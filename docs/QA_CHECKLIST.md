@@ -146,6 +146,30 @@
 - [x] No hay HEX en archivos `.tsx`.
 - [x] Build exitoso.
 
+### Fase 7C.4: Presets BarChart, LineChart, AreaChart
+- [x] `BarChart.tsx` creado en `src/components/charts/`.
+- [x] `LineChart.tsx` creado en `src/components/charts/`.
+- [x] `AreaChart.tsx` creado en `src/components/charts/`.
+- [x] `index.ts` exporta BarChart, LineChart, AreaChart.
+- [x] BarChart soporta `horizontal` y `stacked` props.
+- [x] BarChart recibe datos por prop `data: Array<{ label, value }>`.
+- [x] LineChart soporta `smooth` prop (default true).
+- [x] LineChart recibe datos por prop `data: Array<{ label, value }>`.
+- [x] AreaChart usa line series con `areaStyle: { opacity: 0.15 }` — sin gradientes.
+- [x] AreaChart recibe datos por prop `data: Array<{ label, value }>`.
+- [x] Todos los presets soportan `loading`, `empty`, `error`.
+- [x] Todos los presets soportan `title`, `description`, `actions`, `filters`, `footer`.
+- [x] Todos los presets soportan `ariaLabel` y `summary` para accesibilidad.
+- [x] Todos los presets soportan `height` personalizable.
+- [x] Demo en `App.tsx`: 4 ejemplos de presets (BarChart vertical, LineChart, AreaChart, BarChart horizontal).
+- [x] Demo incluye transición `demoLoading`.
+- [x] No datos de negocio, solo técnicos ("Categoría A", "Lunes", etc).
+- [x] No se creó HeatmapChart ni KpiCard ni DonutChart.
+- [x] No se crearon dashboards ni pantallas.
+- [x] No se instalaron dependencias.
+- [x] No hay HEX en archivos `.tsx`.
+- [x] Build exitoso.
+
 ## Estándares de Calidad Permanentes
 - [ ] Visual: Fidelidad 1:1 con tokens oficiales.
 - [ ] Performance: 100/100 Lighthouse (Desktop).

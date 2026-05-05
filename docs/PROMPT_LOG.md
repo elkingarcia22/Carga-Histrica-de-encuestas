@@ -117,7 +117,28 @@
   - No se crearon presets (BarChart, LineChart). No se instalaron dependencias.
 - **Resultado:** Contenedores estructurales enterprise con accesibilidad completa. Listos para presets en Fase 7C.4.
 
+### 2026-05-05 — Fase 7C.4: BarChart, LineChart, AreaChart Presets (Implementada)
+- **Acción:** Creación de presets reutilizables para gráficos de comparación y tendencia.
+- **Detalles:**
+  - Creado `BarChart.tsx`: preset de ECharts bar. Props `data: Array<{label, value}>`, `seriesName`, `horizontal`, `stacked`. Usa ChartCard como contenedor. Soporta loading/empty/error.
+  - Creado `LineChart.tsx`: preset de ECharts line. Props `data: Array<{label, value}>`, `seriesName`, `smooth` (default true). Usa ChartCard como contenedor. Soporta loading/empty/error.
+  - Creado `AreaChart.tsx`: preset de ECharts line con `areaStyle: { opacity: 0.15 }` (sin gradientes decorativos). Props `data: Array<{label, value}>`, `seriesName`, `smooth`. Usa ChartCard como contenedor. Soporta loading/empty/error.
+  - `index.ts` actualizado con exports de `BarChart`, `LineChart`, `AreaChart`.
+  - `App.tsx` actualizado: FormSection "Phase 7C.3 + Presets 7C.4" con 4 demos técnicas (BarChart vertical, LineChart, AreaChart, BarChart horizontal) + demos legacy de ChartCard directo. Datos técnicos genéricos ("Categoría A", "Lunes", etc). Transición `demoLoading` (1800ms).
+  - No se crearon DonutChart, HeatmapChart, KpiCard.
+  - No se crearon dashboards ni pantallas reales.
+  - No se instalaron dependencias.
+  - No hay HEX en archivos `.tsx`.
+- **Documentación:**
+  - Actualizado `ARCHITECTURE.md`: referencias a BarChart, LineChart, AreaChart.
+  - Actualizado `COMPONENT_DECISION_MATRIX.md`: ChartShell/ChartCard a "Aprobado", BarChart/LineChart/AreaChart a "Pendiente QA".
+  - Actualizado `MIGRATION_MAP.md`: BarChart/LineChart/AreaChart marcados como "Impl. QA".
+  - Actualizado `CHART_COMPONENT_ROADMAP.md`: Fase 7C.4 marcada como implementada.
+  - Actualizado `ROADMAP.md`: Fase 7C.4 marcada como implementada, pendiente QA.
+  - Actualizado `QA_CHECKLIST.md`: checklist completo para Fase 7C.4.
+- **Resultado:** Presets de comparación y tendencia completados. Suite base de charts (BarChart, LineChart, AreaChart) lista para QA. Listro para Fase 7C.5 (DonutChart + Sparkline).
+
 ## Bloqueos o Supuestos
 - **Slider:** Reservado para Fase 7B.7.
-- **ECharts:** Reservado para Fase 7C.
-- **Pantallas de negocio:** Bloqueadas hasta completar Fase 7B core.
+- **ECharts (Dashboards):** Bloqueados hasta completar presets base (7C.4) + composición (7C.5) + densidad (7C.6).
+- **Pantallas de negocio:** Bloqueadas hasta completar Fase 7B core + charts base.

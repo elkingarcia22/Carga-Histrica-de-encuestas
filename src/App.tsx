@@ -79,7 +79,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Tag, SectionHeader, PageHeader } from "@/components/utility"
-import { EChart, ChartShell, ChartCard } from "@/components/charts"
+import { EChart, ChartShell, ChartCard, BarChart, LineChart, AreaChart } from "@/components/charts"
 
 function App() {
   const [activeNavId, setActiveNavId] = React.useState(navigationConfig[1].id) // Default to Learning
@@ -778,7 +778,7 @@ function App() {
                         title="Atención: Acción Importante"
                         description="Estás a punto de desactivar un servicio. Podrás revertirlo después."
                         confirmLabel="Desactivar"
-                        trigger={<Button variant="outline" size="sm" className="text-amber-600 border-amber-200 hover:bg-amber-50">Warning Confirm</Button>}
+                        trigger={<Button variant="outline" size="sm" className="text-amber-600 border-amber-200 hover:bg-amber-50 dark:text-[#FFD4A0] dark:border-[#5E3A16] dark:hover:bg-[#5E3A16]/30">Warning Confirm</Button>}
                         onConfirm={() => alert("Advertido")}
                       />
 
@@ -787,7 +787,7 @@ function App() {
                         title="¿Eliminar elemento permanentemente?"
                         description="Esta acción no se puede deshacer. Se borrarán todos los datos asociados."
                         confirmLabel="Eliminar"
-                        trigger={<Button variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/10">Destructive Confirm</Button>}
+                        trigger={<Button variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/10 dark:text-[#FFD2CD] dark:border-[#801B21] dark:hover:bg-[#801B21]/30">Destructive Confirm</Button>}
                         onConfirm={() => alert("Eliminado")}
                       />
                     </div>
@@ -1069,11 +1069,75 @@ function App() {
               </FormSection>
 
               <FormSection
-                title="Contenedores Estructurales (Phase 7C.3)"
-                description="ChartCard y ChartShell — superficie visual y gestión de estados para dashboards enterprise."
+                title="Contenedores Estructurales (Phase 7C.3) + Presets (Phase 7C.4)"
+                description="ChartCard, ChartShell, BarChart, LineChart y AreaChart — componentes reutilizables para dashboards enterprise."
               >
                 <div className="space-y-6">
-                  {/* ChartCard: datos reales con transición loading → data */}
+                  {/* Preset Charts: BarChart, LineChart, AreaChart */}
+                  <div className="space-y-6">
+                    <h4 className="text-sm font-medium text-muted-foreground">Presets de Gráficos (Fase 7C.4)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <BarChart
+                        title="Comparación por Categoría"
+                        description="Unidades distribuidas por área"
+                        data={[
+                          { label: "Categoría A", value: 420 },
+                          { label: "Categoría B", value: 580 },
+                          { label: "Categoría C", value: 350 },
+                          { label: "Categoría D", value: 270 },
+                        ]}
+                        seriesName="Unidades"
+                        height={260}
+                        loading={demoLoading}
+                      />
+                      <LineChart
+                        title="Tendencia Semanal"
+                        description="Actividad día a día"
+                        data={[
+                          { label: "Lunes", value: 150 },
+                          { label: "Martes", value: 230 },
+                          { label: "Miércoles", value: 200 },
+                          { label: "Jueves", value: 300 },
+                          { label: "Viernes", value: 280 },
+                        ]}
+                        seriesName="Actividad"
+                        smooth={true}
+                        height={260}
+                        loading={demoLoading}
+                      />
+                      <AreaChart
+                        title="Acumulado Mensual"
+                        description="Volumen acumulativo de ingresos"
+                        data={[
+                          { label: "Semana 1", value: 1000 },
+                          { label: "Semana 2", value: 2300 },
+                          { label: "Semana 3", value: 3800 },
+                          { label: "Semana 4", value: 5200 },
+                        ]}
+                        seriesName="Ingresos"
+                        height={260}
+                        loading={demoLoading}
+                      />
+                      <BarChart
+                        title="Comparación Horizontal"
+                        description="Ranking de desempeño por equipo"
+                        data={[
+                          { label: "Equipo A", value: 85 },
+                          { label: "Equipo B", value: 92 },
+                          { label: "Equipo C", value: 78 },
+                          { label: "Equipo D", value: 88 },
+                          { label: "Equipo E", value: 81 },
+                        ]}
+                        seriesName="Desempeño"
+                        horizontal={true}
+                        height={260}
+                        loading={demoLoading}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Legacy ChartCard examples for reference */}
+                  <h4 className="text-sm font-medium text-muted-foreground">Contenedores Estructurales (Fase 7C.3) - Directos</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <ChartCard
                       title="Distribución por Categoría"
