@@ -37,7 +37,7 @@ export function FilterBar({
 
   return (
     <div className={cn("flex flex-col gap-4", className)}>
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card p-4 border border-border/10 rounded-lg shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-card p-5 border border-border/10 rounded-2xl shadow-sm">
         <div className="flex flex-1 flex-col md:flex-row md:items-center gap-4">
           {onSearchChange && (
             <div className="relative w-full md:w-64">

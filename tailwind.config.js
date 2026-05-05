@@ -88,6 +88,7 @@ export default {
         drawer: "var(--shadow-drawer)",
       },
       fontFamily: {
+        sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
         body: ["var(--font-body)"],
         heading: ["var(--font-heading)"],
       },

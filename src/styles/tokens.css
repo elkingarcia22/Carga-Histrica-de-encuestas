@@ -31,11 +31,11 @@
   --color-ai-bg: #f3f2ff;
   --color-ai-border: #97a5fd;
   
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  /* Radius — UBITS app uses generous rounding */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
   --radius-full: 9999px;
   
   /* Shadows */

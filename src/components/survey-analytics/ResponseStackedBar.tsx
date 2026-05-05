@@ -48,8 +48,8 @@ export function ResponseStackedBar({
       case "negative": return "bg-destructive"
       case "warning": return "bg-warning"
       case "info": return "bg-info"
-      case "neutral": return "bg-muted-foreground/40"
-      default: return "bg-muted-foreground/20"
+      case "neutral": return "bg-muted-foreground/60"
+      default: return "bg-muted-foreground/40"
     }
   }
 

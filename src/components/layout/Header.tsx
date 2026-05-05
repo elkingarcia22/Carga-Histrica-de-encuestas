@@ -28,7 +28,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
           
           {/* Title Area */}
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold text-foreground leading-tight">
+            <h1 className="text-2xl font-extrabold text-foreground leading-tight tracking-tight">
               {title}
             </h1>
             {description && (
@@ -43,7 +43,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
         <div className="flex items-center space-x-4">
           <div className="relative group">
             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted transition-colors group-focus-within:text-primary" />
-            <div className="h-10 w-64 rounded-lg border border-input bg-surface-muted/30 pl-10 pr-4 text-sm text-text-muted flex items-center transition-all focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
+            <div className="h-11 w-64 rounded-xl border border-input bg-surface-muted/30 pl-10 pr-4 text-sm text-text-muted flex items-center transition-all focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/30">
               Buscar en UBITS...
             </div>
           </div>

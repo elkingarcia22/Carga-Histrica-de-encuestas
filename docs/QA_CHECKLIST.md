@@ -19,138 +19,51 @@
 - [x] No hay HEX en archivos `.tsx`.
 - [x] Build exitoso.
 
-## Fase 7D: Componentes Avanzados (En curso)
+## Fase 8.0-8.2: Governance & Architecture (Completada)
+- [x] DASHBOARD_SHELL_PATTERNS.md — Estructura de dashboards, responsive, temas.
+- [x] DASHBOARD_LAYOUT_RECIPES.md — 7 plantillas reutilizables.
+- [x] DASHBOARD_STATE_PATTERNS.md — 7 patrones de estado.
+- [x] DASHBOARD_QA_RULES.md — Framework QA multi-tier.
+- [x] Build exitoso sin cambios de componentes.
 
-### Fase 7D.1: Date & Range Inputs (Completada)
-- [x] Calendar, DatePicker, DateRangePicker.
-- [x] Slider y RangeSlider (wrapper).
-- [x] MonthPicker, QuarterSelector, PeriodSelector.
-- [x] DateFilterBar (composed).
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
+## Fase 8.3: Component Decision Gate + First Screen Intake (Completada)
+- [x] ANTIGRAVITY.md — 10 restricciones obligatorias.
+- [x] FIRST_SCREEN_INTAKE.md — Survey Analytics Dashboard requirements.
+- [x] FIRST_SCREEN_COMPONENT_DECISION_GATE.md — 12/12 componentes aprobados.
+- [x] FIRST_SCREEN_COMPONENT_MAP.md — Layout design con componentes.
+- [x] FIRST_SCREEN_MOCK_DATA_MAP.md — Mock data bindings.
+- [x] FIRST_SCREEN_QA_PLAN.md — QA strategy (9 tiers, 40+ scenarios).
+- [x] FIRST_SCREEN_BUILD_PROMPT.md — Phase 8.4 build prompt.
+- [x] Listo para Phase 8.4 (First Screen Build).
 
-### Fase 7D.2: Upload & Files Suite (Completada)
-- [x] FileUpload y UploadZone (infraestructura base).
-- [x] FilePreview y AttachmentList (visualización metadata).
-- [x] UploadProgress e ImportCsvPanel (data import).
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
+## Fase 8.4: First Screen Build (Completada - 2026-05-05)
+- [x] Implementar screen file (<300 líneas)
+- [x] Implementar sections (<200 líneas cada)
+- [x] Conectar a mock layer (getMockSurveyDashboardData)
+- [x] URL state para filters (history.replaceState)
+- [x] Loading states en todas las secciones (Skeletons)
+- [x] Empty states definidos y funcionales
+- [x] Error states definidos (Alert destructive)
+- [x] Responsive testing (375, 768, 1440px)
+- [x] Dark mode verified
+- [x] Accessibility check (WCAG AA)
+- [x] Code review passed
+- [x] **Hotfix 8.4.1**: Data-to-UI Binding Integrity audit y corrección (Completada)
 
-### Fase 7D.3: Visual Selection (Completada)
-- [x] CardSelection, RadioCardGroup.
-- [x] SelectableCard, OptionTile, CheckboxCardGroup.
-- [x] SegmentedControl.
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
-
-### Fase 7D.4: Carousel & Media (En curso)
-#### Fase 7D.4A: Carousel Base (Completada)
-- [x] `Carousel.tsx` instalado desde shadcn/ui.
-- [x] `UbitsCarousel.tsx` implementado como wrapper enterprise.
-- [x] Contenido inyectado por `children`.
-- [x] Soporte para controles `prev/next` y `dots`.
-- [x] Integración con `SectionHeader`.
-- [x] No hay autoplay por defecto.
-- [x] Accesibilidad: roles de carrusel y navegación por teclado.
-- [x] No hay datos de negocio hardcodeados.
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
-
-#### Fase 7D.4B: Gallery & ImageGrid (Completada)
-- [x] `ImageGrid.tsx` implementado con variantes cards/compact/bento.
-- [x] `Gallery.tsx` implementado con soporte para header y estado vacío.
-- [x] Items inyectados por `props` (no hardcodeados).
-- [x] Soporte para selección de items (`selectable`, `selectedIds`).
-- [x] Placeholders de imagen mediante iconos sobrios.
-- [x] No hay preview modal ni modales de imagen.
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
-
-#### Hotfix 7D.4B.1: Enterprise Style Refinement (Completada)
-- [x] Eliminados gradientes decorativos (`bg-gradient`).
-- [x] Eliminado glassmorphism (`backdrop-blur`).
-- [x] Eliminadas animaciones de escala agresivas.
-- [x] Reemplazadas superficies por tokens sobrios (`bg-card/95`, `bg-primary`).
-- [x] Validado estilo sobrio B2B.
-- [x] Build exitoso.
-
-### Fase 7D.4C: Media Previews (Completada)
-- [x] `PreviewCard.tsx` implementado con metadata y acciones.
-- [x] `MediaPreview.tsx` implementado como visor flexible inline.
-- [x] `EmptyGalleryState.tsx` especializado para colecciones media.
-- [x] Items inyectados por `props`.
-- [x] `Gallery.tsx` actualizado para usar `EmptyGalleryState` por defecto.
-- [x] No hay Lightbox real ni modales de imagen.
-- [x] No hay FileReader ni carga real de archivos.
-- [x] No hay datos de negocio.
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
-
-### Fase 7D.5: Survey Analytics Suite (Completada)
-#### Fase 7D.5A: Survey Analytics Foundations (Completada)
-- [x] `DeltaPill.tsx` implementado con soporte para tonos semánticos.
-- [x] `InlineLegend.tsx` implementado con orientación horizontal/vertical.
-- [x] `MetricComparisonFooter.tsx` implementado con grid responsivo.
-- [x] Tipos base en `surveyAnalyticsTypes.ts`.
-- [x] Datos inyectados por `props` (no hardcodeados).
-- [x] No se crearon charts ni dashboards complejos.
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
-
-#### Hotfix 7D.5A.1: Semantic Color Mapping (Completada)
-- [x] Corregido uso de `error` por `destructive` (token oficial).
-- [x] Validada visibilidad de métricas negativas (rojo) en DeltaPill e InlineLegend.
-
-#### Fase 7D.5B: Response Distribution (Completada)
-- [x] `ResponseStackedBar.tsx` implementado con HTML/CSS nativo.
-- [x] `ResponseStackedBarGroup.tsx` implementado con soporte para leyendas compartidas.
-- [x] Tipos extendidos en `surveyAnalyticsTypes.ts`.
-- [x] Cálculo automático de porcentajes basado en `total` o suma de valores.
-- [x] No se utiliza ECharts ni Canvas para estas barras.
-- [x] Soporte para tonos semánticos UBITS.
-- [x] Tooltips enriquecidos (estilo ECharts) en cada segmento.
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
-
-#### Fase 7D.5D: Survey Metric Cards (Completada)
-- [x] `SurveyMetricCard.tsx` implementado (composición de DeltaPill + MetricComparisonFooter).
-- [x] `FavorabilityDistributionCard.tsx` implementado (composición de ResponseStackedBar).
-- [x] `ParticipationTrendCard.tsx` implementado (composición de TrendMetricLineChart + KPI style).
-- [x] Todos los datos inyectados por `props` (no hardcodeados).
-- [x] Soportan estados `loading`, `empty` (vía `segments.length === 0`) y `error`.
-- [x] No hay dashboards ni pantallas reales.
-- [x] Hallazgo `showComparison` en `TrendMetricLineChart` corregido (visualización activada con líneas punteadas).
-- [x] Hallazgo `text-white` en `ResponseStackedBar` corregido (reemplazado por `text-primary-foreground`).
-- [x] Hallazgo deuda técnica `any[]` en `TrendMetricLineChart` corregido (tipado estricto implementado).
-- [x] No hay HEX en archivos `.tsx`.
-- [x] Build exitoso.
-
-### Fase 7D.6: QA Integral Advanced Components (Completada)
-#### Fase 7D.6 Audit (Completada)
-- [x] npm run build exitoso.
-- [x] TypeScript 0 errores.
-- [x] 0 HEX en archivos `.tsx`.
-- [x] 0 instancias de `any` / `any[]`.
-- [x] 0 instancias de `as any`.
-- [x] 0 `text-white` en componentes avanzados.
-- [x] 0 `bg-error` / `text-error` / `border-error`.
-- [x] 0 gradientes decorativos.
-- [x] 0 glassmorphism / `backdrop-blur` decorativos.
-- [x] `package.json` limpio, sin dependencias inesperadas.
-- [x] Sin dashboards ni pantallas reales.
-- [x] Sin APIs ni fetchers.
-- [x] Sin datos de negocio reales.
-- [x] App.tsx permanece como playground técnico.
-- [x] Todas las documentaciones sincronizadas.
-
-#### Hotfix 7D.6.1: CSS Design Token Compliance (Completada)
-- [x] Reemplazado `text-white` con `text-primary-foreground` en `PreviewCard.tsx` L64.
-- [x] Reemplazado `text-white` con `text-primary-foreground` en `ImageGrid.tsx` L120.
-- [x] Removido `backdrop-blur-[2px]` de `ResponseStackedBar.tsx` L96.
-- [x] npm run build exitoso post-hotfix.
+### Data-to-UI Binding QA (Hotfix 8.4.1)
+- [x] Cada campo mock usado por la pantalla mapea a una prop real.
+- [x] Props opcionales críticas (como `tone`) no fallan silenciosamente.
+- [x] Tonos semánticos activan colores esperados (no monocromático).
+- [x] Totales de barras apiladas coinciden con suma de segmentos.
+- [x] Porcentajes derivados son matemáticamente consistentes.
+- [x] Visualización llena el 100% del contenedor cuando aplica.
+- [x] Componentes reciben `tone`, no nombres alternos.
+- [x] Build exitoso post-hotfix.
 - [x] TypeScript 0 errores post-hotfix.
-- [x] Verificado: 0 `text-white` en media y survey-analytics.
-- [x] Verificado: 0 `backdrop-blur` en survey-analytics.
-- [x] Contraste visual preservado en light/dark mode.
-- [x] Estados de selección preservados.
-- [x] Comportamiento de tooltips preservado.
+
+## Fase 8.5: Second Screen & Production (Pendiente)
+- [ ] Seleccionar second dashboard
+- [ ] Completar intake process
+- [ ] Build usando patterns de 8.4
+- [ ] Validar patterns reusables
+- [ ] Production readiness review

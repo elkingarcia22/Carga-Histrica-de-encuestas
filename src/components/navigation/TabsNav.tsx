@@ -18,7 +18,7 @@ const TabsNav = React.forwardRef<HTMLDivElement, TabsNavProps>(
       <div
         ref={ref}
         className={cn(
-          "flex items-center space-x-8 border-b border-border/10 w-full bg-card px-8",
+          "flex items-center gap-2 w-full bg-card px-8 py-3",
           className
         )}
         {...props}
@@ -31,16 +31,13 @@ const TabsNav = React.forwardRef<HTMLDivElement, TabsNavProps>(
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
               className={cn(
-                "relative py-4 text-sm font-medium transition-all hover:text-text-primary focus:outline-none",
-                isActive 
-                  ? "text-primary" 
-                  : "text-text-muted"
+                "rounded-full px-4 py-1.5 text-sm font-medium transition-all focus:outline-none",
+                isActive
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-text-muted hover:bg-accent hover:text-foreground"
               )}
             >
               {tab.label}
-              {isActive && (
-                <span className="absolute bottom-0 left-0 h-[2px] w-full bg-primary" />
-              )}
             </button>
           )
         })}

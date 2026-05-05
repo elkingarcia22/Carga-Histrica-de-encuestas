@@ -59,6 +59,36 @@
 
 **Ver:** `docs/ADVANCED_COMPONENT_DECISION_MATRIX.md` para matriz completa (29 componentes, clasificación, prioridades, dependencias).
 
+## Fase 8: Gobernanza & Arquitectura
+
+### Fase 8.0: Starter Kit Readiness (✅ 2026-05-05)
+- **Status:** Documentación de gobernanza completada
+- **Documentos:** STARTER_KIT_READINESS.md, DASHBOARD_ARCHITECTURE.md, MOCK_DATA_STRATEGY.md, SCREEN_BUILD_RULES.md, PHASE_8_ROADMAP.md
+
+### Fase 8.2: Dashboard Shell Patterns (✅ 2026-05-05)
+- **Status:** Arquitectura de patrones completada (documentación pura, cero UI)
+- **Nuevos Documentos:**
+  - `DASHBOARD_SHELL_PATTERNS.md` - Estructura de dashboards, layout responsivo, temas, accesibilidad
+  - `DASHBOARD_LAYOUT_RECIPES.md` - 7 plantillas reutilizables (KPI, Two-Column, Full-Width+Panel, Survey Analytics, Bento, Table+Filters, Gallery)
+  - `DASHBOARD_STATE_PATTERNS.md` - 7 patrones de estado con transiciones y accesibilidad
+  - `DASHBOARD_QA_RULES.md` - Marco QA multi-tier (14 categorías, blocking criteria para Phase 8.3)
+- **Prerequisitos para Phase 8.3:** Seleccionar first dashboard, completar intake, mapear componentes, QA review
+
+### Fase 8.3: Components Decision Gate (✅ 2026-05-05)
+- **Status:** Survey Analytics Dashboard governance complete
+- **Documentos Creados:**
+  - `ANTIGRAVITY.md` - Marco de gobernanza con 10 restricciones obligatorias
+  - `FIRST_SCREEN_INTAKE.md` - Intake document con requisitos, componentes, datos, accesibilidad
+  - `FIRST_SCREEN_COMPONENT_DECISION_GATE.md` - Verificación 12/12 componentes aprobados
+  - `FIRST_SCREEN_COMPONENT_MAP.md` - Mapeo de secciones a componentes con responsive layout
+  - `FIRST_SCREEN_MOCK_DATA_MAP.md` - Mapeo de mock data layer a componentes
+  - `FIRST_SCREEN_QA_PLAN.md` - Plan QA con 9 tiers y 40+ escenarios
+  - `FIRST_SCREEN_BUILD_PROMPT.md` - Prompt autorización Phase 8.4
+- **Result:** Listo para Phase 8.4 build, zero blockers, governance locked
+
+### Fase 8.4: First Screen Build (⏳ Ready - Next Phase)
+- **Criterios:** <300 líneas dashboard, <200 líneas per section, mock layer connection, URL state, loading/empty/error states, responsive (375/768/1440), dark mode, WCAG AA, 80%+ tests
+
 ## Consideraciones Críticas
 1. **0 HEX en TSX**: Todos los componentes deben usar variables CSS de Tailwind.
 2. **Consistencia Visual**: Respetar los tokens definidos en `tokens.css`.

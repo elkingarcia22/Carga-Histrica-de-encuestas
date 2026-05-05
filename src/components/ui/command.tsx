@@ -71,11 +71,11 @@ function CommandInput({
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <div data-slot="command-input-wrapper" className="p-1 pb-0">
-      <InputGroup className="h-8! rounded-lg! border-input/30 bg-input/30 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
+      <InputGroup className="h-8! rounded-lg! border-input/30 bg-muted dark:bg-white/10 shadow-none! *:data-[slot=input-group-addon]:pl-2!">
         <CommandPrimitive.Input
           data-slot="command-input"
           className={cn(
-            "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+            "w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
             className
           )}
           {...props}
@@ -96,7 +96,7 @@ function CommandList({
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        "no-scrollbar max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
+        "max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none",
         className
       )}
       {...props}

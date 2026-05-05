@@ -10,13 +10,13 @@ const alertVariants = cva(
       variant: {
         default: "bg-card text-foreground",
         destructive:
-          "border-destructive/40 text-destructive [&>svg]:text-destructive bg-destructive/5 dark:border-[#E20D34] dark:bg-[#801B21] dark:text-[#FFD2CD] dark:[&>svg]:text-[#FFD2CD]",
+          "border-destructive/40 text-destructive [&>svg]:text-destructive bg-destructive/5 dark:border-destructive/50 dark:bg-destructive/10",
         info:
-          "border-blue-500/40 text-blue-700 [&>svg]:text-blue-700 bg-blue-50/60 dark:border-[#B6B5FC] dark:bg-[#2B3F79] dark:text-[#D6DBFF] dark:[&>svg]:text-[#D6DBFF]",
+          "border-info/40 text-info [&>svg]:text-info bg-info/5 dark:border-info/50 dark:bg-info/10",
         warning:
-          "border-amber-500/40 text-amber-700 [&>svg]:text-amber-700 bg-amber-50/60 dark:border-[#A4621B] dark:bg-[#5E3A16] dark:text-[#FFD4A0] dark:[&>svg]:text-[#FFD4A0]",
+          "border-warning/40 text-warning [&>svg]:text-warning bg-warning/5 dark:border-warning/50 dark:bg-warning/10",
         success:
-          "border-emerald-500/40 text-emerald-700 [&>svg]:text-emerald-700 bg-emerald-50/60 dark:border-[#368226] dark:bg-[#254B1B] dark:text-[#BDE9AC] dark:[&>svg]:text-[#BDE9AC]",
+          "border-success/40 text-success [&>svg]:text-success bg-success/5 dark:border-success/50 dark:bg-success/10",
       },
     },
     defaultVariants: {

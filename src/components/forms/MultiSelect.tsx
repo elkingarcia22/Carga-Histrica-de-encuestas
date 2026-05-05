@@ -68,7 +68,7 @@ export function MultiSelect({
           aria-expanded={open}
           disabled={disabled}
           className={cn(
-            "flex h-auto min-h-10 w-full items-center justify-between rounded-md border-input bg-card dark:bg-muted px-3 py-2 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring/50 focus:border-ring disabled:cursor-not-allowed disabled:opacity-50 transition-all",
+            "flex h-auto min-h-11 w-full items-center justify-between rounded-xl border-input bg-card dark:bg-muted px-4 py-2 text-sm text-foreground ring-offset-background focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary disabled:cursor-not-allowed disabled:opacity-50 transition-all",
             className
           )}
         >
@@ -116,7 +116,7 @@ export function MultiSelect({
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 rounded-md border shadow-md">
+      <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 rounded-xl border shadow-md">
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
           <CommandList className="max-h-[300px] overflow-y-auto">

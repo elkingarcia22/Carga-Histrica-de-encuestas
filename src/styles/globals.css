@@ -4,13 +4,62 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Custom Scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground));
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(220 14% 30%);
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: hsl(220 10% 45%);
+}
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}
+.dark * {
+  scrollbar-color: hsl(220 14% 30%) transparent;
+}
+
 @layer base {
   * {
     @apply border-border outline-none;
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ── Typography Scale (UBITS) ──────────────────────────── */
+  h1 { @apply text-2xl font-extrabold tracking-tight; }
+  h2 { @apply text-xl font-bold tracking-tight; }
+  h3 { @apply text-lg font-bold; }
+  h4 { @apply text-base font-semibold; }
+  h5 { @apply text-sm font-semibold; }
+  h6 { @apply text-xs font-semibold uppercase tracking-wide text-muted-foreground; }
+
+  /* ── Icons — thinner stroke to match UBITS style ────────── */
+  svg.lucide,
+  [data-slot] svg,
+  button svg,
+  a svg {
+    stroke-width: 1.75;
   }
 
   :root {
@@ -43,7 +92,7 @@
     --info-foreground: 0 0% 100%;
 
     --warning: 38 94% 48%; /* #EC9907 — ubits-feedback-border-warning */
-    --warning-foreground: 207 14% 15%; /* Dark text for proper contrast on light orange */
+    --warning-foreground: 0 0% 100%;
 
     --success: 116 53% 37%; /* #328e2c — ubits-feedback-accent-success */
     --success-foreground: 0 0% 100%;
@@ -107,7 +156,7 @@
     --warning-foreground: 207 14% 15%; /* Dark text for orange background */
 
     /* ── Destructive ──────────────────────────────────────── */
-    --destructive: 357 72% 42%;
+    --destructive: 357 72% 55%; /* Lighter red for dark mode visibility */
     --destructive-foreground: 0 0% 100%;
 
     /* ── Bordes e Inputs ──────────────────────────────────── */
