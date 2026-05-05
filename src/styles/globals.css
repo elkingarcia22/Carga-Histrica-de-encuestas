@@ -1,0 +1,116 @@
+@import "./tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border outline-none;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  :root {
+    /* Mapeo de variables shadcn a tokens oficiales UBITS (usando canales HSL para soporte de opacidad) */
+    --background: var(--color-bg-app-hsl);
+    --foreground: var(--color-text-primary-hsl);
+    
+    --card: var(--color-surface-hsl);
+    --card-foreground: var(--color-text-primary-hsl);
+    
+    --popover: var(--color-surface-hsl);
+    --popover-foreground: var(--color-text-primary-hsl);
+    
+    --primary: var(--color-brand-hsl);
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: var(--color-surface-muted-hsl);
+    --secondary-foreground: var(--color-text-primary-hsl);
+    
+    --muted: var(--color-surface-muted-hsl);
+    --muted-foreground: var(--color-text-secondary-hsl);
+    
+    --accent: 217 28% 90%; /* #dce4f0 — blue-tinted hover, coherente con bg-app azulado */
+    --accent-foreground: var(--color-text-primary-hsl);
+    
+    --destructive: var(--color-negative-hsl);
+    --destructive-foreground: 0 0% 100%;
+
+    --info: 225 83% 61%; /* #4a74ee — ubits-feedback-accent-info */
+    --info-foreground: 0 0% 100%;
+
+    --warning: 38 94% 48%; /* #EC9907 — ubits-feedback-border-warning */
+    --warning-foreground: 0 0% 100%;
+
+    --success: 116 53% 37%; /* #328e2c — ubits-feedback-accent-success */
+    --success-foreground: 0 0% 100%;
+
+    --border: var(--color-border-hsl);
+    --input: var(--color-border-hsl);
+    --ring: var(--color-brand-hsl);
+    
+    --radius: var(--radius-md);
+  }
+
+  .dark {
+    /* ── Overrides de tokens UBITS directos (text-text-*, bg-surface-*) ── */
+    /* Sin esto, clases como text-text-secondary quedan oscuras sobre fondo oscuro */
+    --color-text-primary: #edeeef;    /* ubits-fg-1-high dark */
+    --color-text-secondary: #9aa0aa;  /* ubits fg-1-medium dark, paso intermedio */
+    --color-text-muted: #6b7480;      /* reducido para hint/placeholder */
+    --color-text-inverse: #303a47;
+    --color-bg-app: #0E1825;
+    --color-surface: #202837;
+    --color-surface-muted: #1e2a38;   /* recessed, más oscuro que card */
+    --color-surface-subtle: #192230;
+    --color-border: #3d4555;
+    --color-border-strong: #4f5561;
+
+    /* ── Superficies ─────────────────────────────────────── */
+    /* #0E1825 — pantalla base (ubits-bg-2) */
+    --background: 207 45% 10%;
+    /* #edeeef — texto principal (ubits-fg-1-high) */
+    --foreground: 210 6% 93%;
+
+    /* #202837 — contenedores/cards (ubits-bg-1) */
+    --card: 219 26% 17%;
+    --card-foreground: 210 6% 93%;
+
+    /* #26303f — popovers/dropdowns flotan sobre cards */
+    --popover: 219 22% 20%;
+    --popover-foreground: 210 6% 93%;
+
+    /* ── Primario ─────────────────────────────────────────── */
+    /* #3865f5 — azul UBITS brillante en dark */
+    --primary: 222 91% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    /* ── Secundario / Muted / Accent ─────────────────────── */
+    /* #293242 — superficie secundaria, apenas sobre card */
+    --secondary: 219 22% 21%;
+    --secondary-foreground: 210 6% 93%;
+
+    /* #222d3c — superficie muted (recessed, ej. skeleton, tabs bg) */
+    --muted: 219 28% 18%;
+    /* #8d9299 — texto secundario/placeholder, jerarquía clara vs primario */
+    --muted-foreground: 220 4% 57%;
+
+    /* #3b4350 — hover/active (ubits-bg-gray-subtle-hover) */
+    --accent: 217 14% 27%;
+    --accent-foreground: 210 6% 93%;
+
+    /* ── Destructive ──────────────────────────────────────── */
+    --destructive: 357 72% 42%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* ── Bordes e Inputs ──────────────────────────────────── */
+    /* #3d4555 — border sutil, visible sin ser agresivo */
+    --border: 221 16% 29%;
+    /* #404754 — input border ligeramente más oscuro (ubits-border-2) */
+    --input: 221 14% 28%;
+    --ring: 222 91% 58%;
+  }
+}

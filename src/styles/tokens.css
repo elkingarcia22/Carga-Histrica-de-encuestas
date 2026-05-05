@@ -1,0 +1,63 @@
+:root {
+  /* --- UBITS Brand Tokens (Fuente de Verdad HEX) --- */
+  --color-brand: #0c5bef;
+  --color-brand-hover: #1e4abf;
+  --color-brand-pressed: #223a91;
+  
+  /* Surfaces */
+  --color-bg-app: #EDF1F8;
+  --color-surface: #ffffff;
+  --color-surface-nav: #202837;
+  --color-surface-muted: #F3F3F4;
+  --color-surface-subtle: #f9fafb;
+  
+  /* Typography */
+  --color-text-primary: #303a47;
+  --color-text-secondary: #5c646f;
+  --color-text-muted: #979ba3;
+  --color-text-inverse: #ffffff;
+  
+  /* Borders */
+  --color-border: #d0d2d5;
+  --color-border-strong: #979ba3;
+  
+  /* States */
+  --color-positive: #328e2c;
+  --color-negative: #e9343c;
+  --color-warning: #EC9907;
+  --color-info: #4a74ee;
+  
+  /* AI Features */
+  --color-ai-bg: #f3f2ff;
+  --color-ai-border: #97a5fd;
+  
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.07), 0 4px 12px rgba(15, 23, 42, 0.06);
+  --shadow-drawer: 0 8px 32px rgba(15, 23, 42, 0.18), 0 2px 8px rgba(15, 23, 42, 0.10);
+  
+  /* Fonts */
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* --- HSL Channels for Opacity Support (Calculated from HEX) --- */
+  --color-brand-hsl: 219 91% 49%;
+  --color-bg-app-hsl: 217 33% 95%;
+  --color-surface-hsl: 0 0% 100%;
+  --color-text-primary-hsl: 214 17% 23%;
+  --color-text-secondary-hsl: 215 9% 40%;
+  --color-border-hsl: 220 5% 83%;
+  --color-negative-hsl: 357 80% 56%;
+  --color-positive-hsl: 116 53% 37%;
+  --color-warning-hsl: 38 94% 48%;
+  --color-info-hsl: 225 83% 61%;
+  --color-surface-muted-hsl: 240 4% 96%;
+  --color-surface-subtle-hsl: 210 20% 98%;
+  --color-surface-nav-hsl: 219 26% 17%;
+}
