@@ -18,7 +18,7 @@ const TabsNav = React.forwardRef<HTMLDivElement, TabsNavProps>(
       <div
         ref={ref}
         className={cn(
-          "flex items-center space-x-8 border-b border-border w-full bg-card px-8",
+          "flex items-center space-x-8 border-b border-border/10 w-full bg-card px-8",
           className
         )}
         {...props}
