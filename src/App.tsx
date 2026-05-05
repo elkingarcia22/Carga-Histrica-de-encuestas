@@ -79,7 +79,23 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Tag, SectionHeader, PageHeader } from "@/components/utility"
-import { EChart, ChartShell, ChartCard, BarChart, LineChart, AreaChart } from "@/components/charts"
+import { EChart, ChartShell, ChartCard, BarChart, LineChart, AreaChart, DonutChart, SparklineChart, KpiCard, HeatmapChart } from "@/components/charts"
+import { 
+  DatePicker, 
+  DateRangePicker, 
+  MonthPicker, 
+  QuarterSelector, 
+  PeriodSelector, 
+  DateFilterBar,
+  type DateFilterMode 
+} from "@/components/date"
+import { Slider } from "@/components/ui/slider"
+import { RangeSlider } from "@/components/range"
+import { FileUpload, UploadZone, FilePreview, AttachmentList, UploadProgress, ImportCsvPanel } from "@/components/upload"
+import { CardSelection, RadioCardGroup, CheckboxCardGroup, SelectableCard, OptionTile, SegmentedControl } from "@/components/selection"
+import { UbitsCarousel, Gallery, ImageGrid, PreviewCard, MediaPreview, EmptyGalleryState, type MediaItem } from "@/components/media"
+import { DeltaPill, InlineLegend, MetricComparisonFooter, ResponseStackedBar, ResponseStackedBarGroup, TrendMetricLineChart, SurveyMetricCard, FavorabilityDistributionCard, ParticipationTrendCard } from "@/components/survey-analytics"
+import { Layers, Zap, Settings, Shield, Clock, MousePointer2, LayoutGrid, BarChart3, List, ChevronRight, Download, ExternalLink, Share2, Trash2 } from "lucide-react"
 
 function App() {
   const [activeNavId, setActiveNavId] = React.useState(navigationConfig[1].id) // Default to Learning
@@ -95,6 +111,64 @@ function App() {
   const [progressValue, setProgressValue] = React.useState(13)
   const [currentPage, setCurrentPage] = React.useState(1)
   const [demoLoading, setDemoLoading] = React.useState(true)
+
+  // Phase 7D.1A: Date & Range Inputs demo states
+  const [date, setDate] = React.useState<Date>()
+  const [dateRange, setDateRange] = React.useState<{ from?: Date; to?: Date }>()
+
+  // Phase 7D.1B: Slider & Range Selection demo states
+  const [sliderValue, setSliderValue] = React.useState([50])
+  const [rangeValue, setRangeValue] = React.useState<[number, number]>([20, 80])
+  const [percentageValue, setPercentageValue] = React.useState<[number, number]>([0, 100])
+
+  // Phase 7D.1C: Period Selection & Filter Bar demo states
+  const [month, setMonth] = React.useState({ year: 2026, month: 4 })
+  const [quarter, setQuarter] = React.useState<{ year: number; quarter: 1 | 2 | 3 | 4 }>({ year: 2026, quarter: 2 })
+  const [period, setPeriod] = React.useState('last_30_days')
+  const [filterBarMode, setFilterBarMode] = React.useState<DateFilterMode>('period')
+  const [fbPeriod, setFbPeriod] = React.useState('this_month')
+  const [fbDate, setFbDate] = React.useState<Date>()
+  const [fbRange, setFbRange] = React.useState<{ from?: Date; to?: Date }>()
+
+  // Phase 7D.2A: Upload & Files demo states
+  const [singleFile, setSingleFile] = React.useState<File[]>([])
+  const [multipleFiles, setMultipleFiles] = React.useState<File[]>([])
+  const [dropZoneFiles, setDropZoneFiles] = React.useState<File[]>([])
+
+  // Phase 7D.2C: Data Import & Progress demo states
+  const [, setImportFile] = React.useState<File[]>([])
+  const [importStatus, setImportStatus] = React.useState<'idle' | 'validating' | 'uploading' | 'success' | 'error'>('idle')
+  const [importProgress, setImportProgress] = React.useState(0)
+
+  // Phase 7D.3A: Visual Selection demo states
+  const [selectedCard, setSelectedCard] = React.useState("pro")
+  const [selectedRadio, setSelectedRadio] = React.useState("standard")
+
+  // Phase 7D.3B: Selection Multi & Densa demo states
+  const [selectedChecks, setSelectedChecks] = React.useState<string[]>(["mfa"])
+  const [isCardSelected, setIsCardSelected] = React.useState(false)
+  const [selectedTile, setSelectedTile] = React.useState("opt2")
+
+  // Phase 7D.3C: SegmentedControl demo states
+  const [segmentedValue, setSegmentedValue] = React.useState("grid")
+  const [segmentedView, setSegmentedView] = React.useState("detail")
+  const [segmentedPeriod, setSegmentedPeriod] = React.useState("month")
+
+  // Phase 7D.4B: Gallery & ImageGrid demo states
+  const [selectedMedia, setSelectedMedia] = React.useState<string[]>(["m2"])
+  
+  const mockMedia: MediaItem[] = [
+    { id: "m1", title: "Elemento de ejemplo 1", description: "Descripción técnica del recurso multimedia.", kind: "image", badge: "HD", metadata: "2.4 MB" },
+    { id: "m5", title: "Bento Wide", description: "Elemento con span horizontal.", colSpan: 2, kind: "image", badge: "Bento" },
+    { id: "m2", title: "Elemento de ejemplo 2", description: "Descripción técnica del recurso multimedia.", kind: "video", badge: "4K", metadata: "15:30" },
+    { id: "m6", title: "Bento Tall", description: "Elemento con span vertical.", rowSpan: 2, kind: "video", badge: "Bento" },
+    { id: "m3", title: "Elemento de ejemplo 3", description: "Descripción técnica del recurso multimedia.", kind: "document", metadata: "PDF" },
+    { id: "m4", title: "Elemento de ejemplo 4", description: "Descripción técnica del recurso multimedia.", kind: "image", metadata: "PNG" },
+    { id: "m7", title: "Recurso 7", description: "Descripción del recurso.", kind: "image", metadata: "JPG" },
+    { id: "m8", title: "Recurso 8", description: "Descripción del recurso.", kind: "document", metadata: "DOCX" },
+  ]
+
+  const [activePreviewItem, setActivePreviewItem] = React.useState<MediaItem | undefined>(mockMedia[0])
 
   const activeNav = navigationConfig.find(n => n.id === activeNavId) || navigationConfig[0]
 
@@ -778,7 +852,7 @@ function App() {
                         title="Atención: Acción Importante"
                         description="Estás a punto de desactivar un servicio. Podrás revertirlo después."
                         confirmLabel="Desactivar"
-                        trigger={<Button variant="outline" size="sm" className="text-amber-600 border-amber-200 hover:bg-amber-50 dark:text-[#FFD4A0] dark:border-[#5E3A16] dark:hover:bg-[#5E3A16]/30">Warning Confirm</Button>}
+                        trigger={<Button variant="outline" size="sm" className="text-warning border-warning/20 hover:bg-warning/10">Warning Confirm</Button>}
                         onConfirm={() => alert("Advertido")}
                       />
 
@@ -787,7 +861,7 @@ function App() {
                         title="¿Eliminar elemento permanentemente?"
                         description="Esta acción no se puede deshacer. Se borrarán todos los datos asociados."
                         confirmLabel="Eliminar"
-                        trigger={<Button variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/10 dark:text-[#FFD2CD] dark:border-[#801B21] dark:hover:bg-[#801B21]/30">Destructive Confirm</Button>}
+                        trigger={<Button variant="outline" size="sm" className="text-destructive border-destructive/20 hover:bg-destructive/10">Destructive Confirm</Button>}
                         onConfirm={() => alert("Eliminado")}
                       />
                     </div>
@@ -1136,6 +1210,138 @@ function App() {
                     </div>
                   </div>
 
+                  {/* Preset Charts: DonutChart, SparklineChart, KpiCard (Fase 7C.5) */}
+                  <div className="space-y-6">
+                    <h4 className="text-sm font-medium text-muted-foreground">Composición e Indicadores (Fase 7C.5)</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <DonutChart
+                        title="Distribución de Componentes"
+                        description="Breakdown técnico"
+                        data={[
+                          { label: "Core", value: 300 },
+                          { label: "UI", value: 200 },
+                          { label: "Charts", value: 150 },
+                          { label: "Utility", value: 100 },
+                        ]}
+                        seriesName="Componentes"
+                        variant="donut"
+                        height={260}
+                        loading={demoLoading}
+                      />
+                      <DonutChart
+                        title="Variante Pie"
+                        description="Mismo data, distinto style"
+                        data={[
+                          { label: "Frontend", value: 400 },
+                          { label: "Backend", value: 300 },
+                          { label: "DevOps", value: 200 },
+                        ]}
+                        seriesName="Stack"
+                        variant="pie"
+                        height={260}
+                        loading={demoLoading}
+                      />
+                      <div className="space-y-4">
+                        <KpiCard
+                          title="Métrica Ejemplo 1"
+                          value="$2,450"
+                          delta="+12%"
+                          trend="positive"
+                          description="Comparado al período anterior"
+                          sparklineData={[
+                            { label: "W1", value: 2000 },
+                            { label: "W2", value: 2100 },
+                            { label: "W3", value: 2300 },
+                            { label: "W4", value: 2450 },
+                          ]}
+                          footer="Actualizado hace 2 horas"
+                        />
+                        <KpiCard
+                          title="Métrica Ejemplo 2"
+                          value="78.5%"
+                          delta="-2.1%"
+                          trend="negative"
+                          description="Tasa de ejemplo"
+                          sparklineData={[
+                            { label: "Day 1", value: 85 },
+                            { label: "Day 2", value: 82 },
+                            { label: "Day 3", value: 80 },
+                            { label: "Day 4", value: 78.5 },
+                          ]}
+                          footer="Datos técnicos genéricos"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Standalone SparklineChart demo */}
+                  <div className="space-y-6">
+                    <h4 className="text-sm font-medium text-muted-foreground">Sparkline (Fase 7C.5)</h4>
+                    <div className="flex items-center gap-4 p-4 border rounded-lg bg-card">
+                      <div className="flex-1">
+                        <p className="text-sm font-medium">Tendencia Técnica</p>
+                        <p className="text-xs text-muted-foreground">Datos en tiempo de ejecución</p>
+                      </div>
+                      <div className="w-32">
+                        <SparklineChart
+                          data={[
+                            { label: "T1", value: 45 },
+                            { label: "T2", value: 52 },
+                            { label: "T3", value: 48 },
+                            { label: "T4", value: 61 },
+                            { label: "T5", value: 55 },
+                          ]}
+                          height={32}
+                          trend="positive"
+                          showTooltip={true}
+                          ariaLabel="Sparkline demo chart"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* HeatmapChart demo (Fase 7C.6) */}
+                  <HeatmapChart
+                    title="Densidad de Actividad por Zona Horaria"
+                    description="Distribución técnica de eventos por día y hora"
+                    xLabels={["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"]}
+                    yLabels={["00:00-06:00", "06:00-12:00", "12:00-18:00", "18:00-24:00"]}
+                    data={[
+                      { x: "Lunes", y: "00:00-06:00", value: 12 },
+                      { x: "Lunes", y: "06:00-12:00", value: 35 },
+                      { x: "Lunes", y: "12:00-18:00", value: 62 },
+                      { x: "Lunes", y: "18:00-24:00", value: 28 },
+                      { x: "Martes", y: "00:00-06:00", value: 15 },
+                      { x: "Martes", y: "06:00-12:00", value: 42 },
+                      { x: "Martes", y: "12:00-18:00", value: 71 },
+                      { x: "Martes", y: "18:00-24:00", value: 33 },
+                      { x: "Miércoles", y: "00:00-06:00", value: 10 },
+                      { x: "Miércoles", y: "06:00-12:00", value: 38 },
+                      { x: "Miércoles", y: "12:00-18:00", value: 58 },
+                      { x: "Miércoles", y: "18:00-24:00", value: 25 },
+                      { x: "Jueves", y: "00:00-06:00", value: 18 },
+                      { x: "Jueves", y: "06:00-12:00", value: 48 },
+                      { x: "Jueves", y: "12:00-18:00", value: 75 },
+                      { x: "Jueves", y: "18:00-24:00", value: 40 },
+                      { x: "Viernes", y: "00:00-06:00", value: 20 },
+                      { x: "Viernes", y: "06:00-12:00", value: 55 },
+                      { x: "Viernes", y: "12:00-18:00", value: 82 },
+                      { x: "Viernes", y: "18:00-24:00", value: 45 },
+                    ]}
+                    min={0}
+                    max={100}
+                    height={320}
+                    loading={demoLoading}
+                    ariaLabel="Heatmap de densidad de actividad por zona horaria"
+                    summary={
+                      <p>
+                        Mapa de calor que muestra la distribución técnica de eventos a través de
+                        5 días de la semana (Lunes-Viernes) en 4 franjas horarias (00:00-06:00, 06:00-12:00,
+                        12:00-18:00, 18:00-24:00). Valores de ejemplo oscilan entre 10 y 82 unidades.
+                      </p>
+                    }
+                  />
+
                   {/* Legacy ChartCard examples for reference */}
                   <h4 className="text-sm font-medium text-muted-foreground">Contenedores Estructurales (Fase 7C.3) - Directos</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1294,15 +1500,1253 @@ function App() {
               />
             </div>
 
+            <FormSection
+              title="Date & Range Inputs (Phase 7D.1A)"
+              description="Componentes base para selección de fechas y rangos temporales. Usa Date nativo + Intl.DateTimeFormat (sin date-fns)."
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">DatePicker Controlado</h4>
+                    <DatePicker
+                      label="Fecha de ejemplo"
+                      value={date}
+                      onChange={setDate}
+                      placeholder="Selecciona una fecha"
+                      description="Single date selection con validación nativa"
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">DatePicker Deshabilitado</h4>
+                    <DatePicker
+                      label="Fecha deshabilitada"
+                      value={date}
+                      onChange={setDate}
+                      placeholder="No seleccionable"
+                      disabled={true}
+                      description="Estado disabled aplicado"
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">DatePicker con Error</h4>
+                    <DatePicker
+                      label="Fecha con error"
+                      value={undefined}
+                      onChange={() => {}}
+                      placeholder="Campo requerido"
+                      error="Debe seleccionar una fecha válida"
+                      description="Validación visual de error"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">DateRangePicker Controlado</h4>
+                    <DateRangePicker
+                      label="Rango de ejemplo"
+                      value={dateRange}
+                      onChange={setDateRange}
+                      placeholder="Selecciona un rango"
+                      description="Selecciona desde y hasta con doble calendario"
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">DateRangePicker Deshabilitado</h4>
+                    <DateRangePicker
+                      label="Rango deshabilitado"
+                      value={dateRange}
+                      onChange={setDateRange}
+                      placeholder="No seleccionable"
+                      disabled={true}
+                      description="Estado disabled en rango"
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">DateRangePicker con Restricción</h4>
+                    <DateRangePicker
+                      label="Rango restringido"
+                      value={dateRange}
+                      onChange={setDateRange}
+                      placeholder="Selecciona un rango"
+                      minDate={new Date(2026, 4, 1)}
+                      maxDate={new Date(2026, 4, 31)}
+                      description="Solo fechas de mayo de 2026 permitidas"
+                    />
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Slider & Range Selection (Phase 7D.1B)"
+              description="Controles para selección de valores numéricos, rangos, porcentajes y umbrales."
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">Slider Básico</h4>
+                    <div className="px-1">
+                      <Slider
+                        value={sliderValue}
+                        onValueChange={setSliderValue}
+                        max={100}
+                        step={1}
+                      />
+                      <p className="text-xs text-muted-foreground mt-2">Valor actual: {sliderValue[0]}</p>
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">Slider Deshabilitado</h4>
+                    <div className="px-1">
+                      <Slider
+                        defaultValue={[30]}
+                        disabled
+                        max={100}
+                        step={1}
+                      />
+                      <p className="text-xs text-muted-foreground mt-2">No interactuable</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-8">
+                  <div className="space-y-2">
+                    <RangeSlider
+                      label="Rango de ejemplo"
+                      value={rangeValue}
+                      onChange={setRangeValue}
+                      min={0}
+                      max={100}
+                      description="Selecciona un rango de valores numéricos"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <RangeSlider
+                      label="Porcentaje de ejemplo"
+                      value={percentageValue}
+                      onChange={setPercentageValue}
+                      min={0}
+                      max={100}
+                      valueFormatter={(v) => `${v}%`}
+                      description="Uso de formateador para porcentajes"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <RangeSlider
+                      label="Rango con Error"
+                      value={[10, 40]}
+                      onChange={() => {}}
+                      error="El rango seleccionado no es válido para esta configuración"
+                      description="Validación visual de error en rangos"
+                    />
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Period Selection & Filter Bar (Phase 7D.1C)"
+              description="Componentes para filtrado temporal avanzado en dashboards y reportes."
+            >
+              <div className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <MonthPicker
+                    label="Mes de ejemplo"
+                    value={month}
+                    onChange={setMonth}
+                    description="Selección de mes y año"
+                  />
+                  <QuarterSelector
+                    label="Trimestre de ejemplo"
+                    value={quarter}
+                    onChange={setQuarter}
+                    description="Selección de Q1-Q4 y año"
+                  />
+                  <PeriodSelector
+                    label="Periodo de ejemplo"
+                    value={period}
+                    onChange={setPeriod}
+                    description="Opciones predefinidas"
+                  />
+                </div>
+
+                <Separator />
+
+                <div className="space-y-4">
+                  <h4 className="text-sm font-medium text-muted-foreground">DateFilterBar (Demo Técnica)</h4>
+                  <div className="p-4 border rounded-lg bg-muted/30">
+                    <DateFilterBar
+                      mode={filterBarMode}
+                      onModeChange={setFilterBarMode}
+                      period={fbPeriod}
+                      onPeriodChange={setFbPeriod}
+                      date={fbDate}
+                      onDateChange={setFbDate}
+                      range={fbRange}
+                      onRangeChange={setFbRange}
+                    />
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Modo activo: <span className="font-mono font-bold uppercase text-primary">{filterBarMode}</span>
+                  </p>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Upload & Files (Phase 7D.2A)"
+              description="Infraestructura base para selección y arrastre de archivos usando APIs nativas."
+            >
+              <div className="space-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <FileUpload
+                      label="Selección de archivo único"
+                      value={singleFile}
+                      onChange={setSingleFile}
+                      accept=".pdf,.doc,.docx"
+                      description="Solo PDF o Word, máx. 5MB"
+                      maxSizeMB={5}
+                    />
+                    
+                    <FileUpload
+                      label="Selección múltiple"
+                      value={multipleFiles}
+                      onChange={setMultipleFiles}
+                      multiple
+                      maxFiles={3}
+                      description="Máximo 3 archivos de cualquier tipo"
+                    />
+
+                    <FileUpload
+                      label="Estado deshabilitado"
+                      disabled
+                      buttonLabel="No disponible"
+                      description="El componente bloquea la interacción"
+                    />
+                  </div>
+
+                  <div className="space-y-6">
+                    <UploadZone
+                      label="Área de arrastre (Dropzone)"
+                      value={dropZoneFiles}
+                      onChange={setDropZoneFiles}
+                      multiple
+                      description="Arrastra tus reportes aquí (Cualquier formato)"
+                    />
+
+                    <UploadZone
+                      label="Dropzone con validación"
+                      accept="image/*"
+                      maxSizeMB={2}
+                      error="Solo se permiten imágenes menores a 2MB"
+                      description="Ejemplo de feedback de error inmediato"
+                    />
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Visualización de Adjuntos (Phase 7D.2B)"
+              description="Visualización de metadata, variantes de previsualización y gestión de listas."
+            >
+              <div className="space-y-12">
+                {/* Variant Row & Compact */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <SectionHeader title="Variantes de Previsualización" />
+                    <div className="space-y-4">
+                      {singleFile.length > 0 ? (
+                        <FilePreview 
+                          file={singleFile[0]} 
+                          variant="row" 
+                          removable 
+                          onRemove={() => setSingleFile([])}
+                          className="bg-primary/5 border-primary/20"
+                        />
+                      ) : (
+                        <div className="p-4 border border-dashed rounded-lg text-center text-xs text-muted-foreground">
+                          Selecciona un archivo arriba para ver la previsualización en fila
+                        </div>
+                      )}
+                      
+                      <div className="flex flex-wrap gap-2">
+                        <FilePreview 
+                          file={new File([""], "manual_user_guide.pdf", { type: "application/pdf" })} 
+                          variant="compact"
+                        />
+                        <FilePreview 
+                          file={new File([""], "budget_2026.xlsx", { type: "application/vnd.ms-excel" })} 
+                          variant="compact"
+                          removable
+                        />
+                        <FilePreview 
+                          file={new File([""], "invalid_format.exe", { type: "application/x-msdownload" })} 
+                          variant="compact"
+                          error="Formato no permitido"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <SectionHeader title="Estado de Error y Deshabilitado" />
+                    <div className="space-y-4">
+                      <FilePreview 
+                        file={new File([""], "corrupted_image.png", { type: "image/png" })} 
+                        variant="row" 
+                        error="El archivo está dañado o no se puede leer"
+                      />
+                      <FilePreview 
+                        file={new File([""], "system_config.json", { type: "application/json" })} 
+                        variant="row" 
+                        disabled
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* AttachmentList demos */}
+                <div className="space-y-8">
+                  <div className="space-y-4">
+                    <SectionHeader title="Listado de Adjuntos (Layout Grid)" />
+                    <AttachmentList 
+                      files={multipleFiles} 
+                      variant="grid" 
+                      removable 
+                      onRemove={(idx) => setMultipleFiles(multipleFiles.filter((_, i) => i !== idx))}
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <SectionHeader title="Listado Vacío" />
+                    <AttachmentList files={[]} />
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Data Import & Progress (Phase 7D.2C)"
+              description="Panel visual de importación con previsualización de datos y feedback de estado."
+            >
+              <div className="space-y-12">
+                {/* UploadProgress Variants */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-6">
+                    <SectionHeader title="Estados de Progreso" />
+                    <UploadProgress 
+                      value={45} 
+                      status="uploading" 
+                      label="Cargando archivo..." 
+                      description="Subiendo reporte_mensual_v2.csv"
+                    />
+                    <UploadProgress 
+                      value={100} 
+                      status="success" 
+                      label="Carga completada" 
+                      description="El archivo ha sido procesado exitosamente"
+                    />
+                  </div>
+                  <div className="space-y-6">
+                    <SectionHeader title="Estados de Error" />
+                    <UploadProgress 
+                      value={78} 
+                      status="error" 
+                      label="Error en la validación" 
+                      error="La columna 'email' contiene formatos inválidos en la fila 42."
+                    />
+                    <UploadProgress 
+                      value={0} 
+                      status="idle" 
+                      label="Esperando inicio..." 
+                      description="El proceso comenzará al confirmar la importación"
+                    />
+                  </div>
+                </div>
+
+                <Separator />
+
+                {/* ImportCsvPanel demos */}
+                <div className="space-y-8">
+                  <SectionHeader title="Panel de Importación CSV (Composite)" />
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    {/* Empty / Idle State */}
+                    <ImportCsvPanel 
+                      onFileChange={setImportFile}
+                      className="h-full"
+                    />
+
+                    {/* Preview State (Simulated) */}
+                    <ImportCsvPanel 
+                      file={new File([""], "nomina_mayo_2026.csv", { type: "text/csv" })}
+                      status={importStatus}
+                      progress={importProgress}
+                      previewColumns={[
+                        { key: 'id', label: 'ID' },
+                        { key: 'name', label: 'Nombre' },
+                        { key: 'role', label: 'Cargo' },
+                        { key: 'status', label: 'Estado' }
+                      ]}
+                      previewRows={[
+                        { id: '001', name: 'Ana Garcia', role: 'UX Designer', status: 'Activo' },
+                        { id: '002', name: 'Carlos Ruiz', role: 'DevOps', status: 'Pendiente' },
+                        { id: '003', name: 'Marta Sanz', role: 'Product Manager', status: 'Activo' }
+                      ]}
+                      onFileChange={(files) => {
+                        if (files.length === 0) {
+                          setImportStatus('idle')
+                          setImportProgress(0)
+                        } else {
+                          // Simulate process for demo
+                          setImportStatus('validating')
+                          setImportProgress(30)
+                          setTimeout(() => {
+                            setImportStatus('uploading')
+                            setImportProgress(75)
+                            setTimeout(() => {
+                              setImportStatus('success')
+                              setImportProgress(100)
+                            }, 1000)
+                          }, 1000)
+                        }
+                      }}
+                      actions={
+                        <>
+                          <Button variant="outline" size="sm" onClick={() => {
+                            setImportStatus('idle')
+                            setImportProgress(0)
+                          }}>
+                            Cancelar
+                          </Button>
+                          <Button size="sm" disabled={importStatus === 'uploading' || importStatus === 'validating'}>
+                            Confirmar Importación
+                          </Button>
+                        </>
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Visual Selection (Phase 7D.3A)"
+              description="Selección visual mediante Cards y Radio Groups con estética enterprise."
+            >
+              <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-10">
+                  {/* CardSelection Demo */}
+                  <div className="space-y-6">
+                    <SectionHeader title="CardSelection (Single Selection)" />
+                    <CardSelection 
+                      label="Plan de suscripción"
+                      description="Elige el plan que mejor se adapte a tu equipo."
+                      value={selectedCard}
+                      onChange={setSelectedCard}
+                      columns={3}
+                      options={[
+                        { 
+                          value: "basic", 
+                          label: "Básico", 
+                          description: "Ideal para individuos o startups pequeñas.",
+                          eyebrow: "Starter",
+                          icon: Settings
+                        },
+                        { 
+                          value: "pro", 
+                          label: "Profesional", 
+                          description: "Herramientas avanzadas para equipos en crecimiento.",
+                          eyebrow: "Recomendado",
+                          badge: "Popular",
+                          icon: Zap
+                        },
+                        { 
+                          value: "ent", 
+                          label: "Enterprise", 
+                          description: "Control total y seguridad para grandes corporaciones.",
+                          eyebrow: "Corporativo",
+                          icon: Layers
+                        }
+                      ]}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  {/* RadioCardGroup Demo */}
+                  <div className="space-y-6">
+                    <SectionHeader title="RadioCardGroup (Native Accessibility)" />
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                      <RadioCardGroup 
+                        label="Tipo de configuración"
+                        value={selectedRadio}
+                        onChange={setSelectedRadio}
+                        columns={2}
+                        options={[
+                          { 
+                            value: "standard", 
+                            label: "Configuración Estándar", 
+                            description: "Parámetros predefinidos por el sistema.",
+                            badge: "Default"
+                          },
+                          { 
+                            value: "custom", 
+                            label: "Personalizado", 
+                            description: "Ajusta cada detalle manualmente.",
+                          }
+                        ]}
+                      />
+
+                      <RadioCardGroup 
+                        label="Opciones Deshabilitadas"
+                        disabled
+                        value="off"
+                        options={[
+                          { 
+                            value: "on", 
+                            label: "Activado", 
+                            description: "El servicio está funcionando.",
+                          },
+                          { 
+                            value: "off", 
+                            label: "Desactivado", 
+                            description: "El servicio se encuentra en pausa.",
+                          }
+                        ]}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Selection Multi & Densa (Phase 7D.3B)"
+              description="Selección múltiple mediante cards y tiles de alta densidad para interfaces complejas."
+            >
+              <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-10">
+                  {/* CheckboxCardGroup Demo */}
+                  <div className="space-y-6">
+                    <SectionHeader title="CheckboxCardGroup (Multiple Selection)" />
+                    <CheckboxCardGroup 
+                      label="Configuración de Seguridad"
+                      description="Habilita las capas de protección para tu cuenta."
+                      value={selectedChecks}
+                      onChange={setSelectedChecks}
+                      columns={3}
+                      options={[
+                        { 
+                          value: "mfa", 
+                          label: "Autenticación MFA", 
+                          description: "Requiere un código adicional para iniciar sesión.",
+                          badge: "Seguro",
+                          icon: Shield
+                        },
+                        { 
+                          value: "logs", 
+                          label: "Registro de Actividad", 
+                          description: "Historial completo de accesos y cambios.",
+                          icon: Clock
+                        },
+                        { 
+                          value: "ip", 
+                          label: "Restricción por IP", 
+                          description: "Solo permite accesos desde redes conocidas.",
+                          disabled: true,
+                          icon: MousePointer2
+                        }
+                      ]}
+                    />
+                  </div>
+
+                  <Separator />
+
+                  {/* SelectableCard & OptionTile Standalone */}
+                  <div className="space-y-6">
+                    <SectionHeader title="SelectableCard & OptionTile (Standalone)" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">SelectableCard</p>
+                        <SelectableCard 
+                          option={{
+                            value: "standalone",
+                            label: "Card Independiente",
+                            description: "Haz click para alternar el estado de selección.",
+                            icon: Zap
+                          }}
+                          selected={isCardSelected}
+                          onSelect={() => setIsCardSelected(!isCardSelected)}
+                          mode="multiple"
+                        />
+                      </div>
+                      <div className="space-y-4">
+                        <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">OptionTile (Densa)</p>
+                        <div className="space-y-2">
+                          {[
+                            { value: "opt1", label: "Opción Compacta A", description: "Detalle corto", icon: Settings },
+                            { value: "opt2", label: "Opción Compacta B", description: "Detalle corto", badge: "Nuevo", icon: Zap },
+                            { value: "opt3", label: "Opción Compacta C", description: "Detalle corto", icon: Layers }
+                          ].map(opt => (
+                            <OptionTile 
+                              key={opt.value}
+                              option={opt}
+                              selected={selectedTile === opt.value}
+                              onSelect={setSelectedTile}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Segmented Control (Phase 7D.3C)"
+              description="Controles compactos para alternar entre estados, vistas o periodos."
+            >
+              <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-10">
+                  {/* SegmentedControl Variants */}
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                      <div className="space-y-6">
+                        <SectionHeader title="Solid Variant (Default)" />
+                        <SegmentedControl 
+                          label="Vista de visualización"
+                          value={segmentedValue}
+                          onChange={setSegmentedValue}
+                          options={[
+                            { value: "grid", label: "Cuadrícula", icon: LayoutGrid },
+                            { value: "list", label: "Lista", icon: List },
+                            { value: "chart", label: "Gráficos", icon: BarChart3 }
+                          ]}
+                        />
+                      </div>
+
+                      <div className="space-y-6">
+                        <SectionHeader title="Underline Variant (Minimalist)" />
+                        <SegmentedControl 
+                          variant="underline"
+                          label="Nivel de detalle"
+                          value={segmentedView}
+                          onChange={setSegmentedView}
+                          options={[
+                            { value: "summary", label: "Resumen" },
+                            { value: "detail", label: "Detalle" },
+                            { value: "trend", label: "Tendencia" }
+                          ]}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                      <div className="space-y-6">
+                        <SectionHeader title="Outline Variant (Size SM)" />
+                        <SegmentedControl 
+                          variant="outline"
+                          size="sm"
+                          label="Periodo de reporte"
+                          value={segmentedPeriod}
+                          onChange={setSegmentedPeriod}
+                          options={[
+                            { value: "day", label: "Diario" },
+                            { value: "week", label: "Semanal" },
+                            { value: "month", label: "Mensual" }
+                          ]}
+                        />
+                      </div>
+
+                      <div className="space-y-6">
+                        <SectionHeader title="Disabled States" />
+                        <SegmentedControl 
+                          disabled
+                          value="opt1"
+                          options={[
+                            { value: "opt1", label: "Opción 1" },
+                            { value: "opt2", label: "Opción 2" },
+                            { value: "opt3", label: "Opción Deshabilitada", disabled: true }
+                          ]}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Carousel & Media (Phase 7D.4A)"
+              description="Componentes de navegación horizontal y visualización de contenido multimedia."
+            >
+              <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-10">
+                  {/* UbitsCarousel Demo */}
+                  <div className="space-y-6">
+                    <UbitsCarousel 
+                      title="Nuevos Cursos Disponibles"
+                      description="Explora las últimas adiciones a nuestro catálogo corporativo."
+                      showDots
+                      actions={
+                        <Button variant="ghost" size="sm" className="font-semibold text-primary">
+                          Ver todo <ChevronRight className="ml-1" />
+                        </Button>
+                      }
+                      itemClassName="md:basis-1/2 lg:basis-1/3"
+                    >
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <Card key={i} className="group overflow-hidden border-border/50 hover:border-primary/50 transition-colors">
+                          <div className="aspect-video bg-muted/50 flex items-center justify-center relative">
+                            <span className="text-muted-foreground font-mono text-xs">Preview {i}</span>
+                            <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          </div>
+                          <CardHeader className="p-4">
+                            <CardTitle className="text-sm">Card de ejemplo {i}</CardTitle>
+                            <p className="text-xs text-muted-foreground">Descripción técnica del elemento de ejemplo en el carrusel.</p>
+                          </CardHeader>
+                        </Card>
+                      ))}
+                    </UbitsCarousel>
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Gallery & Grid (Phase 7D.4B)"
+              description="Visualización de colecciones multimedia en grillas enterprise y layouts bento."
+            >
+              <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-10">
+                  {/* Gallery with Cards Variant */}
+                  <div className="space-y-6">
+                    <Gallery 
+                      title="Galería de Recursos"
+                      description="Gestiona y selecciona los elementos multimedia de tu biblioteca."
+                      items={mockMedia.slice(0, 4)}
+                      selectable
+                      selectedIds={selectedMedia}
+                      onSelect={(id) => setSelectedMedia(prev => 
+                        prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+                      )}
+                      actions={
+                        <Button size="sm">
+                          <Plus className="mr-2 h-4 w-4" /> Añadir recurso
+                        </Button>
+                      }
+                    />
+                  </div>
+
+                  <Separator />
+
+                  {/* ImageGrid Compact & Bento */}
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                      <div className="space-y-6">
+                        <SectionHeader title="ImageGrid (Compact Variant)" />
+                        <ImageGrid 
+                          variant="compact"
+                          columns={4}
+                          items={mockMedia.slice(0, 4)}
+                        />
+                      </div>
+
+                      <div className="space-y-6">
+                        <SectionHeader title="ImageGrid (Bento Layout)" />
+                        <ImageGrid 
+                          variant="bento"
+                          items={mockMedia}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Empty State Demo */}
+                  <div className="space-y-6">
+                    <SectionHeader title="Gallery (Empty State)" />
+                    <Gallery items={[]} />
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Media Previews (Phase 7D.4C)"
+              description="Visores y tarjetas de previsualización técnica para elementos multimedia."
+            >
+              <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-12">
+                  {/* MediaPreview Inline Demo */}
+                  <div className="space-y-6">
+                    <SectionHeader 
+                      title="MediaPreview (Inline)" 
+                      description="Previsualización detallada de un recurso seleccionado."
+                    />
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                      <Card className="lg:col-span-2 p-6">
+                        <MediaPreview 
+                          item={activePreviewItem}
+                          actions={
+                            <>
+                              <Button variant="outline" size="sm">
+                                <Download className="mr-2 h-4 w-4" /> Descargar
+                              </Button>
+                              <Button variant="outline" size="sm">
+                                <Share2 className="mr-2 h-4 w-4" /> Compartir
+                              </Button>
+                              <Button size="sm">
+                                <ExternalLink className="mr-2 h-4 w-4" /> Abrir original
+                              </Button>
+                            </>
+                          }
+                        />
+                      </Card>
+                      
+                      <div className="space-y-6">
+                        <SectionHeader title="Selector de Preview" />
+                        <div className="grid grid-cols-1 gap-4">
+                          {mockMedia.slice(0, 3).map((item) => (
+                            <PreviewCard 
+                              key={item.id}
+                              item={item}
+                              selected={activePreviewItem?.id === item.id}
+                              onSelect={() => setActivePreviewItem(item)}
+                              className="w-full"
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* PreviewCard Variants */}
+                  <div className="space-y-6">
+                    <SectionHeader title="PreviewCard Variants" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                      <PreviewCard 
+                        item={{ ...mockMedia[0], badge: "Nuevo", metadata: "2.4 MB" }} 
+                        actions={<Button variant="ghost" size="sm" className="w-full">Ver detalles</Button>}
+                      />
+                      <PreviewCard 
+                        item={{ id: "m-no-src", title: "Recurso sin imagen", kind: "document", metadata: "PDF" }} 
+                      />
+                      <PreviewCard 
+                        item={{ ...mockMedia[1], disabled: true }} 
+                        disabled
+                      />
+                      <PreviewCard 
+                        item={mockMedia[2]} 
+                        actions={
+                          <div className="flex gap-2 w-full">
+                            <Button variant="outline" size="sm" className="flex-1">Editar</Button>
+                            <Button variant="outline" size="sm" className="px-2 text-destructive hover:bg-destructive/10"><Trash2 className="h-4 w-4" /></Button>
+                          </div>
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Empty Gallery State */}
+                  <div className="space-y-6">
+                    <SectionHeader title="Empty States Especializados" />
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <EmptyGalleryState 
+                        title="Tu galería está vacía"
+                        description="Comienza subiendo tus primeros recursos multimedia para gestionarlos desde aquí."
+                        action={<Button><Plus className="mr-2 h-4 w-4" /> Subir archivos</Button>}
+                      />
+                      <MediaPreview 
+                        emptyState={
+                          <EmptyGalleryState 
+                            title="Selección requerida" 
+                            description="Haz clic en una tarjeta de la izquierda para ver los detalles técnicos aquí."
+                            className="h-full min-h-[400px]"
+                          />
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Survey Analytics Foundations (Phase 7D.5A)"
+              description="Átomos analíticos para la construcción de dashboards y reportes de encuestas."
+            >
+              <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-12">
+                  {/* DeltaPill Demos */}
+                  <div className="space-y-6">
+                    <SectionHeader title="DeltaPill Variants" description="Indicadores de cambio con tonos semánticos." />
+                    <div className="flex flex-wrap gap-4 items-center">
+                      <DeltaPill value={12.5} />
+                      <DeltaPill value={-3.2} />
+                      <DeltaPill value={0} />
+                      <DeltaPill label="+5.2pp" tone="positive" direction="up" />
+                      <DeltaPill label="-1.8pp" tone="negative" direction="down" />
+                      <DeltaPill label="Sin cambio" tone="neutral" showIcon={false} />
+                      <DeltaPill value={24} size="sm" />
+                      <DeltaPill value={-12} size="sm" />
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* InlineLegend Demos */}
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                      <div className="space-y-6">
+                        <SectionHeader title="InlineLegend (Horizontal)" />
+                        <Card className="p-6">
+                          <InlineLegend 
+                            items={[
+                              { label: "Promotores", value: "65%", tone: "positive", description: "9-10 pts" },
+                              { label: "Pasivos", value: "20%", tone: "warning", description: "7-8 pts" },
+                              { label: "Detractores", value: "15%", tone: "negative", description: "0-6 pts" },
+                            ]}
+                          />
+                        </Card>
+                      </div>
+
+                      <div className="space-y-6">
+                        <SectionHeader title="InlineLegend (Vertical)" />
+                        <Card className="p-6">
+                          <InlineLegend 
+                            orientation="vertical"
+                            items={[
+                              { label: "Métrica A", value: 85, tone: "primary" },
+                              { label: "Métrica B", value: 72, tone: "info" },
+                              { label: "Métrica C", value: 45, tone: "neutral" },
+                            ]}
+                          />
+                        </Card>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* MetricComparisonFooter Demos */}
+                  <div className="space-y-6">
+                    <SectionHeader title="MetricComparisonFooter" description="Comparativos de alta densidad para footers de cards." />
+                    <Card className="max-w-3xl">
+                      <div className="p-6 pb-0">
+                        <h4 className="text-sm font-bold">Resultado General</h4>
+                        <p className="text-2xl font-bold mt-1">78%</p>
+                      </div>
+                      <MetricComparisonFooter 
+                        className="px-6"
+                        items={[
+                          { label: "VS Periodo Anterior", value: "72%", delta: 6, tone: "positive" },
+                          { label: "VS Benchmark", value: "80%", delta: -2, tone: "negative" },
+                          { label: "VS Meta", value: "75%", deltaLabel: "Superado", tone: "positive" },
+                        ]}
+                      />
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
+            <FormSection
+              title="Response Distribution (Phase 7D.5B)"
+              description="Visualización de distribución de respuestas y escalas de favorabilidad."
+            >
+              <div className="space-y-12">
+                <div className="grid grid-cols-1 gap-12">
+                  {/* Single ResponseStackedBar Demos */}
+                  <div className="space-y-6">
+                    <SectionHeader title="ResponseStackedBar" description="Barra 100% apilada con tonos semánticos." />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <Card className="p-6 space-y-6">
+                        <h4 className="text-sm font-bold">Distribución de Favorabilidad</h4>
+                        <ResponseStackedBar 
+                          showLegend
+                          segments={[
+                            { id: "1", label: "Positivo", value: 65, tone: "positive" },
+                            { id: "2", label: "Neutro", value: 20, tone: "neutral" },
+                            { id: "3", label: "Negativo", value: 15, tone: "negative" },
+                          ]}
+                        />
+                      </Card>
+
+                      <Card className="p-6 space-y-6">
+                        <h4 className="text-sm font-bold">Escala Likert (5 niveles)</h4>
+                        <ResponseStackedBar 
+                          size="sm"
+                          showLegend
+                          segments={[
+                            { id: "l1", label: "Muy desacuerdo", value: 5, tone: "negative" },
+                            { id: "l2", label: "Desacuerdo", value: 10, tone: "warning" },
+                            { id: "l3", label: "Neutro", value: 15, tone: "neutral" },
+                            { id: "l4", label: "Acuerdo", value: 40, tone: "info" },
+                            { id: "l5", label: "Muy acuerdo", value: 30, tone: "positive" },
+                          ]}
+                        />
+                      </Card>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* ResponseStackedBarGroup Demo */}
+                  <div className="space-y-6">
+                    <SectionHeader title="ResponseStackedBarGroup" description="Comparativa de múltiples segmentos o preguntas." />
+                    <Card className="p-8">
+                      <ResponseStackedBarGroup 
+                        title="Clima Organizacional por Segmento"
+                        description="Comparativa de favorabilidad en las dimensiones principales de la encuesta."
+                        items={[
+                          {
+                            id: "q1",
+                            label: "Liderazgo y Dirección",
+                            description: "N=450 respuestas",
+                            segments: [
+                              { id: "q1s1", label: "Favorabilidad", value: 78, tone: "positive" },
+                              { id: "q1s2", label: "Neutralidad", value: 12, tone: "neutral" },
+                              { id: "q1s3", label: "Desfavorabilidad", value: 10, tone: "negative" },
+                            ]
+                          },
+                          {
+                            id: "q2",
+                            label: "Ambiente de Trabajo",
+                            description: "N=445 respuestas",
+                            segments: [
+                              { id: "q2s1", label: "Favorabilidad", value: 62, tone: "positive" },
+                              { id: "q2s2", label: "Neutralidad", value: 25, tone: "neutral" },
+                              { id: "q2s3", label: "Desfavorabilidad", value: 13, tone: "negative" },
+                            ]
+                          },
+                          {
+                            id: "q3",
+                            label: "Compensación y Beneficios",
+                            description: "N=438 respuestas",
+                            segments: [
+                              { id: "q3s1", label: "Favorabilidad", value: 45, tone: "positive" },
+                              { id: "q3s2", label: "Neutralidad", value: 30, tone: "neutral" },
+                              { id: "q3s3", label: "Desfavorabilidad", value: 25, tone: "negative" },
+                            ]
+                          }
+                        ]}
+                      />
+                    </Card>
+                  </div>
+
+                  <Separator />
+
+                  {/* Trend Analytics Demo (Phase 7D.5C) */}
+                  <div className="space-y-6">
+                    <SectionHeader title="Trend Analytics (Phase 7D.5C)" description="Visualización de tendencias temporales de métricas." />
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <TrendMetricLineChart 
+                        title="Tendencia de Satisfacción"
+                        description="Evolución mensual del indicador principal."
+                        series={[
+                          {
+                            id: "s1",
+                            label: "Satisfacción General",
+                            tone: "primary",
+                            data: [
+                              { label: "Ene", value: 4.2 },
+                              { label: "Feb", value: 4.5 },
+                              { label: "Mar", value: 4.3 },
+                              { label: "Abr", value: 4.8 },
+                              { label: "May", value: 4.6 },
+                              { label: "Jun", value: 4.9 },
+                            ]
+                          }
+                        ]}
+                        height={280}
+                      />
+
+                      <TrendMetricLineChart 
+                        title="Comparativa de Participación"
+                        description="Tendencia entre el periodo actual y el anterior."
+                        series={[
+                          {
+                            id: "p1",
+                            label: "Periodo Actual",
+                            tone: "positive",
+                            data: [
+                              { label: "Q1", value: 320 },
+                              { label: "Q2", value: 450 },
+                              { label: "Q3", value: 410 },
+                              { label: "Q4", value: 540 },
+                            ]
+                          },
+                          {
+                            id: "p2",
+                            label: "Periodo Anterior",
+                            tone: "neutral",
+                            data: [
+                              { label: "Q1", value: 280 },
+                              { label: "Q2", value: 310 },
+                              { label: "Q3", value: 350 },
+                              { label: "Q4", value: 390 },
+                            ]
+                          }
+                        ]}
+                        height={280}
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <TrendMetricLineChart 
+                        title="Estado: Cargando"
+                        series={[]}
+                        loading={true}
+                        height={200}
+                      />
+                      <TrendMetricLineChart 
+                        title="Estado: Vacío"
+                        series={[]}
+                        empty={true}
+                        height={200}
+                      />
+                      <TrendMetricLineChart 
+                        title="Estado: Error"
+                        series={[]}
+                        error="Error al conectar con la base de datos de encuestas."
+                        height={200}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Survey Metric Cards Demo (Phase 7D.5D) */}
+                  <div className="space-y-6">
+                    <SectionHeader title="Survey Metric Cards (Phase 7D.5D)" description="Composición de átomos en tarjetas analíticas de alto nivel." />
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                      <SurveyMetricCard 
+                        title="NPS General"
+                        description="Net Promoter Score calculado este mes."
+                        value="72"
+                        subtitle="Puntos de favorabilidad"
+                        delta={8}
+                        deltaTone="positive"
+                        comparisonItems={[
+                          { label: "VS Mes Anterior", value: "64", delta: 8, tone: "positive" },
+                          { label: "VS Benchmark", value: "68", delta: 4, tone: "positive" },
+                        ]}
+                        footer="Próxima actualización en 12 días"
+                      />
+
+                      <SurveyMetricCard 
+                        title="Satisfacción Promedio"
+                        description="Promedio de todas las dimensiones."
+                        value="4.6"
+                        subtitle="/ 5.0 total"
+                        delta={-0.2}
+                        deltaTone="negative"
+                        trendDirection="down"
+                        comparisonItems={[
+                          { label: "VS Q1", value: "4.8", delta: -0.2, tone: "negative" },
+                          { label: "VS Q2", value: "4.5", delta: 0.1, tone: "positive" },
+                        ]}
+                        footer="N=1,240 respondientes"
+                      />
+
+                      <SurveyMetricCard 
+                        title="Tasa de Respuesta"
+                        description="Participación sobre el total invitado."
+                        value="84%"
+                        delta={12}
+                        deltaTone="positive"
+                        comparisonItems={[
+                          { label: "VS 2025", value: "72%", delta: 12, tone: "positive" },
+                        ]}
+                        footer="Meta: 85%"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <FavorabilityDistributionCard 
+                        title="Favorabilidad por Dimensión"
+                        description="Distribución agregada de clima organizacional."
+                        segments={[
+                          { id: "1", label: "Favorable", value: 650, tone: "positive", description: "Respuestas 4 y 5" },
+                          { id: "2", label: "Neutral", value: 200, tone: "neutral", description: "Respuesta 3" },
+                          { id: "3", label: "Desfavorable", value: 150, tone: "negative", description: "Respuestas 1 y 2" },
+                        ]}
+                        total={1000}
+                        showComparisonFooter={true}
+                        comparisonItems={[
+                          { label: "Favorabilidad Q1", value: "62%", delta: 3, tone: "positive" },
+                          { label: "Favorabilidad Q2", value: "65%", delta: 0, tone: "neutral" },
+                        ]}
+                        footer="Basado en 15 preguntas de opción múltiple"
+                      />
+
+                      <ParticipationTrendCard 
+                        title="Tendencia de Participación"
+                        description="Volumen de respuestas recolectadas por periodo."
+                        value="5,240"
+                        subtitle="Total respuestas"
+                        delta={15}
+                        deltaTone="positive"
+                        series={[
+                          {
+                            id: "current",
+                            label: "Actual",
+                            tone: "primary",
+                            data: [
+                              { label: "Semana 1", value: 1200, comparisonValue: 1000 },
+                              { label: "Semana 2", value: 1500, comparisonValue: 1600 },
+                              { label: "Semana 3", value: 2100, comparisonValue: 1900 },
+                              { label: "Semana 4", value: 5240, comparisonValue: 4800 },
+                            ]
+                          }
+                        ]}
+                        footer="Actualizado hace 5 minutos"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                      <SurveyMetricCard 
+                        title="Estado: Cargando"
+                        value="---"
+                        loading={true}
+                      />
+                      <FavorabilityDistributionCard 
+                        title="Estado: Vacío"
+                        segments={[]}
+                        empty={true}
+                      />
+                      <SurveyMetricCard 
+                        title="Estado: Error"
+                        value="ERR"
+                        error="No se pudo recuperar la métrica de participación."
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </FormSection>
+
             <Card>
               <CardHeader>
-                <CardTitle>Próximos Pasos (Fase 6)</CardTitle>
+                <CardTitle>Próximos Pasos (Fase 7D.5E)</CardTitle>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2 text-sm text-text-secondary list-disc pl-4">
-                  <li>Implementación de `TableShell` para visualización de datos.</li>
-                  <li>Patrones de formularios enterprise.</li>
-                  <li>Componentes de feedback y overlays.</li>
+                  <li>QA Integral de Survey Analytics Suite.</li>
+                  <li>Detección de insights automáticos (IA-first ready).</li>
+                  <li>Implementación de Dashboard Layout (Fase 7D.6).</li>
                 </ul>
               </CardContent>
             </Card>

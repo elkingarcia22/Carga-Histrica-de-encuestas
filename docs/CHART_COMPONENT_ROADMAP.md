@@ -25,24 +25,26 @@ Ruta de implementación para la capa de visualización de datos en el starter ki
   - `useId()` + `aria-labelledby` en `<section>`.
   - Estados loading y empty son semánticos para lectores de pantalla.
 
-### Fase 7C.4: Gráficos de Comparación y Tendencia
+### Fase 7C.4: Gráficos de Comparación y Tendencia ✓ IMPLEMENTADA
 - **Acción**: Implementación de gráficos estadísticos base.
 - **Entregables**:
-  - `BarChart`: Vertical, Horizontal y Stacked.
-  - `LineChart`: Simple y Multi-serie.
-  - `AreaChart`: Para tendencias de volumen.
+  - `BarChart` ✓: Vertical y Horizontal (stacking via prop). Props genéricos, datos por array.
+  - `LineChart` ✓: Simple con smooth option. Props genéricos, datos por array.
+  - `AreaChart` ✓: Línea con areaStyle sobria (opacity 0.15). Sin gradientes decorativos.
+- **Estado**: Implementado, pendiente QA final.
 
-### Fase 7C.5: Composición e Indicadores Rápidos
+### Fase 7C.5: Composición e Indicadores Rápidos ✓ COMPLETADA
 - **Acción**: Implementación de gráficos circulares y métricas simples.
 - **Entregables**:
-  - `DonutChart` / `PieChart`.
-  - `Sparkline`: Versión ultra-compacta para tablas o KPIs.
+  - `DonutChart` ✓: Preset pie/donut con variante prop. Soporta datos por array, legend vertical, emphasis styling.
+  - `SparklineChart` ✓: Versión ultra-compacta para tablas o KPIs. Default height 32px, trend prop afecta opacity.
+  - `KpiCard` ✓: Card de indicador con valor text-based, delta con color trend, sparkline opcional, footer.
 
-### Fase 7C.6: Gráficos de Densidad y Especializados
+### Fase 7C.6: Gráficos de Densidad y Especializados ✓ COMPLETADA
 - **Acción**: Implementación de visualizaciones complejas.
 - **Entregables**:
-  - `HeatmapChart`.
-  - `GaugeChart` (si se requiere).
+  - `HeatmapChart` ✓: Preset heatmap para análisis de densidad 2D. Props genéricos (xLabels, yLabels, data), escala de colores resuelta dinámicamente desde tema UBITS, VisualMap discreto con 5 niveles de intensidad. Soporta loading/empty/error, ariaLabel, summary para accesibilidad. Tooltip sobrio con contexto x, y, value.
+  - `GaugeChart` (opcional — no recomendado como core).
 
 ## Arquitectura de Carpetas Futura
 ```
