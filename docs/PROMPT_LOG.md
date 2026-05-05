@@ -1,5 +1,43 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-05-05 18:27 - Fase 8.5B: Icon Wrapper + Registry (Completada)
+- **Acción:** Implementación de la infraestructura técnica del sistema de íconos.
+- **Detalles:**
+  - Creado `src/icons/iconTypes.ts` con tipado estricto.
+  - Creado `src/icons/iconRegistry.ts` con nombres semánticos y fallback a Lucide.
+  - Creado `src/icons/UbitsIcon.tsx` como wrapper central accesible.
+  - Creado `docs/ICON_SYSTEM_IMPLEMENTATION.md` con guías de uso.
+- **Resultado:** Infraestructura lista. Lucide activo como fallback. Iconly bloqueado hasta activos locales.
+
+### 2026-05-05 18:22 - Hotfix 8.5A.1: Icon Governance Alignment (Completada)
+- **Acción:** Resolución de contradicciones en la gobernanza de íconos.
+- **Detalles:**
+  - Aclarado que `shadcn/ui` base no se modifica internamente.
+  - Definido Lucide como fallback técnico y Iconly como brand target.
+  - Establecido prerequisito de activos/licencia antes de migración real.
+  - Prohibida la migración masiva.
+- **Resultado:** Gobernanza alineada. Fase 8.5B permanece bloqueada hasta aprobación de QA de este hotfix.
+
+### 2026-05-05 18:17 - Fase 8.5A: Icon System Integration Intake + Architecture (Completada)
+- **Acción:** Definición estratégica y arquitectónica para la integración de Iconly Pro.
+- **Detalles:**
+  - Creado `ICON_SYSTEM_STRATEGY.md` definiendo el patrón Registry + Wrapper.
+  - Creado `ICONLY_INTEGRATION_DECISION_GATE.md` con matriz de decisión y riesgos.
+  - Creado `ICON_MIGRATION_MAP.md` priorizando la migración por categorías.
+  - Creado `ICON_QA_CHECKLIST.md` para validación técnica y visual.
+- **Resultado:** Fase 8.5A completada (Arquitectura Documental). Fase 8.5B planificada.
+
+### 2026-05-05 18:05 - Fase 8.4: First Screen Build (Cierre Formal)
+
+### 2026-05-05 17:56 - Hotfix 8.4.1: Data-to-UI Binding Integrity (Completada)
+- **Acción:** Corrección de integridad de datos entre mocks y componentes visuales.
+- **Detalles:**
+  - Sincronizados tipos: Reemplazado `semanticTone` por `tone` en `src/mocks/types.ts` y generadores.
+  - Consistencia matemática: `distribution.total` ahora es la suma exacta de los valores de sus segmentos.
+  - Escala de color: Mapeados 5 tonos distintos para escala Likert (Red->Orange->Grey->Blue->Green).
+  - Verificación visual: Corregido error de barras vacías y visual monocromática.
+- **Resultado:** Integración de datos 100% íntegra. Fase 8.4 aprobada con Hotfix 8.4.1.
+
 ### 2026-05-05 16:18 - Fase 8.3: Component Decision Gate + First Screen Intake (Completada)
 - **Acción:** Creación de 7 documentos de gobernanza de Phase 8.3 (Decision Gate + First Screen Intake).
 - **Detalles:**

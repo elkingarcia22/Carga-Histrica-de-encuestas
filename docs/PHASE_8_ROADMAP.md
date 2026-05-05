@@ -16,7 +16,16 @@ Phase 8 bridges the component library (Phases 1-7D, now complete) to production 
 - **8.2:** ✅ Dashboard composition patterns (no dashboards built)
 - **8.3:** ✅ Components decision gate (approval for first screen)
 - **8.4:** ✅ First screen build (First real business screen) - COMPLETADA (Con Hotfix 8.4.1)
-- **8.5:** Second screen build + production readiness
+- **8.5:** Icon System Integration & Production Readiness (En curso)
+  - **8.5A:** ✅ Iconly Pro Intake & Architecture
+  - **Hotfix 8.5A.1:** ✅ Icon Governance Alignment
+  - **8.5B:** ✅ Icon Wrapper & Registry
+  - **8.5C:** UI Atoms Migration Audit (Bloqueada)
+  - **8.5D:** Advanced Components Migration (Bloqueada)
+  - **8.5E:** Production Readiness Review (Bloqueada)
+
+> [!IMPORTANT]
+> **Gobernanza de Íconos**: Cualquier migración real a Iconly Pro requiere un nuevo Decision Gate (Fase 8.5C) y la disponibilidad de activos TSX/SVG locales con licencia verificada. La infraestructura de `src/icons/` está lista pero permanece en modo fallback (Lucide) por defecto.
 
 ---
 

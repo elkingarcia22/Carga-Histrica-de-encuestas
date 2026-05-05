@@ -61,7 +61,35 @@
 - [x] Build exitoso post-hotfix.
 - [x] TypeScript 0 errores post-hotfix.
 
-## Fase 8.5: Second Screen & Production (Pendiente)
+## Fase 8.5A: Icon System Integration Intake (Completada - 2026-05-05)
+- [x] ICON_SYSTEM_STRATEGY.md — Patrón Registry + Wrapper definido.
+- [x] ICONLY_INTEGRATION_DECISION_GATE.md — Convivencia Lucide/Iconly aprobada.
+- [x] ICON_MIGRATION_MAP.md — Prioridades de migración establecidas.
+- [x] ICON_QA_CHECKLIST.md — Framework de QA para íconos creado.
+- [x] Build exitoso sin cambios en src/.
+- [x] Cero dependencias instaladas.
+
+## Hotfix 8.5A.1: Icon Governance Alignment (Completada - 2026-05-05)
+- [x] ICON_MIGRATION_MAP.md corregido (Audit vs Implementation).
+- [x] ICONLY_INTEGRATION_DECISION_GATE.md actualizado con prerequisitos de activos.
+- [x] ICON_SYSTEM_STRATEGY.md clarificado (Fallback vs Brand target).
+- [x] ICON_QA_CHECKLIST.md incluye validación de gobernanza.
+- [x] Contradicción de componentes base resuelta.
+
+## Fase 8.5B: Icon Wrapper & Registry (Completada - 2026-05-05)
+- [x] `src/icons/iconTypes.ts` creado.
+- [x] `src/icons/iconRegistry.ts` creado con fallback Lucide.
+- [x] `src/icons/UbitsIcon.tsx` implementado (Accesible + Token-safe).
+- [x] `docs/ICON_SYSTEM_IMPLEMENTATION.md` creado.
+- [x] Build exitoso, TypeScript 0 errores.
+- [x] Cero dependencias nuevas.
+
+## Fase 8.5C: UI Atoms Migration Audit (Bloqueada)
+- [ ] Decision Gate para migración de átomos
+- [ ] Verificación de activos Iconly Pro (TSX/SVG)
+- [ ] Confirmación de licencia comercial
+
+## Fase 8.6: Second Screen & Production (Pendiente)
 - [ ] Seleccionar second dashboard
 - [ ] Completar intake process
 - [ ] Build usando patterns de 8.4

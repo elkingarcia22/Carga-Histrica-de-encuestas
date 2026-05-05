@@ -152,102 +152,27 @@
 ### Fase 8: Gobernanza & Arquitectura
 
 - [x] **Fase 8.0: Starter Kit Readiness (Completada - 2026-05-05)**
-  - [x] STARTER_KIT_READINESS.md: Readiness checklist (components, patterns, tools)
-  - [x] DASHBOARD_ARCHITECTURE.md: Composición de dashboards, reglas de layout, accesibilidad
-  - [x] MOCK_DATA_STRATEGY.md: Estrategia mock, estructura de carpetas
-  - [x] SCREEN_BUILD_RULES.md: Proceso intake, QA rules, testing requirements
-  - [x] PHASE_8_ROADMAP.md: Timeline 8.0-8.5 con dependencias
+  - [x] STARTER_KIT_READINESS.md: Readiness checklist
+  - [x] DASHBOARD_ARCHITECTURE.md: Patrones de composición
+  - [x] MOCK_DATA_STRATEGY.md: Estrategia mock
+  - [x] SCREEN_BUILD_RULES.md: Proceso intake & QA
+  - [x] PHASE_8_ROADMAP.md: Timeline 8.0-8.5
 
 - [x] **Fase 8.2: Dashboard Shell Patterns (Completada - 2026-05-05)**
-  - [x] DASHBOARD_SHELL_PATTERNS.md (~600 líneas): Estructura de layout, grid responsivo, espaciado, temas, accesibilidad
-  - [x] DASHBOARD_LAYOUT_RECIPES.md (~700 líneas): 7 plantillas reutilizables (KPI Row, Two-Column, Full-Width+Panel, Survey Analytics, Bento, Table+Filters, Gallery)
-  - [x] DASHBOARD_STATE_PATTERNS.md (~600 líneas): 7 patrones de estado (Loading, Loaded, Empty, Error, Partial, Filtered Empty, Permission/Stale)
-  - [x] DASHBOARD_QA_RULES.md (~1000 líneas): Marco QA multi-tier (14 categorías, blocking criteria para Phase 8.3)
-  - [x] Actualizado DASHBOARD_ARCHITECTURE.md con referencias a nuevos documentos
-  - [x] Actualizado PHASE_8_ROADMAP.md con descripciones completas
-  - [x] Actualizado QA_CHECKLIST.md
-  - [x] npm run build exitoso, TypeScript 0 errores
+  - [x] Estructura de layout, recipes de grids, patrones de estado y QA rules.
 
-- [ ] **Fase 8.1: Mock Data Layer (Pendiente)**
-  - [ ] Crear src/mocks/ folder structure
-  - [ ] Implementar generators (survey, chart, dashboard data)
-  - [ ] Implementar transformers (filtros, paginación)
-  - [ ] Crear tipos base y documentación
-  - [ ] Tests 80%+
+- [x] **Fase 8.3: Components Decision Gate (Completada - 2026-05-05)**
+  - [x] Intake & Component Map para Survey Analytics Dashboard.
 
-- [ ] **Fase 8.3: Components Decision Gate (Pendiente)**
-  - [ ] Seleccionar first dashboard
-  - [ ] Completar intake document
-  - [ ] Mapear componentes disponibles
-  - [ ] Design review + approval
-  - [ ] Prerequisito: Phase 8.2 (✅) + Phase 8.1 (⏳)
+- [x] **Fase 8.4: First Screen Build (Completada - 2026-05-05)**
+  - [x] Survey Analytics Dashboard implementado con Hotfix 8.4.1.
 
-- [ ] **Fase 8.4: First Screen Build (Pendiente)**
-  - [ ] Implementar screen (<300 líneas)
-  - [ ] Implementar sections (<200 líneas cada)
-  - [ ] Conectar a mock layer
-  - [ ] URL state para filters
-  - [ ] Loading/empty/error states
-  - [ ] Responsive testing (375, 768, 1440px)
-  - [ ] Dark mode verified
-  - [ ] WCAG AA validated
-  - [ ] 80%+ test coverage
+- [ ] **Fase 8.5: Icon System & Production (En curso)**
+  - [x] **8.5A**: Iconly Pro Intake & Architecture (Completada)
+  - [x] **Hotfix 8.5A.1**: Icon Governance Alignment (Completada)
+  - [x] **8.5B**: Icon Wrapper & Registry (Completada)
+  - [ ] **8.5C**: UI Atoms Migration Audit (Siguiente)
+  - [ ] **8.5D**: Advanced Components Migration
+  - [ ] **8.5E**: Production Readiness Review
 
-- [ ] **Fase 8.5: Second Screen & Production (Pendiente)**
-  - [ ] Validar patterns reutilizables
-  - [ ] Production readiness review
-  - [x] Build exitoso, TypeScript 0 errores
-  - [x] Documentación completa (README, examples, STARTER_KIT_READINESS.md)
-  - [x] **Hotfix 7D.6.1:** CSS design token compliance (text-white, backdrop-blur removals)
-
-### Fase 8: Gobernanza & Arquitectura (En curso)
-- [x] **Fase 8.0: Starter Kit Readiness & Dashboard Architecture (Completada)**
-  - [x] STARTER_KIT_READINESS.md — Estado del kit, métricas de calidad, readiness checklist
-  - [x] DASHBOARD_ARCHITECTURE.md — Patrones de composición, reglas de componentes, state management
-  - [x] MOCK_DATA_STRATEGY.md — Estructura src/mocks/, generadores, transformadores
-  - [x] SCREEN_BUILD_RULES.md — Proceso de intake, reglas obligatorias, checklist QA
-  - [x] PHASE_8_ROADMAP.md — Desglose de fases 8.0-8.5 con timelines y success criteria
-  - [x] Actualización de ARCHITECTURE.md con gobernanza Phase 8
-
-- [ ] **Fase 8.1: Mock Data Layer (Planificada)**
-  - [ ] Crear src/mocks/ folder structure
-  - [ ] Implementar generators (survey, chart, user)
-  - [ ] Implementar transformers (filters, pagination)
-  - [ ] Crear central export con dashboard queries
-  - [ ] Tests unitarios + integración
-
-- [ ] **Fase 8.2: Dashboard Shell Patterns (Planificada)**
-  - [ ] Documentar patrones de composición (sin código)
-  - [ ] Definir responsive breakpoints
-  - [ ] Especificar layout grids estándares
-  - [ ] Revisar patrones de accesibilidad
-
-- [ ] **Fase 8.3: Components Decision Gate (Planificada)**
-  - [ ] Seleccionar first business dashboard
-  - [ ] Completar intake document
-  - [ ] Verificar componentes disponibles
-  - [ ] Diseño review + aprobación stakeholder
-
-- [ ] **Fase 8.4: First Screen Build (Planificada)**
-  - [ ] Implementar usando governance patterns
-  - [ ] Assembly: MetricSection + DistributionSection + TimelineSection
-  - [ ] URL state para filters
-  - [ ] QA validation (accessibility, dark mode, responsive)
-  - [ ] Code review + merge
-
-- [ ] **Fase 8.5: Second Screen Build & Production Readiness (Planificada)**
-  - [ ] Construir segundo dashboard
-  - [ ] Validar patrones reusables
-  - [ ] Verification: Ready for Phase 9 (API integration)
-
-## Próximos Hitos
-- **Fase 8.1 - Mock Data Layer** (~1-2 días): Crear infraestructura de datos mock
-- **Fase 8.4 - First Screen Build** (~3-5 días): Construir primer dashboard real
-- **Fase 9 - API Integration** (Futuro): Conectar APIs reales en lugar de mocks
-- **Fase 10 - Production** (Futuro): Deploy y go-live
-
-## Estado Actual
-- ✅ **Fase 7D COMPLETA:** 47 componentes avanzados + 39 base = 86 components ready
-- ✅ **Quality Metrics:** Build pass, TypeScript 0 errors, WCAG 2.1 AA, Dark mode full support
-- ✅ **Governance Defined:** Architecture, mock strategy, screen rules documented
-- ⏳ **Phase 8 In Progress:** Mock layer architecture next
+- [ ] **Fase 9: API Integration (Pendiente)**
