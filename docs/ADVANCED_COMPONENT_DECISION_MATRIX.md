@@ -440,3 +440,52 @@ src/components/
 - [ ] Test coverage >= 80%
 - [ ] Documentación completa (README, examples)
 - [ ] Integration con Form, FilterBar, etc.
+
+## Fase 8.7: Advanced Interaction & AI Components (Nueva Suite)
+
+| # | Componente | Tipo | Prioridad | Base sugerida | Riesgo | Estado |
+|---|---|---|---|---|---|---|
+| 40 | Chip | UBITS Wrapper | 🔴 Alta | Badge + Button | Bajo | ✅ 8.7B |
+| 41 | IA-Button | UBITS Wrapper | 🔴 Alta | Button + Sparkles | Bajo | ✅ 8.7B |
+| 42 | IA Loader | Custom UBITS | 🔴 Alta | SVG / Skeleton | Bajo | ✅ 8.7B |
+| 43 | Save Indicator | Custom UBITS | 🔴 Alta | Badge / Alert | Bajo | ✅ 8.7B |
+| 44 | Stepper | Custom UBITS | 🟡 Media | Button / Card | Medio | ⏳ 8.7C |
+| 45 | Coachmark | Composed UBITS | 🟡 Media | Popover / Portal | Medio | ⏳ 8.7C |
+| 46 | AI Panel V2 | Composed UBITS | 🟡 Media | Card / Tabs | Medio | ⏳ 8.7C |
+| 47 | Video Player | Custom UBITS | 🟡 Media | HTML5 `<video>` | Medio | ⏳ 8.7D |
+| 48 | Audio Player | Custom UBITS | 🟡 Media | HTML5 `<audio>` | Medio | ⏳ 8.7D |
+| 49 | Rich Text Editor | **Bloqueado** | 🟢 Baja | N/A | **Alto** | 🔒 8.7E |
+
+**Archivos conceptuales:**
+```
+src/components/ai/
+├─ IAButton.tsx
+├─ IALoader.tsx
+└─ AIPanel.tsx (V2)
+
+src/components/utility/
+├─ Chip.tsx
+└─ SaveIndicator.tsx
+
+src/components/navigation/
+└─ Stepper.tsx
+
+src/components/overlays/
+└─ Coachmark.tsx
+
+src/components/media/
+├─ VideoPlayer.tsx
+├─ AudioPlayer.tsx
+```
+
+**Restricciones Globales 8.7:**
+- ❌ No dependencias externas pesadas (Tiptap, Plyr, etc.)
+- ❌ No gradientes decorativos fuera de la identidad IA
+- ✅ Uso estricto de tokens de IA (`color-ai-*`)
+- ✅ Accesibilidad WCAG 2.1 (ARIA, focus trap en Coachmarks)
+- ✅ Media players basados en elementos nativos HTML5
+- [ ] Dark/light mode compatibility
+- [ ] No hardcoded colors (usar tokens CSS)
+- [ ] Build y lint sin errores
+- [ ] Test coverage >= 80%
+- [ ] Documentación completa (README, examples)

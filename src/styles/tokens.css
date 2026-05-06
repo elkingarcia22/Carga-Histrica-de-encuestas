@@ -30,6 +30,11 @@
   /* AI Features */
   --color-ai-bg: #f3f2ff;
   --color-ai-border: #97a5fd;
+  --color-ai-gradient-start: #2d5cf7;
+  --color-ai-gradient-end: #e11d48;
+  --color-ai-gradient-start-hsl: 226 92% 57%;
+  --color-ai-gradient-end-hsl: 347 77% 50%;
+  --shadow-ai-premium: 0 4px 15px rgba(45, 92, 247, 0.3), 0 2px 5px rgba(225, 29, 72, 0.2);
   
   /* Radius — UBITS app uses generous rounding */
   --radius-sm: 10px;
@@ -52,6 +57,7 @@
   --color-surface-hsl: 0 0% 100%;
   --color-text-primary-hsl: 214 17% 23%;
   --color-text-secondary-hsl: 215 9% 40%;
+  --color-text-inverse-hsl: 0 0% 100%;
   --color-border-hsl: 220 5% 83%;
   --color-negative-hsl: 357 80% 56%;
   --color-positive-hsl: 116 53% 37%;
@@ -59,5 +65,5 @@
   --color-info-hsl: 225 83% 61%;
   --color-surface-muted-hsl: 222 100% 96%;
   --color-surface-subtle-hsl: 225 100% 98%;
-  --color-surface-nav-hsl: 222 39% 11%;
+  --color-surface-nav-hsl: 222 47% 11%;
 }

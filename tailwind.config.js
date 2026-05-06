@@ -46,10 +46,8 @@ export default {
           DEFAULT: "hsl(var(--card) / <alpha-value>)",
           foreground: "hsl(var(--card-foreground) / <alpha-value>)",
         },
-        nav: {
-          DEFAULT: "hsl(var(--nav) / <alpha-value>)",
-          foreground: "hsl(var(--nav-foreground) / <alpha-value>)",
-        },
+        nav: "hsl(var(--nav) / <alpha-value>)",
+        "nav-foreground": "hsl(var(--nav-foreground) / <alpha-value>)",
         
         /* UBITS Semantic Design System Utilities (Legacy/Direct HEX) */
         brand: {

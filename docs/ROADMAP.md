@@ -177,6 +177,12 @@
   - [x] **Fase 8.6B:** ✅ Playground Shell Architecture (Completada)
   - [x] **Fase 8.6C:** ✅ Playground Shell Navigation Components (Completada)
   - [x] **Hotfix 8.6C.1:** ✅ Playground Shell Demo Stabilization (Completada - 2026-05-06)
-  - [ ] **Fase 8.6D:** Home/List Template Patterns (Siguiente)
+  - [ ] **Fase 8.7: Advanced Interaction & AI Components (En curso)**
+  - [x] **8.7A**: ✅ Advanced Interaction & AI Decision Matrix (Finalizado - 2026-05-06)
+  - [x] **QA 8.7A**: ✅ Aprobado (Gobernanza documental certificada)
+  - [x] **8.7B**: ✅ Lightweight Status & AI Controls (Implementada - 2026-05-06)
+  - [ ] **8.7C**: Guided Interaction Components (Pendiente)
+  - [ ] **8.7D**: Media Players (Pendiente)
+  - [ ] **8.7E**: Rich Text Decision Gate (Bloqueado)
 
 - [ ] **Fase 9: API Integration (Pendiente)**

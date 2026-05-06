@@ -23,8 +23,9 @@ src/
 │  ├─ upload/          # [7D.2] FileUpload, UploadZone, FilePreview, AttachmentList, UploadProgress, ImportCsvPanel (Data Import)
 │  ├─ selection/       # [7D.3] CardSelection, RadioCardGroup, CheckboxCardGroup, SelectableCard, OptionTile, SegmentedControl (Visual Selection Suite)
 │  ├─ media/           # [7D.4] UbitsCarousel, Gallery, ImageGrid, PreviewCard, MediaPreview, EmptyGalleryState (Media Suite)
-│  └─ survey-analytics/# [7D.5] DeltaPill, InlineLegend, MetricComparisonFooter, ResponseStackedBar, ResponseStackedBarGroup, TrendMetricLineChart, SurveyMetricCard, FavorabilityDistributionCard, ParticipationTrendCard (Survey Analytics Suite)
-├─ examples/
+│  ├─ survey-analytics/# [7D.5] DeltaPill, InlineLegend, MetricComparisonFooter, ResponseStackedBar, ResponseStackedBarGroup, TrendMetricLineChart, SurveyMetricCard, FavorabilityDistributionCard, ParticipationTrendCard (Survey Analytics Suite)
+│  ├─ ai-interaction/  # [8.7B] Chip, AIButton, AILoader, SaveIndicator (Lightweight AI Suite)
+│  ├─ examples/
 │  └─ forms/           # Ejemplos de integración técnica
 ├─ styles/
 │  ├─ tokens.css       # Variables de diseño (UBITS + shadcn)

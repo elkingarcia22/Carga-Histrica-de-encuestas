@@ -79,3 +79,4 @@
 - **Fase 7B.5:** Feedback & Status (Alert, Skeleton, Progress, Sonner) integrados.
 - **Fase 7C:** Charts suite (BarChart, LineChart, AreaChart, DonutChart, SparklineChart, KpiCard, HeatmapChart) completada.
 - **Fase 7D.0:** 29 componentes avanzados faltantes documentados en `ADVANCED_COMPONENT_DECISION_MATRIX.md` (Fase 7D.1-7D.6 planificadas).
+- **Fase 8.7A:** Suite de interacción avanzada e IA documentada (Chip, IA-Button, AI Panel V2, Media Players).

@@ -1,5 +1,21 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-05-06 - Fase 8.7B: Lightweight Status & AI Controls (Implementada)
+- **Status**: Finalizado
+- **Objetivo**: Implementar Chip, AIButton, AILoader y SaveIndicator.
+- **Resultado**: 4 componentes TSX + Tipos + Demo técnica en App.tsx + Documentación técnica.
+- **Gobernanza**: 0 dependencias nuevas, 0 HEX, 0 `text-white`, 0 `any`.
+- **Siguiente**: QA Fase 8.7B.
+
+### 2026-05-06 - Fase 8.7A: Advanced Interaction & AI Decision Matrix (Finalizado)
+- **Status**: Finalizado
+- **Objetivo**: Definir la estrategia técnica para componentes de IA, interacción avanzada y media.
+- **Resultado**: 6 documentos de arquitectura creados. Roadmap de 5 etapas definido.
+- **QA**: Aprobado el 2026-05-06. Certificación documental 100% íntegra.
+- **Nota**: Ajuste visual en Sidebar (globals.css) registrado como mantenimiento heredado, no funcional de 8.7.
+- **Gobernanza**: 0 cambios en código para la suite, 0 dependencias nuevas. Rich Text Editor bloqueado.
+- **Siguiente**: Fase 8.7B · Lightweight Status & AI Controls (Autorizada).
+
 ### 2026-05-06 - Hotfix 8.6C.1: Playground Shell Demo Stabilization (Completada)
 - **Status**: Finalizado
 - **Objetivo**: Estabilizar y auditar el Shell Demo (Sidebar + SubNav) eliminando deuda técnica visual y de tipos.

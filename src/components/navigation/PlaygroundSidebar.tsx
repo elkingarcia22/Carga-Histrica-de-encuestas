@@ -80,7 +80,7 @@ export const PlaygroundSidebar: React.FC<SidebarProps> = ({
     <TooltipProvider>
       <aside
         className={cn(
-          "fixed left-6 top-4 bottom-4 w-20 bg-nav flex flex-col items-center py-6 rounded-[32px] shadow-2xl z-50 border border-white/5",
+          "fixed left-6 top-4 bottom-4 w-20 ubits-premium-sidebar-rail flex flex-col items-center py-6 rounded-[32px] shadow-2xl z-50 border border-white/5",
           className
         )}
       >

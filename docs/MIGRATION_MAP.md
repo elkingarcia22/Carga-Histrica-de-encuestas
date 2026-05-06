@@ -89,6 +89,13 @@
 - **8.5C**: Icon Migration Decision Gate (✅ 2026-05-06)
 - **8.5D**: Icon Assets Preparation (Bloqueada - Requiere Assets)
 
+### Fase 8.7: Advanced Interaction & AI Components (✅ 8.7A)
+- **8.7A**: ✅ Advanced Interaction & AI Decision Matrix (Cerrado 2026-05-06)
+- **Chip, AI-Button, IA Loader, Save Indicator**: ✅ Listo (8.7B)
+- **Stepper, Coachmark, AI Panel V2**: ⏳ Diferido (8.7C)
+- **Video Player, Audio Player**: ⏳ Diferido (8.7D)
+- **Rich Text Editor**: 🔒 BLOQUEADO (8.7E)
+
 ## Consideraciones Críticas
 1. **Gobernanza de Íconos**: Prohibido el reemplazo masivo. Uso obligatorio de `<UbitsIcon />`.
 2. **shadcn/ui base**: Intocable internamente. Lucide permanece como fallback.
