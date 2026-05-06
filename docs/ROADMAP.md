@@ -171,8 +171,11 @@
   - [x] **8.5A**: Iconly Pro Intake & Architecture (Completada)
   - [x] **Hotfix 8.5A.1**: Icon Governance Alignment (Completada)
   - [x] **8.5B**: Icon Wrapper & Registry (Completada)
-  - [ ] **8.5C**: UI Atoms Migration Audit (Siguiente)
-  - [ ] **8.5D**: Advanced Components Migration
-  - [ ] **8.5E**: Production Readiness Review
+  - [x] **Fase 8.5C:** ✅ Icon Migration Decision Gate (Finalizado)
+  - [ ] **Fase 8.5D:** Icon Assets Preparation (Bloqueado)
+  - [x] **Fase 8.6A:** ✅ UBITS Template Component Gap Audit (Ajustado por Hotfix 8.6A.1)
+  - [x] **Fase 8.6B:** ✅ Playground Shell Architecture (Completada)
+  - [x] **Fase 8.6C:** ✅ Playground Shell Navigation Components (Finalizado - 2026-05-06)
+  - [ ] **Fase 8.6D:** Home/List Template Patterns (Siguiente)
 
 - [ ] **Fase 9: API Integration (Pendiente)**

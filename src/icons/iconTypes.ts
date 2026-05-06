@@ -47,7 +47,22 @@ export type IconName =
   | 'arrowRight'
   | 'close'
   | 'check'
-  | 'notification';
+  | 'notification'
+  | 'home'
+  | 'building'
+  | 'bolt'
+  | 'award'
+  | 'palette'
+  | 'code'
+  | 'help'
+  | 'graduation'
+  | 'sparkles'
+  | 'layers'
+  | 'sun'
+  | 'moon'
+  | 'vacancies'
+  | 'templates'
+  | 'logout';
 
 export interface UbitsIconProps {
   /** The semantic name of the icon from the registry */

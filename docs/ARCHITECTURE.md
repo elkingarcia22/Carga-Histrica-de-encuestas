@@ -148,13 +148,17 @@ Governance documents for first dashboard build:
 - `FIRST_SCREEN_QA_PLAN.md` — 9-tier QA strategy (40+ scenarios)
 - `FIRST_SCREEN_BUILD_PROMPT.md` — Phase 8.4 build authorization
 
-**Fase 8.5: Icon System & Production Readiness** (✅ 8.5A/B - 2026-05-05)
+**Fase 8.5: Icon System & Production Readiness** (✅ 8.5A/B/C - 2026-05-06)
 
-1. **Icon Architecture (8.5A):** Estrategia de convivencia híbrida (Lucide fallback + Iconly target).
-2. **Icons Infrastructure (8.5B):**
-   - Patrón Registry & Wrapper implementado en `src/icons/`.
-   - Abstracción total de proveedores. Consumo vía nombres semánticos.
-   - Soporte nativo para tokens de diseño (`primary`, `success`, `destructive`, etc.).
-   - Accesibilidad integrada (decorative vs meaningful).
+### Icon System Architecture
+- **Core**: Lucide React (Mandatory for shadcn/ui base).
+- **Brand**: Iconly Pro (Target for business logic/dashboards).
+- **Pattern**: Registry + Wrapper (`UbitsIcon`).
+- **Status (2026-05-06)**: Infrastructure ready. Real Iconly migration is **BLOCKED** until assets/license delivery. Lucide acts as the current and primary technical fallback.
 
-**Phase 8 Timeline:** 8.0 (✅) → 8.1 (✅) → 8.2 (✅) → 8.3 (✅) → 8.4 (✅) → 8.5 (✅ 8.5A/B) → 9.0 (API)
+---
+
+*Documento de arquitectura UBITS v3.0.0*
+*Última revisión: 2026-05-06*
+
+**Phase 8 Timeline:** 8.0 (✅) → 8.1 (✅) → 8.2 (✅) → 8.3 (✅) → 8.4 (✅) → 8.5 (✅) → 8.6 (8.6C ✅) → 9.0 (API)

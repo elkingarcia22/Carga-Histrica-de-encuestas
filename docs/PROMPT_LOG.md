@@ -1,5 +1,28 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-05-06 - Fase 8.6C: Navigation Shell Components (Completada)
+- **Status**: Finalizado
+- **Objetivo**: Construir componentes base de navegación (Sidebar, SubNav, TabBar).
+- **Resultado**: 4 componentes TSX + Tipos + Demo técnica en App.tsx.
+- **Gobernanza**: 0 rutas reales, 0 APIs, 0 HEX. Uso estricto de tokens.
+- **Siguiente**: Fase 8.6D · Home/List Template Patterns.
+
+### 2026-05-06 - Fase 8.6B: Playground Shell Architecture (Completada)
+- **Status**: Finalizado
+- **Objetivo**: Definir la arquitectura técnica y contratos del App Shell reusable.
+- **Resultado**: 6 documentos de arquitectura creados (Slots, Navigation, Responsive, Theme, QA).
+- **Gobernanza**: 0 cambios en código. Arquitectura 100% agnóstica.
+- **Siguiente**: Fase 8.6C · Navigation Shell Components.
+
+### 2026-05-06 - Hotfix 8.6A.1: Playground Shell Scope Alignment (Completada)
+- **Status**: Finalizado
+- **Objetivo**: Reenfocar la auditoría de `template-ubits` hacia la arquitectura de Playground Shell.
+- **Resultado**: Documentación corregida para priorizar Sidebar, SubNav, Responsive TabBar y Home Templates.
+- **Gobernanza**: 0 cambios en código. Foco en arquitectura reutilizable.
+- **Siguiente**: Fase 8.6B · Playground Shell Architecture.
+
+### 2026-05-06 - Fase 8.6A: UBITS Template Component Gap Audit (Ajustada)
+
 ### 2026-05-05 18:27 - Fase 8.5B: Icon Wrapper + Registry (Completada)
 - **Acción:** Implementación de la infraestructura técnica del sistema de íconos.
 - **Detalles:**

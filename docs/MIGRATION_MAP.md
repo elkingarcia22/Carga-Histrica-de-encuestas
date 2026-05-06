@@ -76,14 +76,27 @@
 - **Hotfix 8.5A.1**: Icon Governance Alignment (✅ 2026-05-05)
 - **8.5B**: Icon Wrapper & Registry (✅ 2026-05-05)
 - **Status:** Infraestructura técnica de íconos completada. Wrapper y Registry operativos con fallback Lucide.
-- **8.5C**: UI Atoms Migration Audit (Bloqueada - Requiere Decision Gate)
+- **8.6A Audit: Template UBITS Gap Analysis**
+- **Status**: ✅ Ajustado por Hotfix 8.6A.1
+- **Foco**: Playground Shell Architecture (Sidebar, SubNav, Responsive, Home Templates).
+- **Acción**: Seguir el Roadmap corregido en `TEMPLATE_UBITS_MIGRATION_ROADMAP.md`.
+- **8.6B Architecture: Playground Shell Slot Contracts**
+- **Status**: ✅ Finalizado
+- **8.6C Navigation: Shell Components (Sidebar, SubNav, TabBar)**
+- **Status**: ✅ Finalizado
+- **Acción**: Proceder con Home/List Template en 8.6D.
+
+- **8.5C**: Icon Migration Decision Gate (✅ 2026-05-06)
+- **8.5D**: Icon Assets Preparation (Bloqueada - Requiere Assets)
 
 ## Consideraciones Críticas
 1. **Gobernanza de Íconos**: Prohibido el reemplazo masivo. Uso obligatorio de `<UbitsIcon />`.
 2. **shadcn/ui base**: Intocable internamente. Lucide permanece como fallback.
-3. **0 HEX en TSX**: Todos los componentes deben usar variables CSS de Tailwind.
-4. **Consistencia Visual**: Respetar los tokens definidos en `tokens.css`.
-5. **Puntualidad**: Migrar solo lo necesario para desbloquear pantallas.
+3. No se permite la migración directa de código HTML/CSS/JS.
+4. Todos los componentes deben ser re-interpretados usando tokens UBITS y lógica de React.
 
 > [!CAUTION]
-> La Fase 8.5C no puede iniciarse sin confirmación de licencia y activos Iconly Pro oficiales en formato TSX/SVG.
+> La migración real en Fase 8.5D está **BLOQUEADA** hasta que se entreguen los activos Iconly Pro en formato TSX/SVG para los 5 candidatos seleccionados.
+
+---
+*Documento actualizado por el equipo de Arquitectura Frontend.*

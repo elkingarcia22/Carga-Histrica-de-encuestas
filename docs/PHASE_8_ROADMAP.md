@@ -20,12 +20,12 @@ Phase 8 bridges the component library (Phases 1-7D, now complete) to production 
   - **8.5A:** ✅ Iconly Pro Intake & Architecture
   - **Hotfix 8.5A.1:** ✅ Icon Governance Alignment
   - **8.5B:** ✅ Icon Wrapper & Registry
-  - **8.5C:** UI Atoms Migration Audit (Bloqueada)
-  - **8.5D:** Advanced Components Migration (Bloqueada)
+  - **8.5C:** ✅ Icon Migration Decision Gate (Finalizado)
+  - **8.5D:** Icon Assets Preparation (Bloqueado)
   - **8.5E:** Production Readiness Review (Bloqueada)
 
 > [!IMPORTANT]
-> **Gobernanza de Íconos**: Cualquier migración real a Iconly Pro requiere un nuevo Decision Gate (Fase 8.5C) y la disponibilidad de activos TSX/SVG locales con licencia verificada. La infraestructura de `src/icons/` está lista pero permanece en modo fallback (Lucide) por defecto.
+> **Gobernanza de Íconos**: Fase 8.5C CERRADA. La migración real está **BLOQUEADA** y pausada hasta la provisión de activos TSX/SVG locales con licencia comercial. Se prohíbe el uso de CDNs o librerías externas como `react-iconly` en esta etapa.
 
 ---
 

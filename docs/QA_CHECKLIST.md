@@ -84,14 +84,37 @@
 - [x] Build exitoso, TypeScript 0 errores.
 - [x] Cero dependencias nuevas.
 
-## Fase 8.5C: UI Atoms Migration Audit (Bloqueada)
-- [ ] Decision Gate para migración de átomos
-- [ ] Verificación de activos Iconly Pro (TSX/SVG)
-- [ ] Confirmación de licencia comercial
+## Fase 8.5C: Icon Migration Decision Gate (Finalizado - 2026-05-06)
+- [x] `docs/ICON_MIGRATION_DECISION_GATE_8_5C.md` cerrado.
+- [x] `docs/ICON_FIRST_MIGRATION_CANDIDATES.md` validado (5 candidatos).
+- [x] `docs/ICON_ASSET_REQUIREMENTS.md` verificado.
+- [x] `docs/ICON_MIGRATION_RISK_ASSESSMENT.md` validado.
+- [ ] **8.5D**: Icon Assets Preparation (Bloqueado)
 
-## Fase 8.6: Second Screen & Production (Pendiente)
-- [ ] Seleccionar second dashboard
-- [ ] Completar intake process
-- [ ] Build usando patterns de 8.4
-- [ ] Validar patterns reusables
-- [ ] Production readiness review
+## Fase 8.6A: UBITS Template Component Gap Audit (Ajustado por Hotfix 8.6A.1)
+- [x] Comparativa técnica Playground Shell vs repo legacy.
+- [x] Identificación de arquitectura de slots para el shell.
+- [x] Definición de templates de Home reusables.
+- [x] Exclusión de componentes específicos de producto (LMS Creator, etc.).
+- [x] Roadmap 8.6B-8.6F definido en `TEMPLATE_UBITS_MIGRATION_ROADMAP.md`.
+- [x] Cero cambios en `src/components` (Gobernanza cumplida).
+
+## Fase 8.6B: Playground Shell Architecture (Finalizado - 2026-05-06)
+- [x] Definición de arquitectura de Slots (`PLAYGROUND_SHELL_ARCHITECTURE.md`).
+- [x] Contratos conceptuales de Slots (`PLAYGROUND_SHELL_SLOT_CONTRACTS.md`).
+- [x] Contrato de navegación Admin/Collab (`PLAYGROUND_SHELL_NAVIGATION_CONTRACT.md`).
+- [x] Comportamiento responsive definido (`PLAYGROUND_SHELL_RESPONSIVE_BEHAVIOR.md`).
+- [x] Reglas de theming y diseño visual (`PLAYGROUND_SHELL_THEME_RULES.md`).
+- [x] Plan de QA para futuras fases (`PLAYGROUND_SHELL_QA_PLAN.md`).
+- [x] Cero código generado (Documentación pura).
+
+## Fase 8.6C: Navigation Shell Components (Finalizado - 2026-05-06)
+- [x] Tipos seguros definidos (`navigationTypes.ts`).
+- [x] Componente `PlaygroundSidebar` (Full/Rail) implementado.
+- [x] Componente `UbitsSubNav` (Horizontal) implementado.
+- [x] Componente `UbitsMobileTabBar` implementado.
+- [x] Demo técnica integrada en `App.tsx`.
+- [x] Cero uso de HEX hardcoded y 0 rutas reales.
+- [x] Build exitoso y TS 0 errores.
+
+## Fase 8.6D: Home/List Template Patterns (Pendiente)

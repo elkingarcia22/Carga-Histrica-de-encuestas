@@ -141,7 +141,7 @@ export const DatePicker = React.forwardRef<
             mode="single"
             selected={isValidValue ? value : undefined}
             onSelect={handleDateSelect}
-            disabled={(date) => {
+            disabled={(date: any) => {
               // Disable dates outside min/max range
               if (minDate && date < minDate) return true
               if (maxDate && date > maxDate) return true
