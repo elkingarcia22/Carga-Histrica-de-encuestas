@@ -1,11 +1,13 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
-### 2026-05-06 - Fase 8.7B: Lightweight Status & AI Controls (Implementada)
-- **Status**: Finalizado
+### 2026-05-06 - Fase 8.7B: Lightweight Status & AI Controls (✅ QA Aprobado)
+- **Status**: ✅ Finalizado & Sincronizado
 - **Objetivo**: Implementar Chip, AIButton, AILoader y SaveIndicator.
-- **Resultado**: 4 componentes TSX + Tipos + Demo técnica en App.tsx + Documentación técnica.
-- **Gobernanza**: 0 dependencias nuevas, 0 HEX, 0 `text-white`, 0 `any`.
-- **Siguiente**: QA Fase 8.7B.
+- **Resultado**: Suite de 4 componentes atómicos con identidad visual **"AI Spark"** unificada.
+- **QA**: Aprobado el 2026-05-06. Corregida visibilidad de texto/iconos y eliminado uso de `text-white`.
+- **Gobernanza**: 0 dependencias nuevas, 0 HEX, 0 `text-white` (reemplazado por `text-primary-foreground`), 0 `any`.
+- **Sincronización**: Local y GitHub (Commit 2baeb7d).
+- **Siguiente**: Cierre formal Fase 8.7B.
 
 ### 2026-05-06 - Fase 8.7A: Advanced Interaction & AI Decision Matrix (Finalizado)
 - **Status**: Finalizado
