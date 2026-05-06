@@ -23,7 +23,7 @@ interface SidebarProps {
 
 /**
  * UBITS PREMIUM RAIL SIDEBAR
- * Restored original icon colors with high-contrast safety for all modes.
+ * Refined icon colors using white/40 to match footer aesthetics and ensure visibility in all modes.
  */
 export const PlaygroundSidebar: React.FC<SidebarProps> = ({
   items,
@@ -50,15 +50,16 @@ export const PlaygroundSidebar: React.FC<SidebarProps> = ({
               "relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 group outline-none",
               isActive 
                 ? "bg-[#0C5BEF] text-white shadow-lg shadow-brand/20 scale-110" 
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                : "text-white/40 hover:bg-white/10 hover:text-white"
             )}
           >
             <UbitsIcon 
               name={item.icon as any} 
               size="sm" 
+              tone="inverse"
               className={cn(
                 "transition-transform duration-300",
-                isActive ? "scale-110 text-white" : "group-hover:scale-110 text-slate-400 group-hover:text-white"
+                isActive ? "scale-110 opacity-100" : "opacity-100 group-hover:scale-110"
               )} 
             />
             {isActive && (
