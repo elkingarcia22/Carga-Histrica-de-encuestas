@@ -56,7 +56,7 @@ export const PlaygroundShellDemo: React.FC = () => {
       <PlaygroundSidebar 
         role={role === "creator" || role === "recruitment" ? "shared" : role}
         activeItemId={activeSidebarId}
-        onItemSelect={(id) => {
+        onItemSelect={(id: string) => {
           setActiveSidebarId(id);
           // Reset tab to first one on section change
           setActiveTabId(""); 

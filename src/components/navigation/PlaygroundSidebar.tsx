@@ -1,96 +1,132 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { UbitsIcon } from "@/icons";
-import type { SidebarProps, NavigationItem } from "./navigationTypes";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
+import type { NavigationItem, NavigationSection } from "./navigationTypes";
+
+interface SidebarProps {
+  items: NavigationSection[];
+  activeId?: string;
+  onItemClick?: (id: string) => void;
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
+  className?: string;
+  role?: string;
+  activeItemId?: string;
+  onItemSelect?: (id: string) => void;
+}
 
 /**
- * UBITS PREMIUM PLAYGROUND SIDEBAR
- * Consistent Visual Identity: Using the Deep Navy/Slate background for both modes.
- * Background: #111827 (Deep Professional Navy) for both Light and Dark.
+ * UBITS PREMIUM RAIL SIDEBAR
+ * A fixed 80px wide navigation rail with custom styled minimalist scrollbar.
  */
 export const PlaygroundSidebar: React.FC<SidebarProps> = ({
   items,
-  activeItemId,
-  onItemSelect,
-  role = "admin",
+  activeId,
+  onItemClick,
   header,
   footer,
   className,
+  activeItemId,
+  onItemSelect,
 }) => {
-  const renderItem = (item: NavigationItem) => {
-    const isActive = activeItemId === item.id || item.active;
-    const isDisabled = item.disabled;
+  const currentActiveId = activeId || activeItemId;
+  const handleItemClick = onItemClick || onItemSelect;
 
-    if (item.role && item.role !== "shared" && item.role !== role) {
-      return null;
-    }
+  const renderItem = (item: NavigationItem) => {
+    const isActive = currentActiveId === item.id;
 
     return (
-      <button
-        key={item.id}
-        type="button"
-        disabled={isDisabled}
-        onClick={() => !isDisabled && onItemSelect?.(item.id)}
-        className={cn(
-          "relative flex items-center justify-center w-11 h-11 transition-all duration-300 rounded-full group mb-2",
-          isActive
-            ? "bg-[#0C5BEF] text-white shadow-[0_0_25px_rgba(12,91,239,0.3)] scale-110"
-            : "text-white/30 hover:text-white hover:bg-white/5 hover:scale-105",
-          isDisabled && "opacity-30 cursor-not-allowed"
-        )}
-        aria-label={item.label}
-      >
-        {item.icon && (
-          <UbitsIcon
-            name={item.icon}
-            size="sm"
-            tone="inverse"
+      <Tooltip key={item.id} delayDuration={0}>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => handleItemClick?.(item.id)}
             className={cn(
-              "flex-shrink-0 transition-transform duration-300",
-              isActive ? "scale-100" : "group-hover:scale-105"
+              "relative flex items-center justify-center w-12 h-12 rounded-full transition-all duration-300 group outline-none",
+              isActive 
+                ? "bg-brand text-white shadow-lg shadow-brand/20 scale-110" 
+                : "text-slate-400 hover:bg-white/5 hover:text-white"
             )}
-          />
-        )}
-      </button>
+          >
+            <UbitsIcon 
+              name={item.icon as any} 
+              size="sm" 
+              className={cn(
+                "transition-transform duration-300",
+                isActive ? "scale-110" : "group-hover:scale-110"
+              )} 
+            />
+            {isActive && (
+              <div className="absolute -left-4 w-1 h-6 bg-brand rounded-r-full shadow-[0_0_8px_rgba(12,91,239,0.5)]" />
+            )}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={20} className="font-medium">
+          {item.label}
+        </TooltipContent>
+      </Tooltip>
     );
   };
 
   return (
-    <aside
-      className={cn(
-        "fixed left-6 top-4 w-[96px] h-[calc(100vh-32px)] z-50 flex flex-col items-center py-8 rounded-[32px] shadow-2xl transition-all duration-700",
-        "bg-[#111827] border border-white/5",
-        className
-      )}
-    >
-      {/* Header / Logo */}
-      <div className="mb-12">
-        {header}
-      </div>
+    <TooltipProvider>
+      <aside
+        className={cn(
+          "fixed left-6 top-4 bottom-4 w-20 bg-[#111827] text-white flex flex-col items-center py-8 rounded-[32px] shadow-2xl z-50 border border-white/5",
+          className
+        )}
+      >
+        {/* Header / Logo */}
+        <div className="mb-12 flex-shrink-0">
+          {header}
+        </div>
 
-      {/* Navigation Body */}
-      <div className="flex-1 flex flex-col items-center w-full overflow-y-auto pt-2 px-4 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent hover:scrollbar-thumb-white/20">
-        <style dangerouslySetInnerHTML={{ __html: `
-          .no-scrollbar::-webkit-scrollbar { display: none; }
-          .scrollbar-thin::-webkit-scrollbar { width: 4px; }
-          .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-          .scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 20px; }
-          .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
-        `}} />
-        {items.map((section) => (
-          <div key={section.id} className="flex flex-col items-center w-full">
-            {section.items.map(renderItem)}
-          </div>
-        ))}
-      </div>
+        {/* Navigation Body with Custom Dark Scrollbar */}
+        <div 
+          className="flex-1 flex flex-col items-center w-full overflow-y-auto pt-2 px-4 space-y-8 custom-sidebar-scroll"
+          style={{
+            scrollbarWidth: 'none', /* Firefox */
+            msOverflowStyle: 'none', /* IE/Edge */
+          }}
+        >
+          <style dangerouslySetInnerHTML={{ __html: `
+            .custom-sidebar-scroll::-webkit-scrollbar {
+              width: 3px;
+            }
+            .custom-sidebar-scroll::-webkit-scrollbar-track {
+              background: transparent;
+            }
+            .custom-sidebar-scroll::-webkit-scrollbar-thumb {
+              background: rgba(255, 255, 255, 0.05);
+              border-radius: 10px;
+            }
+            .custom-sidebar-scroll::-webkit-scrollbar-thumb:hover {
+              background: rgba(255, 255, 255, 0.15);
+            }
+            /* Firefox alternative */
+            .custom-sidebar-scroll {
+              scrollbar-width: thin;
+              scrollbar-color: rgba(255, 255, 255, 0.05) transparent;
+            }
+          `}} />
+          
+          {items.map((section) => (
+            <div key={section.id} className="flex flex-col items-center w-full space-y-6">
+              {section.items.map(renderItem)}
+            </div>
+          ))}
+        </div>
 
-      {/* Subtle Divider */}
-      <div className="w-10 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent my-6" />
-
-      {/* Footer Area */}
-      <div className="flex flex-col items-center gap-5 pb-4">
-        {footer}
-      </div>
-    </aside>
+        {/* Footer / User Profile */}
+        <div className="mt-auto pt-8 flex-shrink-0">
+          {footer}
+        </div>
+      </aside>
+    </TooltipProvider>
   );
 };
