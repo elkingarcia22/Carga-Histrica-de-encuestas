@@ -23,7 +23,7 @@ interface SidebarProps {
 
 /**
  * UBITS PREMIUM RAIL SIDEBAR
- * Debug version with forced scrollbar visibility and logging.
+ * Clean production version with original subtle scrollbar aesthetics.
  */
 export const PlaygroundSidebar: React.FC<SidebarProps> = ({
   items,
@@ -37,16 +37,6 @@ export const PlaygroundSidebar: React.FC<SidebarProps> = ({
 }) => {
   const currentActiveId = activeId || activeItemId;
   const handleItemClick = onItemClick || onItemSelect;
-  const scrollRef = React.useRef<HTMLDivElement>(null);
-
-  // Debugging logs
-  React.useEffect(() => {
-    if (scrollRef.current) {
-      const { scrollHeight, clientHeight } = scrollRef.current;
-      console.log(`[Sidebar Debug] Scroll Height: ${scrollHeight}, Client Height: ${clientHeight}`);
-      console.log(`[Sidebar Debug] Is Overflowing: ${scrollHeight > clientHeight}`);
-    }
-  }, [items]);
 
   const renderItem = (item: NavigationItem) => {
     const isActive = currentActiveId === item.id;
@@ -96,31 +86,28 @@ export const PlaygroundSidebar: React.FC<SidebarProps> = ({
           {header}
         </div>
 
-        {/* Navigation Body with Forced Visibility Scrollbar */}
+        {/* Navigation Body with Original Subtle Scrollbar */}
         <div 
-          ref={scrollRef}
           className="flex-1 flex flex-col items-center w-full overflow-y-auto pt-2 px-4 space-y-8 custom-sidebar-scroll"
         >
           <style dangerouslySetInnerHTML={{ __html: `
             .custom-sidebar-scroll::-webkit-scrollbar {
-              width: 6px !important;
-              display: block !important;
+              width: 4px;
             }
             .custom-sidebar-scroll::-webkit-scrollbar-track {
-              background: rgba(255, 255, 255, 0.02) !important;
+              background: transparent;
             }
             .custom-sidebar-scroll::-webkit-scrollbar-thumb {
-              background: rgba(255, 255, 255, 0.3) !important;
-              border-radius: 10px !important;
-              border: 1px solid rgba(0, 0, 0, 0.2) !important;
+              background: rgba(255, 255, 255, 0.1);
+              border-radius: 10px;
             }
             .custom-sidebar-scroll::-webkit-scrollbar-thumb:hover {
-              background: rgba(255, 255, 255, 0.5) !important;
+              background: rgba(255, 255, 255, 0.2);
             }
             /* Firefox alternative */
             .custom-sidebar-scroll {
-              scrollbar-width: thin !important;
-              scrollbar-color: rgba(255, 255, 255, 0.3) transparent !important;
+              scrollbar-width: thin;
+              scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
             }
           `}} />
           
@@ -129,9 +116,6 @@ export const PlaygroundSidebar: React.FC<SidebarProps> = ({
               {section.items.map(renderItem)}
             </div>
           ))}
-
-          {/* Spacer to force scroll if needed for testing */}
-          <div className="h-20 w-full flex-shrink-0" />
         </div>
 
         {/* Footer / User Profile */}

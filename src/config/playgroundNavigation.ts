@@ -31,10 +31,6 @@ export const COLLABORATOR_NAVIGATION: NavigationSection[] = [
       { id: "reclutamiento", label: "Reclutamiento", icon: "users" as IconName },
       { id: "tareas", label: "Tareas", icon: "layers" as IconName },
       { id: "ia-para-hr", label: "IA para HR", icon: "sparkles" as IconName },
-      { id: "extra-1", label: "Extra 1", icon: "bolt" as IconName },
-      { id: "extra-2", label: "Extra 2", icon: "palette" as IconName },
-      { id: "extra-3", label: "Extra 3", icon: "award" as IconName },
-      { id: "extra-4", label: "Extra 4", icon: "building" as IconName },
     ]
   }
 ];
