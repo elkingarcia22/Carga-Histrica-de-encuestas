@@ -421,3 +421,33 @@
 - **Remoto de Destino:** `origin/main`
 - **Confirmación:** U1 ha sido oficialmente cerrada y congelada.
 - **Confirmación:** U2 no ha comenzado y permanecerá bloqueada hasta nuevo intake de fase.
+
+## Fase 4B1 · U2 Interaction Intake and Decision Gate
+- **Objetivo**: Definir y bloquear las decisiones de arquitectura de interacción para U2 (Archivos seleccionados).
+- **Componentes auditados**: `UploadZone`, `FileUpload`, `FilePreview`, `AttachmentList`, `UploadProgress`.
+- **Decisiones bloqueadas**: 
+  - Manejo de `File` (estado local, no canónico).
+  - Continuar habilitado si no hay errores y hay > 0 archivos.
+  - Formato progresivo de archivos (.xlsx inicialmente).
+- **Decisiones provisionales**:
+  - Máximo 5 archivos, 25MB cada uno, 50MB lote.
+  - Arquitectura en la misma screen con estado efímero de archivos.
+- **Decision gates**: 
+  - Selección de Parser: DEFERRED a U3 (no se usa ni selecciona en esta fase).
+- **Riesgos identificados**: 
+  - Guardar objeto `File` en estado serializable (mitigado).
+  - Manejo de PII local (mitigado).
+  - Performance para lotes masivos (mitigado con límite provisorio).
+- **Autorización o bloqueo**: Autorización para la Fase 4B2.
+- **Confirmación**: No hubo código, commit ni push en esta fase. Documento de intake creado exitosamente en `docs/U2_INTERACTION_INTAKE.md`.
+
+## Fase 4B1.1 · U2 Intake Documentation Checkpoint
+- **Fecha**: 2026-06-10
+- **Objetivo**: Publicar exclusivamente los entregables documentales de Fase 4B1.
+- **Documentos incluidos**: `docs/U2_INTERACTION_INTAKE.md`, `docs/PROMPT_LOG.md`.
+- **Estado formal del intake**: `READY_WITH_PROVISIONAL_LIMITS`.
+- **Límites provisionales**: Máximo 5 archivos, 25 MB por archivo, 50 MB por lote. Arquitectura local de interacción.
+- **Decision gates pendientes**: Contradicción entre `useState<File[]>` y reducer mínimo diferida a Fase 4B2. Parser diferido a U3. Límites productivos finales y Backend APIs.
+- **Mensaje de commit previsto**: `docs(survey-import): define U2 interaction intake`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: U2 no fue construida. Fase 4B2 todavía no fue ejecutada.
