@@ -355,3 +355,69 @@
 - **Remoto de destino**: `origin/main` (`https://github.com/elkingarcia22/Carga-Histrica-de-encuestas.git`)
 - **Confirmación**: Fase 4 todavía no comenzó. No se generó UI, rutas ni instalaron dependencias.
 
+## Fase 4A · U1 Foundation and Static Initial State
+- **Objetivo:** Construir la base visual de U1 con estilo UBITS B2B enterprise para el prototipo "Importación asistida por IA de encuestas finalizadas".
+- **Commit base:** 5b63645ef9424e6e2254b6b305a56b39ab3c6357
+- **Componentes verificados:** `AppShell`, `Header`, `PageShell`, `Card`, `Button`, `Badge`, `Separator`, `Tooltip`, `UploadZone`, `FileUpload`, `Breadcrumbs`, `TabsNav`, `UbitsProductHeader`.
+- **Punto de montaje utilizado:** `src/App.tsx` (reemplazo del playground demo por la nueva pantalla U1).
+- **Fixture utilizado:** `upload-initial` (sin archivos).
+- **Archivos creados:**
+  - `src/config/survey-import/importWizardContent.ts`
+  - `src/components/survey-import/ImportWizardShell.tsx`
+  - `src/components/survey-import/ImportWizardHeader.tsx`
+  - `src/components/survey-import/ImportWizardSteps.tsx`
+  - `src/components/survey-import/InitialUploadPanel.tsx`
+  - `src/components/survey-import/ImportSummaryCard.tsx`
+  - `src/components/survey-import/ImportWizardFooter.tsx`
+  - `src/screens/survey-import/SurveyImportUploadScreen.tsx`
+- **Alcance implementado:** Shell general, header contextual, stepper pasivo con 4 etapas, zona de carga pasiva (disabled), sección de información del proceso IA, resumen lateral vacío leyendo de fixture inicial, footer pasivo (disabled).
+- **Alcance excluido:** U2-U4, React Router, selección real de archivos, parseo, arrastrar y soltar funcional.
+- **Resultado TypeScript:** 0 errores (`npx tsc --noEmit`).
+- **Resultado build:** Exitoso (Vite build 1.75s).
+- **Resultado lint:** 0 errores y 0 warnings en el dominio `survey-import`. Se mantienen los 25 errores y 1 warning de deuda externa.
+- **Resultado visual:** Validado a 1440x900 y 1280x800. UI accesible, con estados disabled reales y consistencia UBITS.
+- **Confirmación:** No hubo commit ni push. No se instalaron dependencias ni se alteraron componentes UI base.
+
+## Fase 5A · U1 Independent QA Audit
+- **Objetivo:** Auditar de forma independiente la implementación real de U1.
+- **Archivos revisados:** `src/components/survey-import/*.tsx`, `src/screens/survey-import/SurveyImportUploadScreen.tsx`, `src/config/survey-import/importWizardContent.ts`, `src/App.tsx`.
+- **Resultado técnico:** Exitoso. Build exitoso, 0 errores en dominio, TypeScript 0 errores.
+- **Resultado visual:** Aprobado en resoluciones base (1440x900, 1280x800) y comportamientos responsive.
+- **Hallazgos:**
+  - 1 Medium: `ImportSummaryCard` importa directamente `uploadInitialScenario` desde los mocks en lugar de recibirlo por props.
+- [x] Autorizada Fase 6 (Hotfix).
+- **Confirmación:** No se modificó código. No se hizo commit. No se hizo push.
+
+## Fase 6A · U1 Data Decoupling and Visual Verification Hotfix
+- **Objetivo:** Corregir el hallazgo H1 separando los datos en `ImportSummaryCard` y ejecutar QA visual real en navegador.
+- **Archivos modificados:** `ImportSummaryCard.tsx`, `SurveyImportUploadScreen.tsx`, `docs/U1_QA_REPORT.md`, `docs/PROMPT_LOG.md`, `docs/QA_CHECKLIST.md`.
+- **Hallazgo corregido:** `ImportSummaryCard` ya no importa fixtures directamente, es puramente presentacional recibiendo props tipadas. `SurveyImportUploadScreen` orquesta la inyección de datos seguros.
+- **Resoluciones inspeccionadas:** 1440x900, 1280x800, 900x800.
+- **Resultado de teclado:** Focos e interactividad deshabilitada (botones, área pasiva) verificada como inaccesible por Tab. Orden lógico validado.
+- **Resultado TypeScript:** 0 errores.
+- **Resultado build:** Exitoso.
+- **Resultado lint:** 0 errores y 0 warnings en `survey-import`. Baseline heredado mantenido (25 errores, 1 warning).
+- **Confirmación:** Sin commit, sin push, sin dependencias.
+
+## Fase 7A · U1 Formal Closure, Commit and Push
+- **Fecha:** 2026-06-10
+- **Objetivo:** Ejecutar el cierre formal de la primera pantalla de carga inicial (U1) y su commit de publicación.
+- **Estado Técnico:** TypeScript 0 errores, Build exitoso. Lint de dominio 0 errores/0 warnings. Lint global conservado (25 errores, 1 warning). No hay secretos, referencias de URLs externas ni data real.
+- **Resultado Visual:** Control de QA superado, manteniendo el desacople de datos y sin regresiones visuales.
+- **Archivos Incluidos:**
+  - `src/App.tsx`
+  - `src/config/survey-import/importWizardContent.ts`
+  - `src/components/survey-import/ImportWizardShell.tsx`
+  - `src/components/survey-import/ImportWizardHeader.tsx`
+  - `src/components/survey-import/ImportWizardSteps.tsx`
+  - `src/components/survey-import/InitialUploadPanel.tsx`
+  - `src/components/survey-import/ImportSummaryCard.tsx`
+  - `src/components/survey-import/ImportWizardFooter.tsx`
+  - `src/screens/survey-import/SurveyImportUploadScreen.tsx`
+  - `docs/U1_QA_REPORT.md`
+  - `docs/QA_CHECKLIST.md`
+  - `docs/PROMPT_LOG.md`
+- **Mensaje de Commit:** `feat(survey-import): add static U1 upload experience`
+- **Remoto de Destino:** `origin/main`
+- **Confirmación:** U1 ha sido oficialmente cerrada y congelada.
+- **Confirmación:** U2 no ha comenzado y permanecerá bloqueada hasta nuevo intake de fase.
