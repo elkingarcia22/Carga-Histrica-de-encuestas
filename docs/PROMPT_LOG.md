@@ -1,5 +1,24 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-06-10 - Fase 4B2.2 · Duplicate Binary Ownership Architecture Hotfix
+- **Objetivo**: Corregir la política documental de propiedad binaria para duplicados y lotes excedidos.
+- **Defecto detectado**: La arquitectura declaraba que un archivo duplicado no conservaba binario, pero permitía que al remover el original, el duplicado se volviera válido, lo cual es incompatible sin transferir binarios.
+- **Política binaria corregida**: Cada archivo seleccionado conserva o descarta su propio objeto `File`. No se transfieren binarios entre IDs. El boundary binario sigue siendo el `Map<FileId, File>` y el reducer almacena solo metadata.
+- **Estados que retienen binario**: `valid`, `warning`, `duplicate`, e individualmente válidos en lote > 50 MB.
+- **Estados que no lo retienen**: `unsupported`, `too-large` (> 25MB individual), `zero-byte`, `temporary`, `invalid-name`, y excedentes de 5 archivos.
+- **Regla de duplicados**: Un duplicado retiene su propio binario (`hasBinary: true`), se muestra en UI, cuenta para límites y bloquea. Si se remueve el primer archivo (original), los restantes se reevalúan usando sus propios binarios.
+- **Regla para lote superior a 50 MB**: Los archivos válidos individualmente conservan sus binarios. El lote completo se bloquea, pero no descarta binarios válidos. Al remover suficientes archivos, el lote puede recuperar validez sin solicitar nuevamente los archivos.
+- **Casos D1-D6 (QA Conceptual)**:
+  - D1: Dos duplicados conservan binario. Primero válido, segundo duplicado.
+  - D2: Remover original elimina su binario; duplicado restante se vuelve válido con el suyo.
+  - D3: Remover duplicado no afecta al original ni a su binario.
+  - D4: Tres duplicados. Al remover el primero, el segundo es válido, tercero sigue duplicado.
+  - D5: Lote > 50 MB retiene binarios individualmente válidos y bloquea; al remover recupera validez.
+  - D6: Archivo > 25 MB individual no conserva binario ni puede validarse por remoción de otros.
+- **Mensaje de commit previsto**: `docs(survey-import): fix U2 duplicate binary ownership`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: No se modificó ni creó código (U2 no está construida).
+
 ### 2026-06-10 - Fase 4B2.1 · U2 Architecture Documentation Checkpoint
 - **Objetivo**: Verificar, precisar y publicar la documentación arquitectónica U1-U2.
 - **Documentos incluidos**: `docs/U2_INTERACTION_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.

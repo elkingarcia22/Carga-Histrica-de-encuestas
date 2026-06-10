@@ -71,7 +71,7 @@ Se resuelve la contradicción entre `useState<File[]>` y reducer, eliminando el 
 - Creación al seleccionar desde el File System.
 - Asignación de ID efímero opaco (UUID local).
 - Extracción síncrona de metadata (nombre, tamaño, tipo, lastModified).
-- Almacenamiento en `Map<FileId, File>` si es válido o "warning".
+- Almacenamiento en `Map<FileId, File>` si es válido, "warning", "duplicate" o individualmente válido dentro de un lote > 50 MB. (No se almacena para "unsupported", "too-large" individual > 25MB, "zero-byte", "temporary", "invalid-name" ni excedentes de 5 archivos).
 - Destrucción al dispararse evento de remoción, cancelación, o desmontaje del componente.
 
 ## 10. Modelo local de metadata
@@ -118,12 +118,12 @@ Orden estricto de ejecución síncrona:
 13. Detectar duplicados preliminares (Clave normalizada `normalizedNameKey` + Tamaño + LastModified).
 14. Evaluar cantidad total y tamaño de lote.
 15. Derivar estado visual.
-16. Decidir si retener el binario (sí para valid/warning).
+16. Decidir si retener el binario (sí para valid, warning, duplicate, e individualmente válidos en lote bloqueado).
 17. Actualizar `Map<FileId, File>`.
 18. Despachar metadata al reducer/hook.
 19. Re-render UI U2.
 
-Prohibido: `FileReader`, Hashing, Parsing.
+Prohibido: `FileReader`, Hashing, Parsing. Nunca transferir binarios entre IDs.
 
 ## 13. Política MIME
 - Extensión permitida + MIME compatible = Válido.
@@ -144,9 +144,11 @@ Prohibido: `FileReader`, Hashing, Parsing.
 
 ## 15. Duplicados
 - Criterio: Coincidencia de Clave Normalizada (`normalizedNameKey`) + Tamaño en bytes + `lastModified`.
-- El archivo original (el primero retenido) conserva su binario y metadata.
-- El duplicado conserva solo metadata (estado `duplicate`), sin binario y bloquea el botón "Continuar".
-- Permite remoción para desbloquear el lote.
+- Un archivo duplicado aparece como fila visible, conserva su propio `File` (`hasBinary: true`), y bloquea el botón "Continuar".
+- Cuenta para la cantidad y tamaño total del lote.
+- Permite remoción para desbloquear el lote. Se reevalúa después de cada eliminación.
+- El primer archivo agregado del grupo se muestra como `valid` o `warning`. Los siguientes como `duplicate`.
+- Si se elimina el primero: Se recalcula el grupo completo. El primer archivo restante se convierte en `valid` o `warning` utilizando exclusivamente el `File` asociado a su propio ID. Nunca se transfiere ni reutiliza el binario eliminado. Queda prohibida la lectura profunda de contenido para resolver duplicados.
 
 ## 16. Taxonomía visual
 | Estado | Origen | Severidad | Retiene binario | Bloquea | Acción |
@@ -154,7 +156,7 @@ Prohibido: `FileReader`, Hashing, Parsing.
 | `valid` | UI | Info | Sí | No | Remover |
 | `warning` | UI | Low | Sí | No | Remover |
 | `invalid` | UI | High | No | Sí | Remover |
-| `duplicate` | UI | High | No | Sí | Remover |
+| `duplicate` | UI | High | Sí | Sí | Remover (reevaluación obligatoria) |
 | `unsupported` | UI | High | No | Sí | Remover |
 | `too-large` | UI | High | No | Sí | Remover |
 
@@ -167,7 +169,7 @@ Aclaración: Los estados derivados mencionados (`valid`, `warning`, `invalid`, `
 - **Lote mixto:** Vista U2, `Continuar` deshabilitado por presencia de archivos bloqueantes.
 - **Lote válido:** Vista U2, `Continuar` habilitado.
 - **Excedentes de 5 archivos:** Solo se incorporan archivos hasta completar la capacidad restante. Los excedentes no entran en metadata ni en el Map binario. Se muestra un mensaje visible dentro de U2 y se anuncia el número rechazado mediante la única región `aria-live="polite"`. Un toast puede ser complementario únicamente si ya existe un patrón aprobado.
-- **Excedentes de 50 MB:** Los archivos aceptados permanecen visibles. El lote se marca bloqueado. Se muestra una alerta persistente o mensaje de lote, y el usuario debe remover archivos. No se descartan automáticamente archivos ya visibles. El mensaje no debe incluir información técnica innecesaria.
+- **Excedentes de 50 MB:** Los archivos individualmente válidos conservan sus referencias binarias. El lote se bloquea por una regla global. Se muestra una alerta persistente y el usuario debe remover archivos. Tras quedar en 50 MB o menos, el lote se recalcula sin solicitar nuevamente archivos ya seleccionados. No se descartan referencias binarias automáticamente por el error global.
 
 ## 18. Acciones
 - **Agregar más:** Acumula respetando la capacidad restante de los 5 cupos. Revalida estado global.
@@ -234,11 +236,11 @@ Aclaración: Los estados derivados mencionados (`valid`, `warning`, `invalid`, `
 | MIME inesperado | `data.xlsx` | `warning` | Low | Sí | No |
 | Cero bytes | `empty.xlsx` | `zero-byte` | High | No | Sí |
 | > 25 MB | `huge.xlsx` | `too-large` | High | No | Sí |
-| Lote > 50 MB | Varios válidos | `too-large` en total | High | Sí (hasta cupo MB) | Sí |
+| Lote > 50 MB | Varios válidos | `too-large` en total | High | Sí (individualmente válidos retienen) | Sí |
 | > 5 archivos | 6 archivos | Alerta, muestra 5 | Info | Para los 5 | Para los 5 |
 | Nombre vacío | `.xlsx` | `invalid-name` | High | No | Sí |
 | Temporal | `~$data.xlsx` | `temporary` | High | No | Sí |
-| Duplicado | `data.xlsx` | `duplicate` | High | No | Sí |
+| Duplicado | `data.xlsx` | `duplicate` | High | Sí | Sí |
 | Válido | `data.xlsx` | `valid` | Info | Sí | No |
 
 ## 26. Riesgos
@@ -280,6 +282,14 @@ Debe prohibir expresamente la modificación o creación de:
 
 ## 29. Criterios de aceptación para U2
 La construcción futura deberá cumplir la separación metadata/blob, aplicar los límites centralizados, respetar accesibilidad y no alterar U1 estructuralmente.
+
+### QA conceptual obligatorio (Regresión futura)
+**D1 · Dos duplicados:** Ambos conservan su propio binario. Primero: `valid`. Segundo: `duplicate`. Lote bloqueado.
+**D2 · Remover el original:** Se elimina el binario del original. El duplicado restante se recalcula como `valid`. Conserva su propio binario. No se solicita una nueva selección.
+**D3 · Remover el duplicado:** El original continúa válido. Su binario permanece intacto.
+**D4 · Tres duplicados:** Primero válido. Otros dos duplicados. Al eliminar el primero, uno de los restantes se convierte en válido. El tercero continúa duplicado.
+**D5 · Lote superior a 50 MB:** Los archivos individualmente válidos conservan sus binarios. El lote está bloqueado. Al remover suficientes archivos, puede recuperar validez.
+**D6 · Archivo individual mayor a 25 MB:** Visible. No conserva binario. Bloquea. No puede convertirse en válido solo por cambios en el resto del lote.
 
 ## 30. Decision gates abiertos
 - Elección de la librería Parser para transitar a U3.
