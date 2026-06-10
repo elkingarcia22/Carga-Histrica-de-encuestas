@@ -1,5 +1,25 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-06-10 - Fase 4B2.1 · U2 Architecture Documentation Checkpoint
+- **Objetivo**: Verificar, precisar y publicar la documentación arquitectónica U1-U2.
+- **Documentos incluidos**: `docs/U2_INTERACTION_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
+- **Estado formal de la arquitectura**: `APPROVED_WITH_PROVISIONAL_LIMITS`.
+- **Decisiones congeladas**: Reducer local como fuente de verdad, Boundary binario, prohibición de `useState<File[]>`, pipeline síncrono.
+- **Límites provisionales**: Máx 5 archivos, 25MB c/u, 50MB lote.
+- **Aclaración de PII en filename**: Filename visible (`displayName`) separado de la clave normalizada (`normalizedNameKey`) para proteger PII y detectar duplicados.
+- **CTA Continuar**: Totalmente deshabilitado en la primera construcción (sin callback, sin transición conceptual a U3).
+- **Parser gate**: DEFERRED a U3. 
+- **Mensaje de commit previsto**: `docs(survey-import): lock U2 interaction architecture`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: U2 no fue construida. No se modificó U1, contratos ni fixtures.
+### 2026-06-10 - Fase 4B2 · U2 Interaction Architecture Lock
+- **Objetivo**: Bloquear formalmente la arquitectura de interacción U1–U2.
+- **Decisiones bloqueadas**: Arquitectura de estado separada (metadata local vs `Map<FileId, File>` efímero), reglas de lote (máx 5 archivos, 25MB c/u, 50MB lote), pipeline sin parser.
+- **Decision gates**: Parser diferido a U3. Continuar suspendido.
+- **Archivos creados/modificados**: `docs/U2_INTERACTION_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
+- **Estado**: Fase documental aprobada (`APPROVED_WITH_PROVISIONAL_LIMITS`). Construcción de U2 autorizada.
+- **Confirmación**: No se alteró código, ni dependencias, ni se hicieron commits/pushes.
+
 ### 2026-06-10 - Repository Hygiene Gate (Completada)
 - **Objetivo**: Limpieza del repositorio antes del commit.
 - **Cambio de .gitignore**: Fortalecido con protecciones para \`.env\`, directorios temporales, y archivos sensibles (xlsx/xls/csv locales y privados).

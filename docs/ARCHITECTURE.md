@@ -175,3 +175,4 @@ Governance documents for first dashboard build:
 ## Arquitectura de Importación (Fase 2)
 La arquitectura técnica del dominio de importación (wizard, pipeline local, límites de estado y adaptadores) está documentada como una extensión del sistema en:
 - [IMPORT_ARCHITECTURE.md](./IMPORT_ARCHITECTURE.md)
+- [U2_INTERACTION_ARCHITECTURE.md](./U2_INTERACTION_ARCHITECTURE.md)
