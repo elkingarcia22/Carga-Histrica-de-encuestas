@@ -1,5 +1,45 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-06-10 - Repository Hygiene Gate (Completada)
+- **Objetivo**: Limpieza del repositorio antes del commit.
+- **Cambio de .gitignore**: Fortalecido con protecciones para \`.env\`, directorios temporales, y archivos sensibles (xlsx/xls/csv locales y privados).
+- **Estado de package-lock.json**: Restaurado a su versión original en HEAD ya que los cambios eran únicamente resoluciones automáticas sin alterar \`package.json\`.
+- **Estado de scripts temporales**: \`generate_mocks.cjs\` y \`generate_mocks.js\` eliminados exitosamente por no estar referenciados ni contener datos reales únicos.
+- **Resultado de revisión de secretos y datos**: Working tree limpio. No se hallaron tokens, contraseñas, URLs expuestas, ni archivos reales de clientes.
+- **Confirmación**: No hubo commit ni push.
+
+### 2026-06-10 - Fase 2C: Architecture Formal Approval (Completada)
+- **Status**: Finalizado
+- **Objetivo**: Realizar revisión cruzada documental entre Intake, Arquitectura y Screen Map, resolver inconsistencias y aprobar arquitectura formalmente.
+- **Archivos afectados**: Creado `docs/IMPORT_ARCHITECTURE_APPROVAL.md`, actualizados `docs/IMPORT_ARCHITECTURE.md` y `docs/SCREEN_MAP.md`.
+- **Resultado**: Matriz de consistencia generada. Se definió explícitamente `commit-start` y se aclaró la definición de *single-page flow*.
+- **Decisiones congeladas**: Macroetapas conceptuales, U1 como primera pantalla inicial, Context+useReducer en memoria sin persistencia, límites UI/IA, y privacidad efímera.
+- **Decision gates abiertos**: Parseo en navegador, umbrales de IA, librerías por instalar y APIs productivas.
+- **Siguiente**: Fase 3 · Mock Data Contract (Autorizada bajo condiciones).
+
+### 2026-06-10 - Fase 2B: Screen Map Lock (Completada)
+- **Status**: Finalizado
+- **Objetivo**: Crear y bloquear el mapa conceptual de pantallas, estados visuales, navegación y bifurcaciones del agente visual guiado.
+- **Archivos afectados**: Creado `docs/SCREEN_MAP.md`, actualizado `docs/IMPORT_ARCHITECTURE.md`.
+- **Resultado**: Definidas 4 macroetapas visibles, inventario de vistas y matriz de navegación sin crear rutas.
+- **Decisiones bloqueadas**: U1 (Carga inicial) será la primera pantalla de implementación. Estados internos no son rutas. Unknown bloquea el avance.
+- **Pendientes para Fase 2C**: (Si aplica) o continuar con Mock Data Contract.
+
+### 2026-06-10 - Fase 2A: Architecture Lock (Completada)
+- **Status**: Finalizado
+- **Objetivo**: Bloquear la arquitectura técnica del flujo de importación antes de construir UI.
+- **Archivos afectados**: Creado `docs/IMPORT_ARCHITECTURE.md`, actualizado `docs/ARCHITECTURE.md`.
+- **Resultado**: Documentación de pipeline de importación, máquina de estados, límites IA y adaptadores mock.
+- **Decisiones pendientes**: Elección definitiva de parsers (SheetJS vs ExcelJS) y uso de Web Workers.
+- **Siguiente**: Fase 3 · Mock Data Contract.
+
+### 2026-06-10 - Fase 1: Prototype Intake (Completada)
+- **Status**: Finalizado
+- **Objetivo**: Consolidar decisiones de producto, alcance inicial, requerimientos y flujo para el prototipo "Importación asistida por IA".
+- **Archivos afectados**: Creado `docs/PROJECT_INTAKE.md`.
+- **Resultado**: Documento de intake formal creado con familias de datos, visión de producto y reglas de IA definidas.
+- **Decisiones pendientes**: Parsing de archivos (librerías), estado global, límites de procesamiento, políticas de datos, y modelo de IA (bloqueado para la Fase 2).
+
 ### 2026-05-06 - Fase 8.7B: Lightweight Status & AI Controls (✅ QA Aprobado)
 - **Status**: ✅ Finalizado & Sincronizado
 - **Objetivo**: Implementar Chip, AIButton, AILoader y SaveIndicator.
@@ -119,3 +159,199 @@
   - Creado `DASHBOARD_STATE_PATTERNS.md` (~600 líneas): 7 patrones de estado (Loading, Loaded, Empty, Error, Partial, Filtered Empty, Permission/Stale) con reglas de transición y accesibilidad.
   - Creado `DASHBOARD_QA_RULES.md` (~1000 líneas): Marco QA multi-tier cubriendo 14 categorías: técnica, design system, accesibilidad, responsive, light/dark, mock data, no-hardcoding, no-API, performance, composición, pre-build checklist, matriz de escalación, puertas de revisión.
 - **Resultado:** Gobernanza de arquitectura Phase 8.2 completada. Cero componentes nuevos, cero APIs, cero datos de negocio. Build exitoso, TypeScript 0 errores. Listo para Phase 8.3 (Component Decision Gate + First Screen Intake).
+
+## Fase 3A · 2026-06-10
+
+**Objetivo:** Crear el modelo canónico de datos (Canonical Data Model) para el proceso de importación asistida por IA.
+
+**Archivos creados:**
+- `docs/DATA_MODEL.md`
+- `src/types/survey-import/*.ts` (16 archivos)
+
+**Resultado:** Fase 3A completada. Modelo canónico creado y validado con TypeScript sin dependencias externas ni UI.
+
+**Decisiones de modelo:**
+- Uso estricto de uniones discriminadas para manejar los modos de importación excluyentes (`raw-individual` y `aggregated-comparison`).
+- Abstracción total de React y frameworks de parsing.
+- Prevención de exposición de datos sensibles (PII) en `ImportIssue`.
+
+**Decision gates:**
+- Definición de librerías para parsing (Excel/CSV).
+- Paginación y manejo de memoria de respuestas masivas.
+- Umbrales de confidencialidad definitivos.
+- Validaciones de esquema (Zod) aplazadas a 3B.
+
+**Pendientes para Fase 3B:**
+- Crear mock data contracts.
+- Crear fixtures y esquemas Zod.
+
+## Fase 3B1 · Synthetic Fixture Set
+- Fecha: 2026-06-10
+- Objetivo: Crear un conjunto estático de fixtures tipeados estrictamente sin UI.
+- Archivos creados: src/mocks/survey-import/**/*.ts, docs/MOCK_DATA_CONTRACT.md
+- Escenarios creados: M0 a M6 (upload-initial, raw-happy-path, etc.)
+- Resultado de QA: Typescript sin errores, dependencias sin cambios.
+- Pendientes para Fase 3B2: Zod, implementacion en UI.
+
+## Fase 3B1.1 · Fixture Consistency Hotfix
+- Fecha: 2026-06-10
+- Objetivo: Corregir inconsistencias de `unknown-blocked` y `result-cancelled` respecto a la arquitectura formalmente aprobada.
+- Archivos modificados: `unknownBlockedScenario.ts`, `importResultScenarios.ts`, `scenarioCatalog.ts`, `MOCK_DATA_CONTRACT.md`.
+- Inconsistencias corregidas: `unknown-blocked` ahora tiene estado `detection-partial` y permanece en macro-etapa `upload`. `result-cancelled` ya no hereda de `raw-individual` con éxito, no declara entidades importadas y retorna a `wizard-exit`.
+- Resultado de QA: Typescript sin errores, dependencias sin cambios.
+- Confirmación: No se modificó el contrato canónico.
+
+## Fase 3A.1 · Type Contract Compile Hotfix
+- Fecha: 2026-06-10
+- Objetivo: Recuperar compilación TypeScript y build exitosos mediante correcciones mínimas en los contratos canónicos, sin cambiar el significado del dominio.
+- Errores encontrados: 51 errores TS1484 (verbatimModuleSyntax en imports) y 8 errores TS2459 (IssueId no exportado de issues.ts pero importado desde allí). También se corrigieron paths incorrectos en mocks.
+- Archivos modificados: 16 archivos en `src/types/survey-import/` y todos los mocks en `src/mocks/survey-import/` afectados.
+- Integridad: El contrato funcional no cambió. Entidades, campos, uniones discriminadas y fixtures se mantienen idénticos.
+- Resultado de QA:
+  - TypeScript: 0 errores (`npx tsc --noEmit`).
+  - Build: Exitoso (`npm run build`).
+  - Lint: 0 errores en los archivos modificados de la capa de dominio (`npm run lint`). Los errores preexistentes fuera del dominio se mantienen.
+- Confirmación: No hubo commit ni push. No se usaron supresiones TS. No se modificaron configuraciones.
+
+## Fase 3B2A · Runtime Schema Foundation
+- Fecha: 2026-06-10
+- Objetivo: Crear la primera capa modular de schemas Zod para validar en runtime tipos comunes, IDs, estados, archivos, hojas, campos, evidencias, detección, configuración e issues.
+- Versión de Zod: ^4.4.3
+- Archivos creados:
+  - `src/lib/survey-import/schemas/commonSchemas.ts`
+  - `src/lib/survey-import/schemas/sourceSchemas.ts`
+  - `src/lib/survey-import/schemas/detectionSchemas.ts`
+  - `src/lib/survey-import/schemas/configurationSchemas.ts`
+  - `src/lib/survey-import/schemas/issueSchemas.ts`
+  - `src/lib/survey-import/schemas/index.ts`
+  - `docs/RUNTIME_VALIDATION.md`
+- Schemas creados: Todos los esquemas básicos, source file/sheet/field, import detection y evidencias, survey configuration, import issue. Todos usando `.strict()` y comprobando paridad tipeada `z.ZodType<T>`.
+- Reglas diferidas: Validaciones cruzadas de sesión (`ImportSessionSchema`), validación de `Participants`, `Questions`, `Segments`, `Responses` y `Result` aplazadas a Fase 3B2B y 3B2C.
+- Resultado de TypeScript: Exitoso (0 errores).
+- Resultado de build: Exitoso (Vite build completado).
+- Resultado de lint: Exitoso (0 errores en archivos creados).
+- Estado de pruebas runtime: Diferidas a Fase 3B2C al no contar con un test runner pre-configurado en el starter kit.
+- Confirmación: No hubo commit ni push. No se inyectaron dependencias ni se alteró UI.
+
+## Fase 3B2B · Deep Domain Runtime Schemas
+- **Objetivo:** Crear la segunda capa de schemas Zod para validar las entidades profundas del dominio (Preguntas, Demográficos, Participantes, Segmentos, Respuestas, Resultados, Capacidades Analíticas, Modo de Datos).
+- **Rango declarado de Zod:** ^4.4.3
+- **Versión exacta instalada:** 4.4.3
+- **Archivos creados:**
+  - `src/lib/survey-import/schemas/questionSchemas.ts`
+  - `src/lib/survey-import/schemas/demographicSchemas.ts`
+  - `src/lib/survey-import/schemas/participantSchemas.ts`
+  - `src/lib/survey-import/schemas/segmentSchemas.ts`
+  - `src/lib/survey-import/schemas/responseSchemas.ts`
+  - `src/lib/survey-import/schemas/analyticsSchemas.ts`
+  - `src/lib/survey-import/schemas/modeDataSchemas.ts`
+- **Schemas creados:** 20+ schemas incluyendo `canonicalQuestionSchema`, `canonicalDemographicSchema`, `canonicalParticipantSchema`, `canonicalSegmentSchema`, `rawResponseSchema`, `aggregatedResultSchema`, `analyticCapabilitySchema`.
+- **Uniones discriminadas creadas:** `questionScaleSchema` y `importModeDataSchema` usando `z.union`.
+- **Reglas diferidas:** Validaciones cruzadas inter-entidades en la sesión, sumatorias al 100% de sentiment distribution, y consolidación de preview y sesión final.
+- **Resultado de TypeScript:** Exitoso (0 errores en `npx tsc --noEmit`).
+- **Resultado de build:** Exitoso.
+- **Resultado de lint:** Exitoso en `src/lib/survey-import/schemas/`.
+## Fase 3B2C1 · Session Runtime Contract
+- **Objetivo:** Completar el árbol de schemas de runtime incorporando `ImportSessionSchema`, preview, resultado, progreso de revisión e invariantes matemáticas transversales, sin ejecución ni mutación de código de UI o contratos.
+- **Archivos creados:**
+  - `src/lib/survey-import/schemas/reviewSchemas.ts`
+  - `src/lib/survey-import/schemas/previewSchemas.ts`
+  - `src/lib/survey-import/schemas/resultSchemas.ts`
+  - `src/lib/survey-import/schemas/sessionSchemas.ts`
+- **Schemas creados:** `reviewProgressSchema`, `importPreviewSchema`, `importResultSchema` (union discriminada), `importSessionSchema`.
+- **Refinamientos creados:** Super refines para la suma matemática de `sentimentDistribution`, y 8 invariantes de sesión en `importSessionSchema` (`unknown` block, preview confirmation, commit-start logic, etc.).
+- **Gobernanza de ModeData y Analytics:** `ImportModeDataSchema` modificado para usar estrictamente `z.discriminatedUnion("mode", ...)`. `AnalyticCapabilitySchema` confirmado como universal y sin restricciones artificiales a modo agregado.
+- **Baseline de lint heredado:** 0 errores y 0 warnings en el dominio `survey-import`. Excepciones previas se mantienen fuera del entorno de `survey-import`.
+- **Resultado de TypeScript:** Exitoso.
+- **Resultado de build:** Exitoso.
+- **Resultado de lint:** Exitoso.
+- **Reglas diferidas:** Transiciones válidas completas entre estados, matching, coherencia de referenciales de IDs y safe parsing del catálogo.
+- **Confirmación:** No hubo commit ni push. No se instalaron dependencias ni se alteraron componentes.
+
+## Fase 3B2C2 · Runtime Fixture Validation
+- **Objetivo:** Ejecutar una validación real mediante `safeParse` para demostrar que los escenarios sintéticos cumplen el contrato y los escenarios inválidos son rechazados, obteniendo paths seguros.
+- **Mecanismo utilizado:** Ninguno. Fase bloqueada. No se encontró en el repositorio ningún runner de TypeScript configurado (Vitest, Jest, tsx, ts-node) que permita ejecutar validaciones con soporte para alias de TypeScript (`@/`). Node 24 nativo falla en la resolución de alias y extensiones implícitas sin empaquetadores, y no se instalaron herramientas para respetar la restricción "no-install".
+- **Casos positivos:** 0 (no ejecutados).
+- **Casos negativos:** 0 (no ejecutados).
+- **Resultado:** Bloqueada. 
+- **Baseline global de lint:** `npx eslint` sobre `src/lib/survey-import/schemas/` y `src/mocks/survey-import/` finalizó sin errores. El lint global reportó 25 errores de deuda técnica heredada (fuera del dominio `survey-import`). El build y `npx tsc --noEmit` completaron sin errores.
+- **Confirmación:** No se modificaron schemas, fixtures ni contratos. No hubo commit ni push.
+
+## Fase 3B2C2.1 · Vite Runtime Harness Recovery
+- **Objetivo:** Ejecutar la validación runtime programáticamente usando la instancia de Vite ya instalada mediante SSR sin dependencias adicionales.
+- **Vite exacto:** v8.0.10.
+- **Método:** Script harness.mjs temporal usando Vite `ssrLoadModule`.
+- **Resultado de positivos:** 10/10 pasaron.
+- **Resultado de negativos:** 17/18 rechazados. El caso N5 ('Raw con visibilidad aggregated-only') arrojó 'pass' exponiendo un defecto de validación cruzada. Se identificó 1 mensaje inseguro (Regex).
+- **Resultado de paths:** Paths seguros y correctamente trazados para los casos rechazados.
+- **Resultado del catálogo:** 0 inconsistencias.
+- **Resultado global de lint:** Lint de dominio limpio, 25 errores heredados, 1 warning heredado.
+- **Confirmación de temporales:** `tmp/runtime-validation` fue creado para la ejecución y eliminado correctamente.
+- **Confirmación:** No hubo commit ni push. No se instalaron dependencias ni se alteró configuración.
+
+## Fase 3B2C2.2 · Runtime Contract Hotfix and Regression
+- **Objetivo:** Aplicar correcciones mínimas para rechazar configuraciones inconsistentes de visibilidad en el modo `raw-individual` y purgar la exposición de regex en los validadores de formato (email).
+- **Archivos modificados:** `sessionSchemas.ts` y `participantSchemas.ts`.
+- **Ejecución del Harness:** Se recreó `tmp/runtime-validation/harness.mjs` bajo `vite.ssrLoadModule` para importar y procesar `SCENARIO_CATALOG` contra `ImportSessionSchema`.
+- **Resultados de la Regresión:**
+  - 10 de 10 pruebas positivas superadas con éxito.
+  - 18 de 18 pruebas negativas rechazadas bajo invariantes precisas.
+  - La prueba N5 fue corregida (se rechazó por visibilidad inválida).
+  - La prueba N11 fue reescrita para inyectar un resultado `completed` íntegro y validó el rechazo por estado `cancelled` excluyente de sesión.
+  - La prueba N15 validó un formato inválido de email arrojando el mensaje estático seguro, sin exponer la regex subyacente.
+- **Baseline del Lint:** 25 errores heredados fuera del scope, 1 warning heredado, 0 errores o warnings adicionales en los dominios de importación. TypeScript compilación seca validó impecablemente sin excepciones y `vite build` arrojó empaquetado exitoso (1.98s).
+- **Temporales:** El `tmp/runtime-validation/` directory and sus scripts fueron erradicados finalizando el QA técnico.
+- **Confirmación:** No hubo push, commit, generación de UI ni instalación de nuevas dependencias NPM. Se aprueba la conclusión de la Fase 3B.
+
+## Fase 3B2C2.3 · Exact Fixture Integrity Audit
+**Objetivo:** Ejecutar `ImportSessionSchema.safeParse` directamente sobre los objetos exportados por el catálogo público para confirmar inmutabilidad y probar la falta de adaptación por parte del harness.
+**Mecanismo:** Script de Vite SSR con validación estricta y control de hash SHA-256 antes y después del parse para garantizar 0% mutaciones.
+**Resultado exacto de fixtures:** 8/10 fixtures aprobaron exactamente igual a como estaban en el catálogo. `raw-review-required` y `unknown-blocked` fallaron debido a inconsistencias documentales en las sumatorias de progreso de revisión.
+**Resultado de integridad:** Los 10 fixtures fueron evaluados sin alteración, preservando su firma criptográfica.
+**Regresión mínima:** 4 de 4 casos negativos fueron correctamente rechazados (`isCommitStarted`, `email`, `visibility` public en raw, y mode `unknown` en config).
+**Cleanup:** El directorio `tmp/runtime-validation/` o scripts temporales fueron eliminados.
+**Compliance:** Sin commit, sin push.
+
+## Fase 3B2C2.4 · Review Progress Semantics Decision Gate
+- **Objetivo:** Determinar de forma inequívoca la semántica de los conteos de `ReviewProgress` y clasificar los fallos de la auditoría de fixtures, evaluando la exclusividad transversal de `blocking`.
+- **Fuentes revisadas:** `DATA_MODEL.md`, `IMPORT_ARCHITECTURE.md`, esquemas de revisión, y fixtures afectados.
+- **Clasificación formal:** **MIXED_DEFECT**.
+- **Modelo semántico elegido:** Modelo B (`blocking` como dimensión transversal que cuenta entidades con al menos un issue bloqueante, y no se suma a los estados exclusivos). 
+- **Decisión:** El schema actual falla lógicamente al sumar `blocking` al total. El fixture `unknown-blocked` falla semánticamente al establecer `blocking: 1` cuando `total: 0`.
+- **Archivos que podrá tocar el hotfix:** Únicamente `src/lib/survey-import/schemas/reviewSchemas.ts` y `src/mocks/survey-import/scenarios/unknownBlockedScenario.ts`.
+- **Estado:** Completada. Fase 3C permanece bloqueada.
+- **Confirmación:** No hubo commit, no hubo push, ni modificaciones a código, schemas, ni fixtures.
+
+## Fase 3B2C2.5 · Review Progress Mixed-Defect Hotfix
+- **Objetivo:** Ejecutar las correcciones recomendadas en la Fase 3B2C2.4 para remover `blocking` de los estados mutuamente excluyentes en los esquemas y normalizar `unknown-blocked`.
+- **Archivos modificados:** `src/lib/survey-import/schemas/reviewSchemas.ts` y `src/mocks/survey-import/scenarios/unknownBlockedScenario.ts`.
+- **Defecto corregido:** Mixed-defect de schema (double counting) y fixture (conteo de issues globales interpretados erróneamente como entidades).
+- **Resultados de validación:** 
+  - 10/10 positivos exactos pasaron sin adaptación ni modificación. 
+  - 7/7 casos RP evaluando estados exclusivos y transversales resultaron exitosos.
+  - 18/18 regresiones negativas estructurales de sesión se mantuvieron firmes.
+- **Baseline QA Técnico:** 25 errores heredados, 1 warning heredado, 0 hallazgos nuevos en `survey-import`. Compilación seca exitosa y empaquetado de producción exitoso.
+- **Temporales:** Directorio `tmp/runtime-validation/` creado para el harness y posteriormente eliminado.
+- **Confirmación:** No hubo commit ni push. No se instalaron dependencias ni se alteró UI. Fase 3C autorizada.
+
+## Fase 3C1 · Data Contract Formal Approval
+- **Objetivo**: Emitir la aprobación formal del contrato de datos completo antes de comenzar la primera pantalla.
+- **Documentos Revisados**: `IMPORT_ARCHITECTURE_APPROVAL.md`, `PROJECT_INTAKE.md`, `IMPORT_ARCHITECTURE.md`, `SCREEN_MAP.md`, `DATA_MODEL.md`, `MOCK_DATA_CONTRACT.md`, `RUNTIME_VALIDATION.md`, `RUNTIME_VALIDATION_RESULTS.md`, `REVIEW_PROGRESS_SEMANTICS_DECISION.md`.
+- **Resultado Técnico**: Validación limpia para TypeScript, Build, y Lint (dominio `survey-import`). Deuda externa heredada identificada (25 errores, 1 warning). Árbol de Git seguro (sin archivos riesgosos reales ni scripts temporales).
+- **Estado Formal**: `APPROVED_WITH_CONDITIONS`
+- **Contratos Congelados**: `src/types/survey-import/**`, `src/mocks/survey-import/**`, `src/lib/survey-import/schemas/**`, y documentación asociada.
+- **Decision Gates Abiertos**: Parsers, licencias, Web Workers, límites productivos, proveedor IA, adaptadores, persistencia y autenticación.
+- **Autorización Fase 3C2**: Aprobada.
+- **Autorización Fase 4**: Aprobada condicionadamente a construir exclusivamente U1 · Carga Inicial sin conexión de dependencias.
+- **Confirmación**: No se hizo commit, no se hizo push, no se creó código de UI.
+
+## Fase 3C2 · Git Checkpoint, Commit and Push
+- **Fecha**: 2026-06-10
+- **Objetivo**: Realizar el primer checkpoint formal del proyecto publicando los artefactos aprobados en el repositorio remoto.
+- **Estado Técnico**: TypeScript compilación seca (0 errores), Build exitoso, Lint de dominio (0 errores, 0 warnings), Errores globales heredados mantenidos (25 errores, 1 warning).
+- **Resultado de revisión de seguridad**: Limpia. 0 secretos expuestos, 0 contraseñas, 0 datos reales de clientes.
+- **Archivos incluidos**: `.gitignore`, documentos de proyecto aprobados (`docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`, `docs/PROJECT_INTAKE.md`, `docs/IMPORT_ARCHITECTURE.md`, `docs/SCREEN_MAP.md`, `docs/IMPORT_ARCHITECTURE_APPROVAL.md`, `docs/DATA_MODEL.md`, `docs/MOCK_DATA_CONTRACT.md`, `docs/RUNTIME_VALIDATION.md`, `docs/RUNTIME_VALIDATION_RESULTS.md`, `docs/REVIEW_PROGRESS_SEMANTICS_DECISION.md`, `docs/DATA_CONTRACT_APPROVAL.md`), tipos canónicos (`src/types/survey-import/**`), fixtures sintéticos (`src/mocks/survey-import/**`), y schemas runtime (`src/lib/survey-import/schemas/**`).
+- **Mensaje de commit previsto**: `feat(survey-import): establish validated import domain foundation`
+- **Remoto de destino**: `origin/main` (`https://github.com/elkingarcia22/Carga-Histrica-de-encuestas.git`)
+- **Confirmación**: Fase 4 todavía no comenzó. No se generó UI, rutas ni instalaron dependencias.
+

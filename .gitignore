@@ -25,3 +25,24 @@ dist-ssr
 
 # Reference repos (cloned locally, not tracked)
 references/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Datos locales y sensibles
+/uploads/
+/tmp/
+/local-data/
+/private-data/
+/data/real/
+/scratch/
+
+# Archivos locales de encuesta
+*.local.xlsx
+*.local.xls
+*.local.csv
+*.private.xlsx
+*.private.xls
+*.private.csv

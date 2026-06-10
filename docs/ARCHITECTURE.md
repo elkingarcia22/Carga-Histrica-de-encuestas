@@ -171,3 +171,7 @@ Governance documents for first dashboard build:
 - **Infrastructure**: `src/components/navigation/`.
 - **Estabilización**: Hotfix 8.6C.1 (Aprobado). 0 HEX en TSX, 0 text-white.
 - **Siguiente**: Fase 8.6D · Home/List Template Patterns (Bloqueada hasta cierre formal).
+
+## Arquitectura de Importación (Fase 2)
+La arquitectura técnica del dominio de importación (wizard, pipeline local, límites de estado y adaptadores) está documentada como una extensión del sistema en:
+- [IMPORT_ARCHITECTURE.md](./IMPORT_ARCHITECTURE.md)
