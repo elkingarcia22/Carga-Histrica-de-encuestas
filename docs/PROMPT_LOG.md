@@ -585,3 +585,34 @@
 - **Remoto de destino**: `origin/main`
 - **Confirmación de cierre**: U2 queda formalmente cerrada.
 - **Confirmación**: U3 no comenzó y queda bloqueada hasta Fase 4C1.
+
+### 2026-06-10 - Fase 4C1 · U3 Parser and Profiling Intake
+- **Objetivo**: Definir y documentar decisiones necesarias antes de construir el parsing y profiling (U3).
+- **Inventario técnico**: Parsers no instalados. Se requiere agregar uno. Vite worker support disponible.
+- **Formatos evaluados**: `.xlsx` y `.xls`. CSV diferido.
+- **Parsers evaluados**: SheetJS (recomendado para `.xls`), ExcelJS.
+- **Licencias**: SheetJS Community Edition es Apache 2.0 (`APPROVED_FOR_PROTOTYPE`).
+- **Worker**: Recomendación provisional de usar el Main Thread para el prototipo debido a su sencillez temporal, con transición requerida a Web Worker para producción.
+- **Límites**: Bloqueo máximo de hojas (10), celdas/filas inspeccionadas limitadas, tamaño máx 25MB por archivo para prevenir ZIP bombs.
+- **Seguridad**: Prohibido el uso o evaluación de fórmulas y ejecución de macros. Sanitización severa de muestras para PII.
+- **Profiling contract**: Contrato conceptual creado (`ProfilingFileResult`, `ProfilingSheetResult`, etc.).
+- **Decision gates**: Se aprueba `U3_PARSER_PROFILING_INTAKE.md`. Pendientes de decisión final de parser y worker antes del código.
+- **Riesgos**: Bundle grande, congelamiento de UI en lote masivo, riesgo de PII si los sanitizers fallan.
+- **Autorización o bloqueo para Fase 4C2**: `READY_WITH_BLOCKING_DECISION_GATES`. Fase 4C2 (Documentación) autorizada.
+- **Confirmación**: No se generó código, no se instalaron dependencias, no hubo commit y no hubo push.
+
+### 2026-06-10 - Fase 4C1.1 · U3 Parser and Profiling Intake Documentation Checkpoint
+- **Objetivo**: Verificar y aplicar correcciones técnicas y de gobernanza al intake de U3, consolidando decision gates para el parser, Worker, seguridad, memoria y profiling, dejando el repositorio limpio para Fase 4C2.
+- **Documentos incluidos**: `docs/U3_PARSER_PROFILING_INTAKE.md` y `docs/PROMPT_LOG.md`.
+- **Estado formal**: `READY_WITH_BLOCKING_DECISION_GATES`.
+- **Candidatos evaluados**: SheetJS CE, ExcelJS. Ninguno aprobado definitivamente para instalación. Papa Parse diferido.
+- **`.xls`**: Bloqueado para spike.
+- **Worker**: Requerido desde el primer spike. Main Thread productivo bloqueado.
+- **Licencias identificadas**: Apache 2.0 (SheetJS CE) y MIT (ExcelJS), no aprobadas definitivamente.
+- **Riesgo ZIP y memoria**: Mitigación mediante Worker, ArrayBuffer y límites de expansión, no solo por tamaño comprimido en U2.
+- **Límites provisionales**: Máximo 10 hojas, 100.000 filas declaradas, 10.000 celdas inspeccionadas, 10 muestras de máximo por columna.
+- **Sanitización**: Enmascaramiento heurístico, no garantiza detección total de PII.
+- **Decision gates pendientes**: Selección de parser (SheetJS vs ExcelJS), Worker spike y límites productivos finales.
+- **Mensaje de commit previsto**: `docs(survey-import): define U3 parser profiling intake`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: No hubo código, no se instalaron dependencias, y no se construyó U3. Autorizada únicamente Fase 4C2 documental.
