@@ -1,3 +1,46 @@
+### 2026-06-11 - Fase 4E2.1 · Historical Preview Simulated Architecture Documentation Checkpoint
+- **Objetivo**: Corregir inconsistencias documentales de Fase 4E2 antes de consolidar el Architecture Lock y pasar al Mock Data Contract.
+- **Estado formal**: `HISTORICAL_PREVIEW_SIM_ARCHITECTURE_LOCKED_WITH_MOCK_DATA_GATE`.
+- **Correcciones realizadas**:
+  - Clasificación de métricas del segundo periodo (delta, tendencia, distribución comparativa) como `SYNTHETIC_PREVIEW_VALUE_REQUIRES_MOCK_CONTRACT` en lugar de datos generados libremente.
+  - Rectificación de la política de distribución: no se debe forzar la redistribución silente al 100%, sino aceptar una tolerancia numérica documentada en Fase 4E3.
+  - Corrección de métricas: eliminación de mención a eNPS para la primera pantalla, favoreciendo favorabilidad y participación estricta.
+  - Auditoría de Starter Kit documentada para el gráfico de tendencia y otros componentes.
+  - Reestructuración del árbol de componentes en un esquema más preciso y conciso.
+  - Incorporación exhaustiva en matrices de riesgos y decisiones.
+  - División estricta en Flash 3.0 Tasks.
+- **Archivos creados/modificados**:
+  - Modificado `docs/HISTORICAL_PREVIEW_SIMULATED_INTAKE.md`.
+  - Modificado `docs/HISTORICAL_PREVIEW_SIMULATED_ARCHITECTURE.md`.
+  - Modificado `docs/ARCHITECTURE.md`.
+  - Modificado `docs/SCREEN_MAP.md`.
+  - Modificado `docs/PROMPT_LOG.md`.
+- **QA de integridad**: No se alteró código, no se generó UI, dependencias intactas. 0 secretos, 0 contraseñas o datos reales.
+- **Autorización**: Se autoriza la **Fase 4E3 · Historical Preview Simulated Mock Data Contract**.
+
+### 2026-06-11 - Fase 4E2 · Historical Preview Simulated Architecture Lock
+- **Estado formal**: `HISTORICAL_PREVIEW_SIM_ARCHITECTURE_LOCKED`.
+- **Decisiones arquitectónicas**:
+  - Frontera U3-SIM → Preview definida (`OPEN_SIMULATED_HISTORICAL_PREVIEW`).
+  - Orquestación visual cedida al owner de vistas actual (`upload-idle`, `files-selected`, `simulated-processing`, `historical-preview-simulated`).
+  - Fuente única de verdad centralizada en un adapter sintético (`HistoricalPreviewModel`).
+  - Cero lecturas de binarios, cero dependencias nuevas.
+- **Contratos definidos**:
+  - 4 KPIs fijos: Favorabilidad, Participación, Respuestas, Delta porcentual.
+  - Distribución en barra apilada y tendencia conceptual o tabla.
+  - Capacidades mapeadas y segmentos reducidos a contador numérico.
+  - Insights limitados a 2 derivados de valores sintéticos.
+  - ARR y variables complejas de negocio excluidas de primera pantalla.
+- **Archivos creados/modificados**:
+  - Creado `docs/HISTORICAL_PREVIEW_SIMULATED_ARCHITECTURE.md`.
+  - Modificado `docs/ARCHITECTURE.md`.
+  - Modificado `docs/SCREEN_MAP.md`.
+  - Modificado `docs/PROMPT_LOG.md`.
+- **QA de integridad**: No se alteró código, no se generó UI, dependencias intactas. Las actualizaciones se mantienen estrictamente documentales.
+- **Bloqueos o gates pendientes**:
+  - `PROVISIONAL_LOCKED` para deltas.
+- **Autorización**: Se autoriza la **Fase 4E2.1 · Historical Preview Simulated Architecture Documentation Checkpoint**.
+
 ### 2026-06-11 - Fase 4D4G · U3-SIM Task 7 — Independent End-to-End QA and Closure Gate
 - **Objetivo**: Determinar independientemente si la integración completa de U3-SIM cumple la arquitectura, y está libre de lecturas binarias, defectos de estado y deuda técnica.
 - **Estado formal**: `U3_SIM_QA_APPROVED`
@@ -1288,3 +1331,13 @@ Autorizo continuar a la **Fase 4D4F · U3-SIM Task 6 — U2 to U3-SIM Integratio
 - **Búsquedas de seguridad**: Confirmado 0 lecturas binarias, 0 dependencias extrañas, 0 requests reales.
 - **Autorización**: Se autoriza **Fase 4D4G · U3-SIM Task 7 — Independent End-to-End QA and Closure Gate**.
 - **Estado**: Aprobado.
+
+## Fase 4E1 · Historical Preview Simulated Intake
+**Descripción:** Definición y validación documental del intake completo para la funcionalidad "Historical Preview Simulated", la cual será la siguiente vista conceptual tras U3-SIM.
+**Acciones:**
+- Verificación del estado del repositorio: rama `main`, sincronizada con `origin/main`, working tree limpio.
+- Confirmación de que U1, U2 y U3-SIM están congeladas y no hay dependencias, parser, ni Worker reales.
+- Creación del documento `docs/HISTORICAL_PREVIEW_SIMULATED_INTAKE.md` detallando el objetivo, usuario principal, primera pantalla, base técnica, datos mock autorizados, KPIs, layout conceptual, disclosure, criterios de éxito y matriz de riesgos.
+- Cumplimiento de la restricción estricta "No code modification": 0 cambios en `src/**`, 0 UI construida.
+- **Autorización:** Se autoriza exclusivamente la **Fase 4E2 · Historical Preview Simulated Architecture Lock**.
+- **Estado:** Completado.
