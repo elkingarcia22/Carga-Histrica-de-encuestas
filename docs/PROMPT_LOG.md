@@ -1365,3 +1365,16 @@ Autorizo continuar a la **Fase 4D4F · U3-SIM Task 6 — U2 to U3-SIM Integratio
 - Comprobación de seguridad documental confirmando 0 secretos o rutas expuestas.
 - **Autorización:** Fase 4E4 · Historical Preview Simulated Local Contract and Adapter Build Planning.
 - **Estado:** Completado.
+
+## Fase 4E4 · Historical Preview Simulated Local Contract and Adapter Build Planning
+**Descripción:** Estructuración de la planificación para crear y documentar tipos, adapter, interfaces locales e imports futuros, garantizando una arquitectura unívoca sin codificación en la carpeta de código fuente.
+**Acciones:**
+- Creación del documento `docs/HISTORICAL_PREVIEW_SIMULATED_BUILD_PLAN.md` detallando:
+  - Definición de tipos de dominio (Local Contracts) `HistoricalPreviewSimulatedContract` y `ScenarioState`.
+  - Firma determinística del adaptador (`createHistoricalPreviewSimulatedContract`).
+  - Interfaces locales UI (`HistoricalPreviewSimulatedScreenProps`).
+  - Ubicación de archivos futuros (`types.ts`, `adapter.ts`, `HistoricalPreviewSimulatedScreen.tsx`).
+- Respeto absoluto de la restricción documental: 0 líneas de código implementadas en `src/`.
+- Actualización de `PROMPT_LOG.md`.
+- **Autorización:** Pendiente de revisión del usuario.
+- **Estado:** Completado.
