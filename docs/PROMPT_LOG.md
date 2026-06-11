@@ -1,5 +1,43 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-06-10 - Fase 4C2A.1 · U3 Architecture Documentation Checkpoint
+- **Objetivo**: Verificar, corregir y publicar la arquitectura documental de U3.
+- **Documentos incluidos**: `docs/U3_PARSER_PROFILING_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
+- **Estado formal**: `APPROVED_WITH_BLOCKING_SPIKE_GATES`.
+- **Decisiones corregidas y bloqueadas**:
+  - Versión SheetJS corregida a 0.20.3 (tarball oficial).
+  - Worker sin garantías absolutas de memoria; actúa como aislamiento y mitigación.
+  - FileId diferenciado formalmente de File en las capas de interacción.
+  - Estrategia de entrada binaria (File versus ArrayBuffer) abierta para evaluación en spike.
+  - Handoff al clasificador entrega únicamente evidencia estructural, no "Match Final".
+  - Sanitización heurística, no estricta, aplicada solo a muestras.
+  - Presupuesto blando (15s, warning) versus duro (terminación).
+  - Acción Continuar renderizada y deshabilitada en U2.
+- **Gates que permanecen bloqueados**: Spike ejecutable, instalación de parsers, construcción de U3.
+- **Mensaje de commit previsto**: `docs(survey-import): lock U3 parser profiling architecture`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: Confirmación de no código, no instalación, no spike y no U3.
+### 2026-06-10 - Fase 4C2A · U3 Parser and Profiling Architecture Lock
+- **Objetivo**: Definir formalmente la arquitectura de la fase "U3 · Procesamiento inicial y profiling" para bloquear las capas de interacción, Worker, protocolo de mensajes, adaptador de parser, y sanitización antes de ejecutar un spike o autorizar la instalación de dependencias.
+- **Commit base**: `9d394136e66b26a4b251d806c9aacdb404ebe0c8`
+- **Decisiones bloqueadas**: 
+  - La inspección binaria (`.xlsx`) ocurrirá en un Web Worker (concurrencia 1, archivo por archivo).
+  - El Main Thread no ejecutará el parser.
+  - El adaptador aislará la biblioteca subyacente de U3 y no expondrá sus objetos.
+  - La sanitización (truncado, enmascaramiento heurístico) se ejecutará en el Worker.
+  - No se ejecutarán fórmulas, macros ni llamadas a APIs.
+  - La frontera entre U2 y U3 estará protegida por la validación de estado local y el ciclo de vida de los `File`.
+- **Decisiones diferidas/abiertas**:
+  - Selección definitiva del parser exacto, verificación de su procedencia y revisión de licencia (`SheetJS` u otros).
+  - Estrategia de lectura (`File` frente a `ArrayBuffer`).
+  - Soporte aislado para `.xls`.
+- **Archivos creados/modificados**:
+  - `docs/U3_PARSER_PROFILING_ARCHITECTURE.md` (creado).
+  - `docs/ARCHITECTURE.md` (actualizado).
+  - `docs/PROMPT_LOG.md` (actualizado).
+- **Estado Técnico**: `APPROVED_WITH_BLOCKING_SPIKE_GATES`. Fase documental aprobada.
+- **Confirmación**: No se alteró código funcional, no se instalaron bibliotecas (`npm install` bloqueado), ni se crearon UI o hooks. No hubo commit ni push. Autorizado el paso a Fase 4C2B documental.
+
 ### 2026-06-10 - Fase 5B · U2 Independent QA Audit
 - **Objetivo**: Auditar de forma independiente la implementación de la interacción local de U2 (Archivos seleccionados).
 - **Commit base**: 4b9281f5fd9790d989afcdaf66b39c5f2140bdbf
