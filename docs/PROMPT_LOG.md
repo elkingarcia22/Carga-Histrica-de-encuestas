@@ -1,5 +1,18 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-06-11 - Fase 4D3.1 · U3-SIM Build Plan Documentation Checkpoint
+- **Objetivo**: Verificar, corregir y publicar el plan técnico detallado de la arquitectura para U3-SIM.
+- **Commit base**: fbdb7b82e6193589ee0858e8c56983b97d5268e5
+- **Estado formal**: `U3_SIM_BUILD_PLAN_APPROVED`.
+- **Estrategia de vista**: Se consolida la única fuente de verdad en `SurveyImportView` (`upload-idle`, `files-selected`, `simulated-processing`), eliminando ambigüedades.
+- **Condición Continuar**: Definida conceptualmente como `canStartSimulation` pero no habilitada en código aún.
+- **Inventario**: Se establece un inventario exacto de 4 archivos a modificar y 9 a crear.
+- **Arquitectura de componentes**: Se delimita la creación de contratos, adapter, hooks y componentes presentacionales con estricta separación de responsabilidades y nulo acoplamiento a binarios o fixtures reales en UI.
+- **División Flash**: Separado en 7 tareas ejecutables progresivamente (Task 1 a Task 7).
+- **Mensaje de commit previsto**: `docs(survey-import): approve simulated U3 build plan`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: No se ha escrito, modificado ni stageado código funcional en `src/`.
+
 ### 2026-06-11 - Fase 4D2.1 · Simulated Processing Architecture Documentation Checkpoint
 - **Objetivo**: Validar, corregir y realizar el checkpoint documental final para la arquitectura de U3-SIM.
 - **Commit base**: 47c69f76a327375320f5c5dd8aac0bbc3844b5f5
@@ -854,3 +867,21 @@
 - **Riesgos**: Posible impacto en Web Worker si no se encapsula estrictamente.
 - **Autorización o bloqueo para P1B**: Fase 4C2D2 · P1 Worker Bootstrap Architecture and Harness Intake **Autorizada**.
 - **Confirmación de no Worker, no parser ejecutado, no fixture, no UI y no U3**: Se confirma que solo se instaló la dependencia de manera aislada, no se generó Worker ni se mutó código.
+
+### 2026-06-11 - Fase 4D3 · U3-SIM First Screen Build Intake and File Plan
+- **Objetivo**: Definir el plan técnico exacto para construir la vista de procesamiento inicial simulado U3-SIM sin escribir código aún.
+- **Commit base**: `fbdb7b82e6193589ee0858e8c56983b97d5268e5`
+- **Componentes auditados**: Reutilizables de `src/components/ui/` (Progress, Alert, Badge, Card, etc.) y de `src/components/survey-import/`. Ausencia de UI base preconstruida para "IA ligera".
+- **Decisiones**: 
+  - Se creará una vista independiente `SimulatedProcessingScreen` renderizada condicionalmente en `SurveyImportUploadScreen` para aislar responsabilidades.
+  - El orquestador navegará entre `upload-idle` → `files-selected` → `simulated-processing`.
+  - El límite de la U2 requerirá únicamente inyectar props funcionales a `ImportWizardFooter` para habilitar el botón "Continuar".
+  - El Reducer actual no se mutará. Un nuevo Reducer local controlará solo la fase de simulación.
+  - El adapter gestionará la resolución del escenario y proveerá el plan de ejecución determinístico sin usar `File` objects.
+- **Inventario**: 
+  - Archivos a modificar: `SurveyImportUploadScreen.tsx`, `ImportWizardFooter.tsx`, `QA_CHECKLIST.md`, `PROMPT_LOG.md`.
+  - Archivos a crear: `SimulatedProcessingScreen.tsx`, `useSimulatedProcessingState.ts`, `simulationConfig.ts`, `simulatedImportAdapter.ts`, `simulationTypes.ts`.
+- **División Flash**: Separado en 7 tareas incrementales, yendo desde los contratos y config, hasta el orquestador visual y QA exhaustivo.
+- **QA y Riesgos**: Evaluación estructurada en visual, a11y, regresiones, funcionalidad y memory leaks por timers reactivos mal limpiados.
+- **Estado**: `U3_SIM_BUILD_PLAN_APPROVED`
+- **Confirmación**: No se mutó código fuente (src/). No se agregaron dependencias. No se generó UI, timers o adapters. No se hizo commit. No se hizo push.
