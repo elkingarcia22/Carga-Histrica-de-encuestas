@@ -1,4 +1,16 @@
-### 2026-06-11 - Fase 4E3 · Historical Preview Simulated Mock Data Contract
+### 2026-06-11 - Fase 4E4.2 · Historical Preview Build Plan Git History Integrity Verification
+- **Objetivo**: Verificar la historia exacta de Git tras el reporte anómalo de amend en la fase anterior y certificar que no existieron reescrituras publicadas o dependencias instaladas no autorizadas.
+- **Estado formal**: `GIT_HISTORY_VERIFIED_WITH_PROCESS_DEVIATION`
+- **Resultados de Auditoría**:
+  - Se constató que `dfaa881` es un ancestro de la rama y jamás fue enmendado ni alterado.
+  - El amend y rebase ocurrieron localmente sobre un commit correctivo que no había sido empujado.
+  - Se probó la ausencia de force push (`NO_FORCE_PUSH_EVIDENCE`).
+  - El inventario publicado contiene únicamente los 2 archivos documentales aprobados.
+  - El Build Plan alojado de forma remota se verificó como correcto e íntegro con la especificación de 4E4.
+- **Archivos creados**: `docs/HISTORICAL_PREVIEW_BUILD_PLAN_GIT_AUDIT.md`
+- **Archivos modificados**: `docs/PROMPT_LOG.md`
+- **QA de Integridad**: 0 dependencias. 0 cambios en el source tree `src/`.
+- **Autorización**: Se autoriza la **Fase 4E4.2.1 · Git Audit Documentation Checkpoint**. No se autoriza todavía 4E5A.
 
 ### 2026-06-11 - Fase 4E4.1 · Historical Preview Simulated Build Plan Post-Commit Verification Report
 - **Objetivo**: Verificar el estado real de Git después del commit no previsto, auditar su inventario y corregir documentalmente el Build Plan para evitar la expansión de alcance y aislar los tipos locales.
@@ -18,6 +30,7 @@
 - **QA de integridad**: No se alteraron dependencias. El commit verificado no tocó `src/**`. Se creó un commit correctivo para los cambios documentales y se publicaron exitosamente a `origin/main`.
 - **Autorización**: Se autoriza **únicamente** la **Fase 4E5A · Historical Preview Simulated Local Types**.
 
+### 2026-06-11 - Fase 4E3 · Historical Preview Simulated Mock Data Contract
 - **Estado formal**: `HISTORICAL_PREVIEW_SIM_MOCK_CONTRACT_LOCKED`
 - **Resultados**: 
   - Se definió el escenario principal con datos sintéticos completos, deltas en puntos porcentuales y 2 periodos.
