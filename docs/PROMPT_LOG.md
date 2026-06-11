@@ -1,3 +1,16 @@
+### 2026-06-11 - Fase 4E3 · Historical Preview Simulated Mock Data Contract
+- **Objetivo**: Definir y bloquear el Mock Data Contract de la pantalla de vista previa histórica simulada.
+- **Estado formal**: `HISTORICAL_PREVIEW_SIM_MOCK_CONTRACT_LOCKED`
+- **Resultados**: 
+  - Se definió el escenario principal con datos sintéticos completos, deltas en puntos porcentuales y 2 periodos.
+  - Se definieron escenarios alternativos (`limited`, `empty`, `error-simulated`).
+  - Se estableció una separación estricta entre la metadata existente y la metadata sintética para la preview.
+  - Se creó la matriz de validación con invariantes matemáticas obligatorias.
+- **Archivos creados**: `docs/HISTORICAL_PREVIEW_SIMULATED_MOCK_DATA_CONTRACT.md`
+- **Archivos modificados**: `docs/PROMPT_LOG.md`
+- **QA de integridad**: No se alteraron mocks, no se crearon tipos, no se generó UI. Cero dependencias y cero commits/pushes.
+- **Autorización**: Se autoriza la **Fase 4E3.1 · Historical Preview Simulated Mock Data Contract Documentation Checkpoint**.
+
 ### 2026-06-11 - Fase 4E2.1 · Historical Preview Simulated Architecture Documentation Checkpoint
 - **Objetivo**: Corregir inconsistencias documentales de Fase 4E2 antes de consolidar el Architecture Lock y pasar al Mock Data Contract.
 - **Estado formal**: `HISTORICAL_PREVIEW_SIM_ARCHITECTURE_LOCKED_WITH_MOCK_DATA_GATE`.
@@ -1340,4 +1353,15 @@ Autorizo continuar a la **Fase 4D4F · U3-SIM Task 6 — U2 to U3-SIM Integratio
 - Creación del documento `docs/HISTORICAL_PREVIEW_SIMULATED_INTAKE.md` detallando el objetivo, usuario principal, primera pantalla, base técnica, datos mock autorizados, KPIs, layout conceptual, disclosure, criterios de éxito y matriz de riesgos.
 - Cumplimiento de la restricción estricta "No code modification": 0 cambios en `src/**`, 0 UI construida.
 - **Autorización:** Se autoriza exclusivamente la **Fase 4E2 · Historical Preview Simulated Architecture Lock**.
+- **Estado:** Completado.
+
+## Fase 4E3.1 · Historical Preview Simulated Mock Data Contract Documentation Checkpoint
+**Descripción:** Auditoría, corrección y consolidación documental del contrato mock para Historical Preview Simulated.
+**Acciones:**
+- Verificación inicial del estado de Git y fuentes de verdad.
+- Auditoría matemática confirmando favorabilidad, distribución, delta y participación.
+- Consolidación del formato documental asegurando separación entre datos del fixture original (como capacidades y segmentos) y mock (como delta e insights).
+- Definición clara de la matriz V1-V16, con escenarios de limitación, empty state y simulated error, garantizando determinismo estricto y versionado conceptual 1.0.
+- Comprobación de seguridad documental confirmando 0 secretos o rutas expuestas.
+- **Autorización:** Fase 4E4 · Historical Preview Simulated Local Contract and Adapter Build Planning.
 - **Estado:** Completado.
