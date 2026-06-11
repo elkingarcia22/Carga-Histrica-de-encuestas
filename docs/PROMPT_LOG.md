@@ -1,6 +1,49 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
-### 2026-06-10 - Fase 4C2B.1 · Parser and Worker Spike Plan Documentation Checkpoint
+### 2026-06-10 - Fase 4C2C.1 · Parser Dependency Decision Documentation Checkpoint
+- **Objetivo**: Verificar, corregir y publicar el reporte documental de la Fase 4C2C (P0) aislando a SheetJS como único candidato para P1.
+- **Commit base**: 6895e681dbcdae9216157ae2bdc4d7c6931f218d
+- **Documentos incluidos**: `docs/U3_PARSER_DEPENDENCY_DECISION.md`, `docs/PROMPT_LOG.md`.
+- **Resultado de P0**: `DEPENDENCY_SPIKE_APPROVED_WITH_CONDITIONS`
+- **Candidato seleccionado**: **SheetJS CE (0.20.3)** (Autorizado para P1)
+- **Candidato secundario**: ExcelJS (4.4.0) (`SECONDARY_CANDIDATE_NOT_SELECTED`)
+- **Hashes registrados (SHA-256)**:
+  - `xlsx-0.20.3.tgz`: `8dc73fc3b00203e72d176e85b50938627c7b086e607c682e8d3c22c02bb99fe8`
+  - `exceljs-4.4.0.tgz`: `8adac13d192ce80e11304732d3ab96708b2c64bb54771b5da4f946e5eea55a18`
+- **Advisory histórico**: SheetJS (`~0.19.3`) en npm tiene reportes de Prototype Pollution. La versión CDN 0.20.3 declara correcciones, generando divergencia resuelta temporalmente para aislamiento en P1 (`CONFLICTING_SECURITY_EVIDENCE_RESOLVED_FOR_ISOLATED_SPIKE`).
+- **Matriz recalculada**: SheetJS obtuvo 70/100 (penalizado justamente en compatibilidad y bundle no comprobados) frente a ExcelJS 45/100 (penalizado por arrastrar 9 dependencias transitivas).
+- **Metadata corregida**: Se actualizó el riesgo para dependencias de compresión de ExcelJS (no son optional, son dependencias directas de producción).
+- **Estrategia P1**: URL oficial versionada en `package.json` (`APPROVED_FOR_P1_ONLY`).
+- **Estrategia productiva**: Abierta (Vendoring/Mirroring/etc.) tras culminación exitosa de P1 (`PRODUCTION_ACQUISITION_OPEN`).
+- **Condiciones obligatorias para P1**: 20 condiciones registradas explícitamente abarcando hashes, imports aislados, 0 network I/O, medición de chunk, nulo impacto en main chunk y rollback baseline.
+- **Riesgos residuales documentados**: Worker stability, Runtime network, Bundle chunk limits, ZIP bombs, File/ArrayBuffer transfer, Memory limits.
+- **Mensaje previsto de commit**: `docs(survey-import): approve parser dependency spike candidate`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: NO se ha instalado código, NO se ha implementado Worker, NO se han añadido datos sensibles y NO se ha ejecutado P1.### 2026-06-10 - Fase 4C2C · Parser Dependency Decision Gate
+- **Objetivo**: Evaluar formalmente los candidatos de parser y decidir si alguno puede ser autorizado para un spike aislado en P1.
+- **Commit base**: 6895e681dbcdae9216157ae2bdc4d7c6931f218d
+- **Candidatos evaluados**: SheetJS CE (0.20.3) y ExcelJS (4.4.0).
+- **Artefactos temporales inspeccionados**: `/tmp/parser-eval/xlsx-0.20.3.tgz` y `/tmp/parser-eval/exceljs-4.4.0.tgz`. (Eliminados tras inspección).
+- **Hashes calculados (SHA-256)**:
+  - `xlsx-0.20.3.tgz`: `8dc73fc3b00203e72d176e85b50938627c7b086e607c682e8d3c22c02bb99fe8`
+  - `exceljs-4.4.0.tgz`: `8adac13d192ce80e11304732d3ab96708b2c64bb54771b5da4f946e5eea55a18`
+- **Procedencia**: SheetJS verificado desde CDN oficial, ExcelJS desde NPM Registry público.
+- **Licencias**: SheetJS (Apache-2.0), ExcelJS (MIT).
+- **Scripts**: Ninguno declara scripts pre/post-install riesgosos.
+- **Transitivas**: SheetJS posee 0 dependencias. ExcelJS posee 9 directas y amplias transitivas (`jszip`, `saxes`, etc).
+- **Advisories**: SheetJS libre de reportes en su build CDN oficial. ExcelJS arrastra advertencias en dependencias de compresión.
+- **Compatibilidad teórica**: SheetJS soporta Worker de forma nativa sin requerir polyfills I/O de Node.
+- **Matriz ponderada**: SheetJS CE obtuvo 100/100, liderando frente al 71/100 de ExcelJS.
+- **Candidato seleccionado**: **SheetJS CE (0.20.3)** autorizado para P1.
+- **Condiciones para P1**: Demostrar parseo en Worker, `0 KB` incrementado en main thread, nulo network I/O, estricto límite de chunk y compatibilidad de Worker module en Vite.
+- **Rollback**: Definidos planes de limpieza local y desinstalación para el spike en caso de no éxito, incluyendo pre y post-commit actions.
+- **Resultado de P0**: `DEPENDENCY_SPIKE_APPROVED_WITH_CONDITIONS`
+- **Confirmación de gobernanza**: 
+  - NO se instalaron dependencias.
+  - NO se generó código ni Worker.
+  - NO se abrieron archivos Excel.
+  - NO se crearon fixtures ni UI.
+  - NO se hizo commit ni push.### 2026-06-10 - Fase 4C2B.1 · Parser and Worker Spike Plan Documentation Checkpoint
 - **Objetivo**: Revisar integralmente el plan de spikes y publicar los documentos autorizados, corrigiendo terminología, garantizando seguridad y aislando la futura dependencia.
 - **Documentos incluidos**: `docs/U3_PARSER_WORKER_SPIKE_PLAN.md`, `docs/PROMPT_LOG.md`.
 - **Estado formal**: `READY_FOR_DEPENDENCY_GATE`.
