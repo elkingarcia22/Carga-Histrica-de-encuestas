@@ -4,10 +4,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles } from 'lucide-react';
 
 interface InitialUploadPanelProps {
+  onAddFiles?: (files: File[]) => void;
   className?: string;
 }
 
-export function InitialUploadPanel({ className }: InitialUploadPanelProps) {
+export function InitialUploadPanel({ onAddFiles, className }: InitialUploadPanelProps) {
   const { uploadZone, processInfo } = importWizardContent;
 
   return (
@@ -18,11 +19,12 @@ export function InitialUploadPanel({ className }: InitialUploadPanelProps) {
           <p className="text-sm text-muted-foreground">{uploadZone.description}</p>
         </div>
 
-        {/* Zona pasiva de carga, disabled para fase inicial */}
+        {/* Zona pasiva de carga, habilitada para seleccionar archivos */}
         <UploadZone
-          disabled={true}
-          idleText={uploadZone.idleText}
           accept={uploadZone.supportedFormats}
+          multiple
+          onChange={onAddFiles}
+          idleText={uploadZone.idleText}
         />
 
         <Card className="bg-muted/30 border-muted">

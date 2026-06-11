@@ -4,20 +4,24 @@ import { importWizardContent } from '@/config/survey-import/importWizardContent'
 interface ImportSummaryCardProps {
   className?: string;
   filesCount: number;
+  totalSizeLabel?: string;
+  validCount?: number;
+  blockedCount?: number;
   modeLabel: string;
   surveyTypeLabel: string;
   privacyLabel: string;
-  pendingReviewsCount: number;
   isEmpty: boolean;
 }
 
 export function ImportSummaryCard({
   className,
   filesCount,
+  totalSizeLabel,
+  validCount,
+  blockedCount,
   modeLabel,
   surveyTypeLabel,
   privacyLabel,
-  pendingReviewsCount,
   isEmpty,
 }: ImportSummaryCardProps) {
   const { summary } = importWizardContent;
@@ -38,7 +42,25 @@ export function ImportSummaryCard({
               <dt className="text-muted-foreground">{summary.labels.files}</dt>
               <dd className="font-medium text-foreground">{filesCount}</dd>
             </div>
-            <div className="flex justify-between">
+            {totalSizeLabel && (
+              <div className="flex justify-between">
+                <dt className="text-muted-foreground">Tamaño total</dt>
+                <dd className="font-medium text-foreground">{totalSizeLabel}</dd>
+              </div>
+            )}
+            {validCount !== undefined && (
+              <div className="flex justify-between text-green-600 dark:text-green-400">
+                <dt>Válidos</dt>
+                <dd className="font-medium">{validCount}</dd>
+              </div>
+            )}
+            {blockedCount !== undefined && blockedCount > 0 && (
+              <div className="flex justify-between text-destructive">
+                <dt>Con bloqueo</dt>
+                <dd className="font-medium">{blockedCount}</dd>
+              </div>
+            )}
+            <div className="flex justify-between pt-4 border-t">
               <dt className="text-muted-foreground">{summary.labels.mode}</dt>
               <dd className="font-medium text-foreground">{modeLabel}</dd>
             </div>
@@ -49,10 +71,6 @@ export function ImportSummaryCard({
             <div className="flex justify-between">
               <dt className="text-muted-foreground">{summary.labels.privacy}</dt>
               <dd className="font-medium text-foreground">{privacyLabel}</dd>
-            </div>
-            <div className="flex justify-between pt-4 border-t">
-              <dt className="text-muted-foreground">{summary.labels.pendingReviews}</dt>
-              <dd className="font-medium text-foreground">{pendingReviewsCount}</dd>
             </div>
           </dl>
         )}

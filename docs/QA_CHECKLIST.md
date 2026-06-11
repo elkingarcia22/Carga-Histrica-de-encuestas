@@ -52,3 +52,66 @@
 - [x] Realizar QA de teclado y accesibilidad operativa.
 - [x] Verificar Technical QA baseline (TS, Build, Lint).
 - [x] Resultado final de U1: ✅ Aprobado y listo para cierre formal.
+
+## Fase 4B3A: U2 Selection and Validation (Implementada)
+- [x] Ejecutar gate inicial en la rama main.
+- [x] Auditar componentes y usar UploadZone sin estado useState<File[]>.
+- [x] Crear configuración uploadLimits.ts.
+- [x] Crear reducer puro useLocalUploadState.
+- [x] Crear boundary binario mediante Map efímero en SurveyImportUploadScreen.
+- [x] Mostrar UI U2 con lista de archivos sin parseo y sin persistencia.
+- [x] Aplicar límites estáticos (5 archivos, 25MB por archivo, 50MB lote).
+- [x] Validación de metadatos, control de duplicados y bloqueos.
+- [x] Summary actualizado correctamente en el componente lateral.
+- [x] Ejecutar QA Técnico: TypeScript 0 errores, Build exitoso.
+- [x] Confirmar cero commits, cero dependencias, cero rutas.
+
+## Fase 5B: U2 Independent QA Audit (Completada)
+- [x] Ejecutar auditoría sobre U2 y emitir U2_QA_REPORT.md
+- [x] Resultado: Hallazgos Blocking en TypeScript (Build roto).
+- [x] Bloqueado cierre de Fase 7B.
+- [x] Autorizada Fase 6B (Hotfix).
+
+## Fase 6B: U2 Type Contract and Build Recovery Hotfix (Completada)
+- [x] Identificados errores TS1484 y TS2322.
+- [x] Agregados imports type-only a LocalFileMetadata en componentes UI.
+- [x] Fijado el tipado de retorno explícito en revalidateBatch para proteger inferencia literal de FileStatus.
+- [x] QA Técnico: TypeScript 0 errores.
+- [x] QA Técnico: Build exitoso.
+- [x] QA Técnico: Lint 0 errores dominio U2 (25 heredados mantenidos).
+- [x] QA Visual: Aprobado (Regresión intacta a 1440x900, 1280x800, 900x800).
+- [x] Autorizado cierre de U2.
+
+## Fase 5B.1: U2 Post-Hotfix Independent Regression Audit (Completada)
+- [x] Ejecutar reauditoría posterior al hotfix.
+- [x] Verificado solución de TS1484 (import type) y TS2322 (cast literal a FileStatus).
+- [x] Verificada conservación de límite binario: Duplicate retiene binario bajo su ID.
+- [x] TypeScript y Build pasan sin errores.
+- [x] Emitido Fase 5B.1 Report en U2_QA_REPORT.md.
+- [x] Autorizada transición a Fase 7B (Formal Closure).
+
+## Fase 5B.2: FileStatus Cast Verification and U2 Closure Gate Report (Completada)
+- [x] Búsqueda estricta de casts en el dominio U2.
+- [x] Hallazgo Medium detectado: `as FileStatus` en `useLocalUploadState.ts` línea 59.
+- [x] TS, Build, y Lint (U2) continúan 100% exitosos sin errores.
+- [x] Fase 7B (Closure) **Bloqueada**.
+- [x] Autorizada **Fase 6B.1 (FileStatus Structural Typing Hotfix)**.
+
+## Fase 6B.1: FileStatus Structural Typing Hotfix (Completada)
+- [x] Reemplazado `as FileStatus` con ramas explícitas de validación (Alternativa D).
+- [x] Verificada ausencia total de casts encubridores de FileStatus en el dominio U2.
+- [x] TS, Build, y Lint (U2) continúan 100% exitosos sin errores.
+- [x] Autorizada reauditoría final o cierre.
+
+## Fase 5B.3: U2 Final Independent Closure Audit (Completada)
+- [x] Gate inicial completado: `main` limpio sin cambios no autorizados.
+- [x] Inventario validado: Cero scope creep.
+- [x] Ausencia de casts confirmada: 0 ocurrencias de `as FileStatus`, `as any` o supresiones.
+- [x] Tipado estructural verificado: `FileStatus` literal estricto.
+- [x] Reducer auditado: Solo maneja metadata.
+- [x] Boundary binario validado: `Map` efímero B1-B3 confirmados.
+- [x] Regresión de duplicados D1-D4 completada con éxito.
+- [x] Integración UploadZone: pasiva, sin `useState<File[]>`.
+- [x] QA Visual validado a 1440x900, 1280x800, 900x800. Botón "Continuar" deshabilitado.
+- [x] QA Técnico: TS 0 errores, Build pass, Lint U2 pass.
+- [x] Fase 7B (Formal Closure) Autorizada.
