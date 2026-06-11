@@ -1,5 +1,25 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-06-10 - Fase 4C2B.1 · Parser and Worker Spike Plan Documentation Checkpoint
+- **Objetivo**: Revisar integralmente el plan de spikes y publicar los documentos autorizados, corrigiendo terminología, garantizando seguridad y aislando la futura dependencia.
+- **Documentos incluidos**: `docs/U3_PARSER_WORKER_SPIKE_PLAN.md`, `docs/PROMPT_LOG.md`.
+- **Estado formal**: `READY_FOR_DEPENDENCY_GATE`.
+- **Structured clone**: Definido como el mecanismo obligatorio de transferencia (reemplazando JSON exclusivo).
+- **File frente a ArrayBuffer**: Decisión postergada formalmente al Spike P2, evaluando clonación vs transfer list.
+- **Protocolo**: Plano, discriminado, seguro y sin objetos/crudos, usando serializables y primitivos.
+- **Presupuestos no garantizados**: Los presupuestos se definen como "experimentales" y "observables", sin prometer garantías universales.
+- **Seguridad ZIP controlada**: No se construirán bombas ZIP peligrosas; la validación será sintética simulando excesos en adaptador.
+- **Memoria observable**: Sin promesas de GC inmediato ni recuperación exacta, la evaluación será limitada a lo observable en DevTools.
+- **Sanitización heurística**: Se define como mitigación truncada de valores antes de enviar, no como anonimización certificada.
+- **Cancelación**: Limpieza de referencias, pero sin promesas absolutas de memory purge.
+- **Terminología legal corregida**: Se reemplazó lenguaje informal ("vírica") por evaluación formal ("Licencia copyleft potencialmente incompatible tras revisión").
+- **Red fuera del runtime**: Prohibido usar fetch o CDN fallback durante el parsing o carga inicial.
+- **Rollback**: Definidos pasos pre-commit y post-commit seguros.
+- **Decision gates**: Se autoriza el paso hacia Fase 4C2C para evaluación documental de parser real. P0 bloquea P1, P1 bloquea P2, P2 bloquea P3.
+- **Mensaje de commit previsto**: `docs(survey-import): define parser worker spike plan`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: Se confirma que NO se ha instalado código, NO se ha implementado UI, NO se construyó U3 y NO se alteró ninguna otra área.
+
 ### 2026-06-10 - Fase 4C2A.1 · U3 Architecture Documentation Checkpoint
 - **Objetivo**: Verificar, corregir y publicar la arquitectura documental de U3.
 - **Documentos incluidos**: `docs/U3_PARSER_PROFILING_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
@@ -654,3 +674,20 @@
 - **Mensaje de commit previsto**: `docs(survey-import): define U3 parser profiling intake`
 - **Remoto de destino**: `origin/main`
 - **Confirmación**: No hubo código, no se instalaron dependencias, y no se construyó U3. Autorizada únicamente Fase 4C2 documental.
+
+### 2026-06-10 - Fase 4C2B · Parser Dependency and Worker Spike Plan
+- **Objetivo**: Definir formalmente el plan de evaluación (spike) para la dependencia de parsing y el Web Worker, estableciendo gates de decisión estrictos.
+- **Commit base**: `0e1f630`
+- **Documento creado**: `docs/U3_PARSER_WORKER_SPIKE_PLAN.md`
+- **Secuencia P0–P4**: Definida (Evidencia, Worker Bootstrap, Cancelación, Presupuestos, XLS Legacy).
+- **Dependency gate**: Establecidos criterios de procedencia, integridad, licencia y seguridad.
+- **Worker**: Confinamiento estricto, mitigación de riesgos de memoria y concurrencia controlada (1).
+- **File frente a ArrayBuffer**: Decisión obligatoria a evaluar en fase P2.
+- **Fixtures**: Sintéticos, aislados, cero datos reales.
+- **Benchmark**: Métricas de tiempo, memoria, bundle y Main Thread definidas.
+- **Seguridad y Sanitización**: Casos definidos (corrupción, extensiones falsas, PII).
+- **Cancelación**: Casos definidos en lectura, inspección, timeout y entre archivos.
+- **Rollback**: Definido (restaurar package.json, lockfile, eliminar artefactos).
+- **Decision gates**: Dependencia exacta, versión, bundle, File/ArrayBuffer, presupuesto duro.
+- **Autorización o bloqueo para 4C2C**: Autorizada Fase 4C2C · Parser Dependency Decision Gate.
+- **Confirmación**: No se instalaron dependencias. No se escribió código. No se ejecutó spike. No se hizo commit. No se hizo push.
