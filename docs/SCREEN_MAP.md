@@ -67,6 +67,11 @@ Muestra únicamente información segura y agregada (dependiendo de la etapa actu
 * **Restricciones**: No mostrar resultados definitivos prematuros. No simular streaming de IA en tiempo real.
 * **Estados**: `validating`, `profiling`, `classifying`.
 
+### Vista U3-SIM · Procesamiento inicial simulado (Variante Temporal)
+* **Objetivo**: Simular el procesamiento profundo para validar flujo de producto sin dependencia del parser real.
+* **Nota**: Esta vista no crea una nueva ruta y no sustituye a la U3 real de producción.
+* **Handoff**: Al completarse guiará al usuario hacia una pre-visualización histórica simulada (por definir).
+
 ### Vista U4 · Estructura detectada
 * **Objetivo**: Explicar los hallazgos antes de configurar.
 * **Elementos**: Familia detectada, confianza (IA), hojas y roles, tipo sugerido, alertas, CTA Continuar.
@@ -141,8 +146,9 @@ Navegación interna basada en tabs. Las correcciones se conservan al cambiar de 
 | --- | -------------------------------------- | ------------------------ | ------------------------------------------------- | ---------------- | ----------------- | ---------------------- | -------------------- | --------------------------------- |
 | E0  | Lista de encuestas                     | (Externa)                | N/A                                               | N/A              | U1                | Iniciar importación    | N/A                  | N/A                               |
 | U1  | Carga inicial                          | 1. Cargar archivos       | `idle`, `files-selected`                          | E0               | U2                | Continuar (deshabilitado) | Descargar plantilla  | Sin archivos                      |
-| U2  | Archivos seleccionados y validación    | 1. Cargar archivos       | `files-selected`, `validating`                    | U1               | U3                | Analizar lote          | Agregar archivos     | Errores de formato                |
+| U2  | Archivos seleccionados y validación    | 1. Cargar archivos       | `files-selected`, `validating`                    | U1               | U3/U3-SIM         | Analizar lote          | Agregar archivos     | Errores de formato                |
 | U3  | Analizando lote                        | 1. Cargar archivos       | `validating`, `profiling`, `classifying`          | U2               | U4                | N/A (Automático)       | Cancelar             | N/A                               |
+| U3-SIM | Analizando lote (Simulado)          | 1. Cargar archivos       | `queued`, `running`, `completed`                  | U2               | (Preview)         | N/A (Automático)       | Cancelar             | N/A                               |
 | U4  | Estructura detectada                   | 1. Cargar archivos       | `detection-complete`, `detection-partial`         | U3               | C1 (o U1 si error)| Continuar              | Reemplazar archivos  | Unknown o incompatibilidad        |
 | C1  | Configuración general                  | 2. Configurar importación| `configuration-required`, `review-required`       | U4, R1/R2/R3      | R1                | Ir a revisar           | Volver               | Omisiones en campos obligatorios  |
 | R1  | Preguntas y escalas (Tab)              | 3. Revisar y mapear      | `review-required`, `ready-for-preview`            | C1, R2, R3        | R2, P1            | Siguiente Tab / Preview| Volver               | Conflictos críticos de escala     |

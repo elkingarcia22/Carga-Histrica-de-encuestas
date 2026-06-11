@@ -1,5 +1,36 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-06-11 - Fase 4D2.1 · Simulated Processing Architecture Documentation Checkpoint
+- **Objetivo**: Validar, corregir y realizar el checkpoint documental final para la arquitectura de U3-SIM.
+- **Commit base**: 47c69f76a327375320f5c5dd8aac0bbc3844b5f5
+- **Correcciones realizadas**:
+  - Reafirmación de macroetapa `Cargar` como contexto persistente; fases internas no sustituyen el stepper oficial.
+  - Eliminación de lenguaje de red/API; adopción de término "fallo simulado de procesamiento".
+  - Política de tiempos configurables y separada de UI (estado: `PROVISIONAL_LOCKED_PENDING_VISUAL_QA`).
+  - Separación de semántica de cancelación: `CANCEL_SIMULATION` vs `CANCEL_IMPORT_FLOW`.
+- **Estado de arquitectura**: `U3_SIM_ARCHITECTURE_LOCKED` (documentación).
+- **Inventario**: `docs/U3_SIMULATED_PROCESSING_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/SCREEN_MAP.md`, `docs/PROMPT_LOG.md`.
+- **Mensaje de commit previsto**: `docs(survey-import): lock simulated U3 processing architecture`
+- **Remoto de destino**: `origin/main`
+- **Confirmación de no código**: No se ha escrito, modificado ni stageado código funcional en `src/`.
+- **Confirmación de no dependencias**: No se instalaron dependencias ni modificaron archivos de lock.
+- **Confirmación de no UI / timers / Continuar**: La UI no ha sido alterada, no existen timers ejecutables y el botón Continuar no fue habilitado.
+
+### 2026-06-11 - Fase 4D2 · Simulated Processing Architecture Lock
+- **Objetivo**: Definir y bloquear la arquitectura exacta de U3-SIM antes de construir su interfaz para simular el análisis de archivos.
+- **Fuentes revisadas**: Documentación de arquitectura, estado local de uploads (U1/U2), y Screen map.
+- **Decisiones**: 
+  - Se autoriza la creación de un reducer local separado (`useSimulatedProcessingState`) para manejar los timers cancelables de estado simulado y evitar acoplamiento con `useLocalUploadState`.
+  - El límite binario se respeta; `Map<FileId, File>` no será leído, y se limpiará al cancelar.
+  - Adapter orquestador consumirá de manera determinística fixtures pre-cargados.
+  - Etiqueta de "Simulación de prototipo" siempre será visible.
+- **Estado**: `U3_SIM_ARCHITECTURE_LOCKED`
+- **Archivos modificados**: `docs/U3_SIMULATED_PROCESSING_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/SCREEN_MAP.md`, `docs/PROMPT_LOG.md`.
+- **Confirmación de no código**: No se ha escrito ningún código fuente (`src/`).
+- **Confirmación de no dependencias**: No se ha ejecutado npm install ni modificado lockfiles.
+- **Confirmación de repositoy**: No se hizo commit, no se hizo push.
+
+
 ### 2026-06-11 - Fase 4C2D1.3.1 · Lockfile Repair Planning Documentation Checkpoint
 - **Objetivo**: Verificar el inventario documental acumulado y crear un único commit de release.
 - **Commit base**: 5598884858b2a0e85791debb24903a3809ff5814
