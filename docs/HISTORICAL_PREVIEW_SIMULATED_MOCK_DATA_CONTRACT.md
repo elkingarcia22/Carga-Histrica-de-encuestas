@@ -53,13 +53,21 @@ Tabla de comprobación matemática del escenario principal:
 | Participación | 82 | 85 | 85 - 82 = +3 | N/A (no expuesto)|
 | Respuestas | 100 | 120 | N/A | N/A |
 | Suma conteos Dist | 68+20+12 = 100 | 89+19+12 = 120 | N/A | Ok |
-| Suma % Dist | 68+20+12 = 100% | 74.2+15.8+10 = 100%| N/A | Ok |
+| Suma % Dist | 68+20+12 = 100% | 74+16+10 = 100%| N/A | Ok |
 | `periodCount` | 2 |
 | Orden cronológico | `base` antes de `comparativo` |
 
 ## 6. Favorabilidad y distribución
-**Política seleccionada:** En el escenario sintético, la favorabilidad contractual coincide numéricamente con el porcentaje del bucket `favorable`.
-Esto no define la fórmula productiva, que continúa `DEFERRED`, sino que se utiliza para asegurar coherencia visual en el prototipo y no generar una pantalla con datos contradictorios.
+**Política seleccionada:** `INTEGER_DISPLAY_PERCENTAGE_POLICY`.
+- En el escenario sintético, la favorabilidad contractual coincide numéricamente y de forma exacta con el porcentaje del bucket `favorable` (`period.metrics.favorability === period.distribution[favorable].percentage`).
+- Los porcentajes de distribución de la primera preview se representan con precisión entera.
+- Los conteos conservan precisión exacta.
+- Los porcentajes deben ser compatibles con los conteos al redondear a cero decimales (`round(responseCount / totalResponses × 100) === percentage`).
+- No se almacenan simultáneamente porcentajes enteros y decimales para el mismo bucket.
+- La UI no recalcula porcentajes.
+- El adapter valida, pero no corrige ni normaliza.
+
+Esto no define la fórmula productiva, que continúa `DEFERRED`, sino que se utiliza para asegurar coherencia visual en el prototipo (estado `LOCKED_FOR_SIMULATION`) y no generar una pantalla con datos contradictorios.
 
 ## 7. Participación
 La participación `participationRate` se tratará como un valor contractual explícito provisto por el contrato mock.
@@ -79,20 +87,20 @@ No se calculará dinámicamente derivándolo de respuestas, y no se introduce ni
 **Periodo Base:**
 | Categoría | Porcentaje | Conteo | Orden |
 | --------- | ---------: | -----: | ----: |
-| `favorable`| 68.0% | 68 | 1 |
-| `neutral` | 20.0% | 20 | 2 |
-| `unfavorable`| 12.0% | 12 | 3 |
-*Suma conteo = 100, suma % = 100.0%. Respuestas = 100.*
+| `favorable`| 68% | 68 | 1 |
+| `neutral` | 20% | 20 | 2 |
+| `unfavorable`| 12% | 12 | 3 |
+*Suma conteo = 100, suma % = 100%. Respuestas = 100.*
 
 **Periodo Comparativo:**
 | Categoría | Porcentaje | Conteo | Orden |
 | --------- | ---------: | -----: | ----: |
-| `favorable`| 74.2% | 89 | 1 |
-| `neutral` | 15.8% | 19 | 2 |
-| `unfavorable`| 10.0% | 12 | 3 |
-*Suma conteo = 120, suma % = 100.0%. Respuestas = 120.*
+| `favorable`| 74% | 89 | 1 |
+| `neutral` | 16% | 19 | 2 |
+| `unfavorable`| 10% | 12 | 3 |
+*Suma conteo = 120, suma % = 100%. Respuestas = 120.*
 
-Ambas distribuciones son estrictamente compatibles y respetan la tolerancia de 99.9 a 100.1 sin normalización ni redistribución en frontend.
+Ambas distribuciones son estrictamente compatibles y respetan la tolerancia de 99.9 a 100.1 sin normalización ni redistribución en frontend (para el escenario principal, la suma efectiva debe ser exactamente 100).
 
 ## 10. Tendencia
 - Dos puntos exactos.
@@ -159,15 +167,21 @@ No expone stacks ni errores de red. Posee acción volver. Código interno concep
 9. Roles únicos (`base` y `comparison`).
 10. Orden cronológico (`base` ocurre antes).
 11. Métricas en rango (0-100%).
-12. Conteos de distribución suman conteo total de respuestas.
-13. Suma de porcentaje de distribución en tolerancia (99.9% a 100.1%).
-14. Delta expresado y calculado en puntos porcentuales y con dirección exacta.
-15. Tendencia reutiliza métricas e IDs existentes.
-16. Insights derivan de reglas justificables determinísticas explícitas.
-17. Disclosure es persistente en todos los estados.
-18. Ausencias representadas como no disponibles, sin ceros sustitutivos.
-19. Sin datos reales.
-20. Sin normalización silenciosa.
+12. Los conteos suman `totalResponses`.
+13. Los porcentajes suman 100 (dentro de tolerancia 99.9% a 100.1% para escenarios futuros).
+14. El porcentaje favorable coincide exactamente con favorabilidad.
+15. Los porcentajes se expresan como enteros para el escenario principal.
+16. Cada porcentaje coincide con el conteo redondeado a cero decimales.
+17. El adapter no redondea ni corrige valores.
+18. El fixture ya contiene los porcentajes finales aprobados.
+19. Los componentes no recalculan distribución.
+20. Delta expresado y calculado en puntos porcentuales y con dirección exacta.
+21. Tendencia reutiliza métricas e IDs existentes.
+22. Insights derivan de reglas justificables determinísticas explícitas.
+23. Disclosure es persistente en todos los estados.
+24. Ausencias representadas como no disponibles, sin ceros sustitutivos.
+25. Sin datos reales.
+26. Sin normalización silenciosa.
 
 ## 18. Matriz V1–V16
 | ID | Caso | Entrada conceptual | Resultado esperado | Estado |
@@ -175,9 +189,9 @@ No expone stacks ni errores de red. Posee acción volver. Código interno concep
 | V1 | Escenario principal válido | 2 periodos, matemáticas correctas | Renderiza pantalla completa | `PREVIEW_READY` |
 | V2 | Delta positivo correcto | Base 68, Comp 74, Delta +6 | Aceptado | `PREVIEW_READY` |
 | V3 | Delta inconsistente | Base 68, Comp 74, Delta +10 | Rechazo de contrato (validación previa)| `CONTRACT_REJECTED` |
-| V4 | Distribución dentro de tolerancia | Suma = 100.0% | Aceptado | `PREVIEW_READY` |
-| V5 | Distribución fuera de tolerancia | Suma = 101.5% | Adapter limita módulos | `PREVIEW_LIMITED` |
-| V6 | Conteos distintos de respuestas | Fav 50, Neu 50, Unf 50, Resp 100 | Rechazo de contrato | `CONTRACT_REJECTED` |
+| V4 | Distribución exacta | % = conteo redondeado, suma = 100%, Fav = Bucket Favorable | Aceptado | `PREVIEW_READY` |
+| V5 | Distribución fuera de tolerancia o desigual | Suma = 101.5% o favorabilidad ≠ bucket favorable | Adapter limita módulos | `PREVIEW_LIMITED` |
+| V6 | Inconsistencia de conteo o redondeo | Conteos ≠ Respuestas o % ≠ conteo redondeado a cero decimales | Rechazo de contrato | `CONTRACT_REJECTED` |
 | V7 | Un solo periodo | 1 periodo base | Adapter limita módulos | `PREVIEW_LIMITED` |
 | V8 | Periodos desordenados | Comp anterior a Base | Rechazo de contrato | `CONTRACT_REJECTED` |
 | V9 | Métrica fuera de rango | Participación = 150% | Rechazo de contrato | `CONTRACT_REJECTED` |
