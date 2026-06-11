@@ -1,8 +1,28 @@
 ### 2026-06-11 - Fase 4E3 · Historical Preview Simulated Mock Data Contract
-- **Objetivo**: Definir y bloquear el Mock Data Contract de la pantalla de vista previa histórica simulada.
+
+### 2026-06-11 - Fase 4E4.1 · Historical Preview Simulated Build Plan Post-Commit Verification Report
+- **Objetivo**: Verificar el estado real de Git después del commit no previsto, auditar su inventario y corregir documentalmente el Build Plan para evitar la expansión de alcance y aislar los tipos locales.
+- **Estado formal**: `HISTORICAL_PREVIEW_SIM_BUILD_PLAN_CHECKPOINT_APPROVED`
+- **Resultados**:
+  - Auditoría del commit confirmada: solo incluyó `docs/HISTORICAL_PREVIEW_SIMULATED_BUILD_PLAN.md` y `docs/PROMPT_LOG.md`. Cero código funcional (0 en `src/`).
+  - Se eliminó del primer bloque de implementación (Fases 4E5A-D) cualquier mención a componentes, props React, screens y charts, difiriéndolos explícitamente (`DEFERRED_TO_PRESENTATIONAL_BUILD_INTAKE`).
+  - Se corrigió la nomenclatura de contratos, separando claramente: `HistoricalPreviewScenario` (fixture), `HistoricalPreviewModel` (resultado para UI) y `HistoricalPreviewAdapterResult`.
+  - Se estableció una política de ausencia estricta (usando `null` de forma controlada y evitando numéricos mágicos).
+  - Configuración y Copy se depuraron para que no contengan valores reales de negocio ni lógica.
+  - Decision Gate del fixture ejecutable: Se aprobó la opción de un **Fixture sintético dedicado** (`src/mocks/survey-import/historical-preview/historicalPreviewScenarios.ts`).
+  - La API del Adapter se definió como `createHistoricalPreviewModel(input)` retornando una unión discriminada con issues seguros ante errores, asegurando un flujo libre de excepciones no controladas.
+  - Tareas Flash 3.0 para la construcción (4E5A a 4E5D) delimitadas y verificadas acíclicamente.
+- **Archivos creados/modificados**:
+  - Modificado `docs/HISTORICAL_PREVIEW_SIMULATED_BUILD_PLAN.md`
+  - Modificado `docs/PROMPT_LOG.md`
+- **QA de integridad**: No se alteraron dependencias. El commit verificado no tocó `src/**`. Se creó un commit correctivo para los cambios documentales y se publicaron exitosamente a `origin/main`.
+- **Autorización**: Se autoriza **únicamente** la **Fase 4E5A · Historical Preview Simulated Local Types**.
+
 - **Estado formal**: `HISTORICAL_PREVIEW_SIM_MOCK_CONTRACT_LOCKED`
 - **Resultados**: 
   - Se definió el escenario principal con datos sintéticos completos, deltas en puntos porcentuales y 2 periodos.
+
+- **Objetivo**: Definir y bloquear el Mock Data Contract de la pantalla de vista previa histórica simulada.
   - Se definieron escenarios alternativos (`limited`, `empty`, `error-simulated`).
   - Se estableció una separación estricta entre la metadata existente y la metadata sintética para la preview.
   - Se creó la matriz de validación con invariantes matemáticas obligatorias.

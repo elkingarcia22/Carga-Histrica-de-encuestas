@@ -1,132 +1,127 @@
 # Historical Preview Simulated Local Contract and Adapter Build Planning
 
 ## 1. Objetivo y Alcance
-Este documento detalla la planificación técnica para la Fase 4E4. Define la estructura de tipos, la firma del adaptador, y las interfaces locales que permitirán renderizar la pantalla *Historical Preview Simulated* de manera unívoca y determinística, basada estrictamente en el `HISTORICAL_PREVIEW_SIMULATED_MOCK_DATA_CONTRACT.md`.
+Este documento detalla la planificación técnica para la Fase 4E4. Define la estructura de tipos, la firma del adaptador, y las interfaces locales basadas estrictamente en el `HISTORICAL_PREVIEW_SIMULATED_MOCK_DATA_CONTRACT.md`.
 
-**Nota Restrictiva:** Este documento es exclusivamente de planificación. No se debe codificar en `src/` hasta que la fase 4E5 sea autorizada.
+**Nota Restrictiva:** Este documento es exclusivamente de planificación. No se debe codificar en `src/` hasta que la fase 4E5 sea autorizada. El primer bloque constructivo (Fases 4E5A-D) excluye terminantemente props React, componentes, screens y hooks.
 
-## 2. Tipos de Dominio (Local Contracts)
-Se definirá una estructura de tipos en `src/lib/survey-import/historical-preview/simulation/types.ts` que reflejará fielmente el contrato mock, separando claramente los datos derivados del fixture base y los datos sintéticos (deltas, insights).
+## 2. Tipos de Dominio Futuros (Local Types)
+Inventario cerrado de tipos a definir en `src/lib/survey-import/historical-preview/historicalPreviewTypes.ts` (sin enums, sin classes, readonly):
+- `HistoricalPreviewStatus`
+- `HistoricalPreviewScenarioId`
+- `HistoricalPreviewPeriodRole`
+- `HistoricalPreviewAvailability`
+- `HistoricalPreviewDistributionCategory`
+- `HistoricalPreviewDeltaDirection`
+- `HistoricalPreviewDeltaUnit`
+- `HistoricalPreviewCapabilityStatus`
+- `HistoricalPreviewSegmentStatus`
+- `HistoricalPreviewInsightType`
+- `HistoricalPreviewInsightSeverity`
+- `HistoricalPreviewSurveyIdentity`
+- `HistoricalPreviewPeriodMetrics`
+- `HistoricalPreviewDistributionItem`
+- `HistoricalPreviewPeriod`
+- `HistoricalPreviewFavorabilityDelta`
+- `HistoricalPreviewTrendPoint`
+- `HistoricalPreviewCapability`
+- `HistoricalPreviewSegmentSummary`
+- `HistoricalPreviewInsight`
+- `HistoricalPreviewDisclosure`
+- `HistoricalPreviewModel`
+- `HistoricalPreviewScenario`
 
-```typescript
-// src/lib/survey-import/historical-preview/simulation/types.ts
+### Política de Ausencia
+- `null` para métricas conocidas pero no disponibles.
+- Arrays vacíos únicamente cuando la colección existe y está vacía.
+- Objetos o módulos opcionales solo cuando el módulo completo puede estar ausente.
+- Disponibilidad explícita para módulos presentacionales.
+Prohibido: `0` como ausencia, `""`, `NaN`, `-1`, mezcla arbitraria de `null` y `undefined`.
 
-export type ScenarioState =
-  | 'VALID_COMPARISON'
-  | 'LIMITED_DATA'
-  | 'EMPTY_STATE'
-  | 'SIMULATED_ERROR';
+## 3. Configuración y Copy
+Archivo: `src/config/survey-import/historicalPreviewConfig.ts`
+Contendrá solo:
+- Títulos, disclosure, labels, unidades, labels de distribución y estados.
+- Textos limited, empty y error.
+- Acciones, textos esperados para insights derivados y accesibilidad.
+Prohibido: Valores numéricos de dominio (ej. 68, 74, 6), periodos, respuestas, distribuciones, escenarios, lógica, JSX, React, colores.
 
-export interface HistoricalPeriod {
-  periodId: string;
-  name: string;
-  favorabilityPercentage: number;
-  participationRate: number;
-  responsesCount: number;
-  distribution: {
-    favorable: number;
-    neutral: number;
-    unfavorable: number;
-  };
-}
+## 4. Decision Gate del Fixture Ejecutable
+Estrategia: **C. Fixture sintético dedicado** (`LOCKED`).
+Archivo: `src/mocks/survey-import/historical-preview/historicalPreviewScenarios.ts`
+Contiene exclusivamente escenarios: `ready`, `limited`, `empty`, `error-simulated`.
+Características: Determinístico, serializable, sin funciones/React/fechas runtime/datos reales.
 
-export interface HistoricalPreviewSimulatedContract {
-  contractId: 'historical-preview-simulated';
-  contractVersion: '1.0';
-  isSynthetic: true;
-  scenario: ScenarioState;
-  
-  // Datos del escenario (solo presentes si no hay error/empty state total)
-  data?: {
-    basePeriod: HistoricalPeriod;
-    comparativePeriod: HistoricalPeriod;
-    
-    // Deltas sintéticos
-    delta: {
-      favorabilityPoints: number; // Ej: +6
-      trend: 'positive' | 'negative' | 'neutral';
-    };
-    
-    // Insights generados
-    insights: string[]; // Ej: ["Variación positiva de favorabilidad", "Participación estable"]
-    
-    // Datos heredados del fixture (Resumen pasivo)
-    capabilitiesCount: number;
-    segmentsCount: number;
-  };
+## 5. Firma del Adaptador (Adapter)
+Archivo: `src/lib/survey-import/historical-preview/historicalPreviewAdapter.ts`
+API Recomendada: `createHistoricalPreviewModel(input)` donde `input` es `{ scenarioId }`.
+El orquestador entrega el ID, una función local obtiene el escenario, valida, transforma y devuelve una unión discriminada:
+- Success con `model` (`HistoricalPreviewModel`).
+- Failure con issue seguro (código cerrado, severity, module, safe message key).
 
-  // Disclaimer mandatario
-  disclaimer: {
-    message: string;
-    isMandatory: true;
-  };
-}
-```
+Responsabilidades: Valida, deriva delta, deriva tendencia, deriva insights, determina estado. No corrige datos silenciosamente.
 
-## 3. Firma del Adaptador (Adapter)
-El adaptador residirá en `src/lib/survey-import/historical-preview/simulation/adapter.ts`. Su responsabilidad será tomar el fixture base procesado por U3-SIM y transformarlo en el `HistoricalPreviewSimulatedContract` inyectando los deltas sintéticos según las reglas matemáticas del contrato mock.
+### Reglas de Insights
+- Favorabilidad: delta > 0 (positivo), delta < 0 (disminución), delta = 0 (neutral, si límite máximo de dos lo permite).
+- Participación: dif abs <= 2pp (estable), dif abs > 2pp (variación).
 
-```typescript
-// src/lib/survey-import/historical-preview/simulation/adapter.ts
+### Invariantes Ejecutables (Fase 4E5D)
+1. Escenario sintético.
+2. ID permitido.
+3. Estado permitido.
+4. Dos periodos para ready.
+5. Roles únicos.
+6. Orden cronológico.
+7. Métricas en rango.
+8. Conteos enteros.
+9. Distribución consistente.
+10. Tolerancia 99.9-100.1.
+11. Favorabilidad coherente con favorable.
+12. Delta correcto.
+13. Trend consistente.
+14. Capacidades válidas.
+15. Segmentos pasivos.
+16. Máximo dos insights.
+17. Insights justificables.
+18. Disclosure persistente.
+19. Sin datos reales.
+20. Sin objetos binarios.
 
-import { ProcessedSurveyFixture } from '@/lib/survey-import/simulationTypes'; // Ejemplo de import
-import { HistoricalPreviewSimulatedContract, ScenarioState } from './types';
-
-/**
- * Genera el contrato mock para el Historical Preview.
- * NO evalúa dominio real, NO tiene estado.
- */
-export const createHistoricalPreviewSimulatedContract = (
-  baseFixture: ProcessedSurveyFixture,
-  forcedScenario: ScenarioState = 'VALID_COMPARISON'
-): HistoricalPreviewSimulatedContract => {
-  // 1. Manejo temprano de escenarios EMPTY_STATE y SIMULATED_ERROR
-  // 2. Extracción pasiva de capacidades y segmentos del baseFixture
-  // 3. Generación determinística del periodo comparativo (sintético)
-  // 4. Cálculo matemático exacto de la distribución según el Mock Data Contract (ej: 89/19/12 para 120 respuestas)
-  // 5. Retorno del contrato inmutable
-  // ...
-};
-```
-
-## 4. Interfaces de UI Locales
-La pantalla y sus componentes presentacionales residirán en `src/components/survey-import/historical-preview/`. Sus props se definirán en función del contrato local.
-
-```typescript
-// src/components/survey-import/historical-preview/HistoricalPreviewSimulatedScreen.tsx
-
-import { HistoricalPreviewSimulatedContract } from '@/lib/survey-import/historical-preview/simulation/types';
-
-export interface HistoricalPreviewSimulatedScreenProps {
-  contract: HistoricalPreviewSimulatedContract;
-  onAccept: () => void;
-  onCancel: () => void;
-}
-```
-
-## 5. Ubicación de Archivos (Future Imports)
-
-La estructura de carpetas futura será la siguiente:
-
+## 6. Grafo de Dependencias
 ```text
-src/
-  lib/
-    survey-import/
-      historical-preview/
-        simulation/
-          types.ts             // Tipos locales
-          adapter.ts           // Función createHistoricalPreviewSimulatedContract
-          constants.ts         // Constantes de distribución y literales
-  components/
-    survey-import/
-      historical-preview/
-        HistoricalPreviewSimulatedScreen.tsx
-        components/
-          PeriodComparisonCard.tsx
-          InsightsList.tsx
-          HistoricalDisclaimer.tsx
+historicalPreviewTypes
+        ↑
+historicalPreviewScenarios
+        │
+        ├──────────────┐
+        ↓              ↓
+historicalPreviewAdapter ← historicalPreviewConfig
+        ↓
+HistoricalPreviewModel
 ```
+* Types no importa dominio. Config puede usar `import type`. Fixture importa types. Adapter importa types, fixture y config.
 
-## 6. Siguientes Pasos (Bloqueados)
-- **Fase 4E5:** Implementación real de los archivos detallados en el punto 5, sin modificar U1, U2 o U3-SIM.
-- Auditoría técnica del compilador y linter sobre el nuevo código.
+## 7. División Flash 3.0
+- **Fase 4E5A · Local Types**: `historicalPreviewTypes.ts`
+- **Fase 4E5B · Configuration and Copy**: `historicalPreviewConfig.ts`
+- **Fase 4E5C · Executable Synthetic Fixture**: `historicalPreviewScenarios.ts`
+- **Fase 4E5D · Deterministic Adapter**: `historicalPreviewAdapter.ts`
+- **Fase 5E1 · Independent QA**
+- **Fase 6E1 · Hotfix**
+- **Fase 7E1 · Closure**
+
+*(Se permite un harness temporal en 4E5D para validar V1-V16, verificando dos ejecuciones idénticas y cero contacto con UI).*
+
+## 8. DEFERRED_TO_PRESENTATIONAL_BUILD_PLAN
+Estado: `DEFERRED_TO_PRESENTATIONAL_BUILD_INTAKE`
+Se difieren explícitamente a una fase posterior:
+- `HistoricalPreviewSimulatedScreenProps`
+- Componentes
+- Screen
+- Charts
+- Integración
+- Navegación
+- Acciones
+- Responsive
+- QA Visual
+
