@@ -5,9 +5,19 @@ interface ImportWizardFooterProps {
   className?: string;
   onBack?: () => void;
   disableBack?: boolean;
+  onContinue?: () => void;
+  continueDisabled?: boolean;
+  continueLabel?: string;
 }
 
-export function ImportWizardFooter({ className, onBack, disableBack = true }: ImportWizardFooterProps) {
+export function ImportWizardFooter({ 
+  className, 
+  onBack, 
+  disableBack = true,
+  onContinue,
+  continueDisabled = true,
+  continueLabel
+}: ImportWizardFooterProps) {
   const { footer } = importWizardContent;
 
   return (
@@ -25,8 +35,19 @@ export function ImportWizardFooter({ className, onBack, disableBack = true }: Im
           <span className="text-xs text-muted-foreground hidden sm:inline-block">
             {footer.disabledReason}
           </span>
-          <Button variant="default" disabled aria-disabled="true">
-            {footer.nextAction}
+          <Button 
+            variant="default" 
+            disabled={continueDisabled} 
+            aria-disabled={continueDisabled ? "true" : "false"}
+            onClick={(e) => {
+              if (continueDisabled) {
+                e.preventDefault();
+                return;
+              }
+              onContinue?.();
+            }}
+          >
+            {continueLabel || footer.nextAction}
           </Button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { ImportWizardShell } from '@/components/survey-import/ImportWizardShell';
 import { ImportWizardHeader } from '@/components/survey-import/ImportWizardHeader';
 import { ImportWizardSteps } from '@/components/survey-import/ImportWizardSteps';
@@ -17,11 +17,53 @@ import {
   getNormalizedNameKey,
   validateSingleFile
 } from '@/hooks/survey-import/useLocalUploadState';
+import { SimulatedProcessingScreen } from '@/screens/survey-import/SimulatedProcessingScreen';
+import { useSimulatedProcessingState } from '@/hooks/survey-import/useSimulatedProcessingState';
+import { createSimulatedImportPlan, type NonEmptySimulationInputFiles } from '@/lib/survey-import/simulation/simulatedImportAdapter';
+import type { SimulationPlan } from '@/lib/survey-import/simulation/simulationTypes';
+
+type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing';
+
+function SimulatedProcessingController({ 
+  plan, 
+  onReturnToFiles, 
+  onCancelImportFlow 
+}: { 
+  plan: SimulationPlan; 
+  onReturnToFiles: () => void;
+  onCancelImportFlow: () => void;
+}) {
+  const simulatedState = useSimulatedProcessingState(plan);
+  const { start } = simulatedState;
+
+  useEffect(() => {
+    start();
+  }, [start]);
+
+  return (
+    <SimulatedProcessingScreen
+      plan={plan}
+      state={simulatedState.state}
+      onCancelSimulation={() => simulatedState.cancelSimulation()}
+      onReturnToFiles={() => {
+        simulatedState.reset?.();
+        onReturnToFiles();
+      }}
+      onCancelImportFlow={() => {
+        simulatedState.cancelSimulation();
+        onCancelImportFlow();
+      }}
+    />
+  );
+}
 
 export function SurveyImportUploadScreen() {
   const { summary } = importWizardContent;
   const binaryMap = useRef<Map<string, File>>(new Map());
   const { state, addFiles, removeFile, setGlobalMessage, reset } = useLocalUploadState();
+  const [activePlan, setActivePlan] = useState<SimulationPlan | null>(null);
+
+  const currentView: SurveyImportView = activePlan ? 'simulated-processing' : (state.view === 'idle' ? 'upload-idle' : state.view);
 
   const handleAddFiles = (selectedFiles: File[]) => {
     if (selectedFiles.length === 0) return;
@@ -94,6 +136,63 @@ export function SurveyImportUploadScreen() {
     reset('Se han descartado todos los archivos. Regreso a la pantalla inicial.');
   };
 
+  const hasBlockingFiles = state.files.some(f => 
+    f.status === 'invalid' || 
+    f.status === 'too-large' || 
+    f.status === 'unsupported' || 
+    f.status === 'duplicate'
+  );
+  
+  const acceptedFiles = state.files.filter(f => f.status === 'valid' || f.status === 'warning');
+
+  const canStartSimulation = 
+    currentView === 'files-selected' &&
+    state.files.length > 0 &&
+    !hasBlockingFiles &&
+    !state.hasBatchSizeError &&
+    !activePlan;
+
+  const handleContinue = () => {
+    if (!canStartSimulation) return;
+
+    const hasCompleteBinaryBoundary = () => {
+      return acceptedFiles.every(f => binaryMap.current.has(f.id));
+    };
+
+    if (!hasCompleteBinaryBoundary()) return;
+
+    const firstFile = acceptedFiles[0];
+    if (!firstFile) return;
+
+    const inputTuple: NonEmptySimulationInputFiles = [
+      { fileId: firstFile.id, displayName: firstFile.displayName },
+      ...acceptedFiles.slice(1).map(f => ({ fileId: f.id, displayName: f.displayName }))
+    ];
+
+    const plan = createSimulatedImportPlan(inputTuple);
+    setActivePlan(plan);
+  };
+
+  const handleReturnToFiles = () => {
+    setActivePlan(null);
+  };
+
+  const handleCancelImportFlow = () => {
+    setActivePlan(null);
+    binaryMap.current.clear();
+    reset('Importación cancelada. Regreso a la pantalla inicial.');
+  };
+
+  if (currentView === 'simulated-processing' && activePlan) {
+    return (
+      <SimulatedProcessingController
+        plan={activePlan}
+        onReturnToFiles={handleReturnToFiles}
+        onCancelImportFlow={handleCancelImportFlow}
+      />
+    );
+  }
+
   // Selectors for UI
   const filesCount = state.files.length;
   const validCount = state.files.filter(f => f.status === 'valid' || f.status === 'warning').length;
@@ -111,7 +210,7 @@ export function SurveyImportUploadScreen() {
         header={<ImportWizardHeader />}
         steps={<ImportWizardSteps />}
         mainContent={
-          state.view === 'idle' ? (
+          currentView === 'upload-idle' ? (
             <InitialUploadPanel onAddFiles={handleAddFiles} />
           ) : (
             <SelectedFilesPanel
@@ -138,7 +237,10 @@ export function SurveyImportUploadScreen() {
         footer={
           <ImportWizardFooter 
             disableBack={isEmpty} 
-            onBack={handleBack} 
+            onBack={handleBack}
+            continueDisabled={!canStartSimulation}
+            onContinue={handleContinue}
+            continueLabel="Continuar"
           />
         }
       />
