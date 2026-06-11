@@ -115,3 +115,14 @@
 - [x] QA Visual validado a 1440x900, 1280x800, 900x800. Botón "Continuar" deshabilitado.
 - [x] QA Técnico: TS 0 errores, Build pass, Lint U2 pass.
 - [x] Fase 7B (Formal Closure) Autorizada.
+
+## Fase 5C1: Independent Dependency Acquisition and Lockfile Reproducibility QA (Completada)
+- [x] Gate inicial completado: `main` limpio en el commit `55988848`.
+- [x] Rollback de `xlsx` verificado directamente sin diferencias en `package.json` y `package-lock.json`.
+- [x] Ausencia de `xlsx` confirmada en `node_modules` y `src/`.
+- [x] Auditoría estructural de lockfile base: Identificadas inconsistencias en `@rolldown/binding-wasm32-wasi`.
+- [x] Reproducción en entorno aislado (R1 y R2) demuestra fallo incondicional de `npm ci` con el lockfile en `HEAD`.
+- [x] Documental verificado: Confirmada causalidad atribuida al defecto preexistente en el lockfile, no a la instalación de SheetJS.
+- [x] Verificado el entorno local funcional pero irreproducible (`LOCAL_ENVIRONMENT_HEALTHY_BUT_NOT_REPRODUCIBLE`).
+- [x] Emitido reporte en `U3_P1_DEPENDENCY_QA.md`.
+- [x] Autorizada únicamente Fase 4C2D1.2 (Reproducibility Decision Gate).

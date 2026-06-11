@@ -1,5 +1,75 @@
 # Prompt Log - plantilla-proyectos-shadcn
 
+### 2026-06-11 - Fase 4C2D1.3.1 · Lockfile Repair Planning Documentation Checkpoint
+- **Objetivo**: Verificar el inventario documental acumulado y crear un único commit de release.
+- **Commit base**: 5598884858b2a0e85791debb24903a3809ff5814
+- **Inventario incluido**: 6 documentos (`U3_P1_DEPENDENCY_ACQUISITION.md`, `U3_P1_DEPENDENCY_QA.md`, `PACKAGE_MANAGER_LOCKFILE_DECISION.md`, `LOCKFILE_REPRODUCIBILITY_REPAIR_PLAN.md`, `QA_CHECKLIST.md`, `PROMPT_LOG.md`).
+- **Resultado del rollback**: SheetJS ausente.
+- **Veredicto de QA independiente**: Defecto base confirmado en `npm ci`.
+- **Defecto de reproducibilidad**: `@emnapi/core`, `@emnapi/runtime` faltantes para la resolución de `@rolldown/binding-wasm32-wasi`.
+- **Node/npm como candidatos**: Node `24.13.0` y npm `11.6.2` como T1 (candidato a validar, no estándar).
+- **L1 y L2 pendientes**: Estrategias comparativas de regeneración pendientes de validación.
+- **Plan R0–R6**: SheetJS bloqueado hasta R6. Worker bloqueado.
+- **Ownership pendiente**: Hasta comprobación con upstream.
+- **Rollback por rutas explícitas**: Eliminación de temporal inventariado, `git restore` y `git revert` sin reescritura de historial.
+- **Estado de SheetJS**: Ausente.
+- **Estado del Worker**: Ausente.
+- **Estado de U3**: Bloqueada.
+- **Mensaje previsto del commit**: `docs(platform): define lockfile reproducibility recovery plan`
+- **Remoto de destino**: `origin/main`
+- **Confirmación**: No instalación, no código y no spike.
+
+### 2026-06-11 - Fase 4C2D1.3 · Lockfile Reproducibility Repair Plan
+- **Objetivo**: Definir un plan pequeño, secuencial y verificable para reparar el lockfile sin gobernarlo prematuramente.
+- **Commit base**: 5598884858b2a0e85791debb24903a3809ff5814
+- **Estado actual**: `READY_FOR_REPRODUCIBILITY_REPAIR_PLAN`.
+- **Corrección sobre Node/npm candidatos**: Node v24.13.0 y npm 11.6.2 se definen estrictamente como candidatos de evaluación, no como el estándar aprobado del Starter Kit.
+- **Corrección sobre regeneración total**: Declarado como experimento de alto riesgo (L2) a comparar frente a una reparación generada por npm (L1).
+- **Rollback seguro**: Definido a través de eliminación de temporales o git revert, evitando resets destructivos.
+- **Plan R0–R6**: Estructurado desde el baselining (R0) hasta reintento de SheetJS (R6).
+- **Ownership**: Pendiente. Requerirá validación para decidir entre `FIX_IN_UPSTREAM_STARTER` o prototipo.
+- **Matrices**: Matrices de toolchains y de lockfiles definidas e incorporadas al plan.
+- **QA**: Ampliado para cubrir pruebas cruzadas, CI, seguridad, visual (U1/U2) y bundle.
+- **Secuencia de commits**: Separada (I. Toolchain Governance, II. Lockfile Repair, III. SheetJS Acquisition, IV. Worker Spike).
+- **Riesgos**: Riesgos documentados, incluyendo candidato equivocado y regeneración amplia.
+- **Gates**: Toolchain Candidate Selection, Minimal vs Full Repair Decision, Ownership.
+- **Autorización**: Se autoriza la **Fase 4C2D1.4 · Isolated Toolchain and Lockfile Repair Spike** únicamente en rama aislada o entorno temporal (`READY_FOR_ISOLATED_REPRODUCIBILITY_REPAIR_SPIKE`).
+- **Confirmación**: No se alteraron archivos técnicos (0 cambios a `src/`, dependencias, o UI), ni se hizo commit ni push.
+
+### 2026-06-11 - Fase 4C2D1.2 · Package Manager and Lockfile Reproducibility Decision Gate
+- **Objetivo**: Evaluar la evidencia del defecto del lockfile y decidir una estrategia para la gobernanza del toolchain y la reparación del lockfile.
+- **Commit base**: 5598884858b2a0e85791debb24903a3809ff5814
+- **Resultado QA (Fase 5C1)**: `QA_CONFIRMS_SAFE_ROLLBACK_AND_REPRODUCIBILITY_BLOCKER`. Defecto preexistente documentado en dependencias `@emnapi`. Entorno local sano pero no reproducible.
+- **Estado del toolchain**: Node v24.13.0, npm 11.6.2. Lockfile versión 3. `packageManager` y `engines` no declarados. `.node-version` ausente. (`TOOLCHAIN_UNGOVERNED`).
+- **Alcance del defecto**: Defecto localizado en resoluciones de `@rolldown/binding-wasm32-wasi` (`@emnapi/core`, `@emnapi/runtime`) pero agravado por la interpretación dependiente de las diferentes versiones de Node/npm instaladas frente a la original.
+- **Alternativa Recomendada**: Alternativa A (Gobernar Node/npm actual y regenerar lockfile). `RECOMMENDED`.
+- **Ownership Recomendado**: `TECHNICAL_BRANCH_REQUIRED` para prototipo, y posteriormente `FIX_IN_UPSTREAM_STARTER`.
+- **Estrategia Recomendada**: Gobernar formalmente Node v24.13.0 y npm 11.6.2 mediante `.node-version`, `engines`, y `packageManager`. Borrar dependencias y realizar instalación limpia (`npm install`) en entorno aislado para regenerar un `package-lock.json` consistente.
+- **Secuencia Futura**: Commit I (Toolchain Governance), Commit II (Lockfile Repair), Commit III (SheetJS), Commit IV (Worker Spike).
+- **QA Requerido**: `npm ci` exitoso y segunda ejecución idempotente. TypeScript sin errores, build exitoso.
+- **Rollback**: Descartar rama y restaurar desde `main`. 
+- **Autorización**: Se bloquea la manipulación de código, dependencias o el Worker. Se autoriza la **Fase 4C2D1.3 · Lockfile Reproducibility Repair Plan** (también documental).
+- **Confirmación**: No se alteró código funcional (`src/`), no se hizo commit, no se hizo push, SheetJS ausente. Únicamente se crearon/modificaron archivos documentales.
+### 2026-06-11 - Fase 5C1 · Independent Dependency Acquisition and Lockfile Reproducibility QA
+- **Objetivo**: Auditar independientemente el rollback y la reproducibilidad del lockfile asociados a la instalación de SheetJS en la Fase 4C2D1.
+- **Commit base**: 5598884858b2a0e85791debb24903a3809ff5814
+- **Resultado QA**: `QA_CONFIRMS_SAFE_ROLLBACK_AND_REPRODUCIBILITY_BLOCKER`. Rollback verificado íntegramente. Defecto estructural preexistente confirmado en el lockfile (`@emnapi/core` faltante). Reproducción aislada de `npm ci` completada.
+- **Gobernanza**: Node 24.13.0, npm 11.6.2. Documentación en su mayor parte precisa. `engines` y `packageManager` faltantes.
+- **Autorización**: Se bloquean los pasos de adquisición de parser. Autorizada únicamente la **Fase 4C2D1.2 · Package Manager and Lockfile Reproducibility Decision Gate**.
+- **Confirmación**: Ninguna alteración a `src/`, `package.json`, o `package-lock.json`. SheetJS ausente.
+
+### 2026-06-11 - Fase 4C2D1.1 · Lockfile Drift Recovery Hotfix
+- **Objetivo**: Separar los cambios causados por SheetJS de cambios ajenos, recuperar un lockfile mínimo sin edición manual y validar instalación limpia.
+- **Commit base**: 5598884858b2a0e85791debb24903a3809ff5814
+- **Deriva encontrada**: `package-lock.json` añadió dependencias (`@emnapi/core`, `@emnapi/runtime`) y subió la versión de `@emnapi/wasi-threads` (1.2.1 a 1.2.2).
+- **Diagnóstico del toolchain**: Node v24.13.0, npm 11.6.2. La inconsistencia del `package-lock.json` de la rama `main` hace que npm resuelva dependencias omitidas previamente (`@emnapi/core`), desencadenando la actualización opcional de `@emnapi/wasi-threads`. `npm ci` falló al intentarlo desde `HEAD`.
+- **Estrategia usada**: Rollback Total (Alternativa C), al ser imposible la regeneración mínima con el toolchain actual.
+- **Resultado final**: `DEPENDENCY_ACQUISITION_ROLLED_BACK`. Se restauraron ambos `package.json` y `package-lock.json` a su versión original en HEAD y se limpió el árbol.
+- **QA**: TypeScript `tsc --noEmit` y `npm run build` ejecutados exitosamente con 0 errores y bundle restaurado.
+- **Auditoría de integridad**: Cero importaciones añadidas, cero `Worker` o código del parser ejecutados.
+- **Autorización**: Bloqueo de las fases dependientes directas de SheetJS (`BLOCKED_BY_PACKAGE_MANAGER_REPRODUCIBILITY`). Autorizada auditoría independiente.
+- **Confirmación**: No se hicieron commits ni push.
+
 ### 2026-06-10 - Fase 4C2C.1 · Parser Dependency Decision Documentation Checkpoint
 - **Objetivo**: Verificar, corregir y publicar el reporte documental de la Fase 4C2C (P0) aislando a SheetJS como único candidato para P1.
 - **Commit base**: 6895e681dbcdae9216157ae2bdc4d7c6931f218d
@@ -734,3 +804,22 @@
 - **Decision gates**: Dependencia exacta, versión, bundle, File/ArrayBuffer, presupuesto duro.
 - **Autorización o bloqueo para 4C2C**: Autorizada Fase 4C2C · Parser Dependency Decision Gate.
 - **Confirmación**: No se instalaron dependencias. No se escribió código. No se ejecutó spike. No se hizo commit. No se hizo push.
+
+### 2026-06-11 - Fase 4C2D1 · SheetJS Dependency Acquisition and Integrity Checkpoint
+- **Objetivo**: Validar integridad del repositorio, descargar y verificar SheetJS CE 0.20.3 exacto, e instalarlo controladamente sin ejecutar scripts ni afectar el main bundle.
+- **Commit base**: `5598884`
+- **Fuente**: `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`
+- **Hash esperado**: `8dc73fc3b00203e72d176e85b50938627c7b086e607c682e8d3c22c02bb99fe8`
+- **Hash calculado**: `8dc73fc3b00203e72d176e85b50938627c7b086e607c682e8d3c22c02bb99fe8`
+- **Metadata**: Inspeccionada. `xlsx` 0.20.3, Apache-2.0, 0 dependencias transitivas productivas, sin scripts maliciosos detectados.
+- **Instalación controlada**: Ejecutada con flag `--ignore-scripts` y `--save-exact`.
+- **Scripts deshabilitados**: Sí, a través del manejador de paquetes.
+- **Cambios exactos de dependencias**: Agregado `"xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"` en `package.json` y actualizaciones rutinarias en lockfile para subdependencias locales. ExcelJS y Papa Parse NO fueron instalados.
+- **Versión resuelta**: `0.20.3`.
+- **Baseline**: 324.25 kB del chunk principal antes de la instalación.
+- **Build posterior**: Build exitoso (3.54s). Tamaño del chunk principal permanece en 324.25 kB.
+- **Ausencia de imports**: Verificado. 0 imports de `xlsx` en `src/`.
+- **Rollback**: Documentado para desinstalación local y restauración manual del `package.json` y lockfile si se requiere desechar la fase.
+- **Riesgos**: Posible impacto en Web Worker si no se encapsula estrictamente.
+- **Autorización o bloqueo para P1B**: Fase 4C2D2 · P1 Worker Bootstrap Architecture and Harness Intake **Autorizada**.
+- **Confirmación de no Worker, no parser ejecutado, no fixture, no UI y no U3**: Se confirma que solo se instaló la dependencia de manera aislada, no se generó Worker ni se mutó código.
