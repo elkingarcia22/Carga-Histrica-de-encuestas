@@ -2525,6 +2525,34 @@ El working tree se encuentra auditado, las incidencias de lint saneadas en el c�
 
 **Siguiente fase:** `Fase 4E-R6B2H2C · Large Batch Representation in Simulated Analysis`
 
+## 2026-06-12 - Fase 4E-R6B2H2B-R4A · Forward Recovery Branch Bootstrap and Contamination Removal
+
+**Status:** `HISTORICAL_IMPORT_NORMALIZATION_FORWARD_RECOVERY_BOOTSTRAPPED`
+
+**Ejecución de Preflight y Recovery Branch:**
+- Rama creada: `recovery/historical-import-forward-cleanup`
+- SHA Base: `1ca42cadb319ccf6b112ce4bbbc7a5d5d4ca28e9`
+- Revert de `1ca42ca` ejecutado y 4 rutas relacionadas a `prospect-import` retiradas satisfactoriamente del árbol.
+
+**Frozen Files Cleanup:**
+- 3 archivos congelados de `historical-preview` (Types, Config y Scenarios) retirados del árbol.
+- Ningún consumidor modificado, dependían exclusivamente de ellos mismos.
+
+**Auditoría de Integridad:**
+- R3 permanece intacto y determinístico en todas sus interfaces de `normalization-preview`.
+- La UI (U1 a U4-SIM, shell, stepper, footer, y dropzone) no ha sido modificada. Sigue existiendo la regresión layout presente en 56564e7 que será abordada en la reconstrucción visual.
+
+**QA Técnico:**
+- Compilación (tsc -b), lint (con exclusiones de starter kit previas), tests y build general (npm run build) exitosos.
+
+**Estado de Commits:**
+- `docs(survey-import): lock remote recovery strategy`
+- `revert(prospects): remove cross-project classification contamination`
+- `chore(survey-import): remove frozen historical preview artifacts`
+- Push NO realizado, estado confinado en local de forma atómica.
+
+**Siguiente fase máxima autorizable:** `Fase 4E-R6B2H2B-R4B · Shared Wizard and Visual Baseline Reconstruction`
+
 ## 2026-06-12 - Fase 4E-R6B2H2B-R3 · Remote Incident Recovery Decision
 
 **Status:** `HISTORICAL_IMPORT_NORMALIZATION_REMOTE_RECOVERY_STRATEGY_LOCKED`
