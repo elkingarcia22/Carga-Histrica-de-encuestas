@@ -2692,3 +2692,21 @@ El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%
 **No push:** Respetado estrictamente.
 
 **Siguiente fase autorizable:** `Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Delta QA`
+
+## HISTORICAL_IMPORT_NORMALIZATION_ROW_AWARE_FOCUS_READY
+
+- **Strategy implemented**: Row-aware focus management using callback refs in `SelectedFileRow` and `SelectedFileList` driven by `pendingFocusId` and `pendingFocusEmptyRef` state variables in `SelectedFilesPanel`. The universal fallback `headerRef.current?.focus()` was completely removed.
+- **Files modified**:
+  - `src/components/survey-import/SelectedFilesPanel.tsx`
+  - `src/components/survey-import/SelectedFileList.tsx`
+  - `src/components/survey-import/SelectedFileRow.tsx`
+  - `src/components/upload/UploadZone.tsx`
+- **Next row focus**: If a row is deleted and it is not the last visible row, focus falls back to the *next* visible row's delete button.
+- **Previous row focus**: If the last visible row is deleted, focus falls back to the *previous* visible row's delete button.
+- **Terminal page**: If the last row of a paginated screen (page > 1) is deleted, focus falls back to the last row of the newly active previous page.
+- **Empty state**: If the last row of the first page is deleted (empty batch), focus explicitly falls back to the primary action: the drag-and-drop `UploadZone`.
+- **Keyboard-only QA**: Deleting items successively with Enter works smoothly as focus natively jumps to adjacent remove buttons.
+- **Pagination intact**: Existing page slice limits remain unaffected.
+- **Visual snapshot intact**: No visual or structural layout shift was introduced.
+- **Typecheck, lint, build, tests**: All type checks and builds succeeded. Linter errors only existed outside the modified files.
+- **Status confirmation**: Push was explicitly avoided per constraints.
