@@ -35,16 +35,16 @@ export function SimulatedProcessingFileList({
 
         let Icon = ClockIcon;
         let iconClass = 'text-muted-foreground';
-        let statusLabel = SIMULATION_ACCESSIBILITY_LABELS.filePending;
+        let statusLabel = 'En espera';
 
         if (file.status === 'completed') {
           Icon = CheckCircle2Icon;
           iconClass = 'text-[hsl(var(--success))]';
-          statusLabel = SIMULATION_ACCESSIBILITY_LABELS.fileCompleted;
+          statusLabel = 'Revisado';
         } else if (file.status === 'active') {
           Icon = Loader2Icon;
           iconClass = 'text-primary animate-spin';
-          statusLabel = SIMULATION_ACCESSIBILITY_LABELS.fileActive;
+          statusLabel = 'Analizando';
         } else if (file.status === 'warning') {
           Icon = AlertTriangleIcon;
           iconClass = 'text-[hsl(var(--warning))]';

@@ -14,9 +14,11 @@ export type SimulationStatus =
 
 export type SimulationPhaseId =
   | 'validating-metadata'
-  | 'profiling-structure'
-  | 'detecting-survey-type'
-  | 'building-historical-result';
+  | 'identifying-function'
+  | 'detecting-survey'
+  | 'recognizing-data'
+  | 'preparing-mappings'
+  | 'consolidating-issues';
 
 export type SimulationFileStatus =
   | 'pending'
@@ -42,6 +44,7 @@ export interface SimulationPhaseDefinition {
   readonly description: string;
   readonly durationMs: number;
   readonly accessibleLabel: string;
+  readonly finding?: string;
 }
 
 export interface SimulationResultSummary {

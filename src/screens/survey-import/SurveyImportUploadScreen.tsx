@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { ImportWizardShell } from '@/components/survey-import/ImportWizardShell';
 import { ImportWizardHeader } from '@/components/survey-import/ImportWizardHeader';
 import { ImportWizardSteps } from '@/components/survey-import/ImportWizardSteps';
@@ -7,6 +7,7 @@ import { SelectedFilesPanel } from '@/components/survey-import/SelectedFilesPane
 import { ImportSummaryCard } from '@/components/survey-import/ImportSummaryCard';
 import { ImportWizardFooter } from '@/components/survey-import/ImportWizardFooter';
 import { UploadLiveRegion } from '@/components/survey-import/UploadLiveRegion';
+import { UploadBatchAlert } from '@/components/survey-import/UploadBatchAlert';
 import { importWizardContent } from '@/config/survey-import/importWizardContent';
 import { formatFileSize } from '@/components/upload/uploadUtils';
 import { uploadLimits } from '@/config/survey-import/uploadLimits';
@@ -21,17 +22,20 @@ import { SimulatedProcessingScreen } from '@/screens/survey-import/SimulatedProc
 import { useSimulatedProcessingState } from '@/hooks/survey-import/useSimulatedProcessingState';
 import { createSimulatedImportPlan, type NonEmptySimulationInputFiles } from '@/lib/survey-import/simulation/simulatedImportAdapter';
 import type { SimulationPlan } from '@/lib/survey-import/simulation/simulationTypes';
+import { NormalizationPreviewScreen } from '@/screens/survey-import/NormalizationPreviewScreen';
 
-type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing';
+type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing' | 'normalization-preview';
 
-function SimulatedProcessingController({ 
-  plan, 
-  onReturnToFiles, 
-  onCancelImportFlow 
-}: { 
-  plan: SimulationPlan; 
+function SimulatedProcessingController({
+  plan,
+  onReturnToFiles,
+  onCancelImportFlow,
+  onCompleted
+}: {
+  plan: SimulationPlan;
   onReturnToFiles: () => void;
   onCancelImportFlow: () => void;
+  onCompleted: () => void;
 }) {
   const simulatedState = useSimulatedProcessingState(plan);
   const { start } = simulatedState;
@@ -42,9 +46,9 @@ function SimulatedProcessingController({
 
   return (
     <SimulatedProcessingScreen
+      key={plan.planId}
       plan={plan}
       state={simulatedState.state}
-      onCancelSimulation={() => simulatedState.cancelSimulation()}
       onReturnToFiles={() => {
         simulatedState.reset?.();
         onReturnToFiles();
@@ -53,6 +57,7 @@ function SimulatedProcessingController({
         simulatedState.cancelSimulation();
         onCancelImportFlow();
       }}
+      onCompleted={onCompleted}
     />
   );
 }
@@ -62,32 +67,60 @@ export function SurveyImportUploadScreen() {
   const binaryMap = useRef<Map<string, File>>(new Map());
   const { state, addFiles, removeFile, setGlobalMessage, reset } = useLocalUploadState();
   const [activePlan, setActivePlan] = useState<SimulationPlan | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const currentView: SurveyImportView = activePlan ? 'simulated-processing' : (state.view === 'idle' ? 'upload-idle' : state.view);
+  // Auto-collapse stepper after 5 seconds
+  useEffect(() => {
+    collapseTimerRef.current = setTimeout(() => {
+      setIsCollapsed(true);
+    }, 5000);
+    return () => {
+      if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+    };
+  }, []);
+
+  const handleToggleCollapse = useCallback(() => {
+    if (collapseTimerRef.current) {
+      clearTimeout(collapseTimerRef.current);
+      collapseTimerRef.current = null;
+    }
+    setIsCollapsed(prev => !prev);
+  }, []);
+
+  const handleMouseEnterSidebar = useCallback(() => {
+    if (collapseTimerRef.current) {
+      clearTimeout(collapseTimerRef.current);
+      collapseTimerRef.current = null;
+    }
+  }, []);
+
+  let currentView: SurveyImportView = state.view === 'idle' ? 'upload-idle' : state.view;
+  if (showPreview) {
+    currentView = 'normalization-preview';
+  } else if (activePlan) {
+    currentView = 'simulated-processing';
+  }
 
   const handleAddFiles = (selectedFiles: File[]) => {
     if (selectedFiles.length === 0) return;
 
-    // Capacity check
+    // Capacity check (Atomic rejection)
     const currentCount = state.files.length;
-    const capacity = uploadLimits.maxFiles - currentCount;
-    if (capacity <= 0) {
-      setGlobalMessage(`Has alcanzado el límite máximo de ${uploadLimits.maxFiles} archivos.`);
+    if (currentCount + selectedFiles.length > uploadLimits.maxFilesAbsolute) {
+      setGlobalMessage(`Puedes agregar hasta ${uploadLimits.maxFilesAbsolute} archivos por lote.`);
+      // Update accessible message for atomic rejection
+      const msg = `Se intentaron agregar ${selectedFiles.length} archivos, pero se superaría el límite de ${uploadLimits.maxFilesAbsolute}. La operación fue rechazada.`;
+      addFiles([], msg); // Send empty array just to trigger accessible message, or just use a hook if available
       return;
     }
 
-    const filesToProcess = selectedFiles.slice(0, capacity);
-    const overflowCount = selectedFiles.length - filesToProcess.length;
-    
-    if (overflowCount > 0) {
-      setGlobalMessage(`Se omitieron ${overflowCount} archivo(s) por exceder el límite de ${uploadLimits.maxFiles}.`);
-    } else {
-      setGlobalMessage(null);
-    }
+    setGlobalMessage(null);
 
     const metadataArray: LocalFileMetadata[] = [];
 
-    filesToProcess.forEach((file, index) => {
+    selectedFiles.forEach((file, index) => {
       // Create ephemeral ID locally
       const id = crypto.randomUUID();
       const displayName = file.name;
@@ -117,9 +150,7 @@ export function SurveyImportUploadScreen() {
       });
     });
 
-    const msg = overflowCount > 0 
-      ? `Se agregaron ${metadataArray.length} archivos. Se omitieron ${overflowCount} por límite.` 
-      : `Se agregaron ${metadataArray.length} archivos.`;
+    const msg = `Se agregaron ${metadataArray.length} archivos. El lote contiene ${currentCount + metadataArray.length} archivos en total.`;
 
     addFiles(metadataArray, msg);
   };
@@ -136,16 +167,16 @@ export function SurveyImportUploadScreen() {
     reset('Se han descartado todos los archivos. Regreso a la pantalla inicial.');
   };
 
-  const hasBlockingFiles = state.files.some(f => 
-    f.status === 'invalid' || 
-    f.status === 'too-large' || 
-    f.status === 'unsupported' || 
+  const hasBlockingFiles = state.files.some(f =>
+    f.status === 'invalid' ||
+    f.status === 'too-large' ||
+    f.status === 'unsupported' ||
     f.status === 'duplicate'
   );
-  
+
   const acceptedFiles = state.files.filter(f => f.status === 'valid' || f.status === 'warning');
 
-  const canStartSimulation = 
+  const canStartSimulation =
     currentView === 'files-selected' &&
     state.files.length > 0 &&
     !hasBlockingFiles &&
@@ -175,13 +206,28 @@ export function SurveyImportUploadScreen() {
 
   const handleReturnToFiles = () => {
     setActivePlan(null);
+    setShowPreview(false);
   };
 
   const handleCancelImportFlow = () => {
     setActivePlan(null);
+    setShowPreview(false);
     binaryMap.current.clear();
     reset('Importación cancelada. Regreso a la pantalla inicial.');
   };
+
+  const handleSimulationCompleted = () => {
+    setShowPreview(true);
+  };
+
+  if (currentView === 'normalization-preview') {
+    return (
+      <NormalizationPreviewScreen
+        onCancelImportFlow={() => handleReturnToFiles()}
+        onContinueToConfiguration={() => {}}
+      />
+    );
+  }
 
   if (currentView === 'simulated-processing' && activePlan) {
     return (
@@ -189,6 +235,7 @@ export function SurveyImportUploadScreen() {
         plan={activePlan}
         onReturnToFiles={handleReturnToFiles}
         onCancelImportFlow={handleCancelImportFlow}
+        onCompleted={handleSimulationCompleted}
       />
     );
   }
@@ -203,44 +250,77 @@ export function SurveyImportUploadScreen() {
   const surveyTypeLabel = summary.defaultValues.surveyType;
   const privacyLabel = summary.defaultValues.privacy;
 
+  const summaryComponent = (
+    <ImportSummaryCard
+      filesCount={filesCount}
+      totalSizeLabel={formatFileSize(state.totalSizeBytes)}
+      validCount={isEmpty ? undefined : validCount}
+      blockedCount={isEmpty ? undefined : blockedCount}
+      modeLabel={modeLabel}
+      surveyTypeLabel={surveyTypeLabel}
+      privacyLabel={privacyLabel}
+      isEmpty={isEmpty}
+    />
+  );
+
+  let helperText: string | undefined = undefined;
+  if (currentView === 'files-selected') {
+    if (canStartSimulation) {
+      helperText = 'El lote está listo para iniciar el análisis simulado.';
+    } else if (state.hasBatchSizeError) {
+      helperText = `El lote excede el límite de ${uploadLimits.labels.maxSizePerBatch}.`;
+    } else if (hasBlockingFiles) {
+      helperText = 'Resuelve las advertencias o errores en los archivos para continuar.';
+    }
+  }
+
   return (
     <>
       <UploadLiveRegion message={state.accessibleMessage} />
       <ImportWizardShell
         header={<ImportWizardHeader />}
-        steps={<ImportWizardSteps />}
-        mainContent={
-          currentView === 'upload-idle' ? (
-            <InitialUploadPanel onAddFiles={handleAddFiles} />
-          ) : (
-            <SelectedFilesPanel
-              files={state.files}
-              hasBatchSizeError={state.hasBatchSizeError}
-              globalMessage={state.globalMessage}
-              onAddFiles={handleAddFiles}
-              onRemoveFile={handleRemoveFile}
-            />
-          )
-        }
-        summary={
-          <ImportSummaryCard
-            filesCount={filesCount}
-            totalSizeLabel={formatFileSize(state.totalSizeBytes)}
-            validCount={isEmpty ? undefined : validCount}
-            blockedCount={isEmpty ? undefined : blockedCount}
-            modeLabel={modeLabel}
-            surveyTypeLabel={surveyTypeLabel}
-            privacyLabel={privacyLabel}
-            isEmpty={isEmpty}
+        steps={
+          <ImportWizardSteps 
+            isCollapsed={isCollapsed} 
+            onToggleCollapse={handleToggleCollapse}
+            activeStepId={currentView === 'upload-idle' ? 'upload' : 'files-selected'}
           />
         }
+        isCollapsed={isCollapsed}
+        onToggleCollapse={handleToggleCollapse}
+        onMouseEnterSidebar={handleMouseEnterSidebar}
+        mainContent={
+          currentView === 'upload-idle' ? (
+            <InitialUploadPanel
+              onAddFiles={handleAddFiles}
+              summaryNode={summaryComponent}
+            />
+          ) : (
+            <div className="space-y-4">
+              {state.hasLargeBatchWarning && <UploadBatchAlert isVisible={true} variant="warning" />}
+              <SelectedFilesPanel
+                files={state.files}
+                hasBatchSizeError={state.hasBatchSizeError}
+                globalMessage={state.globalMessage}
+                onAddFiles={handleAddFiles}
+                onRemoveFile={handleRemoveFile}
+                filesCount={filesCount}
+                validCount={validCount}
+                blockedCount={blockedCount}
+                totalSizeBytes={state.totalSizeBytes}
+              />
+            </div>
+          )
+        }
+        summary={null}
         footer={
-          <ImportWizardFooter 
-            disableBack={isEmpty} 
+          <ImportWizardFooter
+            disableBack={isEmpty}
             onBack={handleBack}
             continueDisabled={!canStartSimulation}
             onContinue={handleContinue}
             continueLabel="Continuar"
+            helperText={helperText}
           />
         }
       />

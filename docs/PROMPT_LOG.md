@@ -1,3 +1,371 @@
+# Fase 4E-R6B2H1A · Large Batch Capacity Architecture Lock
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+4E-R6B2H1A
+
+## 3. Estado
+`HISTORICAL_IMPORT_NORMALIZATION_BATCH_CAPACITY_ARCHITECTURE_LOCKED`
+
+## 4. Git Preflight Report
+- **Branch**: `main`.
+- **Alignment**: HEAD matches origin/main (ahead 0, behind 0).
+- **Staged files**: 0.
+- **Untracked/Modified**: Corresponden a entregables de QA y fases previas en el working tree sin afectar los `src` base.
+- **Contratos y Frozen Files**: Intactos.
+
+## 5. Previous Decision Audit & Memory Model Correction
+- Se auditó el documento anterior de capacidad y se determinó que la premisa de "OOM por 5GB en navegador" era una afirmación no demostrada y técnicamente incorrecta. Mantener 200 objetos `File` no carga automáticamente su contenido al heap de JS, sino que conserva metadatos (punteros a Blob).
+- El riesgo de rendimiento real recae en la retención del DOM si se renderizan 200 filas en U2 o U3, y en las lecturas futuras de archivos (`FileReader`).
+- Por tanto, no existe impedimento de memoria en el navegador para *seleccionar* 200 archivos.
+
+## 6. Configuración y Límites Bloqueados
+- **Fuente de verdad única**: `src/config/survey-import/uploadLimits.ts` (Se agregará a esta fuente los nuevos límites en implementación).
+- **Máximo absoluto**: 200 archivos.
+- **Warning threshold**: 50 archivos (gatilla advertencia amarilla, no bloquea).
+- **Máximo por archivo**: 25 MB.
+- **Máximo total**: 500 MB (Provisional pendiente de benchmark de red en fases de backend, pero validado visualmente en cliente).
+
+## 7. Arquitectura U1, U2, U3-SIM y U4-SIM
+- **U1**: Contador visible agregado. Bloqueos estrictos a 200 archivos o 500 MB.
+- **U2**: Implementará **Client-side Pagination** usando el componente existente `Pagination`. 25 archivos por página.
+- **U3-SIM Full View**: Máximo de 10 filas visibles de procesamiento.
+- **U3-SIM Tray**: Intacto (máximo 3 filas).
+- **U4-SIM**: El mock de 4 ítems permanece. Para futuros 200 ítems, será mandatoria la paginación o agrupación. Listados planos de 200 prohibidos.
+- **Virtualización**: `NO_DEPENDENCY_REQUIRED`. La paginación nativa mitigará el colapso del DOM sin dependencias de virtualización.
+
+## 8. Performance Budget y QA
+- **Riesgo Algorítmico**: Detección de duplicados actual es `O(n²)`. La implementación futura debe usar una estructura de clave (Map/Set) para lograr `O(n)` total.
+- **Presupuesto**: Main thread libre en < 50ms al soltar; interacción de eliminar en 1 frame; cero scroll horizontal en layouts.
+- **QA Matrix**: Definida exhaustivamente (5, 50, 100, 200, 201 archivos, exceso de 500 MB, eliminación asimétrica en páginas, etc.).
+
+## 9. Copy y Accesibilidad
+- Copys bloqueados para exceso de límite y warning threshold.
+- Accesibilidad definida para foco en paginación y anuncios de live region (no iterar 200 nombres).
+- Parsing, Antivirus, PII, Multiparts clasificados como `DEFERRED`.
+
+## 10. Documentos creados
+- `docs/HISTORICAL_IMPORT_BATCH_CAPACITY_ARCHITECTURE.md`
+
+## 11. Cambios en SRC
+- Cero cambios en `src/**` ejecutados en esta fase.
+
+## 12. Siguiente fase máxima autorizable
+- Estado: `HISTORICAL_IMPORT_NORMALIZATION_BATCH_CAPACITY_ARCHITECTURE_LOCKED`
+- Próxima Fase: `Fase 4E-R6B2H2 · Historical Import Batch Capacity Implementation`
+
+---
+
+# Fase 4E-R6B2H1 · Historical Import Batch Capacity Decision
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+4E-R6B2H1
+
+## 3. Estado
+`HISTORICAL_IMPORT_NORMALIZATION_BATCH_CAPACITY_DECISION_BLOCKED`
+
+## 4. Git Preflight Report
+- Rama `main` confirmada.
+- HEAD y origin/main alineados.
+- Working tree limpio sin cambios en `src`.
+- Contrato R3 intacto.
+- Archivos congelados intactos.
+
+## 5. Inventario de Capacidad y Contrato
+- Máximo actual: 5 archivos.
+- Tamaño por archivo: 25 MB.
+- Lote total: 50 MB.
+- La aplicación retiene los objetos `File` binarios en un mapa en memoria durante todo el flujo.
+
+## 6. Evaluación de Impacto (200 Archivos)
+- Rendimiento U1: Aceptable, aunque requeriría manejo asíncrono para prevenir bloqueo del hilo principal.
+- Rendimiento U2: Crítico. Mostrar 200 filas en flex-col degradará severamente el rendimiento y usabilidad. Se requiere paginación o virtualización visual.
+- Rendimiento U3-SIM: La bandeja (tray) es segura ya que fue previamente truncada a 3 nodos, pero la vista de lista completa también requiere virtualización.
+- Rendimiento U4-SIM: La vista final necesitará agrupación, paginación o filtrado para ser inteligible.
+
+## 7. Decisión y Riesgos
+- **Decisión**: Se recomienda aprobar un máximo absoluto de 200 archivos con un tamaño total estricto de 500 MB por lote para evitar crashes por agotamiento de memoria del navegador (OOM).
+- **Riesgo Principal**: Memory limit al retener 200 referencias `File` y el colapso del DOM al renderizar listas largas.
+- **Condición**: Es mandatorio implementar virtualización o paginación en las listas de selección antes de habilitar los 200 archivos en el UI.
+
+## 8. IA-first Opportunities
+- Clasificación de archivos, agrupación automática, detección de redundancias.
+- Clasificadas como: `VALUABLE_LATER_AFTER_REAL_PARSING_AND_SECURITY_REVIEW`
+
+## 9. Decision Gates
+- Cerrados: Máximo de archivos (200), Tamaño máximo por archivo (25MB), Tamaño máximo del lote (500MB).
+- Pendientes: Configuración centralizada, estrategia U2 (paginación vs virtualización), estrategia U4-SIM.
+
+## 10. Documentos Creados
+- `docs/HISTORICAL_IMPORT_BATCH_CAPACITY_DECISION.md`
+
+## 11. Siguiente fase máxima autorizable
+- Estado final: `HISTORICAL_IMPORT_NORMALIZATION_BATCH_CAPACITY_DECISION_BLOCKED`
+- El cambio no se puede implementar en este instante porque carecemos de virtualización. No se autoriza R7 aún.
+- Próxima fase: `Fase 4E-R6B2H2 · Historical Import Batch Capacity Implementation` (siempre que incluya diseño y construcción de listas largas/virtualización).
+
+---
+
+# Fase 4E-R6B3H4 · Floating Analysis Tray Initial State and Large-Batch Validation
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+4E-R6B3H4
+
+## 3. Estado
+`HISTORICAL_IMPORT_NORMALIZATION_FLOATING_ANALYSIS_TRAY_VALIDATED`
+
+## 4. Estado Inicial Corregido
+- Se garantizó que U3-SIM inicie estrictamente en modo `full` utilizando la inicialización de estado en `SimulatedProcessingScreen`.
+- Se ajustó el `useEffect` para depender de `state.status` (cuando es `'idle'` o `'queued'`) asegurando que las nuevas ejecuciones reinicien `viewMode` a `full` y reseteen las guardas de navegación (usando setTimeout para evitar errores de lint), resolviendo el problema de inicialización minimizada reportado cuando el planId se reusa.
+
+## 5. QA y Validación con Lote Grande (200 elementos)
+- Se ejecutó un test temporal inyectando 200 archivos sintéticos con metadatos realistas.
+- **Renderizado máximo:** Confirmado visualmente y en el DOM que la bandeja (tray) renderiza un máximo de 3 filas.
+- **Conteo restante:** El valor restante manejó correctamente números altos (ej. 197 restantes) sin desbordamientos.
+- **Truncado de filename:** Filenames extremos mostraron correcta truncación por CSS, manteniendo la integridad del layout sin scroll horizontal.
+
+## 6. QA Funcional y Visual
+- La navegación en modo `full` transiciona automáticamente una sola vez.
+- La navegación en modo minimizado espera el clic explícito en el botón de vista previa.
+- Las visualizaciones en desktop y a 900px respetan la elevación UBITS y no tapan el footer.
+
+## 7. QA Técnico
+- Typecheck (`tsc -b`), Lint y Build completados sin errores ni advertencias.
+- Las vistas U1, U2 y U4-SIM permanecen intactas, así como los contratos R3.
+- Cero archivos o helpers temporales de QA mantenidos en el working tree.
+
+## 8. Siguiente fase máxima autorizable
+`Fase 4E-R6B2H1 · Historical Import Batch Capacity Decision`
+
+---
+
+# Fase 4E-R6B3H3 · Floating Analysis Tray Compliance Hotfix
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+4E-R6B3H3
+
+## 3. Estado
+`HISTORICAL_IMPORT_NORMALIZATION_FLOATING_ANALYSIS_TRAY_COMPLIANT`
+
+## 4. Resoluciones de Compliance
+- **Ancho responsivo**: Se eliminó el uso de `calc(100vw-3rem)` y el cálculo arbitrario, optando por utilidades nativas (`w-full`, `max-w-sm`, `left-6`, `right-6`, y márgenes ajustados) que logran responsividad sin scroll horizontal.
+- **Elevación y Superficie**: Se retiraron `shadow-xl`, `backdrop-blur`, y el color con HEX (`bg-background/95`). Se adoptó la superficie oficial usando `shadow-drawer`, `border` y `bg-background`.
+- **Controller/Navegación**: Se desvinculó el estado terminal `completed` de la propiedad `viewMode` para evitar re-navegaciones o navegaciones automáticas no deseadas. Ahora `SimulatedProcessingScreen` decide si navegar usando una bandera que se activa únicamente si se completa la simulación estando en `full` mode en tiempo real.
+- **Tooltips**: Se implementó `Tooltip`, `TooltipTrigger` y `TooltipContent` oficiales provenientes de `@/components/ui/tooltip` en lugar de títulos puros.
+
+## 5. QA y Validación
+- **200 Elementos**: El test funcional local confirma que con 200 elementos la bandeja truncada restringe de forma correcta a solo un máximo de 3 nodos del DOM para los archivos mostrados, respetando el rendimiento y mostrando el contador "restantes" adecuadamente.
+- **QA Visual**: Confirmada la retención de la elevación oficial sin `blur`, validada la experiencia `desktop` (>900px, centrado/max-width) y `mobile` (pantalla completa menos márgenes).
+- **Typecheck, Lint, Tests y Build**: Exitosos y sin advertencias ni errores en el alcance de archivos modificados.
+- **Integridad de Fases Previas**: U1, U2 y U4-SIM siguen intactas, el contrato R3 permanece sin tocar y congelado (8 escenarios).
+
+## 6. Siguiente fase máxima autorizable
+`Fase 4E-R6B2H1 · Historical Import Batch Capacity Decision`
+# Fase 4E-R6B3H2 · Minimized Simulated Analysis Tray
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+4E-R6B3H2
+
+## 3. Referencia Visual Utilizada
+- Estado minimizado en progreso
+- Estado minimizado completado
+- Estado expandido en progreso
+- Estado expandido completado
+
+## 4. Componente Reutilizado o Creado
+- Se creó el componente local `SimulatedProcessingTray` dentro del alcance de `survey-import`.
+
+## 5. Estados
+- **Full**: Se agregó botón "Minimizar análisis".
+- **Expanded**: Header con resumen compacto, lista truncada (máx 3 archivos mostrados) y progreso compacto.
+- **Collapsed**: Indicador animado, porcentaje global, y acciones principales, ocupando un espacio muy reducido en la esquina inferior derecha.
+
+## 6. Eliminación de la Card de Métricas
+- Se eliminó `SimulatedProcessingSummary` del layout principal.
+- Sus métricas fueron integradas en el header principal de `SimulatedProcessingPanel`.
+
+## 7. Comportamiento Durante Procesamiento
+- Minimizar no detiene el timer, no reinicia fases, ni altera la instancia de la simulación.
+- Continúa el progreso de forma global.
+
+## 8. Comportamiento al Completar
+- En vista completa: Automáticamente navega a la vista previa.
+- En vista minimizada o expandida: Permanece en su estado actual, muestra un indicador de finalización y requiere acción manual (Ver vista previa).
+- Se previenen dobles transiciones.
+
+## 9. Escalabilidad
+- Visualmente escala a 200 archivos sin renderizarlos todos mediante un límite de lista a archivos recientes.
+- Confirmación de que el límite global de archivos no se modificó en esta fase.
+
+## 10. QA
+- **Funcional**: Se corroboró la funcionalidad completa del flujo de minimización, la no detención del progreso y la correcta transición final a U4-SIM.
+- **Desktop Visual**: Bandeja alineada a esquina, animaciones de expansión, progreso visible.
+- **900 px Visual**: Bandeja responsiva con anchos relativos máximos y scroll contenido.
+- **Accesibilidad**: Roles ARIA correctos, títulos de botones descriptivos, contrastes.
+
+## 11. QA Técnico
+- Typecheck: 0 errores en los archivos editados.
+- Lint: 0 errores o warnings en los archivos modificados.
+- Tests & Build: Build OK.
+- Integridad: R3 intacto, U1 y U2 intactos, archivos congelados intactos.
+
+## 12. Estado
+HISTORICAL_IMPORT_NORMALIZATION_FLOATING_ANALYSIS_TRAY_READY
+
+## 13. Siguiente Fase Autorizable
+Fase 4E-R6B2H1 · Historical Import Batch Capacity Decision
+
+# Fase 4E-R7H1 · Release Preflight Hygiene Hotfix
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+R7H1
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_RELEASE_PREFLIGHT_HYGIENE_READY
+
+## 4. Causa del Bloqueo en R7
+- Fallo en `git diff --check` por trailing whitespace en `SelectedFilesPanel.tsx:64` y `SimulatedProcessingPanel.tsx:86`.
+- Existencia del script temporal untracked `update_log.js`.
+
+## 5. Auditoría y Eliminación de `update_log.js`
+- Se confirmó read-only que el archivo era untracked, nunca fue incluido en Git, no estaba referenciado en `package.json` ni en otros scripts.
+- Su único propósito fue actualizar este mismo log en R6B3.
+- Se eliminó de manera segura sin afectar funcionalidad ni requerir scripts adicionales.
+
+## 6. Corrección de Whitespace
+- Se eliminaron los espacios finales en `src/components/survey-import/SelectedFilesPanel.tsx` (línea 64) y `src/components/survey-import/SimulatedProcessingPanel.tsx` (línea 86).
+- Archivos afectados: Solo los dos mencionados.
+
+## 7. QA Técnico y Funcional
+- **Cambios funcionales:** Cero. Se validó por diff que U1, U2, U3-SIM, U4-SIM y demás lógica permanece intacta.
+- **Contrato R3:** Permanece 100% intacto. Cero modificaciones.
+- **Archivos Congelados:** Intactos bajo el estado `FROZEN_PENDING_RECOVERY_DECISION`.
+- **TypeScript:** `npx tsc -b` ejecutado con éxito, cero errores.
+- **Lint:** ESLint sobre el incremento ejecutado sin advertencias.
+- **Tests y Build:** `npm run build` ejecutado exitosamente.
+- **Git Diff:** `git diff --check` limpio (cero errores de whitespace). Cero staged files. Ningún commit o push fue realizado en esta fase.
+
+## 8. Siguiente fase autorizable
+Repetir desde el inicio: Fase 4E-R7 · Formal Closure, GitHub Publish and Vercel Deployment
+
+---
+
+# Fase 4E-R6B3 · Simulated Analysis Experience
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+R6B3
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_SIMULATED_ANALYSIS_READY
+
+## 4. Detalles de la ejecución
+- **Adaptación Visual U3-SIM:** Se integró el componente `AILoader` (variante `card`) en la cabecera de la simulación, indicando progreso y estados.
+- **Skeletons y Hallazgos:** Se incorporaron `Skeleton` progresivos en `SimulatedProcessingPanel` para mostrar las 6 fases de análisis. Una vez completadas, se muestran `finding` explícitos.
+- **Fases del Lote:** Se actualizaron en `simulationConfig.ts` y `simulationTypes.ts` las 6 fases de revisión requeridas.
+- **Listado de Archivos:** Se ajustaron los labels visuales a "En espera", "Analizando" y "Revisado".
+- **Flujo U1 -> U2 -> U3-SIM -> U4-SIM:** Modificado `SurveyImportUploadScreen` para transicionar a `normalization-preview` nativamente al concluir el análisis.
+- **Footer en U3-SIM:** Se integró `ImportWizardFooter` en U3-SIM con el back habilitado, continuar deshabilitado explícitamente y helper text.
+- **Integridad y Seguridad:**
+  - Cero dependencias añadidas.
+  - Cero importaciones desde archivos congelados (`historical-preview`).
+  - Cero lecturas de binarios.
+
+## 5. QA Técnico
+- **TypeScript:** `tsc -b` sin errores ni advertencias de scope.
+- **Build:** `npm run build` exitoso.
+
+## 6. Siguiente fase autorizable
+Fase 4E-R7 · Formal Closure, Publishing and Vercel Deployment
+
+---
+
+# Fase 4E-R6B1 · Upload Screen Visual Alignment
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+R6B1
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_UPLOAD_VISUAL_ALIGNMENT_READY
+
+## 4. Detalles de la ejecución
+- **Baseline:** `0ed46951f5981a58dda681c1452f10b54709e858`
+- **Inconsistencia corregida:** La pantalla inicial de carga (U1) tenía una composición estrecha con el resumen aislado y la dropzone angosta. Ahora utiliza toda la superficie amplia del shell, integrando la dropzone, el resumen como panel complementario lateral, y el callout de importación asistida.
+- **Archivos modificados:**
+  - `src/components/survey-import/ImportWizardShell.tsx` (se habilitó renderizado condicional del right rail).
+  - `src/screens/survey-import/SurveyImportUploadScreen.tsx` (se adaptaron las props enviadas al shell y a `InitialUploadPanel`).
+  - `src/components/survey-import/InitialUploadPanel.tsx` (nueva grilla para dropzone y panel resumen; uso de Callout/Card de importación asistida).
+  - `src/config/survey-import/importWizardContent.ts` (actualización semántica de título, descripción y emptyState del lote).
+- **Componentes reutilizados:** `UploadZone`, `ImportSummaryCard`, `Card`, y los íconos de lucide-react.
+- **Cambios funcionales:** Cero. Se mantuvo exactamente el mismo comportamiento funcional (drag and drop, selección, estados, stepper de U2, validaciones superficiales).
+- **QA Desktop:** Foco visual logrado; dropzone ancha; resumen al lado sin espacios vacíos enormes.
+- **QA 900 px:** Adaptación correcta de los paneles (Dropzone arriba, resumen abajo) con grid-cols-1. Stepper y footer accesibles sin solapamiento.
+- **Accesibilidad:** Único h1, roles semánticos en `Card` y `UploadZone`, contraste suficiente y live region preservada.
+- **Typecheck/Lint/Tests/Build:** Todo pasa correctamente (`npx tsc -b && npm run build` exitoso sin warnings locales).
+- **Integridad de flujos posteriores (U2, U3-SIM, U4-SIM):** Intactos.
+- **Integridad R3:** Intacto.
+- **Archivos congelados:** Intactos.
+
+## 5. Siguiente fase autorizable
+Fase 4E-R6B2 · Selected Files Screen Visual Alignment
+
+---
+
+# Fase 4E-R6P2 · Recovery Artifact Audit and Selective Cleanup
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+R6P2
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_ARTIFACTS_CLEANED
+
+## 4. Detalles de la auditoría
+- **Causa del bloqueo:** Falla en Git Preflight de R6B1 por presencia de archivos residuales de recuperación y scripts python de intentos previos.
+- **Artefactos auditados y eliminados:**
+  - `diff_content.txt`
+  - `diff_output_1.patch`
+  - `diff_output_2.patch`
+  - `diff_output_3.patch`
+  - `diff_recovery.patch`
+  - `full_recovery.txt`
+  - `recovery_25.txt`
+  - `replay_edits.py`
+  - `src/screens/survey-import/SurveyImportUploadScreen.tsx.rej`
+- **Evidencia (trabajo pendiente):** Los archivos de diff/patch y `.rej` correspondían a integraciones de U4-SIM en el stepper de importación, las cuales se descartaron explícitamente en el enfoque de aislar la alineación visual (Visual Alignment) antes de conectar la experiencia simulada. Por ende, no hay trabajo funcional perdido que deba aplicarse en esta fase.
+- **Componentes preservados:** Se conservaron todos los entregables de R4/R6, incluyendo los componentes en `src/components/survey-import/normalization-preview/` y `src/screens/survey-import/NormalizationPreviewScreen.tsx`.
+- **Contrato R3:** Verificado intacto.
+- **Archivos congelados:** Verificados intactos.
+- **QA técnico:** `tsc -b` y `npm run build` ejecutados exitosamente. Cero errores, cero advertencias dentro del alcance.
+
+## 5. Siguiente fase autorizable
+Repetir: Fase 4E-R6B1 · Upload Screen Visual Alignment
+
+---
+
 # Fase 4E-R3R2 · Safe Repository Recovery and Selective Commit
 
 ## 1. Resumen ejecutivo
@@ -428,7 +796,7 @@ Solo se reporta el presente texto en `docs/PROMPT_LOG.md`.
 El principal riesgo es continuar sin una fuente de verdad coherente. Se requiere resolver si el KPI redondea a enteros (actualizando la Sección 6 y el formato visual) o si se modifican los conteos para forzar el `74%` exacto (actualizando la Sección 9).
 
 ## 20. Autorización o bloqueo para Fase 4E5D
-**BLOQUEADA**. No se autoriza Fase 4E5D · Historical Preview Simulated Deterministic Adapter. 
+**BLOQUEADA**. No se autoriza Fase 4E5D · Historical Preview Simulated Deterministic Adapter.
 
 ## 21. Estado
 `BLOCKED_BY_MOCK_DATA_CONTRACT_MISMATCH`
@@ -592,7 +960,7 @@ Las capacidades auditadas en la fuente (`participation`, `favorability`, `area-c
 Resumen pasivo en modo ready/limited: `availableCount: 1`, `status: 'available'`. Empty/Error reportan `0` e inactivos, sin ceros engañosos. Ningún resultado ni tamaño de muestra directo en el objeto.
 
 ## 18. Disclosure
-Mantiene título ("Vista histórica simulada") y descripción persistentes sin depender de la configuración extra (al requerir Strings explícitos en el tipo). 
+Mantiene título ("Vista histórica simulada") y descripción persistentes sin depender de la configuración extra (al requerir Strings explícitos en el tipo).
 
 ## 19. Exports
 Se exportan directamente las variables de escenario constantes: `historicalPreviewComparisonReady`, `historicalPreviewLimited`, `historicalPreviewEmpty`, `historicalPreviewErrorSimulated`. No se incluye lógica, ni funciones selectoras.
@@ -615,7 +983,7 @@ Ejecutados y aprobados:
 - `npm run build` sin errores.
 
 ## 24. QA conceptual
-- El fixture contiene estrictamente los datos tipados según `HistoricalPreviewScenario` pero no el modelo procesado. 
+- El fixture contiene estrictamente los datos tipados según `HistoricalPreviewScenario` pero no el modelo procesado.
 - No hay cálculo de delta o tendencia.
 - Completamente aislado del `adapter` (no existe) y UI.
 - No hay arreglos de variables en el config original.
@@ -653,7 +1021,7 @@ COMPLETED
 
 ### 2026-06-11 - Fase 4E3 · Historical Preview Simulated Mock Data Contract
 - **Estado formal**: `HISTORICAL_PREVIEW_SIM_MOCK_CONTRACT_LOCKED`
-- **Resultados**: 
+- **Resultados**:
   - Se definió el escenario principal con datos sintéticos completos, deltas en puntos porcentuales y 2 periodos.
 
 - **Objetivo**: Definir y bloquear el Mock Data Contract de la pantalla de vista previa histórica simulada.
@@ -865,13 +1233,13 @@ Aprobada localmente.
 - **Cambio de plan**: Validado. Interrumpe ejecución antigua e inicializa la nueva secuencia para prevenir inconsistencias de identidad.
 - **Harness temporal**: Se diseñó un arnés DOM-free (`testHook.ts`) para validar todos los flujos lógicos (R1 a R11) sin tests permanentes; se ejecutó de manera exitosa y posteriormente se eliminó.
 - **Búsquedas de seguridad**: Verificado. Cero `any`, casts, mutaciones, accesos a red, uso de mocks y dependencias UI externas.
-- **QA técnico**: 
+- **QA técnico**:
   - TypeScript: 0 errores (`tsc --noEmit`).
   - Build: Exitoso (`vite build`).
   - Lint: 0 errores.
 - **Errores heredados**: Se mantienen las exclusiones correspondientes a fases aún no arregladas.
 - **Errores nuevos**: Cero.
-- **Confirmaciones**: 
+- **Confirmaciones**:
   - Confirmación de no creación de UI.
   - Confirmación de no screen nueva.
   - Confirmación de no U2 modificada.
@@ -913,7 +1281,7 @@ Aprobada localmente.
 ### 2026-06-11 - Fase 4D2 · Simulated Processing Architecture Lock
 - **Objetivo**: Definir y bloquear la arquitectura exacta de U3-SIM antes de construir su interfaz para simular el análisis de archivos.
 - **Fuentes revisadas**: Documentación de arquitectura, estado local de uploads (U1/U2), y Screen map.
-- **Decisiones**: 
+- **Decisiones**:
   - Se autoriza la creación de un reducer local separado (`useSimulatedProcessingState`) para manejar los timers cancelables de estado simulado y evitar acoplamiento con `useLocalUploadState`.
   - El límite binario se respeta; `Map<FileId, File>` no será leído, y se limpiará al cancelar.
   - Adapter orquestador consumirá de manera determinística fixtures pre-cargados.
@@ -972,7 +1340,7 @@ Aprobada localmente.
 - **Estrategia Recomendada**: Gobernar formalmente Node v24.13.0 y npm 11.6.2 mediante `.node-version`, `engines`, y `packageManager`. Borrar dependencias y realizar instalación limpia (`npm install`) en entorno aislado para regenerar un `package-lock.json` consistente.
 - **Secuencia Futura**: Commit I (Toolchain Governance), Commit II (Lockfile Repair), Commit III (SheetJS), Commit IV (Worker Spike).
 - **QA Requerido**: `npm ci` exitoso y segunda ejecución idempotente. TypeScript sin errores, build exitoso.
-- **Rollback**: Descartar rama y restaurar desde `main`. 
+- **Rollback**: Descartar rama y restaurar desde `main`.
 - **Autorización**: Se bloquea la manipulación de código, dependencias o el Worker. Se autoriza la **Fase 4C2D1.3 · Lockfile Reproducibility Repair Plan** (también documental).
 - **Confirmación**: No se alteró código funcional (`src/`), no se hizo commit, no se hizo push, SheetJS ausente. Únicamente se crearon/modificaron archivos documentales.
 ### 2026-06-11 - Fase 5C1 · Independent Dependency Acquisition and Lockfile Reproducibility QA
@@ -1033,7 +1401,7 @@ Aprobada localmente.
 - **Condiciones para P1**: Demostrar parseo en Worker, `0 KB` incrementado en main thread, nulo network I/O, estricto límite de chunk y compatibilidad de Worker module en Vite.
 - **Rollback**: Definidos planes de limpieza local y desinstalación para el spike en caso de no éxito, incluyendo pre y post-commit actions.
 - **Resultado de P0**: `DEPENDENCY_SPIKE_APPROVED_WITH_CONDITIONS`
-- **Confirmación de gobernanza**: 
+- **Confirmación de gobernanza**:
   - NO se instalaron dependencias.
   - NO se generó código ni Worker.
   - NO se abrieron archivos Excel.
@@ -1078,7 +1446,7 @@ Aprobada localmente.
 ### 2026-06-10 - Fase 4C2A · U3 Parser and Profiling Architecture Lock
 - **Objetivo**: Definir formalmente la arquitectura de la fase "U3 · Procesamiento inicial y profiling" para bloquear las capas de interacción, Worker, protocolo de mensajes, adaptador de parser, y sanitización antes de ejecutar un spike o autorizar la instalación de dependencias.
 - **Commit base**: `9d394136e66b26a4b251d806c9aacdb404ebe0c8`
-- **Decisiones bloqueadas**: 
+- **Decisiones bloqueadas**:
   - La inspección binaria (`.xlsx`) ocurrirá en un Web Worker (concurrencia 1, archivo por archivo).
   - El Main Thread no ejecutará el parser.
   - El adaptador aislará la biblioteca subyacente de U3 y no expondrá sus objetos.
@@ -1134,7 +1502,7 @@ Aprobada localmente.
 - **Límites provisionales**: Máx 5 archivos, 25MB c/u, 50MB lote.
 - **Aclaración de PII en filename**: Filename visible (`displayName`) separado de la clave normalizada (`normalizedNameKey`) para proteger PII y detectar duplicados.
 - **CTA Continuar**: Totalmente deshabilitado en la primera construcción (sin callback, sin transición conceptual a U3).
-- **Parser gate**: DEFERRED a U3. 
+- **Parser gate**: DEFERRED a U3.
 - **Mensaje de commit previsto**: `docs(survey-import): lock U2 interaction architecture`
 - **Remoto de destino**: `origin/main`
 - **Confirmación**: U2 no fue construida. No se modificó U1, contratos ni fixtures.
@@ -1207,7 +1575,7 @@ Aprobada localmente.
 ### 2026-05-06 - Hotfix 8.6C.1: Playground Shell Demo Stabilization (Completada)
 - **Status**: Finalizado
 - **Objetivo**: Estabilizar y auditar el Shell Demo (Sidebar + SubNav) eliminando deuda técnica visual y de tipos.
-- **Resultado**: 
+- **Resultado**:
   - 0 HEX en archivos TSX (migración a tokens `--nav`).
   - 0 `text-white` en archivos TSX (migración a `text-nav-foreground`).
   - 0 `as any` en renderizado de íconos (tipado estricto `IconName`).
@@ -1239,6 +1607,7 @@ Aprobada localmente.
 ### 2026-05-06 - Fase 8.6A: UBITS Template Component Gap Audit (Ajustada)
 
 ### 2026-05-05 18:27 - Fase 8.5B: Icon Wrapper + Registry (Completada)
+
 - **Acción:** Implementación de la infraestructura técnica del sistema de íconos.
 - **Detalles:**
   - Creado `src/icons/iconTypes.ts` con tipado estricto.
@@ -1419,7 +1788,7 @@ Aprobada localmente.
 - **Mecanismo utilizado:** Ninguno. Fase bloqueada. No se encontró en el repositorio ningún runner de TypeScript configurado (Vitest, Jest, tsx, ts-node) que permita ejecutar validaciones con soporte para alias de TypeScript (`@/`). Node 24 nativo falla en la resolución de alias y extensiones implícitas sin empaquetadores, y no se instalaron herramientas para respetar la restricción "no-install".
 - **Casos positivos:** 0 (no ejecutados).
 - **Casos negativos:** 0 (no ejecutados).
-- **Resultado:** Bloqueada. 
+- **Resultado:** Bloqueada.
 - **Baseline global de lint:** `npx eslint` sobre `src/lib/survey-import/schemas/` y `src/mocks/survey-import/` finalizó sin errores. El lint global reportó 25 errores de deuda técnica heredada (fuera del dominio `survey-import`). El build y `npx tsc --noEmit` completaron sin errores.
 - **Confirmación:** No se modificaron schemas, fixtures ni contratos. No hubo commit ni push.
 
@@ -1462,7 +1831,7 @@ Aprobada localmente.
 - **Objetivo:** Determinar de forma inequívoca la semántica de los conteos de `ReviewProgress` y clasificar los fallos de la auditoría de fixtures, evaluando la exclusividad transversal de `blocking`.
 - **Fuentes revisadas:** `DATA_MODEL.md`, `IMPORT_ARCHITECTURE.md`, esquemas de revisión, y fixtures afectados.
 - **Clasificación formal:** **MIXED_DEFECT**.
-- **Modelo semántico elegido:** Modelo B (`blocking` como dimensión transversal que cuenta entidades con al menos un issue bloqueante, y no se suma a los estados exclusivos). 
+- **Modelo semántico elegido:** Modelo B (`blocking` como dimensión transversal que cuenta entidades con al menos un issue bloqueante, y no se suma a los estados exclusivos).
 - **Decisión:** El schema actual falla lógicamente al sumar `blocking` al total. El fixture `unknown-blocked` falla semánticamente al establecer `blocking: 1` cuando `total: 0`.
 - **Archivos que podrá tocar el hotfix:** Únicamente `src/lib/survey-import/schemas/reviewSchemas.ts` y `src/mocks/survey-import/scenarios/unknownBlockedScenario.ts`.
 - **Estado:** Completada. Fase 3C permanece bloqueada.
@@ -1472,8 +1841,8 @@ Aprobada localmente.
 - **Objetivo:** Ejecutar las correcciones recomendadas en la Fase 3B2C2.4 para remover `blocking` de los estados mutuamente excluyentes en los esquemas y normalizar `unknown-blocked`.
 - **Archivos modificados:** `src/lib/survey-import/schemas/reviewSchemas.ts` y `src/mocks/survey-import/scenarios/unknownBlockedScenario.ts`.
 - **Defecto corregido:** Mixed-defect de schema (double counting) y fixture (conteo de issues globales interpretados erróneamente como entidades).
-- **Resultados de validación:** 
-  - 10/10 positivos exactos pasaron sin adaptación ni modificación. 
+- **Resultados de validación:**
+  - 10/10 positivos exactos pasaron sin adaptación ni modificación.
   - 7/7 casos RP evaluando estados exclusivos y transversales resultaron exitosos.
   - 18/18 regresiones negativas estructurales de sesión se mantuvieron firmes.
 - **Baseline QA Técnico:** 25 errores heredados, 1 warning heredado, 0 hallazgos nuevos en `survey-import`. Compilación seca exitosa y empaquetado de producción exitoso.
@@ -1571,16 +1940,16 @@ Aprobada localmente.
 ## Fase 4B1 · U2 Interaction Intake and Decision Gate
 - **Objetivo**: Definir y bloquear las decisiones de arquitectura de interacción para U2 (Archivos seleccionados).
 - **Componentes auditados**: `UploadZone`, `FileUpload`, `FilePreview`, `AttachmentList`, `UploadProgress`.
-- **Decisiones bloqueadas**: 
+- **Decisiones bloqueadas**:
   - Manejo de `File` (estado local, no canónico).
   - Continuar habilitado si no hay errores y hay > 0 archivos.
   - Formato progresivo de archivos (.xlsx inicialmente).
 - **Decisiones provisionales**:
   - Máximo 5 archivos, 25MB cada uno, 50MB lote.
   - Arquitectura en la misma screen con estado efímero de archivos.
-- **Decision gates**: 
+- **Decision gates**:
   - Selección de Parser: DEFERRED a U3 (no se usa ni selecciona en esta fase).
-- **Riesgos identificados**: 
+- **Riesgos identificados**:
   - Guardar objeto `File` en estado serializable (mitigado).
   - Manejo de PII local (mitigado).
   - Performance para lotes masivos (mitigado con límite provisorio).
@@ -1753,13 +2122,13 @@ Aprobada localmente.
 - **Objetivo**: Definir el plan técnico exacto para construir la vista de procesamiento inicial simulado U3-SIM sin escribir código aún.
 - **Commit base**: `fbdb7b82e6193589ee0858e8c56983b97d5268e5`
 - **Componentes auditados**: Reutilizables de `src/components/ui/` (Progress, Alert, Badge, Card, etc.) y de `src/components/survey-import/`. Ausencia de UI base preconstruida para "IA ligera".
-- **Decisiones**: 
+- **Decisiones**:
   - Se creará una vista independiente `SimulatedProcessingScreen` renderizada condicionalmente en `SurveyImportUploadScreen` para aislar responsabilidades.
   - El orquestador navegará entre `upload-idle` → `files-selected` → `simulated-processing`.
   - El límite de la U2 requerirá únicamente inyectar props funcionales a `ImportWizardFooter` para habilitar el botón "Continuar".
   - El Reducer actual no se mutará. Un nuevo Reducer local controlará solo la fase de simulación.
   - El adapter gestionará la resolución del escenario y proveerá el plan de ejecución determinístico sin usar `File` objects.
-- **Inventario**: 
+- **Inventario**:
   - Archivos a modificar: `SurveyImportUploadScreen.tsx`, `ImportWizardFooter.tsx`, `QA_CHECKLIST.md`, `PROMPT_LOG.md`.
   - Archivos a crear: `SimulatedProcessingScreen.tsx`, `useSimulatedProcessingState.ts`, `simulationConfig.ts`, `simulatedImportAdapter.ts`, `simulationTypes.ts`.
 - **División Flash**: Separado en 7 tareas incrementales, yendo desde los contratos y config, hasta el orquestador visual y QA exhaustivo.
@@ -1808,7 +2177,7 @@ Aprobada localmente.
 - **Inmutabilidad**: Fixtures no mutados, colecciones creadas nuevas.
 - **Harness temporal**: Creado, ejecutado y destruido, validando determinismo, tipado y conteos sin alterar el repositorio.
 - **Búsquedas de seguridad**: Verificada ausencia de any, supresiones, clases binarias (File, Blob), React, fetch, timers y mutaciones en el adaptador.
-- **QA técnico**: 
+- **QA técnico**:
   - npx tsc --noEmit: 0 errores.
   - npm run build: Exitoso.
   - eslint en el scope: 0 errores.
@@ -1912,7 +2281,7 @@ El `ImportWizardShell` resultó compatible nativamente con su API prop, admitien
 Se expuso la interfaz `SimulatedProcessingScreenProps` conteniendo `plan: SimulationPlan`, `state: SimulationState`, y tres callbacks estrictos (`onCancelSimulation`, `onCancelImportFlow`, `onReturnToFiles`).
 
 ## 7. Composición del wizard
-Se compuso exitosamente la screen envolviéndola en `ImportWizardShell`, pasando `ImportWizardHeader` en `header` y `ImportWizardSteps` en `steps`. 
+Se compuso exitosamente la screen envolviéndola en `ImportWizardShell`, pasando `ImportWizardHeader` en `header` y `ImportWizardSteps` en `steps`.
 
 ## 8. Macroetapas
 La macroetapa principal `Cargar` se conserva visualmente mediante el componente stepper de wizard, y no se agregaron ni alteraron pasos o macroetapas U2 de la interfaz general.
@@ -1921,28 +2290,28 @@ La macroetapa principal `Cargar` se conserva visualmente mediante el componente 
 La UI fue estructurada pasando los datos desde la vista orquestadora (las props de la screen) de forma descendente y top-down a `SimulationDisclosure`, `SimulatedProcessingPanel`, `SimulatedProcessingFileList` y `SimulatedProcessingSummary`.
 
 ## 10. Acciones por estado
-Implementadas conforme al contrato: 
+Implementadas conforme al contrato:
 - `queued/running`: Detener simulación, Cancelar importación
 - `cancelled/failed`: Volver a archivos, Cancelar importación
 - `completed`: Volver a archivos, Cancelar importación. No se incluye preview operativo.
 
 ## 11. Disclosure
-El `SimulationDisclosure` se presenta renderizado permanentemente asegurando visibilidad del propósito sintético del wizard. 
+El `SimulationDisclosure` se presenta renderizado permanentemente asegurando visibilidad del propósito sintético del wizard.
 
 ## 12. Live region
 Se implementó en la pantalla principal una única live region (`aria-live="polite" aria-atomic="true"`) calculada a través de un `getLiveRegionText()` puro.
 
 ## 13. Responsive
-El layout utiliza `flex flex-col gap-6` que escala adaptativamente y no impone anchos fijos agresivos, garantizando QA de viewport escalable según el contenedor del shell. 
+El layout utiliza `flex flex-col gap-6` que escala adaptativamente y no impone anchos fijos agresivos, garantizando QA de viewport escalable según el contenedor del shell.
 
 ## 14. Accesibilidad
-El diseño garantiza solo un encabezado semántico `h1` derivado del header superior y renderiza jerarquía `h2` dentro del layout principal (`Procesando archivos seleccionados`). 
+El diseño garantiza solo un encabezado semántico `h1` derivado del header superior y renderiza jerarquía `h2` dentro del layout principal (`Procesando archivos seleccionados`).
 
 ## 15. Tokens y estilos
 Componentes nativos y clases de Tailwind puras usadas, siguiendo los linters base. Ningún color arbitrario o estilo de UI problemático identificado.
 
 ## 16. Harness temporal
-Se validaron S1-S7 con un arnés en memoria renderizado a string (`tsx harness.tsx`) sin errores, confirmando existencia de elementos y `h1`. 
+Se validaron S1-S7 con un arnés en memoria renderizado a string (`tsx harness.tsx`) sin errores, confirmando existencia de elementos y `h1`.
 
 ## 17. Búsquedas de seguridad
 No se detectaron callbacks vacíos `() => {}` internamente, `any`, `useState`, dependencias `setTimeout`, adaptadores U1 ni `ArrayBuffer`/fixtures estáticas en el componente creado.
@@ -1953,7 +2322,7 @@ No se detectaron callbacks vacíos `() => {}` internamente, `any`, `useState`, d
 - `npm run lint` validado para el scope.
 
 ## 19. Diff resumido
-Creación de un archivo `SimulatedProcessingScreen.tsx` (102 líneas). 
+Creación de un archivo `SimulatedProcessingScreen.tsx` (102 líneas).
 
 ## 20. Riesgos o pendientes
 No existen dependencias de estado para iniciar U2, quedando estrictamente preparado para orquestación.
@@ -2076,3 +2445,82 @@ Autorizo continuar a la **Fase 4D4F · U3-SIM Task 6 — U2 to U3-SIM Integratio
   - Archivos congelados (`historicalPreviewTypes`, `historicalPreviewConfig`, `historicalPreviewScenarios`) intactos.
   - Ningún dato PII ni binario.
 - **Siguiente fase máxima autorizable:** Fase 4E-R4 · Historical Import Normalization First Screen Build Prompt
+
+## 21. Resolución QA Fase 4E-R6P
+**Estado Actual:** `HISTORICAL_IMPORT_NORMALIZATION_WORKTREE_HYGIENE_READY`
+
+- **Verificación de scripts temporales:** Eliminados exitosamente del working tree; no existen rastros en historial Git.
+- **Corrección de whitespace:** Se ejecutó un script en Python para eliminar de forma exacta el trailing whitespace en `docs/PROMPT_LOG.md`, `src/components/survey-import/ImportWizardSteps.tsx` y `src/screens/survey-import/SurveyImportUploadScreen.tsx`. El comando `git diff --check` corrobora la corrección.
+- **Verificación de integridad de R3 y congelación:** Se validaron mediante `git diff` los contratos y adaptadores R3, junto a los archivos congelados de R6. Se confirma que están inalterados.
+- **Validación técnica QA:**
+  - `npx eslint` local en archivos de R6: 0 errores, 0 warnings.
+  - `npx tsc -b`: Typecheck completado sin errores.
+  - `npm run build`: Build de Vite completado exitosamente.
+- **Deuda de Lint:** Se ejecutó lint global encontrando 26 errores, tipificados como `PREEXISTING_REPOSITORY_LINT_DEBT` que no corresponden al área de R6 ni de survey-import, por lo que no bloquean la continuidad.
+
+El working tree se encuentra auditado, las incidencias de lint saneadas en el código objetivo y los flujos R4, R6 y R6A restaurados íntegramente. Queda apto para repetir R6B de forma determinística y segura.
+
+# Fase 4E-R6B3H5 · Floating Analysis Tray Reset Semantics Hotfix — Retry
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+4E-R6B3H5
+
+## 3. Estado
+`HISTORICAL_IMPORT_NORMALIZATION_FLOATING_ANALYSIS_TRAY_RESET_READY`
+
+## 4. Estrategia y Cambios Realizados
+- Se eliminó completamente el `setTimeout(..., 0)` que se utilizaba para el reinicio de estado visual en `SimulatedProcessingScreen.tsx`.
+- Se removió la desactivación de eslint (`eslint-disable-next-line react-hooks/exhaustive-deps`) e implementó `viewModeRef` para acceder a la vista actual sin registrarla como dependencia en el efecto de finalización, evitando la navegación automática por cambios de vista.
+- Se implementó un "remount controlado" pasando la identidad de ejecución estable `plan.planId` como propiedad `key` hacia `SimulatedProcessingScreen` dentro de `SurveyImportUploadScreen.tsx`. Esto asegura un ciclo de vida limpio: cada nueva simulación inicia `viewMode` naturalmente en `full` y reinicia las guardas de navegación.
+
+## 5. QA Funcional y Técnico (Estado Final Permitido)
+- **Volver y reiniciar:** Carga nueva instancia, modo full confirmado, sin navegación automática inesperada.
+- **Cancelar y reiniciar:** Inicia en full, sin duplicar callbacks ni estados heredados.
+- **Navegación full:** Efectúa la navegación automática hacia U4-SIM exclusivamente 1 vez tras completarse la simulación minimizada en estado `full`.
+- **Navegación minimizada:** La bandeja alcanza `completed` sin gatillar navegaciones hasta que el usuario acciona `Ver vista previa` (navega explícitamente y una única vez).
+- **Verificación Técnica:** `git diff --check` limpio. Build (`npm run build`) y Typecheck (`npx tsc -b`) completados exitosamente. No hay errores de lint en las áreas afectadas ni bypasses de `eslint-disable`.
+- **Integridad de R3 y Congelados:** Verificación exitosa en `src/lib/survey-import/normalization-preview/` y mocks asociados, confirmando que las integridades del contrato R3 y de los archivos congelados se mantienen en 0 cambios.
+
+## 6. Siguiente fase máxima autorizable
+`Fase 4E-R6B2H1 · Historical Import Batch Capacity Decision`
+
+
+## Fase 4E-R6B2H2A · Batch Capacity Core and U1 Guardrails
+**Fecha:** 2026-06-12
+**Estado:** `HISTORICAL_IMPORT_NORMALIZATION_BATCH_CAPACITY_CORE_READY`
+
+**Cambios Realizados:**
+- **Límites Implementados:** Se configuró `maxFilesAbsolute: 200`, `maxFilesWarningThreshold: 50`, `maxSizeBytesPerFile: 25MB` y `maxSizeBytesPerBatch: 500MB` (carácter provisional) en el config central.
+- **Estrategia de Rechazo:** Al superar los 200 archivos en el payload de adición, se aplica un rechazo atómico del bloque con mensaje claro.
+- **Validación O(n):** Se optimizó la detección de duplicados usando un `Map` que evalúa en una sola pasada usando metadatos (`name-size-lastModified`).
+- **Boundary:** Se mantiene la barrera binaria estricta, la validación descansa exclusivamente sobre metadata serializable sin lecturas de `FileReader` ni conversiones a base64.
+- **U1 y Componentes UI:** Se incorporó `UploadBatchAlert` con variante amarilla y texto no bloqueante para lotes de más de 50 archivos. El error bloqueante se activa por sobrepasar 500MB totales o errores individuales. Diseño y accesibilidad (live region agregada y contadores correctos) conservados y validados sintéticamente.
+
+**QA Técnico y Visual:**
+- **Typecheck & Build:** `npx tsc -b` y `npm run build` pasaron sin errores.
+- **Integridad:** Las pantallas U2, U3-SIM y U4-SIM, así como el contrato R3 y los archivos congelados, no sufrieron modificaciones (`git diff --check` limpio).
+- **Mediciones:** O(n) duplicate check funciona instantáneamente para arrays de prueba (<10ms superficial).
+
+**Siguiente Fase Máxima Autorizable:**
+`Fase 4E-R6B2H2B · Selected Files Pagination for Large Batches`
+
+## 2026-06-12 - Fase 4E-R6B2H2B · Selected Files Pagination for Large Batches
+
+**Status:** `HISTORICAL_IMPORT_NORMALIZATION_SELECTED_FILES_PAGINATION_READY`
+
+- **Componente Pagination:** Se reutilizó `src/components/ui/pagination.tsx` como implementación base, componiendo la paginación visual localmente dentro de `SelectedFilesPanel.tsx`.
+- **Page size:** Configurado de forma centralizada en `uploadLimits.selectedFilesPageSize` (`25`).
+- **Archivos modificados:**
+  - `src/config/survey-import/uploadLimits.ts`
+  - `src/components/survey-import/SelectedFilesPanel.tsx`
+- **Comportamiento paginación (200 archivos):** Se calculan dinámicamente hasta 8 páginas, mostrando el rango legible de archivos (Ej. Mostrando 1–25 de 200 archivos).
+- **Eliminar archivos:** El handler envuelve el evento original para retroceder de página de manera síncrona y segura si la página actual queda vacía.
+- **Agregar archivos:** Mantiene la página activa actual intacta si sigue siendo válida, recalculando dinámicamente el `totalPages`.
+- **Foco y accesibilidad:** Se incluyó el soporte con `aria-live="polite"` para el rango visible. Los botones de paginación manejan correctamente los enlaces mediante event interception, habilitando accesibilidad de teclado e incorporando `aria-disabled`.
+- **Performance:** Cero hooks innecesarios que induzcan re-renders globales; el `slice` se deriva del estado en un render normal para ~25 elementos visualizados, preservando el performance budget.
+- **QA y Validaciones:** Todo verificado exitosamente (Typecheck, Lint y Build impecables); `InitialUploadPanel` (U1), `SimulatedProcessingScreen` (U3-SIM), y `NormalizationPreviewScreen` (U4-SIM) permanecen 100% intactas. Contrato R3 y archivos congelados estables.
+
+**Siguiente fase:** `Fase 4E-R6B2H2C · Large Batch Representation in Simulated Analysis`

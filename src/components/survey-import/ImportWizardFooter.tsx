@@ -8,6 +8,7 @@ interface ImportWizardFooterProps {
   onContinue?: () => void;
   continueDisabled?: boolean;
   continueLabel?: string;
+  helperText?: string;
 }
 
 export function ImportWizardFooter({ 
@@ -16,25 +17,26 @@ export function ImportWizardFooter({
   disableBack = true,
   onContinue,
   continueDisabled = true,
-  continueLabel
+  continueLabel,
+  helperText
 }: ImportWizardFooterProps) {
   const { footer } = importWizardContent;
 
   return (
     <div className={className}>
-      <div className="flex items-center justify-between py-4 border-t">
-        <Button 
-          variant="outline" 
-          disabled={disableBack} 
-          aria-disabled={disableBack ? "true" : "false"}
-          onClick={onBack}
-        >
-          {footer.backAction}
-        </Button>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground hidden sm:inline-block">
-            {footer.disabledReason}
-          </span>
+      <div className="flex items-center justify-between">
+        <span className="text-sm text-muted-foreground font-medium">
+          {helperText || footer.disabledReason}
+        </span>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            disabled={disableBack} 
+            aria-disabled={disableBack ? "true" : "false"}
+            onClick={onBack}
+          >
+            {footer.backAction}
+          </Button>
           <Button 
             variant="default" 
             disabled={continueDisabled} 

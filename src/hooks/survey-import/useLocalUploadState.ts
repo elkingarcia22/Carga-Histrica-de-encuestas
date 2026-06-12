@@ -21,6 +21,7 @@ export interface UploadBatchState {
   files: LocalFileMetadata[];
   totalSizeBytes: number;
   hasBatchSizeError: boolean;
+  hasLargeBatchWarning: boolean;
   globalMessage: string | null;
   accessibleMessage: string | null;
   addedCountTracker: number;
@@ -37,6 +38,7 @@ const initialState: UploadBatchState = {
   files: [],
   totalSizeBytes: 0,
   hasBatchSizeError: false,
+  hasLargeBatchWarning: false,
   globalMessage: null,
   accessibleMessage: null,
   addedCountTracker: 0,
@@ -75,6 +77,7 @@ function reducer(state: UploadBatchState, action: Action): UploadBatchState {
       newFiles = revalidateBatch(newFiles);
       const totalSizeBytes = newFiles.reduce((acc, f) => acc + f.sizeBytes, 0);
       const hasBatchSizeError = totalSizeBytes > uploadLimits.maxSizeBytesPerBatch;
+      const hasLargeBatchWarning = newFiles.length > uploadLimits.maxFilesWarningThreshold && newFiles.length <= uploadLimits.maxFilesAbsolute;
 
       return {
         ...state,
@@ -82,6 +85,7 @@ function reducer(state: UploadBatchState, action: Action): UploadBatchState {
         files: newFiles,
         totalSizeBytes,
         hasBatchSizeError,
+        hasLargeBatchWarning,
         accessibleMessage: action.accessibleMessage,
         addedCountTracker: state.addedCountTracker + action.payload.length,
       };
@@ -91,6 +95,7 @@ function reducer(state: UploadBatchState, action: Action): UploadBatchState {
       newFiles = revalidateBatch(newFiles);
       const totalSizeBytes = newFiles.reduce((acc, f) => acc + f.sizeBytes, 0);
       const hasBatchSizeError = totalSizeBytes > uploadLimits.maxSizeBytesPerBatch;
+      const hasLargeBatchWarning = newFiles.length > uploadLimits.maxFilesWarningThreshold && newFiles.length <= uploadLimits.maxFilesAbsolute;
 
       return {
         ...state,
@@ -98,6 +103,7 @@ function reducer(state: UploadBatchState, action: Action): UploadBatchState {
         files: newFiles,
         totalSizeBytes,
         hasBatchSizeError,
+        hasLargeBatchWarning,
         accessibleMessage: action.payload.accessibleMessage,
       };
     }

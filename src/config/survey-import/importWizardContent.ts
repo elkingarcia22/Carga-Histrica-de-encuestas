@@ -1,7 +1,7 @@
 export const importWizardContent = {
   header: {
     title: 'Importar encuesta finalizada',
-    description: 'Carga los archivos exportados desde otra plataforma. El sistema revisará la estructura antes de importarlos a UBITS.',
+    description: 'Carga los archivos exportados desde otra plataforma. El sistema simulará la revisión de su estructura antes de preparar la importación a UBITS.',
     cancelAction: 'Cancelar importación',
   },
   steps: [
@@ -25,8 +25,8 @@ export const importWizardContent = {
     ],
   },
   summary: {
-    title: 'Resumen de importación',
-    emptyState: 'Agrega archivos para comenzar el análisis.',
+    title: 'Resumen del lote',
+    emptyState: 'Agrega archivos para comenzar a preparar el análisis simulado.',
     labels: {
       files: 'Archivos',
       mode: 'Modo',

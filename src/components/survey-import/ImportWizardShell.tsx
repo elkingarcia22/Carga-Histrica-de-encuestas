@@ -5,6 +5,9 @@ interface ImportWizardShellProps {
   mainContent: React.ReactNode;
   summary: React.ReactNode;
   footer: React.ReactNode;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
+  onMouseEnterSidebar?: () => void;
 }
 
 export function ImportWizardShell({
@@ -13,42 +16,58 @@ export function ImportWizardShell({
   mainContent,
   summary,
   footer,
+  isCollapsed = false,
+  onToggleCollapse,
+  onMouseEnterSidebar,
 }: ImportWizardShellProps) {
   return (
-    <div className="min-h-screen bg-muted/10 font-sans p-6 md:p-8">
-      <div className="mx-auto max-w-6xl flex flex-col min-h-[calc(100vh-4rem)] bg-background border rounded-xl shadow-sm overflow-hidden">
+    <div className="min-h-screen bg-[#f8f9fa] dark:bg-zinc-950 font-sans flex flex-col overflow-hidden">
+      
+      {/* Main Area: Sidebar + Scroll Content */}
+      <div className="flex-1 min-h-0 flex flex-row gap-0">
         
-        {/* Header Area */}
-        <div className="px-6 md:px-10 pt-8">
-          {header}
-        </div>
+        {/* Stepper / Left Sidebar */}
+        <aside 
+          className={`shrink-0 h-full bg-transparent pt-8 flex flex-col transition-all duration-300 hidden md:flex ${isCollapsed ? 'w-16' : 'w-64'}`}
+          onMouseEnter={onMouseEnterSidebar}
+        >
+          {steps}
+        </aside>
 
-        {/* Content Area */}
-        <div className="flex-1 flex flex-col md:flex-row p-6 md:p-10 gap-8 md:gap-12">
+        {/* Right Content Area */}
+        <div className="flex-1 min-h-0 flex flex-col">
           
-          {/* Stepper / Left Rail */}
-          <aside className="w-full md:w-56 shrink-0">
-            {steps}
-          </aside>
+          {/* Header */}
+          <div className="px-8 pt-8">
+            {header}
+          </div>
 
-          {/* Main Content Area */}
-          <main className="flex-1 min-w-0">
-            {mainContent}
-          </main>
+          {/* Scrollable Content */}
+          <div className="flex-1 overflow-y-auto px-8 pb-8">
+            <div className="flex flex-col gap-8">
+              
+              {/* Main Content */}
+              <main className="min-w-0">
+                {mainContent}
+              </main>
 
-          {/* Summary / Right Rail */}
-          <aside className="w-full md:w-72 shrink-0">
-            {summary}
-          </aside>
+              {/* Summary / Right Rail */}
+              {summary && (
+                <aside className="w-full">
+                  {summary}
+                </aside>
+              )}
 
+            </div>
+          </div>
         </div>
-
-        {/* Footer Area */}
-        <div className="px-6 md:px-10 pb-6 mt-auto">
-          {footer}
-        </div>
-
       </div>
+
+      {/* Footer spanning 100% width */}
+      <div className="px-6 py-4 border-t bg-background shrink-0 flex items-center justify-between">
+        {footer}
+      </div>
+
     </div>
   );
 }

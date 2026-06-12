@@ -10,10 +10,12 @@ import type {
  * Never use Math.random() or 0.
  */
 export const SIMULATION_PHASE_DURATIONS: Record<SimulationPhaseId, number> = {
-  'validating-metadata': 1200,
-  'profiling-structure': 1800,
-  'detecting-survey-type': 1500,
-  'building-historical-result': 2000,
+  'validating-metadata': 1000,
+  'identifying-function': 1200,
+  'detecting-survey': 1500,
+  'recognizing-data': 1800,
+  'preparing-mappings': 1500,
+  'consolidating-issues': 1000,
 };
 
 /**
@@ -22,31 +24,50 @@ export const SIMULATION_PHASE_DURATIONS: Record<SimulationPhaseId, number> = {
 export const SIMULATION_PHASES: readonly SimulationPhaseDefinition[] = [
   {
     id: 'validating-metadata',
-    label: 'Verificando archivos seleccionados',
+    label: 'Validando formato y metadata del lote',
     description: 'Comprobando la integridad de la cabecera y el formato.',
     durationMs: SIMULATION_PHASE_DURATIONS['validating-metadata'],
-    accessibleLabel: 'Fase 1: Verificando archivos seleccionados',
+    accessibleLabel: 'Fase 1: Validando formato y metadata del lote',
+    finding: '4 archivos preparados para revisión'
   },
   {
-    id: 'profiling-structure',
-    label: 'Revisando la estructura esperada',
-    description: 'Analizando las columnas de atributos y respuestas.',
-    durationMs: SIMULATION_PHASE_DURATIONS['profiling-structure'],
-    accessibleLabel: 'Fase 2: Revisando la estructura esperada',
+    id: 'identifying-function',
+    label: 'Identificando la función probable de cada archivo',
+    description: 'Analizando posibles fuentes principales y auxiliares.',
+    durationMs: SIMULATION_PHASE_DURATIONS['identifying-function'],
+    accessibleLabel: 'Fase 2: Identificando la función probable de cada archivo',
+    finding: '1 fuente principal y 3 archivos auxiliares propuestos'
   },
   {
-    id: 'detecting-survey-type',
-    label: 'Identificando el tipo de encuesta',
-    description: 'Clasificando la encuesta según sus dimensiones.',
-    durationMs: SIMULATION_PHASE_DURATIONS['detecting-survey-type'],
-    accessibleLabel: 'Fase 3: Identificando el tipo de encuesta',
+    id: 'detecting-survey',
+    label: 'Detectando encuesta y periodo',
+    description: 'Identificando correspondencias temporales.',
+    durationMs: SIMULATION_PHASE_DURATIONS['detecting-survey'],
+    accessibleLabel: 'Fase 3: Detectando encuesta y periodo',
+    finding: 'Encuesta y periodo representados como consistentes'
   },
   {
-    id: 'building-historical-result',
-    label: 'Preparando el resultado histórico',
-    description: 'Consolidando la vista previa del historial.',
-    durationMs: SIMULATION_PHASE_DURATIONS['building-historical-result'],
-    accessibleLabel: 'Fase 4: Preparando el resultado histórico',
+    id: 'recognizing-data',
+    label: 'Reconociendo hojas, columnas y registros',
+    description: 'Extrayendo esquema de datos simulado.',
+    durationMs: SIMULATION_PHASE_DURATIONS['recognizing-data'],
+    accessibleLabel: 'Fase 4: Reconociendo hojas, columnas y registros',
+  },
+  {
+    id: 'preparing-mappings',
+    label: 'Preparando mapeos preliminares',
+    description: 'Enlazando columnas con atributos requeridos.',
+    durationMs: SIMULATION_PHASE_DURATIONS['preparing-mappings'],
+    accessibleLabel: 'Fase 5: Preparando mapeos preliminares',
+    finding: 'Mapeos preliminares preparados'
+  },
+  {
+    id: 'consolidating-issues',
+    label: 'Consolidando incidencias y bloqueos',
+    description: 'Preparando el resultado final.',
+    durationMs: SIMULATION_PHASE_DURATIONS['consolidating-issues'],
+    accessibleLabel: 'Fase 6: Consolidando incidencias y bloqueos',
+    finding: 'Sin bloqueos críticos en el escenario simulado'
   },
 ];
 
