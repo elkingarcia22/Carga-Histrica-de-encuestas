@@ -2611,3 +2611,38 @@ El working tree se encuentra auditado, las incidencias de lint saneadas en el c�
 - **Estrategia de Ramas:** Se creará `recovery/historical-import-forward-cleanup` sin reescritura de historial (force push denegado).
 
 **Siguiente fase máxima autorizable:** `Fase 4E-R6B2H2B-R4 · Forward Recovery Branch Execution`
+
+## Fase 4E-R6B2H2B-R4B1H1 · Single Drawer Visual Regression Hotfix
+
+**Estado:** `HISTORICAL_IMPORT_NORMALIZATION_SINGLE_DRAWER_BASELINE_READY`
+
+**Hallazgo visual:** El shell compartido (`ImportWizardShell`) había sido reconstruido incorrectamente en la fase previa asumiendo una forma de "card centrada" (max-w-7xl, shadow, bordes) en lugar de un drawer/workspace que ocupara toda la superficie de trabajo.
+
+**Diferencia entre card y drawer:** 
+- Card: fondo exterior predominante, contenedor centrado con márgenes.
+- Drawer: la superficie abarca el total (h-screen/w-full) siendo el marco maestro para U1-U4.
+
+**Capturas como baseline:** Se restauró el concepto observando las capturas compartidas por producto donde no hay márgenes externos gruesos y el workflow actúa como drawer de extremo a extremo.
+
+**Hunks corregidos:**
+- `ImportWizardShell.tsx`: Se retiró `max-w-7xl`, paddings y flex-centers. Reemplazado por un layout flex `h-screen` / `w-full` con color de background nativo de la capa.
+- `ImportWizardHeader.tsx`: Se restauró el control icon-only para el cierre en lugar del botón textual, acorde a capturas.
+- `ImportWizardShell.tsx`: Se retiró formalmente cualquier layout o prop de right-rail/summary del shell como se acordó en `NO_RIGHT_RAIL_IN_HISTORICAL_IMPORT_FLOW`.
+
+**Estrategia de compatibilidad:** 
+El shell no tiene dependencias fuera de las pantallas (U1, U3, etc.), las cuales continúan delegando el layout del layout maestro correctamente al shell sin romper API ni usar un wrapper global en conflicto.
+
+**Header:** Conserva el lenguaje y acción icon-only.
+**Stepper:** Compacto y alineado al mainContent, `w-56` sin interactividad de colapsado (eliminado previamante pero justificado).
+**Content:** Ancho libre sin encerramiento artificial de card.
+**Footer:** Ajustado a `py-4` para alinear a U4 y eliminar padding exagerado.
+
+**QA Visual & Funcional (U1-U4):** 
+- Desktop: el drawer ocupa el viewport como workspace. 
+- 900px: stepper y mainArea se mantienen usables sin compresión forzada y sin horizontal scroll global.
+
+**Typecheck, Lint, Tests, Build:**  y  ejecutados exitosamente sin fallos dentro del target. Errores lint solo en componentes preexistentes ajenos al módulo.
+
+**No Push:** Respetado, rama congelada y lista para U1 upload screen reconstruction.
+
+**Siguiente fase:** `Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Baseline Reconstruction`
