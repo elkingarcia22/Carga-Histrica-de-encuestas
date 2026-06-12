@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { importWizardContent } from '@/config/survey-import/importWizardContent';
+import { cn } from '@/lib/utils';
 
 interface ImportWizardFooterProps {
   className?: string;
@@ -13,7 +14,7 @@ interface ImportWizardFooterProps {
 }
 
 export function ImportWizardFooter({ 
-
+  className,
   onBack, 
   disableBack = true,
   onContinue,
@@ -25,10 +26,10 @@ export function ImportWizardFooter({
   const { footer } = importWizardContent;
 
   return (
-    <>
+    <div className={cn("flex items-center justify-between w-full", className)}>
       <div className="flex items-center gap-3">
         {leftActions}
-        <span className="text-sm text-muted-foreground font-medium">
+        <span className="text-sm text-muted-foreground font-medium hidden sm:inline-block">
           {helperText || footer.disabledReason}
         </span>
       </div>
@@ -56,6 +57,6 @@ export function ImportWizardFooter({
           {continueLabel || footer.nextAction}
         </Button>
       </div>
-    </>
+    </div>
   );
 }
