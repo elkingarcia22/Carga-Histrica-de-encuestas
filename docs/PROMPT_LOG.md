@@ -2726,3 +2726,23 @@ El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%
 - **Typecheck, lint, tests, build**: Validado con `tsc -b`, eslint y build en vite.
 - **Push**: Bloqueado.
 - **Siguiente fase**: Fase 4E-R6B2H2B-R4B5 · U4-SIM Delta QA
+
+## HISTORICAL_IMPORT_NORMALIZATION_U4_LARGE_BATCH_READY
+
+* Fecha: 2026-06-12
+* Fase: H2D
+* Hallazgo resuelto: LARGE_BATCH_U4_FUTURE_PHASE_REQUIRED
+* Estrategia de agrupamiento: Por `structuralFamily` conservando el orden de aparición.
+* Estrategia de paginación: GLOBAL_PAGINATION_WITH_VISIBLE_PAGE_GROUPING.
+* Page size: 25.
+* Resumen global: Se calcularon y mostraron los conteos sobre todo el lote, en los encabezados de agrupación de cada familia.
+* CTA global: Evaluado por el adaptador sobre el lote completo, sin modificación local visual.
+* QA con 4, 25, 26, 50, 100 y 200 archivos: El renderizado se limita siempre a la paginación activa (max 25 archivos montados). Grupos visuales interactivos y correctos.
+* Familias agrupadas correctamente.
+* Incompatibles no visibles bloquean el avance por depender del modelo completo.
+* Relaciones y mapeos intactos.
+* QA desktop y QA 900 px verificados conceptualmente para responsividad en tabla.
+* Accesibilidad comprobada: se mantiene estructura de tabla, botones con aria-label y aria-expanded, además de texto semántico.
+* Typecheck, Lint, Tests y Build: Pasaron exitosamente.
+* Push bloqueado.
+* Siguiente fase: Fase 4E-R6B2H2B-R5 · Recovery Branch Integral QA
