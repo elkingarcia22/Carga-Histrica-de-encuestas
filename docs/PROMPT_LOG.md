@@ -1,3 +1,22 @@
+# Fase 4E-R6B2H2B-R6A · Recovery Branch Publication and Preview Deployment
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+R5 / R6A
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_BRANCH_QA_APPROVED
+
+## 4. Auditoría
+- **SHA auditado:** 3b36284174b18f05b9c2505462f0eac73f06477d
+- **Resultado de QA:** Aprobado íntegramente
+- **Publicación previa:** Confirmación de no publicación previa en origin
+- **Siguiente fase:** R6A (Preview Ready)
+
+---
+
 # Fase 4E-R6B2H2B-R4B1 · Shared Wizard Shell Baseline Reconstruction
 
 ## 1. Fecha
