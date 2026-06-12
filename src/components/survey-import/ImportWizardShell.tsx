@@ -17,7 +17,6 @@ export function ImportWizardShell({
   summary,
   footer,
   isCollapsed = false,
-  onToggleCollapse,
   onMouseEnterSidebar,
 }: ImportWizardShellProps) {
   return (

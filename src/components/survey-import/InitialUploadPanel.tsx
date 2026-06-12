@@ -5,11 +5,10 @@ import { Sparkles } from 'lucide-react';
 
 interface InitialUploadPanelProps {
   onAddFiles?: (files: File[]) => void;
-  summaryNode?: React.ReactNode;
   className?: string;
 }
 
-export function InitialUploadPanel({ onAddFiles, summaryNode, className }: InitialUploadPanelProps) {
+export function InitialUploadPanel({ onAddFiles, className }: InitialUploadPanelProps) {
   const { uploadZone } = importWizardContent;
 
   return (

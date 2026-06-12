@@ -4,12 +4,11 @@ import { ImportWizardHeader } from '@/components/survey-import/ImportWizardHeade
 import { ImportWizardSteps } from '@/components/survey-import/ImportWizardSteps';
 import { InitialUploadPanel } from '@/components/survey-import/InitialUploadPanel';
 import { SelectedFilesPanel } from '@/components/survey-import/SelectedFilesPanel';
-import { ImportSummaryCard } from '@/components/survey-import/ImportSummaryCard';
 import { ImportWizardFooter } from '@/components/survey-import/ImportWizardFooter';
 import { UploadLiveRegion } from '@/components/survey-import/UploadLiveRegion';
 import { UploadBatchAlert } from '@/components/survey-import/UploadBatchAlert';
-import { importWizardContent } from '@/config/survey-import/importWizardContent';
-import { formatFileSize } from '@/components/upload/uploadUtils';
+
+
 import { uploadLimits } from '@/config/survey-import/uploadLimits';
 import {
   useLocalUploadState,
@@ -63,7 +62,7 @@ function SimulatedProcessingController({
 }
 
 export function SurveyImportUploadScreen() {
-  const { summary } = importWizardContent;
+
   const binaryMap = useRef<Map<string, File>>(new Map());
   const { state, addFiles, removeFile, setGlobalMessage, reset } = useLocalUploadState();
   const [activePlan, setActivePlan] = useState<SimulationPlan | null>(null);
@@ -246,22 +245,6 @@ export function SurveyImportUploadScreen() {
   const blockedCount = state.files.filter(f => ['invalid', 'too-large', 'unsupported', 'duplicate'].includes(f.status)).length;
   const isEmpty = filesCount === 0;
 
-  const modeLabel = summary.defaultValues.mode;
-  const surveyTypeLabel = summary.defaultValues.surveyType;
-  const privacyLabel = summary.defaultValues.privacy;
-
-  const summaryComponent = (
-    <ImportSummaryCard
-      filesCount={filesCount}
-      totalSizeLabel={formatFileSize(state.totalSizeBytes)}
-      validCount={isEmpty ? undefined : validCount}
-      blockedCount={isEmpty ? undefined : blockedCount}
-      modeLabel={modeLabel}
-      surveyTypeLabel={surveyTypeLabel}
-      privacyLabel={privacyLabel}
-      isEmpty={isEmpty}
-    />
-  );
 
   let helperText: string | undefined = undefined;
   if (currentView === 'files-selected') {
@@ -293,7 +276,6 @@ export function SurveyImportUploadScreen() {
           currentView === 'upload-idle' ? (
             <InitialUploadPanel
               onAddFiles={handleAddFiles}
-              summaryNode={summaryComponent}
             />
           ) : (
             <div className="space-y-4">
