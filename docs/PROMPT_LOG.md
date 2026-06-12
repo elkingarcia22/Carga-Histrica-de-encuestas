@@ -1,3 +1,280 @@
+# Fase 4E-R3R2 · Safe Repository Recovery and Selective Commit
+
+## 1. Resumen ejecutivo
+Se ha ejecutado la recuperación segura del repositorio y el stage selectivo de los entregables de las fases R1, R2, R2A y R3.
+
+## 2. Fecha
+2026-06-11
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_R1_R3_RECOVERY_APPROVED
+
+## 4. Clasificación
+`SAME_REPOSITORY_UNCOMMITTED_PHASE_OUTPUTS`
+
+## 5. Baseline
+`9ea624f1b8044bf40de32d89ba18a45344dd81cd`
+
+## 6. Confirmación de historia
+Se confirma la ausencia de pérdida de historia. El hotfix R3H1 fue aprobado y ejecutado correctamente.
+
+## 7. Entregables recuperados
+- `docs/HISTORICAL_IMPORT_NORMALIZATION_INTAKE.md`
+- `docs/HISTORICAL_IMPORT_NORMALIZATION_ARCHITECTURE.md`
+- `docs/HISTORICAL_IMPORT_NORMALIZATION_SCOPE_RECOVERY.md`
+- `src/lib/survey-import/normalization-preview/normalizationPreviewTypes.ts`
+- `src/config/survey-import/normalizationPreviewConfig.ts`
+- `src/mocks/survey-import/normalization-preview/normalizationPreviewScenarios.ts`
+- `src/lib/survey-import/normalization-preview/normalizationPreviewAdapter.ts`
+
+## 8. QA Técnico
+Ejecutado y verificado (tsc, eslint, build, git diff).
+
+## 9. Archivos congelados
+Excluidos explícitamente (FROZEN_PENDING_RECOVERY_DECISION):
+- `src/lib/survey-import/historical-preview/historicalPreviewTypes.ts`
+- `src/config/survey-import/historicalPreviewConfig.ts`
+- `src/mocks/survey-import/historical-preview/historicalPreviewScenarios.ts`
+
+## 10. U4-SIM
+Se confirma que U4-SIM no fue construida.
+
+## 11. Siguiente fase
+Siguiente fase autorizable después del push: R4.
+
+---
+
+# Fase 4E-R3H1 · Normalization Preview Type-Only Imports Hotfix
+
+## 1. Resumen ejecutivo
+Se han resuelto los errores `TS1484` detectados por `verbatimModuleSyntax` en los archivos de la fase `normalization-preview`. La corrección consistió exclusivamente en promover los imports de símbolos usados únicamente en posiciones de tipo a `import type`. No se han introducido cambios funcionales, lógicos, ni modificaciones en el contrato, ni en la UI.
+
+## 2. Estado formal
+`HISTORICAL_IMPORT_NORMALIZATION_TYPE_IMPORT_HOTFIX_READY`
+
+## 3. Causa del bloqueo
+La recuperación selectiva de R1–R3 se bloqueó antes del stage debido a que el chequeo de TypeScript `tsc -b` falló con errores `TS1484` al exigir imports de tipo explícitos bajo la política de `verbatimModuleSyntax`.
+
+## 4. Archivos corregidos
+- `src/config/survey-import/normalizationPreviewConfig.ts`
+- `src/lib/survey-import/normalization-preview/normalizationPreviewAdapter.ts`
+- `src/mocks/survey-import/normalization-preview/normalizationPreviewScenarios.ts`
+
+## 5. Confirmación de ajustes
+Se confirma que la única modificación ejecutada fue la inserción de `type` en las declaraciones de importación correspondientes, afectando exclusivamente a tipos exportados por `normalizationPreviewTypes.ts`.
+
+## 6. Resultados de QA
+- Typecheck (`tsc -b`): Exitoso, 0 errores `TS1484`.
+- Lint: Exitoso sin warnings para los archivos modificados.
+- Build (`npm run build`): Exitoso.
+
+## 7. Confirmaciones adicionales
+- Cero cambios funcionales: los ocho escenarios sintéticos, labels y reglas del adapter permanecen inalterados.
+- Archivos congelados: Los activos de `historical-preview` permanecen intactos como untracked.
+- No se han agregado archivos al stage, ni se ha generado commit.
+
+## 8. Siguiente fase autorizada
+Se autoriza la ejecución de: **Fase 4E-R3R2 · Safe Repository Recovery and Selective Commit**.
+
+---
+
+# Fase 4E-R2A · Historical Import Normalization Multi-File Architecture Amendment
+
+## 1. Resumen ejecutivo
+Se ha enmendado la arquitectura conceptual para la pantalla U4-SIM · Vista previa de normalización. La arquitectura ya no asume un único workbook raw, sino un lote multiarchivo correspondiente a una única encuesta y a un único periodo.
+
+## 2. Estado formal
+`HISTORICAL_IMPORT_NORMALIZATION_MULTI_FILE_ARCHITECTURE_AMENDED`
+
+## 3. Motivo de la enmienda
+Revisión de archivos reales de importación confirmó que una ejecución puede recibir varios archivos simultáneamente, los cuales deben procesarse juntos para preparar una única encuesta histórica.
+
+## 4. Supuesto reemplazado
+El supuesto inicial "un workbook raw" ha sido reemplazado por "un lote multiarchivo de una única encuesta y un único periodo".
+
+## 5. Regla de negocio
+UNA IMPORTACIÓN = UNA ENCUESTA + UN PERIODO + UNO O VARIOS ARCHIVOS.
+La mezcla de periodos o de encuestas genera bloqueos.
+
+## 6. Decisiones cerradas
+- Lote multiarchivo.
+- Una sola encuesta por lote.
+- Un solo periodo por lote.
+- Mixed-period y mixed-survey son bloqueos estrictos.
+- `scenarioId` a nivel de lote.
+- Metadata serializable por archivo.
+- Separación explícita de familia estructural y rol propuesto.
+- Relaciones detectadas entre archivos.
+- Fuente principal obligatoria.
+- CTA principal dependiente del estado global del lote.
+- Archivos raw como posible fuente principal.
+- Reportes agregados solo como complemento o evidencia, no para analítica.
+- Prohibición de resolver duplicidades automáticamente en esta fase.
+- Prohibición de generar rutas, dependencias o modificar U1, U2 y U3-SIM.
+
+## 7. Decisiones diferidas a R3
+- Nombres definitivos de tipos.
+- Valores definitivos de fixtures (mock data).
+- Conteos globales.
+- Filenames sintéticos y cantidades exactas.
+- IDs de escenario definitivos.
+
+## 8. Confirmaciones de QA y Restricciones
+- **Confirmación:** Cero cambios en `src/**`.
+- **Confirmación:** Archivos congelados (`historicalPreviewTypes.ts`, `historicalPreviewConfig.ts`, `historicalPreviewScenarios.ts`) permanecen intactos (`FROZEN_PENDING_RECOVERY_DECISION`).
+
+## 9. Archivos modificados
+- `docs/HISTORICAL_IMPORT_NORMALIZATION_ARCHITECTURE.md`
+- `docs/PROMPT_LOG.md`
+
+## 10. Próxima fase
+Se autoriza como siguiente fase máxima la **Fase 4E-R3 · Historical Import Normalization Mock Data Contract**.
+
+---
+
+# Fase 4E-R2 · Historical Import Normalization Architecture Lock
+
+## 1. Resumen ejecutivo
+Se ha definido y bloqueado conceptualmente la arquitectura para la pantalla U4-SIM · Vista previa de normalización. La arquitectura asegura una frontera clara entre U3-SIM y U4-SIM, transiciones de estado libres de PII y la inmutabilidad de los datos sintéticos para validar el mapeo estructural sin analíticas.
+
+## 2. Estado formal
+`HISTORICAL_IMPORT_NORMALIZATION_ARCHITECTURE_LOCKED`
+
+## 3. Decisiones cerradas
+- Integración UI mediante componente condicional en `SurveyImportUploadScreen`.
+- Ownership global de configuración del stepper.
+- Capa separada de Mock Data y Componentes puros para U4-SIM.
+- Construcción de un Adapter determinístico local.
+- Uso del `scenarioId` como único cruce conceptual desde U3-SIM.
+- Utilización de la ruta `normalization-preview` para evitar colisiones con el dominio congelado de KPIs (`historical-preview`).
+
+## 4. Decisiones diferidas
+- IA-first y sugerencias semánticas quedan como `VALUABLE_LATER_AFTER_DETERMINISTIC_MAPPING`.
+
+## 5. Restricciones vigentes
+- Cero lecturas de binarios (`File`/`Blob`).
+- No aplicar lógica analítica (favorabilidad, eNPS, deltas, tendencias).
+- Datos puramente serializables y dependientes estáticamente de fixtures.
+- Archivos comparativos congelados siguen intocables.
+
+## 6. Archivos modificados
+- `docs/HISTORICAL_IMPORT_NORMALIZATION_ARCHITECTURE.md` (Creado)
+- `docs/PROMPT_LOG.md` (Modificado)
+- **Confirmación:** `src/**` NO fue modificado.
+
+## 7. Próxima fase
+Se autoriza la **Fase 4E-R3 · Historical Import Normalization Mock Data Contract**.
+
+---
+
+# Fase 4E-R1 · Historical Import Normalization Prototype Intake
+
+## 1. Resumen ejecutivo
+La Fase 4E-R1 establece el intake documental para la vista previa de normalización histórica. Tras la corrección de alcance (4E-R0), esta fase define los requerimientos funcionales, de interfaz, usuario y datos sintéticos para mostrar cómo el sistema interpreta la estructura de los archivos externos y qué incidencias encuentra, garantizando que el dominio sea estrictamente de preparación de mapeo y no analítico.
+
+## 2. Estado formal
+`HISTORICAL_IMPORT_NORMALIZATION_INTAKE_APPROVED`
+
+## 3. Resultados
+- **Objetivo redefinido:** Mostrar la estructura detectada, incidencias y mapeo propuesto preliminar, en lugar de un dashboard analítico.
+- **Usuario principal:** Administrador UBITS / Consultor, enfocado en alinear columnas y tipos de datos.
+- **Primera pantalla:** `Vista previa de normalización` (Reemplaza a Historical Preview).
+- **Estructura definida:** Resumen de identidades, listado de mapeo preliminar, panel de incidencias.
+- **Escenarios base:** `normalization-ready`, `normalization-issues`, `normalization-empty`, `normalization-error-simulated`.
+- **Integración IA:** Conceptualizada como sugerencias semánticas y detección de anomalías, pero diferida estrictamente a iteraciones post-determinísticas.
+- **Transición U3-SIM:** El adaptador cambiará para retornar un resumen estructural (NormalizationPreviewModel) en lugar de favorabilidad y participación.
+
+## 4. Archivos creados
+- `docs/HISTORICAL_IMPORT_NORMALIZATION_INTAKE.md`
+
+## 5. QA de integridad
+- Cero código funcional creado, cero `src/` modificado, cero dependencias, U1/U2/U3-SIM inalterados.
+
+## 6. Autorización
+Se autoriza la **Fase 4E-R2 · Historical Import Normalization Architecture Lock**.
+
+---
+
+# Fase 4E5C.2 · Historical Preview Executable Fixture Alignment Hotfix Report
+
+## 1. Resumen ejecutivo
+Se alineó el fixture de Historical Preview Simulated con la política `INTEGER_DISPLAY_PERCENTAGE_POLICY` del Mock Data Contract, corrigiendo los flotantes de la distribución comparativa y garantizando la coherencia matemática.
+
+## 2. Estado formal
+`HISTORICAL_PREVIEW_SIM_FIXTURE_CONSISTENCY_RESOLVED`
+
+## 3. Gate inicial
+- **Rama:** `main`
+- **HEAD:** `9ea624f1b8044bf40de32d89ba18a45344dd81cd`
+- **Mensaje:** `docs(survey-import): align historical preview mock contract math`
+- **Tracking:** Up to date con origin/main (ahead 0, behind 0).
+- **Working Tree:** Modificados exclusivamente los permitidos. U1, U2, U3-SIM permanecen intactas. Sin dependencias adicionales.
+
+## 4. Fuentes revisadas
+- `docs/HISTORICAL_PREVIEW_SIMULATED_MOCK_DATA_CONTRACT.md`
+- `src/mocks/survey-import/historical-preview/historicalPreviewScenarios.ts`
+- `src/lib/survey-import/historical-preview/historicalPreviewTypes.ts`
+- `src/config/survey-import/historicalPreviewConfig.ts`
+
+## 5. Inconsistencia corregida
+Los porcentajes comparativos `74.2`, `15.8` y `10.0` fueron reemplazados por sus valores contractuales enteros `74`, `16` y `10`.
+
+## 6. Archivos modificados
+- `src/mocks/survey-import/historical-preview/historicalPreviewScenarios.ts`
+- `docs/PROMPT_LOG.md`
+
+## 7. Distribución base
+Permaneció intacta: `68 / 20 / 12` con `100` respuestas y `82` de participación.
+
+## 8. Distribución comparativa
+Actualizada exclusivamente a: `74 / 16 / 10`.
+
+## 9. Compatibilidad conteo–porcentaje
+Conteos mantenidos: `89 / 19 / 12`. Las proporciones sobre 120 respuestas corresponden exactamente a los enteros 74, 16 y 10 usando la regla de compatibilidad. Total de respuestas: 120.
+
+## 10. Favorabilidad
+Se mantuvo en `74`, coincidiendo de manera perfecta con el porcentaje del bucket favorable (74).
+
+## 11. Delta futuro
+El delta esperado (+6) no se almacenó en el fixture, dejándose la responsabilidad al adaptador futuro.
+
+## 12. Participación
+Se mantuvo intacta: Base 82 y Comparativa 85.
+
+## 13. Regresión de escenarios
+Los escenarios `limited`, `empty` y `error-simulated` permanecieron inalterados en su definición e intención. No se agregaron ceros ficticios.
+
+## 14. Capacidades y segmentos
+Mantenidas de acuerdo a los contratos anteriores, sin alterar IDs, descripciones o conteos pasivos.
+
+## 15. Disclosure
+Mantenido idéntico, con su propiedad de persistencia activa, para advertir el uso de datos sintéticos.
+
+## 16. Búsquedas de seguridad
+Cero ocurrencias resultantes para `74.2`, `15.8`, y cero lógicas detectadas (`function`, `=>`, `React`, etc.). El código contiene cero supresiones como `@ts-ignore` u otros casts.
+
+## 17. QA técnico
+- TypeScript (`tsc --noEmit`): Exitoso.
+- ESLint (focalizado): Exitoso.
+- Build (`npm run build`): Exitoso.
+
+## 18. QA conceptual
+El fixture permanece estático y predecible, actuando como una sola fuente matemática inmutable. Sin derivaciones internas. No se tocó código, tipos ni configuración funcional adicional.
+
+## 19. Diff resumido
+Se cambiaron `74.2`, `15.8` y `10.0` por `74`, `16` y `10` en `historicalPreviewScenarios.ts`.
+
+## 20. Riesgos o pendientes
+Ninguno detectado. La matemática cuadra sin fisuras.
+
+## 21. Autorización o bloqueo para Fase 4E5D
+**SE AUTORIZA:** Fase 4E5D · Historical Preview Simulated Deterministic Adapter
+
+## 22. Estado
+COMPLETED
+
+---
+
 # Fase 4E3.2 · Historical Preview Mock Contract Mathematical Alignment Hotfix Report
 
 ## 1. Resumen ejecutivo
@@ -1761,3 +2038,41 @@ Autorizo continuar a la **Fase 4D4F · U3-SIM Task 6 — U2 to U3-SIM Integratio
 - Math aligned (74 / 16 / 10 percentages, 89 / 19 / 12 counts).
 - Single active integer precision policy.
 - Contract document secured.
+
+## Fase 4E-R0 · Historical Import Normalization Scope Recovery Audit
+- **Objetivo:** Ejecutar una auditoría de recuperación de dominio para corregir la desviación detectada en la Fase 4E, estableciendo el enfoque correcto hacia la normalización y el mapeo estructural (sin analíticas ni KPIs de favorabilidad).
+- **Acción:** Creación de reporte de auditoría `HISTORICAL_IMPORT_NORMALIZATION_SCOPE_RECOVERY.md`, definiendo la matriz de recuperación, identificando artefactos obsoletos a reemplazar (superseded) y delimitando la frontera correcta de U3-SIM. Se bloquea la construcción y se autoriza exclusivamente la fase de intake 4E-R1.
+
+## Fase 4E-R3 · Historical Import Normalization Mock Data Contract
+- **Fecha:** 2026-06-11
+- **Estado formal:** `HISTORICAL_IMPORT_NORMALIZATION_MOCK_DATA_CONTRACT_READY`
+- **Archivos creados o modificados:**
+  - `src/lib/survey-import/normalization-preview/normalizationPreviewTypes.ts` (Creado)
+  - `src/config/survey-import/normalizationPreviewConfig.ts` (Creado)
+  - `src/mocks/survey-import/normalization-preview/normalizationPreviewScenarios.ts` (Creado)
+  - `src/lib/survey-import/normalization-preview/normalizationPreviewAdapter.ts` (Creado)
+  - `docs/PROMPT_LOG.md` (Modificado)
+- **Escenarios creados:**
+  - `multi-file-single-survey-ready` (Happy path)
+  - `multi-file-review-required`
+  - `mixed-period-blocked`
+  - `mixed-survey-blocked`
+  - `missing-primary-source`
+  - `redundant-files-review`
+  - `incompatible-file-blocked`
+  - `simulated-error`
+- **Reglas determinísticas y validaciones implementadas:**
+  - Cero dependencias de métricas analíticas.
+  - Validación de references (issues, files, relations).
+  - Cálculo determinístico del CTA (`canContinueToConfiguration`) basado en bloqueos e incidencias y estados obligatorios.
+  - Generación del `NormalizationPreviewModel`.
+- **Decisiones cerradas:**
+  - Separación total entre tipos locales, configuración pura y mocks determinísticos.
+  - Los conteos analíticos como favorabilidad o distribuciones fueron erradicados en favor de conteos estructurales puros.
+- **Gaps diferidos:**
+  - Integración final con `SimulationResultSummary` en U3-SIM (pendiente de confirmación y autorización).
+- **Confirmación de restricciones:**
+  - Cero componentes y pantallas modificadas.
+  - Archivos congelados (`historicalPreviewTypes`, `historicalPreviewConfig`, `historicalPreviewScenarios`) intactos.
+  - Ningún dato PII ni binario.
+- **Siguiente fase máxima autorizable:** Fase 4E-R4 · Historical Import Normalization First Screen Build Prompt
