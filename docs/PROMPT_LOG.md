@@ -2710,3 +2710,19 @@ El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%
 - **Visual snapshot intact**: No visual or structural layout shift was introduced.
 - **Typecheck, lint, build, tests**: All type checks and builds succeeded. Linter errors only existed outside the modified files.
 - **Status confirmation**: Push was explicitly avoided per constraints.
+
+### 2026-06-12 - Fase 4E-R6B2H2C: Large Batch Representation in Simulated Analysis
+
+- **Estado**: `HISTORICAL_IMPORT_NORMALIZATION_U3_LARGE_BATCH_READY`
+- **Hallazgo corregido**: FULL_VIEW_RENDERS_ALL_FILES
+- **Límite central**: Se definió `SIMULATION_FULL_VIEW_VISIBLE_FILE_LIMIT = 10` en configuration.
+- **Estrategia de priorización**: Activos > Advertencias/Errores > Completados recientes > Pendientes, con desempate de orden original. Los 10 seleccionados conservan su orden relativo.
+- **Conteo agregado**: Se agregó un mensaje para los N archivos adicionales sin mutar estado o arrays globales.
+- **QA con lotes de 5, 10, 11, 50, 100 y 200 archivos**: Validado. Archivos pequeños se muestran sin mensaje; grandes truncan en 10 con conteo del resto.
+- **Activo fuera del top 10**: Validado. Al priorizar por estado, el activo siempre entra en los 10.
+- **Warnings y fallos**: Validado. Prioridad 1 garantiza su visibilidad.
+- **Tray intacto**: Tray (máximo 3 filas) se mantiene exacto, igual que el controller y navegación.
+- **QA desktop y 900 px**: Validado sin desbordamientos ni scroll horizontal forzado.
+- **Typecheck, lint, tests, build**: Validado con `tsc -b`, eslint y build en vite.
+- **Push**: Bloqueado.
+- **Siguiente fase**: Fase 4E-R6B2H2B-R4B5 · U4-SIM Delta QA
