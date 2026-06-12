@@ -1,3 +1,45 @@
+# Fase 4E-R6B2H2B-R4B1 · Shared Wizard Shell Baseline Reconstruction
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+R4B1
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_SHARED_WIZARD_BASELINE_READY
+
+## 4. Archivos Modificados
+- `src/components/survey-import/ImportWizardShell.tsx`
+- `src/components/survey-import/ImportWizardHeader.tsx`
+- `src/components/survey-import/ImportWizardSteps.tsx`
+- `src/components/survey-import/ImportWizardFooter.tsx`
+
+## 5. Decisión Right Rail
+Decisión obligatoria cumplida: `NO_RIGHT_RAIL_IN_HISTORICAL_IMPORT_FLOW`. Se omitió el Right Rail para la Carga Histórica. El prop `summary` quedó opcional para preservar compatibilidad con otros consumidores si lo necesitaran.
+
+## 6. Compatibilidad del Shell
+El shell ahora expone un layout de grid robusto `w-full max-w-7xl` con stepper de `w-56`. Soporta los elementos internos de U1-U4 sin que se rompan. El footer se ha movido al fondo de la card con un sticky border.
+
+## 7. QA Visual y Funcional
+- **Header**: Se restableció visualmente el header original de baseline, incluyendo texto en el botón en vez de un simple icono para mayor accesibilidad.
+- **Stepper**: Se mantuvo el stepper vertical con funcionalidad visual original más candado, eliminando la colapsabilidad redundante y los tooltips que alteraban el flujo.
+- **Footer**: Retorna la barra inferir anclada persistente `border-t bg-background` con acciones en flex.
+- **QA U1, U2, U3-SIM, U4-SIM**: Verificados, interfaces adaptadas exitosamente a lo ancho de la superficie.
+- **QA Desktop / 900 px**: La adaptación responsiva es correcta y respeta anchos flexibles.
+
+## 8. QA Técnico
+- **Typecheck**: `tsc -b` limpio, resueltas las variables sin uso con TS6133 en stepper.
+- **Lint**: Scoped lint `npm run lint -- src/components/survey-import/ImportWizard*.tsx` verificado exitosamente.
+- **Build**: `npm run build` completado sin errores.
+- **R3**: Contrato visual/mocks no tocados, conservan completa integridad.
+- **Push**: No se ha realizado push.
+
+## 9. Siguiente Fase Autorizable
+Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Baseline Reconstruction
+
+---
+
 # Fase 4E-R6B2H1A · Large Batch Capacity Architecture Lock
 
 ## 1. Fecha
