@@ -2646,3 +2646,49 @@ El shell no tiene dependencias fuera de las pantallas (U1, U3, etc.), las cuales
 **No Push:** Respetado, rama congelada y lista para U1 upload screen reconstruction.
 
 **Siguiente fase:** `Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Baseline Reconstruction`
+
+## Fase 4E-R6B2H2B-R4B1H2 · Exact Visual Snapshot Restoration
+
+**Estado:** `HISTORICAL_IMPORT_NORMALIZATION_EXACT_VISUAL_SNAPSHOT_RESTORED`
+
+**Fecha:** 2026-06-12
+
+**Snapshot Fuente:** `56564e7dd98040c7ae18a50a685676148e74c0de`
+
+**Equivalencia verificada:** Se demostró mediante `git diff` que el snapshot fuente tiene cero diferencias en el dominio visual de survey-import en relación con `1ca42ca`, garantizando que es la representación visual final aceptada antes de la contaminación por prospectos.
+
+**Rutas restauradas exactamente (11 archivos):**
+- `src/components/survey-import/ImportWizardFooter.tsx`
+- `src/components/survey-import/ImportWizardHeader.tsx`
+- `src/components/survey-import/ImportWizardShell.tsx`
+- `src/components/survey-import/ImportWizardSteps.tsx`
+- `src/components/survey-import/InitialUploadPanel.tsx`
+- `src/components/upload/UploadZone.tsx`
+- `src/config/survey-import/importWizardContent.ts`
+- `src/screens/survey-import/NormalizationPreviewScreen.tsx`
+- `src/screens/survey-import/SimulatedProcessingScreen.tsx`
+- `src/screens/survey-import/SurveyImportUploadScreen.tsx`
+- `src/styles/globals.css`
+
+**Rutas excluidas:**
+No se restauraron archivos de `historical-preview` (congelados), ni mocks, ni archivos correspondientes a `prospect-import`. Estos permanecen purgadamente ausentes de la rama.
+
+**Integridad:**
+- **Prospectos ausentes**: Verificado, cero archivos `prospect-import`.
+- **Frozen files ausentes**: Verificado, el árbol permanece limpio.
+- **R3 Intacto**: `normalizationPreviewTypes.ts`, `normalizationPreviewConfig.ts`, `normalizationPreviewScenarios.ts` y su adapter coinciden totalmente con `56564e7` y no fueron alterados.
+
+**Comparación con capturas & QA Visual (Desktop y 900px):**
+- **U1**: Drawer completo y libre (no card), dropzone en 2 columnas idéntica a captura guardada.
+- **U2**: Diseño recuperado con lista en su posición original.
+- **U3-SIM**: Fases animadas y el skeleton loader funcionan dentro de un tray flotante minimizable correcto.
+- **U4-SIM**: Componente renderizado limpiamente sin botones de cerrado duplicados.
+El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%.
+
+**QA Técnico:**
+- **Typecheck & Lint**: `tsc -b` y `npm run lint` procesados exitosamente sobre los archivos del dominio.
+- **Tests & Build**: `vite build` exitoso en 2.84s.
+
+**No push:** Respetado estrictamente.
+
+**Siguiente fase autorizable:** `Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Delta QA`
