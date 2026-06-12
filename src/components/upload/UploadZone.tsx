@@ -32,6 +32,8 @@ export interface UploadZoneProps {
   className?: string
   /** Compact mode when files are present */
   compact?: boolean
+  /** Optional ref to the actionable container */
+  actionRef?: React.Ref<HTMLDivElement>
 }
 
 /**
@@ -54,6 +56,7 @@ export function UploadZone({
   activeText = 'Drop files here...',
   className,
   compact = false,
+  actionRef,
 }: UploadZoneProps) {
   const [isDragActive, setIsDragActive] = React.useState(false)
   const [localError, setLocalError] = React.useState<string | null>(null)
@@ -116,13 +119,21 @@ export function UploadZone({
   if (compact && hasFiles) {
     return (
       <div
+        ref={actionRef}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (!disabled && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault()
+            inputRef.current?.click()
+          }
+        }}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
         onClick={() => !disabled && inputRef.current?.click()}
         className={cn(
-          'flex items-center gap-4 p-4 border border-dashed rounded-xl transition-all cursor-pointer',
+          'flex items-center gap-4 p-4 border border-dashed rounded-xl transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           'bg-muted/30 border-border hover:bg-muted/50 hover:border-primary/50',
           isDragActive && 'bg-primary/5 border-primary',
           hasError && 'bg-destructive/5 border-destructive/50',
@@ -175,13 +186,21 @@ export function UploadZone({
       )}
 
       <div
+        ref={actionRef}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (!disabled && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault()
+            inputRef.current?.click()
+          }
+        }}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
         onClick={() => !disabled && inputRef.current?.click()}
         className={cn(
-          'relative flex flex-col items-center justify-center min-h-[240px] p-10 border-2 border-dashed rounded-xl transition-all cursor-pointer w-full',
+          'relative flex flex-col items-center justify-center min-h-[240px] p-10 border-2 border-dashed rounded-xl transition-all cursor-pointer w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           'bg-muted/5 border-border hover:bg-muted/10 hover:border-primary/50',
           isDragActive && 'bg-primary/5 border-primary scale-[1.01] shadow-sm',
           hasError && 'bg-destructive/5 border-destructive/50 hover:border-destructive',
