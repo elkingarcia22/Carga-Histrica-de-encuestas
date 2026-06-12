@@ -21,12 +21,12 @@ export function ImportWizardHeader({ className, onCancel }: ImportWizardHeaderPr
             {header.description}
           </p>
         </div>
-        <Button
-          variant="ghost"
+        <Button 
+          variant="secondary" 
           size="icon"
+          className="w-10 h-10 rounded-xl shrink-0"
           onClick={onCancel}
-          className="shrink-0 rounded-full w-8 h-8 text-muted-foreground hover:bg-slate-100 dark:hover:bg-zinc-800"
-          aria-label={header.cancelAction || "Cancelar importación"}
+          aria-label="Cancelar importación"
         >
           <X className="w-5 h-5" aria-hidden="true" />
         </Button>
