@@ -109,75 +109,76 @@ export function SimulatedProcessingScreen({
 
   return (
     <>
-      <ImportWizardShell
-        header={<ImportWizardHeader />}
-        steps={
-          <ImportWizardSteps 
-            isCollapsed={isCollapsed} 
-            onToggleCollapse={handleToggleCollapse}
-            activeStepId="processing"
-          />
-        }
-        isCollapsed={isCollapsed}
-        onToggleCollapse={handleToggleCollapse}
-        onMouseEnterSidebar={handleMouseEnterSidebar}
-        mainContent={
-          <div className="flex flex-col gap-6">
-            <SimulationDisclosure />
-
-            <div aria-live="polite" aria-atomic="true" className="sr-only">
-              {getLiveRegionText()}
-            </div>
-
-            <AILoader
-              variant="card"
-              status={isTerminal ? (state.status === 'failed' ? 'error' : 'complete') : 'thinking'}
-              label="Analizando el lote…"
-              description="Estamos simulando la revisión de la estructura de los archivos para preparar la vista previa de normalización."
-              progress={plan.phases.length > 0 ? (state.completedPhaseIds.length / plan.phases.length) * 100 : 0}
+      {viewMode === 'full' && (
+        <ImportWizardShell
+          header={<ImportWizardHeader />}
+          steps={
+            <ImportWizardSteps 
+              isCollapsed={isCollapsed} 
+              onToggleCollapse={handleToggleCollapse}
+              activeStepId="upload"
             />
-
+          }
+          isCollapsed={isCollapsed}
+          onToggleCollapse={handleToggleCollapse}
+          onMouseEnterSidebar={handleMouseEnterSidebar}
+          mainContent={
             <div className="flex flex-col gap-6">
-              <SimulatedProcessingPanel
-                status={state.status}
-                phases={plan.phases}
-                activePhase={state.activePhase}
-                completedPhaseIds={state.completedPhaseIds}
-                files={state.files}
-              />
-              <SimulatedProcessingFileList
-                files={state.files}
-                phases={plan.phases}
-              />
-            </div>
+              <SimulationDisclosure />
 
-            <div className="mt-4 flex flex-col gap-4 sm:flex-row justify-between items-center">
-              {!isTerminal && (
-                <Button variant="outline" onClick={onCancelImportFlow}>
-                  Cancelar importación
-                </Button>
-              )}
-              {!isTerminal && (
-                <Button variant="secondary" onClick={() => setViewMode('tray-collapsed')} className="gap-2">
-                  <Minimize2 className="h-4 w-4" />
-                  Minimizar análisis
-                </Button>
-              )}
+              <div aria-live="polite" aria-atomic="true" className="sr-only">
+                {getLiveRegionText()}
+              </div>
+
+              <AILoader
+                variant="card"
+                status={isTerminal ? (state.status === 'failed' ? 'error' : 'complete') : 'thinking'}
+                label="Analizando el lote…"
+                description="Estamos simulando la revisión de la estructura de los archivos para preparar la vista previa de normalización."
+                progress={plan.phases.length > 0 ? (state.completedPhaseIds.length / plan.phases.length) * 100 : 0}
+              />
+
+              <div className="flex flex-col gap-6">
+                <SimulatedProcessingPanel
+                  status={state.status}
+                  phases={plan.phases}
+                  activePhase={state.activePhase}
+                  completedPhaseIds={state.completedPhaseIds}
+                  files={state.files}
+                />
+                <SimulatedProcessingFileList
+                  files={state.files}
+                  phases={plan.phases}
+                />
+              </div>
             </div>
-          </div>
-        }
-        summary={null}
-        footer={
-          <ImportWizardFooter
-            disableBack={false}
-            onBack={onReturnToFiles}
-            continueDisabled={!isTerminal}
-            onContinue={onCompleted}
-            continueLabel="Ver vista previa"
-            helperText={isTerminal ? "Vista previa preparada" : "Análisis simulado en curso"}
-          />
-        }
-      />
+          }
+          summary={null}
+          footer={
+            <ImportWizardFooter
+              disableBack={false}
+              onBack={onReturnToFiles}
+              continueDisabled={!isTerminal}
+              onContinue={onCompleted}
+              continueLabel="Ver vista previa"
+              helperText={isTerminal ? "Vista previa preparada" : "Análisis simulado en curso"}
+              leftActions={
+                !isTerminal ? (
+                  <>
+                    <Button variant="outline" size="sm" onClick={onCancelImportFlow}>
+                      Cancelar importación
+                    </Button>
+                    <Button variant="secondary" size="sm" onClick={() => setViewMode('tray-collapsed')} className="gap-2">
+                      <Minimize2 className="h-4 w-4" />
+                      Minimizar
+                    </Button>
+                  </>
+                ) : undefined
+              }
+            />
+          }
+        />
+      )}
       <SimulatedProcessingTray
         state={state}
         plan={plan}

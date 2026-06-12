@@ -3,7 +3,6 @@ import { ImportWizardShell } from '@/components/survey-import/ImportWizardShell'
 import { ImportWizardHeader } from '@/components/survey-import/ImportWizardHeader';
 import { ImportWizardSteps } from '@/components/survey-import/ImportWizardSteps';
 import { InitialUploadPanel } from '@/components/survey-import/InitialUploadPanel';
-import { SelectedFilesPanel } from '@/components/survey-import/SelectedFilesPanel';
 import { ImportWizardFooter } from '@/components/survey-import/ImportWizardFooter';
 import { UploadLiveRegion } from '@/components/survey-import/UploadLiveRegion';
 import { UploadBatchAlert } from '@/components/survey-import/UploadBatchAlert';
@@ -241,8 +240,7 @@ export function SurveyImportUploadScreen() {
 
   // Selectors for UI
   const filesCount = state.files.length;
-  const validCount = state.files.filter(f => f.status === 'valid' || f.status === 'warning').length;
-  const blockedCount = state.files.filter(f => ['invalid', 'too-large', 'unsupported', 'duplicate'].includes(f.status)).length;
+
   const isEmpty = filesCount === 0;
 
 
@@ -261,38 +259,26 @@ export function SurveyImportUploadScreen() {
     <>
       <UploadLiveRegion message={state.accessibleMessage} />
       <ImportWizardShell
-        header={<ImportWizardHeader />}
+        header={<ImportWizardHeader onCancel={handleCancelImportFlow} />}
         steps={
           <ImportWizardSteps 
             isCollapsed={isCollapsed} 
             onToggleCollapse={handleToggleCollapse}
-            activeStepId={currentView === 'upload-idle' ? 'upload' : 'files-selected'}
+            activeStepId="upload"
           />
         }
         isCollapsed={isCollapsed}
         onToggleCollapse={handleToggleCollapse}
         onMouseEnterSidebar={handleMouseEnterSidebar}
         mainContent={
-          currentView === 'upload-idle' ? (
+          <div className="space-y-4">
+            {state.hasLargeBatchWarning && <UploadBatchAlert isVisible={true} variant="warning" />}
             <InitialUploadPanel
               onAddFiles={handleAddFiles}
+              files={state.files}
+              onRemoveFile={handleRemoveFile}
             />
-          ) : (
-            <div className="space-y-4">
-              {state.hasLargeBatchWarning && <UploadBatchAlert isVisible={true} variant="warning" />}
-              <SelectedFilesPanel
-                files={state.files}
-                hasBatchSizeError={state.hasBatchSizeError}
-                globalMessage={state.globalMessage}
-                onAddFiles={handleAddFiles}
-                onRemoveFile={handleRemoveFile}
-                filesCount={filesCount}
-                validCount={validCount}
-                blockedCount={blockedCount}
-                totalSizeBytes={state.totalSizeBytes}
-              />
-            </div>
-          )
+          </div>
         }
         summary={null}
         footer={

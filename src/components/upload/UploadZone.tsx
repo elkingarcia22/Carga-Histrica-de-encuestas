@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { UploadCloud, X, FileText, AlertCircle } from 'lucide-react'
+import { UploadCloud, AlertCircle, Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { validateFiles } from './uploadUtils'
 
@@ -30,11 +30,14 @@ export interface UploadZoneProps {
   activeText?: string
   /** Additional CSS classes */
   className?: string
+  /** Compact mode when files are present */
+  compact?: boolean
 }
 
 /**
  * UploadZone - UBITS component for drag & drop file selection.
  * Desktop-first, B2B enterprise style using native Drag/Drop API.
+ * Supports compact mode when files are already present.
  */
 export function UploadZone({
   value = [],
@@ -50,6 +53,7 @@ export function UploadZone({
   idleText = 'Drag and drop files here or click to browse',
   activeText = 'Drop files here...',
   className,
+  compact = false,
 }: UploadZoneProps) {
   const [isDragActive, setIsDragActive] = React.useState(false)
   const [localError, setLocalError] = React.useState<string | null>(null)
@@ -103,14 +107,65 @@ export function UploadZone({
     if (inputRef.current) inputRef.current.value = ''
   }
 
-  const removeFile = (index: number) => {
-    const newFiles = value.filter((_, i) => i !== index)
-    onChange?.(newFiles)
-  }
-
+  // removeFile was unused, removing to satisfy TS6133
   const displayError = error || localError
   const hasError = !!displayError
+  const hasFiles = value.length > 0
 
+  // Compact mode: horizontal layout with button
+  if (compact && hasFiles) {
+    return (
+      <div
+        onDragEnter={handleDrag}
+        onDragLeave={handleDrag}
+        onDragOver={handleDrag}
+        onDrop={handleDrop}
+        onClick={() => !disabled && inputRef.current?.click()}
+        className={cn(
+          'flex items-center gap-4 p-4 border border-dashed rounded-xl transition-all cursor-pointer',
+          'bg-muted/30 border-border hover:bg-muted/50 hover:border-primary/50',
+          isDragActive && 'bg-primary/5 border-primary',
+          hasError && 'bg-destructive/5 border-destructive/50',
+          disabled && 'opacity-50 cursor-not-allowed',
+          className
+        )}
+      >
+        <input
+          ref={inputRef}
+          type="file"
+          accept={accept}
+          multiple={multiple}
+          disabled={disabled}
+          onChange={handleChange}
+          className="hidden"
+          aria-hidden="true"
+        />
+
+        <div className={cn(
+          'p-2 rounded-lg',
+          isDragActive ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground',
+          hasError && 'bg-destructive/10 text-destructive'
+        )}>
+          <Plus className="h-5 w-5" />
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground">
+            {isDragActive ? activeText : 'Agregar más archivos'}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Arrastra o haz clic para buscar
+          </p>
+        </div>
+
+        {displayError && (
+          <p className="text-xs text-destructive font-medium">{displayError}</p>
+        )}
+      </div>
+    )
+  }
+
+  // Full mode: vertical layout
   return (
     <div className={cn('flex flex-col gap-2', className)}>
       {label && (
@@ -126,7 +181,7 @@ export function UploadZone({
         onDrop={handleDrop}
         onClick={() => !disabled && inputRef.current?.click()}
         className={cn(
-          'relative flex flex-col items-center justify-center min-h-[160px] p-6 border-2 border-dashed rounded-xl transition-all cursor-pointer',
+          'relative flex flex-col items-center justify-center min-h-[240px] p-10 border-2 border-dashed rounded-xl transition-all cursor-pointer w-full',
           'bg-muted/5 border-border hover:bg-muted/10 hover:border-primary/50',
           isDragActive && 'bg-primary/5 border-primary scale-[1.01] shadow-sm',
           hasError && 'bg-destructive/5 border-destructive/50 hover:border-destructive',
@@ -144,21 +199,21 @@ export function UploadZone({
           aria-hidden="true"
         />
 
-        <div className="flex flex-col items-center text-center gap-3">
+        <div className="flex flex-col items-center text-center gap-4">
           <div className={cn(
-            'p-3 rounded-full bg-background shadow-sm border border-border/50',
+            'p-4 rounded-full bg-background shadow-sm border border-border/50',
             isDragActive && 'text-primary',
             hasError && 'text-destructive'
           )}>
-            {hasError ? <AlertCircle className="h-6 w-6" /> : <UploadCloud className="h-6 w-6" />}
+            {hasError ? <AlertCircle className="h-8 w-8" /> : <UploadCloud className="h-8 w-8" />}
           </div>
           
-          <div className="space-y-1">
-            <p className="text-sm font-semibold">
+          <div className="space-y-1.5">
+            <p className="text-base font-semibold">
               {isDragActive ? activeText : idleText}
             </p>
             {description && !displayError && (
-              <p className="text-xs text-muted-foreground">{description}</p>
+              <p className="text-sm text-muted-foreground max-w-md">{description}</p>
             )}
             {displayError && (
               <p className="text-xs text-destructive font-medium">{displayError}</p>
@@ -166,33 +221,6 @@ export function UploadZone({
           </div>
         </div>
       </div>
-
-      {/* Simple list of selected files */}
-      {value.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {value.map((file, index) => (
-            <div 
-              key={`${file.name}-${index}`}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/30 border border-border/50 text-xs font-medium max-w-[240px]"
-            >
-              <FileText className="h-3 w-3 shrink-0 text-muted-foreground" />
-              <span className="truncate">{file.name}</span>
-              {!disabled && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    removeFile(index)
-                  }}
-                  className="hover:text-destructive transition-colors ml-1"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   )
 }

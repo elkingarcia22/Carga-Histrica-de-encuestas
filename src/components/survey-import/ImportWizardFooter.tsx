@@ -9,50 +9,53 @@ interface ImportWizardFooterProps {
   continueDisabled?: boolean;
   continueLabel?: string;
   helperText?: string;
+  leftActions?: React.ReactNode;
 }
 
 export function ImportWizardFooter({ 
-  className, 
+
   onBack, 
   disableBack = true,
   onContinue,
   continueDisabled = true,
   continueLabel,
-  helperText
+  helperText,
+  leftActions
 }: ImportWizardFooterProps) {
   const { footer } = importWizardContent;
 
   return (
-    <div className={className}>
-      <div className="flex items-center justify-between">
+    <>
+      <div className="flex items-center gap-3">
+        {leftActions}
         <span className="text-sm text-muted-foreground font-medium">
           {helperText || footer.disabledReason}
         </span>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            disabled={disableBack} 
-            aria-disabled={disableBack ? "true" : "false"}
-            onClick={onBack}
-          >
-            {footer.backAction}
-          </Button>
-          <Button 
-            variant="default" 
-            disabled={continueDisabled} 
-            aria-disabled={continueDisabled ? "true" : "false"}
-            onClick={(e) => {
-              if (continueDisabled) {
-                e.preventDefault();
-                return;
-              }
-              onContinue?.();
-            }}
-          >
-            {continueLabel || footer.nextAction}
-          </Button>
-        </div>
       </div>
-    </div>
+      <div className="flex gap-2">
+        <Button 
+          variant="outline" 
+          disabled={disableBack} 
+          aria-disabled={disableBack ? "true" : "false"}
+          onClick={onBack}
+        >
+          {footer.backAction}
+        </Button>
+        <Button 
+          variant="default" 
+          disabled={continueDisabled} 
+          aria-disabled={continueDisabled ? "true" : "false"}
+          onClick={(e) => {
+            if (continueDisabled) {
+              e.preventDefault();
+              return;
+            }
+            onContinue?.();
+          }}
+        >
+          {continueLabel || footer.nextAction}
+        </Button>
+      </div>
+    </>
   );
 }

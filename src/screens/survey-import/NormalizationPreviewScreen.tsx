@@ -1,6 +1,5 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
-import { Sheet, SheetContent, SheetClose, SheetTitle, SheetDescription, SheetFooter } from '@/components/ui/sheet';
-import { X } from 'lucide-react';
+import { Sheet, SheetContent, SheetTitle, SheetDescription, SheetFooter } from '@/components/ui/sheet';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ImportWizardHeader } from '@/components/survey-import/ImportWizardHeader';
 import { ImportWizardSteps } from '@/components/survey-import/ImportWizardSteps';
@@ -26,6 +25,7 @@ export function NormalizationPreviewScreen({
   const model = useMemo(() => getNormalizationPreviewModel('multi-file-single-survey-ready'), []);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [showConfirmClose, setShowConfirmClose] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -53,24 +53,26 @@ export function NormalizationPreviewScreen({
     }
   };
 
+  const handleRequestClose = () => {
+    setShowConfirmClose(true);
+  };
+
+  const handleConfirmClose = () => {
+    onCancelImportFlow?.();
+  };
+
+  const handleCancelClose = () => {
+    setShowConfirmClose(false);
+  };
+
   return (
-    <Sheet open={true} onOpenChange={(isOpen) => { if (!isOpen && onCancelImportFlow) onCancelImportFlow() }}>
+    <Sheet open={true} onOpenChange={(isOpen) => { if (!isOpen) handleRequestClose() }}>
       <SheetContent 
         side="right" 
         className="p-0 flex flex-col gap-0 border-none bg-[#f8f9fa] dark:bg-zinc-950 h-screen overflow-hidden" 
         style={{ width: '100vw', maxWidth: '100vw' }} 
         showCloseButton={false}
       >
-        {/* Custom close button using secondary variant */}
-        <SheetClose asChild>
-          <Button
-            variant="secondary"
-            className="absolute top-6 right-6 z-50 w-10 h-10 rounded-xl"
-            onClick={onCancelImportFlow}
-          >
-            <X className="w-5 h-5" />
-          </Button>
-        </SheetClose>
         {/* Main Area (Sidebar + Scroll Content) taking up all remaining height */}
         <div className="flex-1 min-h-0 flex flex-row gap-0">
           {/* Left Sidebar - Stepper */}
@@ -93,7 +95,7 @@ export function NormalizationPreviewScreen({
             <div className="flex flex-col gap-8 w-full px-8 pb-12">
               {/* Header embedded inside scroll area */}
               <div className="pt-2">
-                <ImportWizardHeader className="pb-0" />
+                <ImportWizardHeader className="pb-0" onCancel={handleRequestClose} />
               </div>
               
               <NormalizationSimulationDisclosure />
@@ -124,21 +126,35 @@ export function NormalizationPreviewScreen({
 
         {/* Footer spanning 100% of the drawer width, running side-to-side */}
         <SheetFooter className="px-6 py-4 border-t bg-background shrink-0 flex flex-row items-center justify-between sm:justify-between m-0 rounded-none z-20 w-full">
-          <div className="text-sm text-muted-foreground font-medium">
-            {model.canContinueToConfiguration 
-              ? 'El lote no presenta bloqueos y está listo para continuar.' 
-              : 'Corrige los bloqueos indicados para poder continuar.'}
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={onCancelImportFlow}>Volver</Button>
-            <Button 
-              variant="default" 
-              onClick={onContinueToConfiguration} 
-              disabled={!model.canContinueToConfiguration}
-            >
-              Continuar a configuración
-            </Button>
-          </div>
+          {showConfirmClose ? (
+            <>
+              <span className="text-sm text-muted-foreground font-medium">
+                ¿Seguro que deseas salir? Se perderán los cambios no guardados.
+              </span>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={handleCancelClose}>Cancelar</Button>
+                <Button variant="destructive" onClick={handleConfirmClose}>Salir</Button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="text-sm text-muted-foreground font-medium">
+                {model.canContinueToConfiguration 
+                  ? 'El lote no presenta bloqueos y está listo para continuar.' 
+                  : 'Corrige los bloqueos indicados para poder continuar.'}
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={handleRequestClose}>Volver</Button>
+                <Button 
+                  variant="default" 
+                  onClick={onContinueToConfiguration} 
+                  disabled={!model.canContinueToConfiguration}
+                >
+                  Continuar a configuración
+                </Button>
+              </div>
+            </>
+          )}
         </SheetFooter>
       </SheetContent>
     </Sheet>

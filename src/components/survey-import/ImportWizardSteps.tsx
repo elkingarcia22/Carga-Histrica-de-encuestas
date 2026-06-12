@@ -2,6 +2,7 @@ import { Check, Lock, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { importWizardContent } from '@/config/survey-import/importWizardContent';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface ImportWizardStepsProps {
   className?: string;
@@ -41,72 +42,89 @@ export function ImportWizardSteps({
         </div>
       )}
 
-      <ol className={cn("relative space-y-3", isCollapsed ? "flex flex-col items-center" : "px-2")}>
-        {steps.map((step, index) => {
-          const isActive = step.id === currentActiveId;
-          const isCompleted = index < activeIndex;
-          const isLocked = index > activeIndex;
+      <TooltipProvider delayDuration={0}>
+        <ol className={cn("relative space-y-3", isCollapsed ? "flex flex-col items-center" : "px-2")}>
+          {steps.map((step, index) => {
+            const isActive = step.id === currentActiveId;
+            const isCompleted = index < activeIndex;
+            const isLocked = index > activeIndex;
 
-          return (
-            <li
-              key={step.id}
-              className={cn(
-                "relative transition-all duration-300 flex items-start w-full z-10",
-                isCollapsed
-                  ? "justify-center py-3"
-                  : "px-2 py-3 gap-4"
-              )}
-            >
-              {/* Connecting Line */}
-              {index < steps.length - 1 && (
-                <div
-                  className={cn(
-                    "absolute w-[2px] -z-10 transition-colors duration-300",
-                    isCollapsed
-                      ? "left-1/2 top-10 bottom-[-1rem] -translate-x-1/2"
-                      : "left-[20px] top-10 bottom-[-1rem]",
-                    isCompleted ? "bg-primary" : "bg-border"
-                  )}
-                />
-              )}
-
-              {/* Circle Indicator */}
-              <span
+            const stepContent = (
+              <li
+                key={step.id}
                 className={cn(
-                  'flex items-center justify-center w-6 h-6 rounded-full shrink-0 transition-all duration-300 z-10 mt-0.5',
-                  isActive
-                    ? 'bg-primary text-primary-foreground shadow-[0_0_0_4px_rgba(var(--primary),0.1)]'
-                    : isCompleted
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground border-2 border-muted-foreground/30'
+                  "relative transition-all duration-300 flex items-start z-10",
+                  isCollapsed
+                    ? "justify-center py-3 w-fit mx-auto"
+                    : "px-2 py-3 gap-4 w-full"
                 )}
               >
-                {isCompleted ? (
-                  <Check className="w-3.5 h-3.5 stroke-[3]" aria-hidden="true" />
-                ) : isLocked ? (
-                  <Lock className="w-3 h-3" aria-hidden="true" />
-                ) : (
-                  <span className="text-[10px] font-bold" aria-hidden="true">{index + 1}</span>
+                {/* Connecting Line */}
+                {index < steps.length - 1 && (
+                  <div
+                    className={cn(
+                      "absolute w-[2px] -z-10 transition-colors duration-300",
+                      isCollapsed
+                        ? "left-1/2 top-10 bottom-[-1rem] -translate-x-1/2"
+                        : "left-[20px] top-10 bottom-[-1rem]",
+                      isCompleted ? "bg-primary" : "bg-border"
+                    )}
+                  />
                 )}
-              </span>
 
-              {/* Text Label */}
-              {!isCollapsed && (
-                <div className="flex flex-col">
-                  <span className={cn(
-                    "text-sm transition-colors duration-300 font-medium",
-                    isActive ? "text-foreground" :
-                    isCompleted ? "text-foreground" :
-                    "text-muted-foreground"
-                  )}>
-                    {step.label}
-                  </span>
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ol>
+                {/* Circle Indicator */}
+                <span
+                  className={cn(
+                    'flex items-center justify-center w-6 h-6 rounded-full shrink-0 transition-all duration-300 z-10 mt-0.5',
+                    isActive
+                      ? 'bg-primary text-primary-foreground shadow-[0_0_0_4px_rgba(var(--primary),0.1)]'
+                      : isCompleted
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground border-2 border-muted-foreground/30'
+                  )}
+                >
+                  {isCompleted ? (
+                    <Check className="w-3.5 h-3.5 stroke-[3]" aria-hidden="true" />
+                  ) : isLocked ? (
+                    <Lock className="w-3 h-3" aria-hidden="true" />
+                  ) : (
+                    <span className="text-[10px] font-bold" aria-hidden="true">{index + 1}</span>
+                  )}
+                </span>
+
+                {/* Text Label */}
+                {!isCollapsed && (
+                  <div className="flex flex-col">
+                    <span className={cn(
+                      "text-sm transition-colors duration-300 font-medium",
+                      isActive ? "text-foreground" :
+                      isCompleted ? "text-foreground" :
+                      "text-muted-foreground"
+                    )}>
+                      {step.label}
+                    </span>
+                  </div>
+                )}
+              </li>
+            );
+
+            if (isCollapsed) {
+              return (
+                <Tooltip key={step.id}>
+                  <TooltipTrigger asChild>
+                    {stepContent}
+                  </TooltipTrigger>
+                  <TooltipContent side="right" sideOffset={0} align="center" alignOffset={-8}>
+                    <p>{step.label}</p>
+                  </TooltipContent>
+                </Tooltip>
+              );
+            }
+
+            return stepContent;
+          })}
+        </ol>
+      </TooltipProvider>
     </nav>
   );
 }
