@@ -4,16 +4,23 @@
 2026-06-12
 
 ## 2. Fase
-R5 / R6A
+R6A
 
 ## 3. Estado
-HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_BRANCH_QA_APPROVED
+HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_PREVIEW_READY
 
-## 4. Auditoría
-- **SHA auditado:** 3b36284174b18f05b9c2505462f0eac73f06477d
-- **Resultado de QA:** Aprobado íntegramente
-- **Publicación previa:** Confirmación de no publicación previa en origin
-- **Siguiente fase:** R6A (Preview Ready)
+## 4. Auditoría y Publicación
+- **Branch remota:** recovery/historical-import-forward-cleanup
+- **Commit local/remoto:** 1c89922d27d39cfdfa15c6295e749b257d85dbe9
+- **Preview Deployment URL:** https://carga-historica-de-encuestas-2dq0sgu24.vercel.app
+- **SHA desplegado:** 1c89922d27d39cfdfa15c6295e749b257d85dbe9
+- **Build audit:** Exitoso, 0 errores, warnings ausentes, dependencias intactas.
+- **Smoke test:** U1–U4, paginación, focos y bandeja pasaron exitosamente en Preview URL.
+- **Visual QA Desktop/900px:** Aprobado.
+- **Accessibility smoke:** Navegación por teclado e interacciones aprobadas.
+- **Draft PR:** Texto descriptivo preparado. No se ha abierto el PR formalmente (pendiente de herramienta).
+- **Riesgos y Políticas:** Se confirma que NO se ha hecho merge, NO se ha publicado en el dominio productivo de main.
+- **Siguiente fase:** Fase 4E-R6B2H2B-R6B · Draft Pull Request Review and Merge Decision
 
 ---
 
