@@ -1,3 +1,18 @@
+# Fase 4G-R6 · Historical Import Review & Mapping Publication Verified
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **SHA funcional:** 0b625dd8557a8a09c3f232cbffd419e06ddf9e15
+* **SHA correctivo:** 8374f45c5b547daada9183b562b9250d240b43a8
+* **SHA final remoto:** 8374f45c5b547daada9183b562b9250d240b43a8
+* **Push:** Normal exitoso (sin uso de `--force` ni similares).
+* **Alineación:** `HEAD` local y `origin/main` alineados (ahead 0 / behind 0).
+* **Documentación:** Closure prematuro eliminado.
+* **Deployment Audit:** `NO_DEPLOYMENT_TRIGGERED`
+* **Publicación:** Código funcional publicado de forma segura y auditable.
+* **Fases siguientes:** R7 (Historical Import Review & Mapping Formal Closure) aún pendiente.
+* **Estado final:** HISTORICAL_IMPORT_REVIEW_MAPPING_PUBLISHED_TO_MAIN
+
 # Fase 4G-R6H1 · Historical Import Review & Mapping Publication Documentation Forward Correction
 
 * **Fecha:** 2026-06-16
