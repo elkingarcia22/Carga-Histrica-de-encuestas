@@ -1,3 +1,17 @@
+# Fase 4F-R7 · Historical Import Configuration Formal Closure
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD Inicial:** dd924f3614525967f97fd737299219d5632e9b69
+**Commit Funcional:** c76ed03a746b6187311be458a31c57c7cb9a61ee
+**Commit Documental de Publicación:** dd924f3614525967f97fd737299219d5632e9b69
+**Alcance Consolidado:** U5 "Configurar encuesta histórica" (Mock Data Contract, Hook de estado local, Componentes UI, Integración en SurveyImportUploadScreen sin persistencia ni peticiones reales).
+**QA Final:** Tests, ESLint y build aprobados. Humo funcional de preservación de borrador validado. Visual y accesibilidad confirmados.
+**Deployment Status:** NO_DEPLOYMENT_TRIGGERED
+**Documento de Cierre:** Creado `docs/HISTORICAL_IMPORT_CONFIGURATION_CLOSURE.md` (Estado: HISTORICAL_IMPORT_CONFIGURATION_FORMALLY_CLOSED).
+**Riesgos Diferidos:** Selección de rangos de meses o fechas exactas (limitado a año por ahora).
+**Siguiente Fase Máxima Autorizable:** Fase 4G-R1 · Historical Import Review & Mapping Prototype Intake
+
 ## Fase 4F-R6 · Historical Import Configuration Safe Publication
 
 * **Fecha:** 2026-06-16
