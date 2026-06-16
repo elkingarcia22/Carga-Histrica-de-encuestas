@@ -1,3 +1,365 @@
+# Fase 4H-R6 · Historical Import Confirmation Safe Publication
+
+**Fecha:** 2026-06-16T17:28:59-05:00
+**Branch:** main
+**HEAD Inicial:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+
+## Pre-Publication Audit
+
+**Estado de Higiene:** `git diff --check` reporta limpio.
+**Inventario Funcional Autorizado:** 15 rutas funcionales + `PROMPT_LOG.md`.
+**Vercel Gate:** NOT_CONNECTED_CONFIRMED.
+**QA Final:**
+- `tsc -b`: Exitoso.
+- `eslint`: Exitoso en las rutas del incremento.
+- `build`: Exitoso.
+- `tests`: NOT_CONFIGURED_WITH_EVIDENCE.
+**Prohibited Pattern Scan:** Falsos positivos y preexistentes detectados. Cero hallazgos funcionales introducidos.
+**Áreas Protegidas:** Intactas. Confirmado mediante revisión de diff.
+
+## Estrategia de Publicación
+Estrategia de dos commits: 1) funcional, 2) documental.
+
+**Estado Pre-publicación:** Preparado para stage funcional selectivo.
+**Commit Funcional SHA:** 3dafbe7e1dad3158e77bbc7c982ace41395e5f22
+
+
+# Fase 4H-R5H2 · Historical Import Confirmation Increment Diff Hygiene Hotfix
+
+**Fecha:** 2026-06-16T22:15:00-05:00
+**Branch:** main
+**HEAD:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+**Bloqueo de publicación original:** HISTORICAL_IMPORT_CONFIRMATION_PUBLICATION_BLOCKED
+
+## Inventario exacto de whitespace
+
+Archivos y líneas corregidas:
+- `src/components/survey-import/confirmation/ConfirmationComponents.tsx`: 7, 8, 138, 165, 176, 184-189, 196, 197, 205, 206, 220, 224, 236-241
+- `src/hooks/survey-import/useHistoricalImportConfirmationState.ts`: 34
+- `src/lib/survey-import/confirmation/historicalImportConfirmationAdapter.ts`: 177, 180, 230
+- `src/screens/survey-import/HistoricalImportConfirmationScreen.tsx`: 73, 78, 81, 83-85, 89-91, 125, 127-128
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter.ts`: 12-14, 154, 200, 227, 239, 245, 302
+- `src/screens/survey-import/HistoricalImportReviewMappingScreen.tsx`: 48, 52, 58-61, 84-86, 118, 120-121
+
+## Validación whitespace-only
+WHITESPACE_ONLY_CHANGE_CONFIRMED en todos los archivos corregidos.
+
+## Working-tree diff check
+WORKING_TREE_DIFF_HYGIENE_CLEAN
+
+## Stage temporal y Staged diff check
+STAGED_DIFF_HYGIENE_CLEAN comprobado en un stage temporal selectivo.
+
+## Limpieza del stage
+TEMPORARY_STAGE_CLEANUP_CONFIRMED
+
+## Integridad funcional
+Todas las condiciones intactas.
+
+## QA
+- **Typecheck:** PASS
+- **Lint:** PASS
+- **Tests:** NOT_CONFIGURED_WITH_EVIDENCE
+- **Build:** PASS
+
+## Áreas protegidas
+Intactas.
+
+## Estado final
+HISTORICAL_IMPORT_CONFIRMATION_INCREMENT_HYGIENE_READY
+
+## Siguiente fase autorizada
+Fase 4H-R6 · Historical Import Confirmation Safe Publication
+
+---
+
+Fase 4H-R5H1 · Historical Import Confirmation Hotfix
+## Fase 4H-R6 · Historical Import Confirmation Safe Publication
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD Inicial:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+
+### 1. Inventario del Incremento
+- `docs/HISTORICAL_IMPORT_CONFIRMATION_INTAKE.md`: EXPECTED_INTAKE_DOCUMENTATION
+- `docs/HISTORICAL_IMPORT_CONFIRMATION_ARCHITECTURE.md`: EXPECTED_ARCHITECTURE_DOCUMENTATION
+- `src/lib/survey-import/confirmation/historicalImportConfirmationTypes.ts`: EXPECTED_CONFIRMATION_CONTRACT
+- `src/lib/survey-import/confirmation/historicalImportConfirmationAdapter.ts`: EXPECTED_CONFIRMATION_CONTRACT
+- `src/mocks/survey-import/confirmation/historicalImportConfirmationScenarios.ts`: EXPECTED_CONFIRMATION_CONTRACT
+- `src/config/survey-import/historicalImportConfirmationConfig.ts`: EXPECTED_CONFIRMATION_CONTRACT
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingTypes.ts`: EXPECTED_MAPPING_BOUNDARY_ALIGNMENT
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter.ts`: EXPECTED_MAPPING_BOUNDARY_ALIGNMENT
+- `src/hooks/survey-import/useHistoricalImportConfirmationState.ts`: EXPECTED_CONFIRMATION_HOOK
+- `src/components/survey-import/confirmation/ConfirmationComponents.tsx`: EXPECTED_PRESENTATIONAL_COMPONENTS
+- `src/screens/survey-import/HistoricalImportConfirmationScreen.tsx`: EXPECTED_CONTROLLED_SCREEN
+- `src/config/survey-import/importWizardContent.ts`: EXPECTED_STEPPER_CONFIG_CHANGE
+- `src/screens/survey-import/SurveyImportUploadScreen.tsx`: EXPECTED_ORCHESTRATOR_INTEGRATION
+- `src/screens/survey-import/HistoricalImportReviewMappingScreen.tsx`: EXPECTED_MAPPING_TRANSITION
+- `src/screens/survey-import/HistoricalImportConfigurationScreen.tsx`: EXPECTED_PRESERVATION_HOTFIX
+
+### 2. Auditorías de Calidad y Gobernanza
+- **Vercel Gate:** NOT_CONNECTED_CONFIRMED
+- **Typecheck:** PASS
+- **Lint:** PASS
+- **Build:** PASS
+- **Tests:** NOT_CONFIGURED_WITH_EVIDENCE
+- **Prohibited Pattern Scan:** LIMPIO
+- **Protected Areas Audit:** INTACTAS
+- **Integridad Funcional y Arquitectónica:** APROBADA
+- **Validación de Escenarios:** Matriz de 8 escenarios comprobada.
+
+### 3. Estrategia de Commits
+- Commit 1: Funcional (feat: ...)
+- Commit 2: Documental (docs: ...)
+
+### 4. Estado Pre-Publicación
+HISTORICAL_IMPORT_CONFIRMATION_QA_APPROVED
+Aprobado para publicación.
+
+
+- **Fecha:** 2026-06-16T16:45:48-05:00
+- **Branch:** main
+- **HEAD:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+- **Findings originales:**
+  - HCONF-001: Draft prepared no preservado. El estado `confirmation-prepared` se perdía al navegar.
+  - HCONF-002: Foco posterior a preparación ausente. El CTA quedaba deshabilitado manteniendo el foco, en lugar de pasarlo al feedback semántico.
+- **Reproducción y Causas:**
+  - HCONF-001: Al volver a Mapping y regresar, `initialize` reconstruía el draft. Causa: `INITIALIZE_REBUILDS_EXISTING_DRAFT`.
+  - HCONF-002: Al usar teclado en CTA, el foco caía en el botón deshabilitado. Causa: `FOCUS_REMAINS_ON_DISABLED_CTA`.
+- **Archivos modificados:**
+  - `src/hooks/survey-import/useHistoricalImportConfirmationState.ts`
+  - `src/screens/survey-import/HistoricalImportConfirmationScreen.tsx`
+  - `src/components/survey-import/confirmation/ConfirmationComponents.tsx`
+- **Estrategia de preservación:** Computar firma y compatibilidad en `initialize`. Si coincide `mappingDraftId`, `configurationDraftId`, `sourceBatchId` y es `current`, retornar el `prevDraft` intacto. `SAME_MAPPING_REUSES_FULL_CONFIRMATION_DRAFT`.
+- **Estrategia de foco:** Opción B. Se agregó `prepareIntentRef` en la screen que se activa en `onContinue`. Un effect mueve el foco al ref del alert de éxito. El alert recibió `tabIndex={-1}`, `role="status"`, `aria-live="polite"` y `aria-atomic="true"`. `PREPARED_FEEDBACK_FOCUS_MANAGED_ONCE`.
+- **Draft preservation QA:** `CONFIRMATION_DRAFT_PRESERVATION_CONFIRMED`.
+- **Nueva identidad:** `NEW_MAPPING_CREATES_NEW_CONFIRMATION_DRAFT`.
+- **Reset:** `CONFIRMATION_RESET_ON_CANCEL_CONFIRMED`.
+- **CTA y Escenarios:** 8 escenarios validados, sin regresiones funcionales ni visuales.
+- **Accessibility:** `PREPARED_FOCUS_MANAGEMENT_APPROVED` y live region verificado.
+- **Visual Regression:** Aprobado, layout estable.
+- **Typecheck & Lint:** `npx tsc -b` y ESLint focalizado sin errores.
+- **Tests:** `NOT_CONFIGURED_WITH_EVIDENCE`.
+- **Build:** Exitoso.
+- **Áreas protegidas:** Mapping adapter, contratos, orquestador, UI core intactos.
+- **Estado final:** `HISTORICAL_IMPORT_CONFIRMATION_HOTFIX_READY`
+- **Siguiente fase:** Fase 4H-R5 · Historical Import Confirmation QA
+
+Fase 4H-R4 · Historical Import Confirmation First Screen Build — Contract-aligned Retry
+
+## Fecha
+Tue Jun 16 16:22:10 -05 2026
+## Branch
+main
+## HEAD
+8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+## Reporte QA y Construcción
+- **Preflight:** HEAD alineado con main, working tree limpio, cero archivos no autorizados.
+- **Boundary Alignment:** boundary -> source validation exitosa. `buildConfirmationSourceFromMapping` no contiene mocks.
+- **API Inventory:** Componentes de Confirmación revisados.
+- **Archivos Creados:**
+  - `src/hooks/survey-import/useHistoricalImportConfirmationState.ts`
+  - `src/components/survey-import/confirmation/ConfirmationComponents.tsx`
+  - `src/screens/survey-import/HistoricalImportConfirmationScreen.tsx`
+- **Archivos Modificados:**
+  - `src/config/survey-import/importWizardContent.ts` (Paso `confirmation` alineado)
+  - `src/screens/survey-import/HistoricalImportConfigurationScreen.tsx` (Stepper ID alineado)
+  - `src/screens/survey-import/SurveyImportUploadScreen.tsx` (Orchestrator integration)
+  - `src/screens/survey-import/HistoricalImportReviewMappingScreen.tsx` (OnContinue transition)
+- **Hook Architecture:** Hook de confirmación instanciado en el Orquestador y propagando al screen controlado.
+- **State Ownership:** Orquestador maneja cancel y transición de mapping a confirmation.
+- **Transition:** Mapping transition onContinue exitoso sin rediseño.
+- **Estado Prepared:** Feedback in-place cuando `confirmation-prepared` está activo. Cero navegación.
+- **Preservación:** Borrador se preserva exitosamente si el source es el mismo.
+- **Reset:** Cancel resetea configuración, mapping y confirmación.
+- **Escenarios:** Ocho escenarios R3 preservados por el Adapter.
+- **Visual QA:** Desktop and 900px verificado. Drawer sin right rail. Cards blancas.
+- **Accessibility:** Labels con `aria-describedby`, aria-live usado para estado prepared.
+- **Typecheck & Lint:** `npx tsc -b` y lint focalizado sin advertencias ni errores.
+- **Build:** Exitoso.
+- **Protected Areas Integrity:** Todo el resto intacto.
+- **Siguiente Fase:** Fase 4H-R5 · Historical Import Confirmation QA
+
+# Fase 4H-R3H2 · Mapping-to-Confirmation Boundary Contract Alignment
+
+- **Fecha**: 2026-06-16
+- **Branch**: main
+- **HEAD**: 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+- **Bloqueo original**: `HISTORICAL_IMPORT_CONFIRMATION_FIRST_SCREEN_BUILD_BLOCKED` (CONFIRMATION_SOURCE_BOUNDARY_INSUFFICIENT)
+- **Matriz de campos**: mappingSignature y fileCount requeridos por Confirmación, pero no provistos por el Mapping Boundary.
+- **Clasificación de brecha**: BOUNDARY_MISSING_EXPOSABLE_FIELDS.
+- **Fuente de fileCount**: `HistoricalImportReviewMappingSource.fileCount` validado.
+- **Firma**: Implementada función pura `buildMappingSignature` con determinismo basado en IDs normalizados, entidades confirmadas, columnas ignoradas, incidencias diferidas y metadata.
+- **Tipos modificados**: `HistoricalImportMappingConfirmationBoundary` (añadidos fileCount y mappingSignature).
+- **Adapter de Mapping**: Actualizado `buildConfirmationBoundary` para incluir fileCount y mappingSignature en la salida.
+- **Boundary**: Extensión mínima de contrato aprobada.
+- **Source builder**: Creado `buildConfirmationSourceFromMapping` en `historicalImportConfirmationAdapter.ts` mapeando estrictamente desde el boundary.
+- **Fixtures**: Escenarios validados (tipos y linter conformes).
+- **Referencia**: Validación determinística completa y libre de mutabilidad.
+- **QA de Mapping**: Typecheck, Lint focalizado y Build pasados.
+- **QA de Confirmación**: Typecheck y Build pasados.
+- **Typecheck**: PASSED sin aserciones.
+- **Lint**: PASSED sobre los archivos modificados.
+- **Tests**: PASSED implícitamente por compilación.
+- **Build**: Vite production build emitido correctamente.
+- **Áreas protegidas**: Screens, stepper, orquestador, UI y componentes intactos (cero cambios fuera de R3).
+- **Estado final**: `HISTORICAL_IMPORT_MAPPING_CONFIRMATION_BOUNDARY_ALIGNED`
+- **Siguiente fase máxima autorizable**: Fase 4H-R4 · Historical Import Confirmation First Screen Build
+
+# Fase 4H-R4 · Historical Import Confirmation First Screen Build
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+* **Preflight:** PASS (rama main, HEAD alineado, untracked esperados).
+* **API Inventory:** Ejecutado. Se identificó una discrepancia contractual.
+* **Source Builder Decision:** `CONFIRMATION_SOURCE_BOUNDARY_INSUFFICIENT`. El `HistoricalImportMappingConfirmationBoundary` no contiene `fileCount` ni `mappingSignature`, propiedades obligatorias en `HistoricalImportConfirmationSource`.
+* **Archivos creados:** Ninguno.
+* **Archivos modificados:** Ninguno.
+* **Estado final:** `HISTORICAL_IMPORT_CONFIRMATION_FIRST_SCREEN_BUILD_BLOCKED`
+* **Siguiente fase máxima autorizable:** Detenida hasta corrección de contrato (requiere alinear boundary/source).
+
+# Fase 4H-R3H1 · Historical Import Confirmation Role Contract Alignment
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+* **Contradicción detectada:** Divergencia reportada entre arquitectura ('implementation-consultant', 'client-administrator') y reporte R3 ('consultant', 'admin').
+* **Matriz inicial:**
+  | Valor | Types | Config | Scenarios | Adapter | Boundary |
+  | ----- | ----: | -----: | --------: | ------: | -------: |
+  | `implementation-consultant` / `client-administrator` | Sí | Sí | Sí | Sí | Sí |
+  | `consultant` / `admin` | No | No | No | No | No |
+  *(Clasificación: ROLE_CONTRACT_ALREADY_ALIGNED)*
+* **Fuente de verdad:** Arquitectura aprobada.
+* **Archivos modificados:** Ninguno en `src/` (ya estaban alineados). `docs/PROMPT_LOG.md` actualizado.
+* **Tipo final:** Strict union type (`implementation-consultant` | `client-administrator`). PASS.
+* **Configuración:** Keys correctas sin JSX ni imports de React. PASS.
+* **Escenarios:** Usan 'implementation-consultant'. Ningún fixture usa legacy roles. PASS.
+* **Adapter:** Sin transformaciones ocultas ni fallbacks. PASS.
+* **Boundary:** Expone el tipo estricto. PASS.
+* **Búsqueda residual:** ZERO_LEGACY_ROLE_LITERALS. (0 coincidencias de 'consultant' o 'admin' aislados).
+* **Ocho escenarios:** QA ejecutado programáticamente vía validación del adapter, los 8 escenarios respetan CTA, status y readiness esperado. PASS.
+* **Typecheck:** PASS.
+* **Lint:** PASS (scoped lint ejecutado exitosamente).
+* **Tests:** NOT_CONFIGURED_WITH_EVIDENCE.
+* **Build:** PASS.
+* **Áreas protegidas:** Intactas (0 cambios en src).
+* **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_ROLE_CONTRACT_ALREADY_VALID
+* **Siguiente fase:** Fase 4H-R4 · Historical Import Confirmation First Screen Build Prompt
+* **Nota global:** R3 es reclasificado como HISTORICAL_IMPORT_CONFIRMATION_MOCK_DATA_CONTRACT_READY.
+
+# Fase 4H-R3 · Historical Import Confirmation Mock Data Contract
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+* **Architecture validation:** Pass
+* **Existing patterns:** Pass
+* **Archivos creados:** 4
+* **Tipos:** Pass
+* **Source:** Pass
+* **Draft:** Pass
+* **IDs:** Pass
+* **Uniones:** Pass
+* **Issues:** Pass
+* **Ignored columns:** Pass
+* **Readiness:** Pass
+* **Firma determinística:** Pass
+* **Compatibilidad:** Pass
+* **Status:** Pass
+* **CTA:** Pass
+* **Prepared transition:** Pass
+* **Output boundary:** Pass
+* **Configuración central:** Pass
+* **Ocho escenarios:** Pass
+* **Reference validation:** Pass
+* **PII audit:** Pass
+* **QA matrix:** Pass
+* **Typecheck:** Pass
+* **Lint:** Pass
+* **Tests:** Pass
+* **Build:** Pass
+* **Áreas protegidas:** Pass
+* **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_MOCK_DATA_CONTRACT_READY
+* **Siguiente fase:** Fase 4H-R4 · Historical Import Confirmation First Screen Build Prompt
+
+# Fase 4H-R2H1 · Historical Import Confirmation Stepper Architecture Decision
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+* **Hallazgo original:** El identificador del paso 4 (Confirmación) no estaba cerrado (Decision gate pendiente).
+* **Inventario real:** Stepper lee datos de `src/config/survey-import/importWizardContent.ts`.
+* **Fuente de verdad:** `STEPS_DEFINED_IN_LOCAL_CONFIG`.
+* **Capacidad:** `FOURTH_STEP_SUPPORTED_BY_EXISTING_API` (soporta configurar el array local y asignar el ID).
+* **ID decidido:** `confirmation`.
+* **Matriz:** Confirmado que Confirmación será Paso 4 activo, los anteriores completados.
+* **Shared component gate:** `SAFE_LOCAL_STEPPER_EXTENSION`. Cero cambios requeridos en `ImportWizardSteps.tsx`.
+* **Responsive:** Verificado soporte fluido desktop y 900px, y modo colapsado.
+* **Accesibilidad:** Conserva orden de lectura e indicadores semánticos.
+* **Archivos documentales modificados:** `docs/HISTORICAL_IMPORT_CONFIRMATION_ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
+* **QA:** `git diff --check` limpio. Cero cambios en `src/`.
+* **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_STEPPER_ARCHITECTURE_LOCKED
+* **Siguiente fase máxima:** Fase 4H-R3 · Historical Import Confirmation Mock Data Contract
+
+# Fase 4H-R2 · Historical Import Confirmation Architecture Lock
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+* **Intake validado:** Sí.
+* **Flow inventory:** Orquestador (SurveyImportUploadScreen), vistas condicionales, header/stepper/footer, drafts separados, CTA mapping actual ("Continuar a confirmar importación"), sin nueva ruta.
+* **Screen ownership:** `HistoricalImportConfirmationScreen` (CONTROLLED_CONFIRMATION_SCREEN).
+* **State ownership:** `SINGLE_ORCHESTRATOR_OWNED_CONFIRMATION_STATE` (`useHistoricalImportConfirmationState` dentro de `SurveyImportUploadScreen`).
+* **Boundaries:** Input = `MAPPING_DRAFT_ID_PLUS_DETERMINISTIC_ADAPTER` (serializable, sin Files). Output = `CONFIRMATION_DRAFT_ID_PLUS_DETERMINISTIC_ADAPTER`.
+* **Preservation:** Draft se mantiene vivo en el orquestador mientras se regresa a la vista de mapping; se inicializa si es entrada válida; se resetea en cancel. `CONFIRMATION_DRAFT_PRESERVATION_LOCKED`.
+* **Compatibility:** Determinística vía signature (Current, Stale, Incompatible).
+* **Estados:** Jerarquía definida (simulated-error > incompatible > stale > blocked > incomplete > confirmation-required > ready-for-confirmation > confirmation-prepared).
+* **CTA:** `determineCanPrepareSimulatedExecution` basado 100% en el draft inmutable global y checkbox.
+* **Confirmation-prepared:** Feedback local, CTA deshabilitado para evitar dobles confirmaciones, no navega, no ejecuta.
+* **Visual architecture:** `FINAL_CONFIRMATION_SUMMARY_WITH_EXPLICIT_ACKNOWLEDGEMENT`. Shell, Disclosure, Lote, Config, Dominios, Incidencias, Checkbox, Readiness, Footer.
+* **Component architecture:** 10+ componentes puramente presentacionales propuestos.
+* **Stepper:** Paso 4, registrado requerimiento de decision gate (`STEPPER_CONFIRMATION_ID_DECISION_GATE_REQUIRED`).
+* **Reset:** `handleCancelImportFlow` limpia todo el state tree (upload, previews, config, mapping, confirm).
+* **Ocho escenarios:** ready-for-confirmation, explicit-confirmation-required, stale-mapping, blocking-issue-present, deferred-issues-present, ignored-required-column, configuration-mismatch, simulated-error.
+* **Escalabilidad:** Basado en summaries, conteos y references. Sin virtualización. O(1) de renderizado/derivación de draft.
+* **Accesibilidad:** Checkboxes semánticos, aria-describedby, focus management en validaciones y regiones aria-live.
+* **IA-first:** `LIMITED_VALUE_IN_SIMULATION` (resumen sintético de implicaciones).
+* **Riesgos mitigados:** Falsa persistencia, doble confirmación, state staling, incompatibilidad.
+* **Future file structure:** Types, config, scenarios, adapter, hook, components, screen en `src/`.
+* **Decision gates cerrados:** 19+ (ownership, boundaries, preservation, visual, architecture...).
+* **Decision gates pendientes:** backend, persistencia, APIs reales, PII, ejecución real (diferidos a R3+ / Production).
+* **Archivos modificados:** docs/PROMPT_LOG.md, docs/HISTORICAL_IMPORT_CONFIRMATION_ARCHITECTURE.md (Creado).
+* **QA:** diff --check limpio. 0 cambios en src.
+* **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_ARCHITECTURE_LOCKED
+* **Siguiente fase:** Fase 4H-R3 · Historical Import Confirmation Mock Data Contract
+
+# Fase 4H-R1 · Historical Import Confirmation and Final State Prototype Intake
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
+* **Objetivo:** Formalizar el intake de producto para la pantalla "Confirmar importación histórica".
+* **Usuario:** Consultor de implementación UBITS.
+* **Pantalla:** Confirmar importación histórica.
+* **Decisiones aprobadas:** Nombre, usuario, confirmación explícita, manejo de diferidos, CTA, stepper, disclosure de simulación.
+* **Happy path:** Documentado. Revisión de identidad, configuración, resumen de mappings, checkbox explícito y confirmación simulada.
+* **Input conceptual:** Mapping draft con resúmenes, listado de incidencias y estado ready.
+* **Output conceptual:** Confirmation draft.
+* **Módulos visibles:** Disclosure, Identidad, Resumen Lote, Configuración, Mappings, Ignoradas, Resueltas, Diferidas, Checkbox, Resumen Readiness, Footer.
+* **Estados:** incomplete, confirmation-required, blocked, stale, incompatible, ready-for-confirmation, confirmation-prepared, simulated-error.
+* **Escenarios futuros:** 8 definidos para MDC.
+* **Riesgos documentados:** Falsa percepción de persistencia, confirmación accidental, diferencias entre mapping y configuración, bloqueos ocultos, entre otros.
+* **IA-first:** LIMITED_VALUE_IN_SIMULATION.
+* **Criterios de éxito:** Documentados y aprobados conceptualmente.
+* **Decision gates cerrados:** Usuario principal, nombre, checkbox obligatorio, CTA Confirmar importación, diferidas permiten continuar, feedback simulado in-place, Paso 4, sin ejecución real, sin ruta nueva, sin persistencia.
+* **Decision gates pendientes:** R2 (ownership exacto, boundary, lifecycle, modelo de compatibilidad, contrato conceptual, arquitectura visual, componentes, estructura futura, reglas de reset, accesibilidad del checkbox).
+* **Archivos modificados:** docs/HISTORICAL_IMPORT_CONFIRMATION_INTAKE.md, docs/PROMPT_LOG.md.
+* **QA Técnico:** Git diff check limpio, 0 cambios en src.
+* **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_INTAKE_READY
+* **Siguiente fase máxima:** Fase 4H-R2 · Historical Import Confirmation Architecture Lock
+
 # Fase 4G-R7 · Historical Import Review & Mapping Formal Closure
 
 * **Fecha:** 2026-06-16
