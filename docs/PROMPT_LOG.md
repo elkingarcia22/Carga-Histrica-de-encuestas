@@ -1,4 +1,37 @@
-# Fase 4E-R6B2H2B-R6A · Recovery Branch Publication and Preview Deployment
+# Fase 4E-R6B2H2B-R6A-H1 · Preview Target and Final SHA Remediation
+
+## 1. Fecha
+2026-06-16
+
+## 2. Fase
+4E-R6B2H2B-R6A-H1
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_PREVIEW_READY
+
+## 4. Auditoría y Remedio de Deployment
+- **Deployment Inicial:** La entrada anterior indicó incorrectamente un despliegue exitoso de tipo Preview.
+- **Target Real:** El deployment reportado (`https://carga-historica-de-encuestas-2dq0sgu24.vercel.app`) apuntaba al target `Production`.
+- **SHA Inicial:** `1c89922d27d39cfdfa15c6295e749b257d85dbe9`
+- **SHA Final (HEAD):** `04627fefbf09b79b8d2a05b3f2dfc17e235ec052`
+- **Remediación:** Se creó explícitamente un Preview Deployment con la CLI Vercel para el SHA final `04627fefbf09b79b8d2a05b3f2dfc17e235ec052`.
+- **Preview URL Final:** https://carga-historica-de-encuestas-la0m8fen0.vercel.app
+- **Incidente de Production:** Se confirma que existió un despliegue en Production no autorizado, pero como no hubo merge ni relink del dominio productivo principal, se clasificó sin impacto real. No se promueve ni elimina para preservar el estado.
+
+## 5. QA Técnico y Smoke
+- **Smoke Test U1-U4:** Confirmados sin errores.
+- **Visual QA (Desktop/900px):** Componentes renderizados correctamente según especificaciones responsivas.
+- **Accessibility Smoke:** Aprobado (navegación e interacción verificadas).
+- **Git State:** Working tree limpio, `origin/main` intacto, SHA verificado en `recovery/historical-import-forward-cleanup`.
+
+## 6. Siguiente Fase Máxima Autorizable
+Fase 4E-R6B2H2B-R6B · Draft Pull Request Review and Merge Decision
+
+---
+
+# Fase 4E-R6B2H2B-R6A · Recovery Branch Publication and Preview Deployment [INCORRECTO]
+
+> **Nota de corrección:** El deployment listado abajo se realizó con target `Production` por error y no abarcó el SHA final. Corregido en R6A-H1.
 
 ## 1. Fecha
 2026-06-12
@@ -7,7 +40,7 @@
 R6A
 
 ## 3. Estado
-HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_PREVIEW_READY
+HISTORICAL_IMPORT_NORMALIZATION_PREVIEW_TARGET_INCIDENT
 
 ## 4. Auditoría y Publicación
 - **Branch remota:** recovery/historical-import-forward-cleanup
