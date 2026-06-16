@@ -2861,3 +2861,16 @@ El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%
 * **Snapshot y Deltas:** Deltas visuales legítimos verificados (Foco U2, Límite U3-SIM, Paginación U4-SIM, Eliminación de artefactos). `HISTORY_VERBOSE_BUT_AUDITABLE`.
 * **Siguiente Fase:** Fase 4E-R6B2H2B-R6C · Formal PR Review Readiness Decision
 
+## HISTORICAL_IMPORT_NORMALIZATION_CONSOLIDATED_IN_MAIN
+
+- **Fecha:** 2026-06-16
+- **PR Real:** #1
+- **Estrategia:** Squash and merge
+- **SHA del squash:** 15c3028471c61f5780a27512003c19bbf4390af4
+- **SHA final de main:** 15c3028471c61f5780a27512003c19bbf4390af4
+- **QA posterior al merge:** Pass (tsc -b, eslint, build)
+- **Estado de Vercel:** No conectado
+- **Rama recovery conservada:** Sí (`MERGED_PENDING_BRANCH_CLEANUP`)
+- **Cero force push:** Sí
+- **Siguiente fase:** Fase 4E-R7 · Main Branch Formal Closure and Next Product Phase
+
