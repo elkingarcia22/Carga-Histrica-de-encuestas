@@ -6,7 +6,7 @@ import type { LocalFileMetadata } from '@/hooks/survey-import/useLocalUploadStat
 import { Info, Sparkles, FileText, CheckCircle2, AlertCircle, HardDrive } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { formatFileSize } from '@/components/upload/uploadUtils';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import {
   Pagination,
   PaginationContent,
@@ -43,25 +43,57 @@ export function SelectedFilesPanel({
 }: SelectedFilesPanelProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const headerRef = useRef<HTMLHeadingElement>(null);
+  const uploadZoneRef = useRef<HTMLDivElement>(null);
+  const pendingFocusEmptyRef = useRef(false);
+  const [pendingFocusId, setPendingFocusId] = useState<string | null>(null);
   const pageSize = uploadLimits.selectedFilesPageSize;
 
   const totalPages = Math.max(1, Math.ceil(files.length / pageSize));
 
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, files.length);
+  const visibleFiles = files.slice(startIndex, endIndex);
+
+  const handleFocusComplete = useCallback(() => {
+    setPendingFocusId(null);
+  }, []);
+
   const handleRemove = (id: string) => {
+    const index = visibleFiles.findIndex(f => f.id === id);
+    if (index !== -1) {
+      if (visibleFiles.length > 1) {
+        if (index < visibleFiles.length - 1) {
+          setPendingFocusId(visibleFiles[index + 1].id);
+        } else {
+          setPendingFocusId(visibleFiles[index - 1].id);
+        }
+      } else {
+        if (currentPage > 1) {
+           setPendingFocusId(files[startIndex - 1].id);
+        } else {
+           pendingFocusEmptyRef.current = true;
+        }
+      }
+    }
+
     const newTotalFiles = files.length - 1;
     const newTotalPages = Math.max(1, Math.ceil(newTotalFiles / pageSize));
     if (currentPage > newTotalPages) {
       setCurrentPage(newTotalPages);
     }
     onRemoveFile(id);
-    
-    // Mover el foco al header para prevenir la pérdida de foco al eliminar
-    headerRef.current?.focus();
   };
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex = Math.min(startIndex + pageSize, files.length);
-  const visibleFiles = files.slice(startIndex, endIndex);
+  useEffect(() => {
+    if (pendingFocusEmptyRef.current) {
+      if (uploadZoneRef.current) {
+        uploadZoneRef.current.focus();
+      } else {
+        headerRef.current?.focus();
+      }
+      pendingFocusEmptyRef.current = false;
+    }
+  });
 
   return (
     <div className={className}>
@@ -132,7 +164,7 @@ export function SelectedFilesPanel({
 
         <UploadBatchAlert isVisible={hasBatchSizeError} />
 
-        <SelectedFileList files={visibleFiles} onRemove={handleRemove} />
+        <SelectedFileList files={visibleFiles} onRemove={handleRemove} pendingFocusId={pendingFocusId} onFocusComplete={handleFocusComplete} />
 
         {filesCount > pageSize && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-2">
@@ -211,6 +243,7 @@ export function SelectedFilesPanel({
         <div className="pt-4 border-t">
           <h3 className="text-sm font-semibold mb-3">Agregar archivos</h3>
           <UploadZone
+            actionRef={uploadZoneRef}
             multiple
             accept={uploadLimits.allowedExtensions.join(',')}
             onChange={onAddFiles}

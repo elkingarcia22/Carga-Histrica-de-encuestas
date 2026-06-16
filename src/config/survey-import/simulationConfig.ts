@@ -117,3 +117,9 @@ export const SIMULATION_ACCESSIBILITY_LABELS = {
   simulationCancelled: 'Simulación cancelada por el usuario',
   simulationFailed: 'Fallo simulado de procesamiento',
 };
+
+/**
+ * Maximum number of files to render in the full-view simulated file list.
+ * Prevents performance degradation with large batches.
+ */
+export const SIMULATION_FULL_VIEW_VISIBLE_FILE_LIMIT = 10;

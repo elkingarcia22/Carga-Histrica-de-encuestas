@@ -81,6 +81,8 @@ export const NORMALIZATION_PREVIEW_CONFIG = {
     'SIMULATED_ERROR',
   ] as const,
 
+  normalizationPreviewFilesPageSize: 25,
+
   limits: {
     maxFilesPreview: 10,
     maxIssuesPreview: 50,

@@ -7,9 +7,10 @@ import { formatFileSize } from '@/components/upload/uploadUtils';
 interface SelectedFileRowProps {
   file: LocalFileMetadata;
   onRemove: (id: string) => void;
+  buttonRef?: React.Ref<HTMLButtonElement>;
 }
 
-export function SelectedFileRow({ file, onRemove }: SelectedFileRowProps) {
+export function SelectedFileRow({ file, onRemove, buttonRef }: SelectedFileRowProps) {
   const isInvalid = ['invalid', 'unsupported', 'too-large'].includes(file.status);
   const isDuplicate = file.status === 'duplicate';
   const isWarning = file.status === 'warning';
@@ -57,6 +58,7 @@ export function SelectedFileRow({ file, onRemove }: SelectedFileRowProps) {
         </div>
 
         <Button
+          ref={buttonRef}
           variant="ghost"
           size="icon"
           className="h-8 w-8 text-muted-foreground hover:text-foreground shrink-0"

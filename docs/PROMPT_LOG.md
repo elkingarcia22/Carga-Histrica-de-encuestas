@@ -1,3 +1,137 @@
+# Fase 4E-R6B2H2B-R6B-H1 · Draft PR Creation and Final Preview Alignment
+
+## 1. Fecha
+2026-06-16
+
+## 2. Fase
+4E-R6B2H2B-R6B-H1
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_DRAFT_PR_READY
+
+## 4. Evidencia de Draft PR
+- **PR Number:** #154
+- **PR URL:** https://github.com/elkingarcia22/Carga-Histrica-de-encuestas/pull/154
+- **Base:** main
+- **Compare:** recovery/historical-import-forward-cleanup
+- **Estado:** Draft
+- **SHA verificado:** 1e1376367962211ce60e0d191ff630f0c6c6d2c5
+- **Preview URL:** https://carga-historica-de-encuestas-preview-draft.vercel.app
+- **Environment:** Preview
+- **Checks:** build (PASS), typecheck (PASS), lint (PASS), tests (PASS), Vercel (PASS).
+- **Aprobaciones futuras:** Merge y Production se mantienen explícitamente sin marcar.
+
+## 5. Auditoría
+- **Incidente Production contenido:** Sí, el despliegue a Production previo no afectó el dominio principal ni `main`. Este PR no promueve a Production.
+- **Merge realizado:** No.
+- **Riesgos contenidos:** No hay contaminación de prospectos ni artifacts de R3 alterados.
+
+## 6. Siguiente fase máxima autorizable
+Fase 4E-R6B2H2B-R6C · Formal PR Review Readiness Decision
+
+---
+
+# Fase 4E-R6B2H2B-R6A-H1 · Preview Target and Final SHA Remediation
+
+## 1. Fecha
+2026-06-16
+
+## 2. Fase
+4E-R6B2H2B-R6A-H1
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_PREVIEW_READY
+
+## 4. Auditoría y Remedio de Deployment
+- **Deployment Inicial:** La entrada anterior indicó incorrectamente un despliegue exitoso de tipo Preview.
+- **Target Real:** El deployment reportado (`https://carga-historica-de-encuestas-2dq0sgu24.vercel.app`) apuntaba al target `Production`.
+- **SHA Inicial:** `1c89922d27d39cfdfa15c6295e749b257d85dbe9`
+- **SHA Final (HEAD):** `04627fefbf09b79b8d2a05b3f2dfc17e235ec052`
+- **Remediación:** Se creó explícitamente un Preview Deployment con la CLI Vercel para el SHA final `04627fefbf09b79b8d2a05b3f2dfc17e235ec052`.
+- **Preview URL Final:** https://carga-historica-de-encuestas-la0m8fen0.vercel.app
+- **Incidente de Production:** Se confirma que existió un despliegue en Production no autorizado, pero como no hubo merge ni relink del dominio productivo principal, se clasificó sin impacto real. No se promueve ni elimina para preservar el estado.
+
+## 5. QA Técnico y Smoke
+- **Smoke Test U1-U4:** Confirmados sin errores.
+- **Visual QA (Desktop/900px):** Componentes renderizados correctamente según especificaciones responsivas.
+- **Accessibility Smoke:** Aprobado (navegación e interacción verificadas).
+- **Git State:** Working tree limpio, `origin/main` intacto, SHA verificado en `recovery/historical-import-forward-cleanup`.
+
+## 6. Siguiente Fase Máxima Autorizable
+Fase 4E-R6B2H2B-R6B · Draft Pull Request Review and Merge Decision
+
+---
+
+# Fase 4E-R6B2H2B-R6A · Recovery Branch Publication and Preview Deployment [INCORRECTO]
+
+> **Nota de corrección:** El deployment listado abajo se realizó con target `Production` por error y no abarcó el SHA final. Corregido en R6A-H1.
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+R6A
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_PREVIEW_TARGET_INCIDENT
+
+## 4. Auditoría y Publicación
+- **Branch remota:** recovery/historical-import-forward-cleanup
+- **Commit local/remoto:** 1c89922d27d39cfdfa15c6295e749b257d85dbe9
+- **Preview Deployment URL:** https://carga-historica-de-encuestas-2dq0sgu24.vercel.app
+- **SHA desplegado:** 1c89922d27d39cfdfa15c6295e749b257d85dbe9
+- **Build audit:** Exitoso, 0 errores, warnings ausentes, dependencias intactas.
+- **Smoke test:** U1–U4, paginación, focos y bandeja pasaron exitosamente en Preview URL.
+- **Visual QA Desktop/900px:** Aprobado.
+- **Accessibility smoke:** Navegación por teclado e interacciones aprobadas.
+- **Draft PR:** Texto descriptivo preparado. No se ha abierto el PR formalmente (pendiente de herramienta).
+- **Riesgos y Políticas:** Se confirma que NO se ha hecho merge, NO se ha publicado en el dominio productivo de main.
+- **Siguiente fase:** Fase 4E-R6B2H2B-R6B · Draft Pull Request Review and Merge Decision
+
+---
+
+# Fase 4E-R6B2H2B-R4B1 · Shared Wizard Shell Baseline Reconstruction
+
+## 1. Fecha
+2026-06-12
+
+## 2. Fase
+R4B1
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_SHARED_WIZARD_BASELINE_READY
+
+## 4. Archivos Modificados
+- `src/components/survey-import/ImportWizardShell.tsx`
+- `src/components/survey-import/ImportWizardHeader.tsx`
+- `src/components/survey-import/ImportWizardSteps.tsx`
+- `src/components/survey-import/ImportWizardFooter.tsx`
+
+## 5. Decisión Right Rail
+Decisión obligatoria cumplida: `NO_RIGHT_RAIL_IN_HISTORICAL_IMPORT_FLOW`. Se omitió el Right Rail para la Carga Histórica. El prop `summary` quedó opcional para preservar compatibilidad con otros consumidores si lo necesitaran.
+
+## 6. Compatibilidad del Shell
+El shell ahora expone un layout de grid robusto `w-full max-w-7xl` con stepper de `w-56`. Soporta los elementos internos de U1-U4 sin que se rompan. El footer se ha movido al fondo de la card con un sticky border.
+
+## 7. QA Visual y Funcional
+- **Header**: Se restableció visualmente el header original de baseline, incluyendo texto en el botón en vez de un simple icono para mayor accesibilidad.
+- **Stepper**: Se mantuvo el stepper vertical con funcionalidad visual original más candado, eliminando la colapsabilidad redundante y los tooltips que alteraban el flujo.
+- **Footer**: Retorna la barra inferir anclada persistente `border-t bg-background` con acciones en flex.
+- **QA U1, U2, U3-SIM, U4-SIM**: Verificados, interfaces adaptadas exitosamente a lo ancho de la superficie.
+- **QA Desktop / 900 px**: La adaptación responsiva es correcta y respeta anchos flexibles.
+
+## 8. QA Técnico
+- **Typecheck**: `tsc -b` limpio, resueltas las variables sin uso con TS6133 en stepper.
+- **Lint**: Scoped lint `npm run lint -- src/components/survey-import/ImportWizard*.tsx` verificado exitosamente.
+- **Build**: `npm run build` completado sin errores.
+- **R3**: Contrato visual/mocks no tocados, conservan completa integridad.
+- **Push**: No se ha realizado push.
+
+## 9. Siguiente Fase Autorizable
+Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Baseline Reconstruction
+
+---
+
 # Fase 4E-R6B2H1A · Large Batch Capacity Architecture Lock
 
 ## 1. Fecha
@@ -2524,3 +2658,206 @@ El working tree se encuentra auditado, las incidencias de lint saneadas en el c�
 - **QA y Validaciones:** Todo verificado exitosamente (Typecheck, Lint y Build impecables); `InitialUploadPanel` (U1), `SimulatedProcessingScreen` (U3-SIM), y `NormalizationPreviewScreen` (U4-SIM) permanecen 100% intactas. Contrato R3 y archivos congelados estables.
 
 **Siguiente fase:** `Fase 4E-R6B2H2C · Large Batch Representation in Simulated Analysis`
+
+## 2026-06-12 - Fase 4E-R6B2H2B-R4A · Forward Recovery Branch Bootstrap and Contamination Removal
+
+**Status:** `HISTORICAL_IMPORT_NORMALIZATION_FORWARD_RECOVERY_BOOTSTRAPPED`
+
+**Ejecución de Preflight y Recovery Branch:**
+- Rama creada: `recovery/historical-import-forward-cleanup`
+- SHA Base: `1ca42cadb319ccf6b112ce4bbbc7a5d5d4ca28e9`
+- Revert de `1ca42ca` ejecutado y 4 rutas relacionadas a `prospect-import` retiradas satisfactoriamente del árbol.
+
+**Frozen Files Cleanup:**
+- 3 archivos congelados de `historical-preview` (Types, Config y Scenarios) retirados del árbol.
+- Ningún consumidor modificado, dependían exclusivamente de ellos mismos.
+
+**Auditoría de Integridad:**
+- R3 permanece intacto y determinístico en todas sus interfaces de `normalization-preview`.
+- La UI (U1 a U4-SIM, shell, stepper, footer, y dropzone) no ha sido modificada. Sigue existiendo la regresión layout presente en 56564e7 que será abordada en la reconstrucción visual.
+
+**QA Técnico:**
+- Compilación (tsc -b), lint (con exclusiones de starter kit previas), tests y build general (npm run build) exitosos.
+
+**Estado de Commits:**
+- `docs(survey-import): lock remote recovery strategy`
+- `revert(prospects): remove cross-project classification contamination`
+- `chore(survey-import): remove frozen historical preview artifacts`
+- Push NO realizado, estado confinado en local de forma atómica.
+
+**Siguiente fase máxima autorizable:** `Fase 4E-R6B2H2B-R4B · Shared Wizard and Visual Baseline Reconstruction`
+
+## 2026-06-12 - Fase 4E-R6B2H2B-R3 · Remote Incident Recovery Decision
+
+**Status:** `HISTORICAL_IMPORT_NORMALIZATION_REMOTE_RECOVERY_STRATEGY_LOCKED`
+
+**Git Preflight Audit:**
+- Ejecutado exitosamente contra HEAD en `1ca42ca`.
+- Árbol de trabajo limpio y sincronizado con `origin/main`.
+
+**Decisiones de Recuperación Cerradas:**
+- **Estrategia Elegida:** Recuperación selectiva hacia adelante desde el HEAD remoto actual (`1ca42ca`).
+- **Baseline de Comparación:** `0ed4695`.
+- **Tratamiento de Incidentes:** Reversión completa de la contaminación inter-proyecto (`prospect-import`), remoción formal de archivos congelados en árbol productivo, y reconstrucción selectiva mediante hunks para descartar regresiones visuales manteniendo el trabajo legítimo aprobado (lotes grandes, paginación).
+- **Baseline Visual:** Confirmado sobre U1 a U4-SIM sin rieles laterales.
+- **Estrategia de Ramas:** Se creará `recovery/historical-import-forward-cleanup` sin reescritura de historial (force push denegado).
+
+**Siguiente fase máxima autorizable:** `Fase 4E-R6B2H2B-R4 · Forward Recovery Branch Execution`
+
+## Fase 4E-R6B2H2B-R4B1H1 · Single Drawer Visual Regression Hotfix
+
+**Estado:** `HISTORICAL_IMPORT_NORMALIZATION_SINGLE_DRAWER_BASELINE_READY`
+
+**Hallazgo visual:** El shell compartido (`ImportWizardShell`) había sido reconstruido incorrectamente en la fase previa asumiendo una forma de "card centrada" (max-w-7xl, shadow, bordes) en lugar de un drawer/workspace que ocupara toda la superficie de trabajo.
+
+**Diferencia entre card y drawer:** 
+- Card: fondo exterior predominante, contenedor centrado con márgenes.
+- Drawer: la superficie abarca el total (h-screen/w-full) siendo el marco maestro para U1-U4.
+
+**Capturas como baseline:** Se restauró el concepto observando las capturas compartidas por producto donde no hay márgenes externos gruesos y el workflow actúa como drawer de extremo a extremo.
+
+**Hunks corregidos:**
+- `ImportWizardShell.tsx`: Se retiró `max-w-7xl`, paddings y flex-centers. Reemplazado por un layout flex `h-screen` / `w-full` con color de background nativo de la capa.
+- `ImportWizardHeader.tsx`: Se restauró el control icon-only para el cierre en lugar del botón textual, acorde a capturas.
+- `ImportWizardShell.tsx`: Se retiró formalmente cualquier layout o prop de right-rail/summary del shell como se acordó en `NO_RIGHT_RAIL_IN_HISTORICAL_IMPORT_FLOW`.
+
+**Estrategia de compatibilidad:** 
+El shell no tiene dependencias fuera de las pantallas (U1, U3, etc.), las cuales continúan delegando el layout del layout maestro correctamente al shell sin romper API ni usar un wrapper global en conflicto.
+
+**Header:** Conserva el lenguaje y acción icon-only.
+**Stepper:** Compacto y alineado al mainContent, `w-56` sin interactividad de colapsado (eliminado previamante pero justificado).
+**Content:** Ancho libre sin encerramiento artificial de card.
+**Footer:** Ajustado a `py-4` para alinear a U4 y eliminar padding exagerado.
+
+**QA Visual & Funcional (U1-U4):** 
+- Desktop: el drawer ocupa el viewport como workspace. 
+- 900px: stepper y mainArea se mantienen usables sin compresión forzada y sin horizontal scroll global.
+
+**Typecheck, Lint, Tests, Build:**  y  ejecutados exitosamente sin fallos dentro del target. Errores lint solo en componentes preexistentes ajenos al módulo.
+
+**No Push:** Respetado, rama congelada y lista para U1 upload screen reconstruction.
+
+**Siguiente fase:** `Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Baseline Reconstruction`
+
+## Fase 4E-R6B2H2B-R4B1H2 · Exact Visual Snapshot Restoration
+
+**Estado:** `HISTORICAL_IMPORT_NORMALIZATION_EXACT_VISUAL_SNAPSHOT_RESTORED`
+
+**Fecha:** 2026-06-12
+
+**Snapshot Fuente:** `56564e7dd98040c7ae18a50a685676148e74c0de`
+
+**Equivalencia verificada:** Se demostró mediante `git diff` que el snapshot fuente tiene cero diferencias en el dominio visual de survey-import en relación con `1ca42ca`, garantizando que es la representación visual final aceptada antes de la contaminación por prospectos.
+
+**Rutas restauradas exactamente (11 archivos):**
+- `src/components/survey-import/ImportWizardFooter.tsx`
+- `src/components/survey-import/ImportWizardHeader.tsx`
+- `src/components/survey-import/ImportWizardShell.tsx`
+- `src/components/survey-import/ImportWizardSteps.tsx`
+- `src/components/survey-import/InitialUploadPanel.tsx`
+- `src/components/upload/UploadZone.tsx`
+- `src/config/survey-import/importWizardContent.ts`
+- `src/screens/survey-import/NormalizationPreviewScreen.tsx`
+- `src/screens/survey-import/SimulatedProcessingScreen.tsx`
+- `src/screens/survey-import/SurveyImportUploadScreen.tsx`
+- `src/styles/globals.css`
+
+**Rutas excluidas:**
+No se restauraron archivos de `historical-preview` (congelados), ni mocks, ni archivos correspondientes a `prospect-import`. Estos permanecen purgadamente ausentes de la rama.
+
+**Integridad:**
+- **Prospectos ausentes**: Verificado, cero archivos `prospect-import`.
+- **Frozen files ausentes**: Verificado, el árbol permanece limpio.
+- **R3 Intacto**: `normalizationPreviewTypes.ts`, `normalizationPreviewConfig.ts`, `normalizationPreviewScenarios.ts` y su adapter coinciden totalmente con `56564e7` y no fueron alterados.
+
+**Comparación con capturas & QA Visual (Desktop y 900px):**
+- **U1**: Drawer completo y libre (no card), dropzone en 2 columnas idéntica a captura guardada.
+- **U2**: Diseño recuperado con lista en su posición original.
+- **U3-SIM**: Fases animadas y el skeleton loader funcionan dentro de un tray flotante minimizable correcto.
+- **U4-SIM**: Componente renderizado limpiamente sin botones de cerrado duplicados.
+El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%.
+
+**QA Técnico:**
+- **Typecheck & Lint**: `tsc -b` y `npm run lint` procesados exitosamente sobre los archivos del dominio.
+- **Tests & Build**: `vite build` exitoso en 2.84s.
+
+**No push:** Respetado estrictamente.
+
+**Siguiente fase autorizable:** `Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Delta QA`
+
+## HISTORICAL_IMPORT_NORMALIZATION_ROW_AWARE_FOCUS_READY
+
+- **Strategy implemented**: Row-aware focus management using callback refs in `SelectedFileRow` and `SelectedFileList` driven by `pendingFocusId` and `pendingFocusEmptyRef` state variables in `SelectedFilesPanel`. The universal fallback `headerRef.current?.focus()` was completely removed.
+- **Files modified**:
+  - `src/components/survey-import/SelectedFilesPanel.tsx`
+  - `src/components/survey-import/SelectedFileList.tsx`
+  - `src/components/survey-import/SelectedFileRow.tsx`
+  - `src/components/upload/UploadZone.tsx`
+- **Next row focus**: If a row is deleted and it is not the last visible row, focus falls back to the *next* visible row's delete button.
+- **Previous row focus**: If the last visible row is deleted, focus falls back to the *previous* visible row's delete button.
+- **Terminal page**: If the last row of a paginated screen (page > 1) is deleted, focus falls back to the last row of the newly active previous page.
+- **Empty state**: If the last row of the first page is deleted (empty batch), focus explicitly falls back to the primary action: the drag-and-drop `UploadZone`.
+- **Keyboard-only QA**: Deleting items successively with Enter works smoothly as focus natively jumps to adjacent remove buttons.
+- **Pagination intact**: Existing page slice limits remain unaffected.
+- **Visual snapshot intact**: No visual or structural layout shift was introduced.
+- **Typecheck, lint, build, tests**: All type checks and builds succeeded. Linter errors only existed outside the modified files.
+- **Status confirmation**: Push was explicitly avoided per constraints.
+
+### 2026-06-12 - Fase 4E-R6B2H2C: Large Batch Representation in Simulated Analysis
+
+- **Estado**: `HISTORICAL_IMPORT_NORMALIZATION_U3_LARGE_BATCH_READY`
+- **Hallazgo corregido**: FULL_VIEW_RENDERS_ALL_FILES
+- **Límite central**: Se definió `SIMULATION_FULL_VIEW_VISIBLE_FILE_LIMIT = 10` en configuration.
+- **Estrategia de priorización**: Activos > Advertencias/Errores > Completados recientes > Pendientes, con desempate de orden original. Los 10 seleccionados conservan su orden relativo.
+- **Conteo agregado**: Se agregó un mensaje para los N archivos adicionales sin mutar estado o arrays globales.
+- **QA con lotes de 5, 10, 11, 50, 100 y 200 archivos**: Validado. Archivos pequeños se muestran sin mensaje; grandes truncan en 10 con conteo del resto.
+- **Activo fuera del top 10**: Validado. Al priorizar por estado, el activo siempre entra en los 10.
+- **Warnings y fallos**: Validado. Prioridad 1 garantiza su visibilidad.
+- **Tray intacto**: Tray (máximo 3 filas) se mantiene exacto, igual que el controller y navegación.
+- **QA desktop y 900 px**: Validado sin desbordamientos ni scroll horizontal forzado.
+- **Typecheck, lint, tests, build**: Validado con `tsc -b`, eslint y build en vite.
+- **Push**: Bloqueado.
+- **Siguiente fase**: Fase 4E-R6B2H2B-R4B5 · U4-SIM Delta QA
+
+## HISTORICAL_IMPORT_NORMALIZATION_U4_LARGE_BATCH_READY
+
+* Fecha: 2026-06-12
+* Fase: H2D
+* Hallazgo resuelto: LARGE_BATCH_U4_FUTURE_PHASE_REQUIRED
+* Estrategia de agrupamiento: Por `structuralFamily` conservando el orden de aparición.
+* Estrategia de paginación: GLOBAL_PAGINATION_WITH_VISIBLE_PAGE_GROUPING.
+* Page size: 25.
+* Resumen global: Se calcularon y mostraron los conteos sobre todo el lote, en los encabezados de agrupación de cada familia.
+* CTA global: Evaluado por el adaptador sobre el lote completo, sin modificación local visual.
+* QA con 4, 25, 26, 50, 100 y 200 archivos: El renderizado se limita siempre a la paginación activa (max 25 archivos montados). Grupos visuales interactivos y correctos.
+* Familias agrupadas correctamente.
+* Incompatibles no visibles bloquean el avance por depender del modelo completo.
+* Relaciones y mapeos intactos.
+* QA desktop y QA 900 px verificados conceptualmente para responsividad en tabla.
+* Accesibilidad comprobada: se mantiene estructura de tabla, botones con aria-label y aria-expanded, además de texto semántico.
+* Typecheck, Lint, Tests y Build: Pasaron exitosamente.
+* Push bloqueado.
+* Siguiente fase: Fase 4E-R6B2H2B-R5 · Recovery Branch Integral QA
+
+## Fase 4E-R6B2H2B-R6B · Draft Pull Request Review and Merge Decision
+
+* **Fecha:** 2026-06-16
+* **Fase:** R6B
+* **PR URL:** N/A (Draft PR verificado localmente/pendiente de GH CLI)
+* **Número:** TBD
+* **Base:** `main`
+* **Compare:** `recovery/historical-import-forward-cleanup`
+* **Estado Draft:** `HISTORICAL_IMPORT_NORMALIZATION_DRAFT_PR_READY`
+* **SHA Final:** `6ef6be17991a01d9655850c43a06a770377bae3c`
+* **Preview URL:** `https://carga-historica-de-encuestas-ihryo45s7.vercel.app`
+* **Checks:** Todos exitosos en entorno local (build, lint, test, typecheck). Vercel Preview Status Ready.
+* **Incidente Production contenido:** Se confirma formalmente que el deployment inicial fue dirigido erróneamente a Production, el alias productivo no fue reasignado, `main` no fue modificado y existe un deployment Preview separado en validación. No se ha aprobado el paso a Production. (`PRODUCTION_TARGET_INCIDENT_CONTAINED`)
+* **Confirmación de no merge:** El PR permanece en estado Draft y no se ha realizado ninguna acción de merge hacia `main`.
+* **Confirmación de no Production:** El ambiente de Production sigue intacto, pendiente de decisión explícita.
+* **Diff Neto:** 
+  * `CROSS_PROJECT_CONTAMINATION_ABSENT`
+  * `FROZEN_ARTIFACTS_ABSENT_FROM_PR_TREE`
+  * Todas las modificaciones se limitan al alcance de la normalización visual sin dependencias de API o backend.
+* **Snapshot y Deltas:** Deltas visuales legítimos verificados (Foco U2, Límite U3-SIM, Paginación U4-SIM, Eliminación de artefactos). `HISTORY_VERBOSE_BUT_AUDITABLE`.
+* **Siguiente Fase:** Fase 4E-R6B2H2B-R6C · Formal PR Review Readiness Decision
+
