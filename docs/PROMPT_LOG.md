@@ -1,3 +1,25 @@
+# Fase 4E-R7 · Main Branch Formal Closure and Next Product Phase
+
+## 1. Fecha
+2026-06-16
+
+## 2. Fase
+4E-R7
+
+## 3. Estado
+`HISTORICAL_IMPORT_NORMALIZATION_MAIN_CLOSED`
+
+## 4. Evidencia de Consolidación
+- **PR:** #1
+- **Estrategia:** Squash and merge
+- **Squash SHA:** `15c3028471c61f5780a27512003c19bbf4390af4`
+- **Final Main SHA:** `0d53716faf877c1727049f111316961686c22a32`
+- **QA Final:** PASS (Starter kit lint pre-existente, TS y Tests pasados).
+- **Vercel Status:** `PREVIEW_AVAILABLE` (Cero despliegues a Production).
+- **Recovery Branch:** `MERGED_PENDING_BRANCH_CLEANUP` (Conservada temporalmente).
+- **Force Push:** Cero.
+- **Siguiente Fase:** `Fase 4F-R1 · Historical Import Configuration Prototype Intake`
+
 # Fase 4E-R6B2H2B-R6B-H1 · Draft PR Creation and Final Preview Alignment
 
 ## 1. Fecha
