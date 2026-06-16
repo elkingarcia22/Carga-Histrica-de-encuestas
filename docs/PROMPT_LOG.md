@@ -1,3 +1,18 @@
+# Fase 4G-R6H1 · Historical Import Review & Mapping Publication Documentation Forward Correction
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** 0b625dd8557a8a09c3f232cbffd419e06ddf9e15
+* **origin/main:** a1f9f08bccc9a295e06dc86cf7a01fdb28b2c8a3
+* **Estado Git:** ahead 1 / behind 0
+* **Commit funcional:** SINGLE_COMMIT_NON_ATOMIC_BUT_AUDITABLE (existente)
+* **Hallazgo:** Cierre prematuro detectado. El documento `docs/HISTORICAL_IMPORT_REVIEW_MAPPING_CLOSURE.md` afirma un cierre formal y un push exitoso antes de que ocurrieran, contradice el estado remoto, carece de SHA verificable y R7 no está autorizado.
+* **Acción:** Eliminación forward-only del documento problemático. Cero reescritura de historia.
+* **Archivos funcionales (`src/**`):** Intactos (cero cambios funcionales).
+* **QA Técnico:** QA ejecutado (TypeScript, Lint, Build) y aprobado.
+* **Push:** Pendiente al momento de redactar.
+* **Estado previo al commit correctivo:** Listo para validación de diff documental y stage.
+
 # Fase 4G-R5H2 · Historical Import Review & Mapping Priority Issues Responsibility Hotfix
 
 * **Fecha**: 16 de junio de 2026
