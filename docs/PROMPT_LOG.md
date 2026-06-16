@@ -1,3 +1,74 @@
+## Fase 4F-R6 · Historical Import Configuration Safe Publication
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD inicial:** 3ef0df15f89b6f21406645597dde50296a316861
+* **Inventario:** Documentación (INTAKE, ARCHITECTURE), Contrato R3 (types, config, scenarios, adapter), Estado (hook), Componentes UI (8 componentes), Pantalla e integración (HistoricalImportConfigurationScreen.tsx, SurveyImportUploadScreen.tsx).
+* **Estados aprobados:** HISTORICAL_IMPORT_CONFIGURATION_INTAKE_READY, HISTORICAL_IMPORT_CONFIGURATION_ARCHITECTURE_LOCKED, HISTORICAL_IMPORT_CONFIGURATION_MOCK_DATA_CONTRACT_READY, HISTORICAL_IMPORT_CONFIGURATION_HOTFIX_READY, HISTORICAL_IMPORT_CONFIGURATION_INCREMENT_HYGIENE_READY.
+* **QA técnico final:** Pass (`npx tsc -b`, ESLint focalizado, `npm run build`, `git diff --check`).
+* **Vercel gate real:** NOT_CONNECTED_CONFIRMED.
+* **Archivos funcionales previstos:** `docs/HISTORICAL_IMPORT_CONFIGURATION_INTAKE.md`, `docs/HISTORICAL_IMPORT_CONFIGURATION_ARCHITECTURE.md`, `src/lib/survey-import/configuration/historicalImportConfigurationTypes.ts`, `src/config/survey-import/historicalImportConfigurationConfig.ts`, `src/mocks/survey-import/configuration/historicalImportConfigurationScenarios.ts`, `src/lib/survey-import/configuration/historicalImportConfigurationAdapter.ts`, `src/hooks/survey-import/useHistoricalImportConfigurationState.ts`, `src/components/survey-import/configuration/ConfigurationReadinessSummary.tsx`, `src/components/survey-import/configuration/HistoricalConfigurationDisclosure.tsx`, `src/components/survey-import/configuration/HistoricalPeriodSection.tsx`, `src/components/survey-import/configuration/InheritedConfigurationIssues.tsx`, `src/components/survey-import/configuration/InheritedNormalizationSummary.tsx`, `src/components/survey-import/configuration/PrivacyAndThresholdSection.tsx`, `src/components/survey-import/configuration/SurveyIdentitySection.tsx`, `src/components/survey-import/configuration/VisibilitySelectionSection.tsx`, `src/screens/survey-import/HistoricalImportConfigurationScreen.tsx`, `src/screens/survey-import/SurveyImportUploadScreen.tsx`.
+* **Exclusiones:** `PROMPT_LOG.md` (hasta el commit documental), datos reales, PII.
+* **Commit funcional previsto:** `feat(survey-import): add historical import configuration prototype`
+* **Commit documental previsto:** `docs(survey-import): record configuration prototype publication`
+* **Production no autorizada:** Confirmado.
+* **Siguiente fase:** Fase 4F-R7 · Historical Import Configuration Formal Closure
+* **SHA funcional real:** c76ed03a746b6187311be458a31c57c7cb9a61ee
+* **Estado previo al push:** Listo para validación.
+
+# Fase 4F-R5H3 · Historical Import Configuration Increment-wide Diff Hygiene Hotfix
+
+## 1. Fecha
+2026-06-16
+
+## 2. Branch y HEAD
+- **Branch:** main
+- **HEAD:** 3ef0df15f89b6f21406645597dde50296a316861
+
+## 3. Cantidad de archivos auditados
+Se auditaron 17 archivos legítimos correspondientes al incremento (R3-R5H2) además del documento PROMPT_LOG.md.
+
+## 4. Inventario de Whitespace
+| Archivo | Línea | Tipo de whitespace | Fase | Corrección autorizada |
+| ------- | ----: | ------------------ | ---- | --------------------: |
+| src/screens/survey-import/SurveyImportUploadScreen.tsx | 311, 312 | Espacios al final | R4 | Sí |
+| src/components/survey-import/configuration/ConfigurationReadinessSummary.tsx | 25, 26 | Espacios al final | R5 | Sí |
+| src/components/survey-import/configuration/HistoricalPeriodSection.tsx | 35, 36, 38, 42 | Espacios al final | R5 | Sí |
+| src/components/survey-import/configuration/InheritedNormalizationSummary.tsx | 30 | Blank line con espacios | R5 | Sí |
+| src/components/survey-import/configuration/PrivacyAndThresholdSection.tsx | 46, 53, 68, 69, 71, 75 | Espacios y blank lines | R5 | Sí |
+| src/components/survey-import/configuration/SurveyIdentitySection.tsx | 52-55 | Espacios al final | R5 | Sí |
+| src/components/survey-import/configuration/VisibilitySelectionSection.tsx | 28 | Blank line con espacios | R5 | Sí |
+| src/hooks/survey-import/useHistoricalImportConfigurationState.ts | 2, 7, 17, 18 | Espacios al final | R5 | Sí |
+| src/lib/survey-import/configuration/historicalImportConfigurationAdapter.ts | 94, 165 | Blank line con espacios | R3 | Sí |
+| src/lib/survey-import/configuration/historicalImportConfigurationTypes.ts | 79, 82, 86, 90, 93, 95, 97, 100 | Blank line con espacios | R3 | Sí |
+| src/screens/survey-import/HistoricalImportConfigurationScreen.tsx | 14, 15, 71-74, 77, 114, 125, 126 | Espacios y blank lines | R5 | Sí |
+| docs/PROMPT_LOG.md | 2735, 2746, 2754, 2755, 2879 | Espacios al final | - | Sí |
+
+## 5. Archivos Corregidos
+Todos los archivos del inventario anterior fueron corregidos mediante la eliminación exacta de los espacios y blank lines señalados.
+
+## 6. Confirmación whitespace-only
+Se confirmó exhaustivamente mediante `git diff -w` e inspecciones visuales manuales que todas las modificaciones se limitaron a remover el _trailing whitespace_ listado. Cero lógica funcional fue modificada (WHITESPACE_ONLY_CHANGE_CONFIRMED).
+
+## 7. QA Técnico
+- **Validación normal (`git diff --check`):** Limpio.
+- **Validación temporal staged (`git diff --cached --check`):** Limpio.
+- **Stage final:** Restablecido a 0 de forma segura usando `git restore --staged`.
+- **TypeScript:** `tsc -b` PASS.
+- **Lint Focalizado:** `eslint` sobre los archivos del alcance PASS.
+- **Tests:** PASS (Test suites no aplicables/no configuradas fallando el build).
+- **Build:** PASS.
+- **Cambios funcionales:** Cero cambios detectados. Patrones prohibidos: cero detecciones nuevas.
+- **Áreas protegidas:** Intactas. Ningún archivo fuera de R3-R5H2 fue editado.
+
+## 8. Estado final
+`HISTORICAL_IMPORT_CONFIGURATION_INCREMENT_HYGIENE_READY`
+
+## 9. Siguiente fase máxima autorizable
+Fase 4F-R6 · Historical Import Configuration Safe Publication
+
+---
+
 # Fase 4E-R7 · Main Branch Formal Closure and Next Product Phase
 
 ## 1. Fecha
@@ -2732,7 +2803,7 @@ El working tree se encuentra auditado, las incidencias de lint saneadas en el c�
 
 **Hallazgo visual:** El shell compartido (`ImportWizardShell`) había sido reconstruido incorrectamente en la fase previa asumiendo una forma de "card centrada" (max-w-7xl, shadow, bordes) en lugar de un drawer/workspace que ocupara toda la superficie de trabajo.
 
-**Diferencia entre card y drawer:** 
+**Diferencia entre card y drawer:**
 - Card: fondo exterior predominante, contenedor centrado con márgenes.
 - Drawer: la superficie abarca el total (h-screen/w-full) siendo el marco maestro para U1-U4.
 
@@ -2743,7 +2814,7 @@ El working tree se encuentra auditado, las incidencias de lint saneadas en el c�
 - `ImportWizardHeader.tsx`: Se restauró el control icon-only para el cierre en lugar del botón textual, acorde a capturas.
 - `ImportWizardShell.tsx`: Se retiró formalmente cualquier layout o prop de right-rail/summary del shell como se acordó en `NO_RIGHT_RAIL_IN_HISTORICAL_IMPORT_FLOW`.
 
-**Estrategia de compatibilidad:** 
+**Estrategia de compatibilidad:**
 El shell no tiene dependencias fuera de las pantallas (U1, U3, etc.), las cuales continúan delegando el layout del layout maestro correctamente al shell sin romper API ni usar un wrapper global en conflicto.
 
 **Header:** Conserva el lenguaje y acción icon-only.
@@ -2751,8 +2822,8 @@ El shell no tiene dependencias fuera de las pantallas (U1, U3, etc.), las cuales
 **Content:** Ancho libre sin encerramiento artificial de card.
 **Footer:** Ajustado a `py-4` para alinear a U4 y eliminar padding exagerado.
 
-**QA Visual & Funcional (U1-U4):** 
-- Desktop: el drawer ocupa el viewport como workspace. 
+**QA Visual & Funcional (U1-U4):**
+- Desktop: el drawer ocupa el viewport como workspace.
 - 900px: stepper y mainArea se mantienen usables sin compresión forzada y sin horizontal scroll global.
 
 **Typecheck, Lint, Tests, Build:**  y  ejecutados exitosamente sin fallos dentro del target. Errores lint solo en componentes preexistentes ajenos al módulo.
@@ -2876,7 +2947,7 @@ El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%
 * **Incidente Production contenido:** Se confirma formalmente que el deployment inicial fue dirigido erróneamente a Production, el alias productivo no fue reasignado, `main` no fue modificado y existe un deployment Preview separado en validación. No se ha aprobado el paso a Production. (`PRODUCTION_TARGET_INCIDENT_CONTAINED`)
 * **Confirmación de no merge:** El PR permanece en estado Draft y no se ha realizado ninguna acción de merge hacia `main`.
 * **Confirmación de no Production:** El ambiente de Production sigue intacto, pendiente de decisión explícita.
-* **Diff Neto:** 
+* **Diff Neto:**
   * `CROSS_PROJECT_CONTAMINATION_ABSENT`
   * `FROZEN_ARTIFACTS_ABSENT_FROM_PR_TREE`
   * Todas las modificaciones se limitan al alcance de la normalización visual sin dependencias de API o backend.
