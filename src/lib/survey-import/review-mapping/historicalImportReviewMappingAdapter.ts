@@ -9,9 +9,9 @@ import type {
   HistoricalConfigurationCompatibilityCheck,
   HistoricalImportMappingIssue,
 } from './historicalImportReviewMappingTypes';
-import type { 
-  HistoricalImportReviewMappingBoundary, 
-  HistoricalImportConfigurationSource 
+import type {
+  HistoricalImportReviewMappingBoundary,
+  HistoricalImportConfigurationSource
 } from '../configuration/historicalImportConfigurationTypes';
 import {
   HISTORICAL_MAPPING_MAX_PRIORITY_ISSUES,
@@ -19,6 +19,26 @@ import {
   HISTORICAL_MAPPING_REQUIRED_DOMAINS,
 } from '../../../config/survey-import/historicalImportReviewMappingConfig';
 import { historicalImportReviewMappingScenarios } from '../../../mocks/survey-import/review-mapping/historicalImportReviewMappingScenarios';
+
+export const buildMappingSignature = (draft: HistoricalImportMappingDraft): string => {
+  const confirmedIds = [...draft.entities]
+    .filter(e => e.status === 'confirmed')
+    .map(e => e.id)
+    .sort();
+  const ignoredIds = [...draft.ignoredColumns].map(i => i.id).sort();
+  const deferredIds = [...draft.deferredIssueIds].sort();
+
+  return [
+    draft.mappingDraftId,
+    draft.configurationDraftId,
+    draft.sourceBatchId,
+    draft.configurationSignature,
+    draft.globalStatus,
+    `C:${confirmedIds.length}`,
+    `I:${ignoredIds.length}`,
+    `D:${deferredIds.length}`
+  ].join('|');
+};
 
 export const buildConfigurationSignature = (
   surveyType: string,
@@ -131,7 +151,7 @@ export const deriveReadiness = (draft: HistoricalImportMappingDraft): Historical
 
   const hasInheritedBlock = draft.issues.some(i => i.code === 'INHERITED_CONFIG_BLOCK');
 
-  const canContinue = 
+  const canContinue =
     !hasInheritedBlock &&
     blockingIssues.length === 0 &&
     simErrorIssues.length === 0 &&
@@ -177,7 +197,7 @@ export const validateReferences = (draft: HistoricalImportMappingDraft): string[
   const errors: string[] = [];
   const entityIds = new Set(draft.entities.map(e => e.id));
   if (entityIds.size !== draft.entities.length) errors.push('Duplicate entity IDs detected.');
-  
+
   const issueIds = new Set(draft.issues.map(i => i.id));
   if (issueIds.size !== draft.issues.length) errors.push('Duplicate issue IDs detected.');
 
@@ -204,7 +224,7 @@ export const enrichDraft = (draft: Omit<HistoricalImportMappingDraft, 'domainSum
   const tempDraft = { ...draft, domainSummaries: summaries } as HistoricalImportMappingDraft;
   const readiness = deriveReadiness(tempDraft);
   const status = determineGlobalStatus(readiness);
-  
+
   return {
     ...tempDraft,
     readiness,
@@ -216,13 +236,13 @@ export const enrichDraft = (draft: Omit<HistoricalImportMappingDraft, 'domainSum
 export const getReviewMappingScenario = (scenarioId: string): HistoricalImportMappingDraft => {
   const scenario = historicalImportReviewMappingScenarios.find(s => s.scenarioId === scenarioId);
   if (!scenario) throw new Error(`Scenario ${scenarioId} not found`);
-  
+
   const enriched = enrichDraft(scenario.initialDraft);
   const errors = validateReferences(enriched);
   if (errors.length > 0) {
     console.warn('Scenario validation errors:', errors);
   }
-  
+
   return JSON.parse(JSON.stringify(enriched));
 };
 
@@ -252,6 +272,8 @@ export const buildConfirmationBoundary = (draft: HistoricalImportMappingDraft, s
     sourceBatchId: draft.sourceBatchId,
     sourceScenarioId: draft.sourceScenarioId,
     configurationSignature: draft.configurationSignature,
+    mappingSignature: buildMappingSignature(draft),
+    fileCount: source.fileCount,
     confirmedConfiguration: {
       surveyName: source.confirmedSurveyName,
       surveyType: source.confirmedSurveyType,
@@ -277,7 +299,7 @@ export const buildMappingSourceFromConfiguration = (
 ): HistoricalImportReviewMappingSource => {
   const scenario = historicalImportReviewMappingScenarios.find(s => s.scenarioId === boundary.sourceScenarioId);
   const baseRelations = scenario ? scenario.source.relationsSummary : [];
-  
+
   return {
     configurationDraftId: boundary.configurationDraftId,
     sourceBatchId: boundary.sourceBatchId,

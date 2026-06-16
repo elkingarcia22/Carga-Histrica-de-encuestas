@@ -45,20 +45,20 @@ export function HistoricalImportReviewMappingScreen({
   onContinue
 }: Props) {
   const isCompatible = compatibility.status === 'current';
-  
+
   const mainContent = (
     <div className="space-y-8 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
       <MappingSimulationDisclosure />
-      
+
       <div className="space-y-3">
         <h3 className="text-lg font-semibold text-slate-800">Configuración origen</h3>
         <InheritedConfigurationSummary source={source} />
       </div>
 
-      <MappingReadinessOverview 
-        status={draft.globalStatus} 
-        readiness={draft.readiness} 
-        compatibility={compatibility} 
+      <MappingReadinessOverview
+        status={draft.globalStatus}
+        readiness={draft.readiness}
+        compatibility={compatibility}
       />
 
       {isCompatible && (
@@ -81,9 +81,9 @@ export function HistoricalImportReviewMappingScreen({
       )}
 
       <div className="space-y-3 pt-4 border-t border-slate-200">
-        <MappingReadinessSummary 
-          readiness={draft.readiness} 
-          compatibility={compatibility} 
+        <MappingReadinessSummary
+          readiness={draft.readiness}
+          compatibility={compatibility}
         />
       </div>
     </div>
@@ -109,13 +109,16 @@ export function HistoricalImportReviewMappingScreen({
           disableBack={false}
           onBack={onBack}
           continueDisabled={!isCompatible || !draft.canContinueToConfirmation}
-          onContinue={onContinue}
+          onContinue={() => {
+            if (!draft.canContinueToConfirmation) return;
+            onContinue();
+          }}
           continueLabel="Continuar a confirmar importación"
           helperText={
-            !isCompatible 
+            !isCompatible
               ? 'Configuración modificada. Regresa a Configuración para reiniciar el mapeo.'
-              : draft.canContinueToConfirmation 
-                ? 'El borrador de mapeo está listo.' 
+              : draft.canContinueToConfirmation
+                ? 'El borrador de mapeo está listo.'
                 : 'Resuelve las incidencias antes de continuar.'
           }
         />

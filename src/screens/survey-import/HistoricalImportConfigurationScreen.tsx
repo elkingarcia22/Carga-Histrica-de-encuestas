@@ -125,7 +125,7 @@ export function HistoricalImportConfigurationScreen({
         <ImportWizardSteps
           isCollapsed={isCollapsed}
           onToggleCollapse={onToggleCollapse}
-          activeStepId="configuration"
+          activeStepId="config"
         />
       }
       isCollapsed={isCollapsed}

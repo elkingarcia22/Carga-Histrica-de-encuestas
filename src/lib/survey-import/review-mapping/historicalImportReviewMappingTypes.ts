@@ -179,6 +179,8 @@ export interface HistoricalImportMappingConfirmationBoundary {
   sourceBatchId: HistoricalConfigurationBatchId;
   sourceScenarioId: HistoricalConfigurationScenarioId;
   configurationSignature: string;
+  mappingSignature: string;
+  fileCount: number;
   confirmedConfiguration: {
     surveyName: string;
     surveyType: string;

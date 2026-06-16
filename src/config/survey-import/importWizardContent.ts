@@ -8,7 +8,7 @@ export const importWizardContent = {
     { id: 'upload', label: 'Cargar archivos', status: 'active' as const },
     { id: 'config', label: 'Configuración general', status: 'pending' as const },
     { id: 'review', label: 'Revisar y mapear', status: 'pending' as const },
-    { id: 'import', label: 'Importar encuesta', status: 'pending' as const },
+    { id: 'confirmation', label: 'Confirmar importación', status: 'pending' as const },
   ],
   uploadZone: {
     label: 'Archivos de la encuesta',

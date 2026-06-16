@@ -28,7 +28,11 @@ import { useHistoricalImportReviewMappingState } from '@/hooks/survey-import/use
 import { buildMappingSourceFromConfiguration } from '@/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter';
 import { toast } from 'sonner';
 
-type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing' | 'normalization-preview' | 'historical-configuration' | 'review-mapping';
+import { HistoricalImportConfirmationScreen } from '@/screens/survey-import/HistoricalImportConfirmationScreen';
+import { useHistoricalImportConfirmationState } from '@/hooks/survey-import/useHistoricalImportConfirmationState';
+import { buildConfirmationSourceFromMapping } from '@/lib/survey-import/confirmation/historicalImportConfirmationAdapter';
+
+type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing' | 'normalization-preview' | 'historical-configuration' | 'review-mapping' | 'confirmation';
 
 function SimulatedProcessingController({
   plan,
@@ -77,6 +81,9 @@ export function SurveyImportUploadScreen() {
 
   const configurationState = useHistoricalImportConfigurationState('ready-for-mapping');
   const mappingState = useHistoricalImportReviewMappingState();
+  const confirmationState = useHistoricalImportConfirmationState();
+
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -107,7 +114,9 @@ export function SurveyImportUploadScreen() {
   }, []);
 
   let currentView: SurveyImportView = state.view === 'idle' ? 'upload-idle' : state.view;
-  if (showReviewMapping) {
+  if (showConfirmation) {
+    currentView = 'confirmation';
+  } else if (showReviewMapping) {
     currentView = 'review-mapping';
   } else if (showConfiguration) {
     currentView = 'historical-configuration';
@@ -228,9 +237,11 @@ export function SurveyImportUploadScreen() {
     setShowPreview(false);
     setShowConfiguration(false);
     setShowReviewMapping(false);
+    setShowConfirmation(false);
     binaryMap.current.clear();
     configurationState.reset();
     mappingState.reset();
+    confirmationState.reset();
     reset('Importación cancelada. Regreso a la pantalla inicial.');
   };
 
@@ -294,11 +305,43 @@ export function SurveyImportUploadScreen() {
           if (!mappingState.draft?.canContinueToConfirmation) return;
           const finalBoundary = mappingState.buildBoundary();
           if (finalBoundary) {
-            toast.success('Borrador de mapeo listo', {
-              description: 'La confirmación de importación todavía no está conectada en este prototipo.',
+            const confirmationSource = buildConfirmationSourceFromMapping(finalBoundary);
+            confirmationState.initialize(confirmationSource);
+            setShowConfirmation(true);
+            setShowReviewMapping(false);
+          }
+        }}
+      />
+    );
+  }
+
+  if (currentView === 'confirmation') {
+    return (
+      <HistoricalImportConfirmationScreen
+        source={confirmationState.source!}
+        draft={confirmationState.draft!}
+        compatibility={confirmationState.compatibility!}
+        readiness={confirmationState.readiness!}
+        status={confirmationState.status!}
+        explicitConfirmationAccepted={confirmationState.explicitConfirmationAccepted}
+        canPrepareSimulatedExecution={confirmationState.canPrepareSimulatedExecution}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={handleToggleCollapse}
+        onMouseEnterSidebar={handleMouseEnterSidebar}
+        onBack={() => {
+          setShowConfirmation(false);
+          setShowReviewMapping(true);
+        }}
+        onCancel={handleCancelImportFlow}
+        onConfirm={() => {
+          if (confirmationState.canPrepareSimulatedExecution) {
+            confirmationState.prepare();
+            toast.success('La confirmación quedó preparada.', {
+              description: 'La ejecución de la importación todavía no está conectada en este prototipo.',
             });
           }
         }}
+        onExplicitConfirmationChange={confirmationState.setExplicitConfirmationAccepted}
       />
     );
   }
