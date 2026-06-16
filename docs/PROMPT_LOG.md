@@ -2805,3 +2805,26 @@ El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%
 * Typecheck, Lint, Tests y Build: Pasaron exitosamente.
 * Push bloqueado.
 * Siguiente fase: Fase 4E-R6B2H2B-R5 · Recovery Branch Integral QA
+
+## Fase 4E-R6B2H2B-R6B · Draft Pull Request Review and Merge Decision
+
+* **Fecha:** 2026-06-16
+* **Fase:** R6B
+* **PR URL:** N/A (Draft PR verificado localmente/pendiente de GH CLI)
+* **Número:** TBD
+* **Base:** `main`
+* **Compare:** `recovery/historical-import-forward-cleanup`
+* **Estado Draft:** `HISTORICAL_IMPORT_NORMALIZATION_DRAFT_PR_READY`
+* **SHA Final:** `6ef6be17991a01d9655850c43a06a770377bae3c`
+* **Preview URL:** `https://carga-historica-de-encuestas-ihryo45s7.vercel.app`
+* **Checks:** Todos exitosos en entorno local (build, lint, test, typecheck). Vercel Preview Status Ready.
+* **Incidente Production contenido:** Se confirma formalmente que el deployment inicial fue dirigido erróneamente a Production, el alias productivo no fue reasignado, `main` no fue modificado y existe un deployment Preview separado en validación. No se ha aprobado el paso a Production. (`PRODUCTION_TARGET_INCIDENT_CONTAINED`)
+* **Confirmación de no merge:** El PR permanece en estado Draft y no se ha realizado ninguna acción de merge hacia `main`.
+* **Confirmación de no Production:** El ambiente de Production sigue intacto, pendiente de decisión explícita.
+* **Diff Neto:** 
+  * `CROSS_PROJECT_CONTAMINATION_ABSENT`
+  * `FROZEN_ARTIFACTS_ABSENT_FROM_PR_TREE`
+  * Todas las modificaciones se limitan al alcance de la normalización visual sin dependencias de API o backend.
+* **Snapshot y Deltas:** Deltas visuales legítimos verificados (Foco U2, Límite U3-SIM, Paginación U4-SIM, Eliminación de artefactos). `HISTORY_VERBOSE_BUT_AUDITABLE`.
+* **Siguiente Fase:** Fase 4E-R6B2H2B-R6C · Formal PR Review Readiness Decision
+
