@@ -21,8 +21,11 @@ import { useSimulatedProcessingState } from '@/hooks/survey-import/useSimulatedP
 import { createSimulatedImportPlan, type NonEmptySimulationInputFiles } from '@/lib/survey-import/simulation/simulatedImportAdapter';
 import type { SimulationPlan } from '@/lib/survey-import/simulation/simulationTypes';
 import { NormalizationPreviewScreen } from '@/screens/survey-import/NormalizationPreviewScreen';
+import { HistoricalImportConfigurationScreen } from '@/screens/survey-import/HistoricalImportConfigurationScreen';
+import { useHistoricalImportConfigurationState } from '@/hooks/survey-import/useHistoricalImportConfigurationState';
+import { toast } from 'sonner';
 
-type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing' | 'normalization-preview';
+type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing' | 'normalization-preview' | 'historical-configuration';
 
 function SimulatedProcessingController({
   plan,
@@ -66,6 +69,10 @@ export function SurveyImportUploadScreen() {
   const { state, addFiles, removeFile, setGlobalMessage, reset } = useLocalUploadState();
   const [activePlan, setActivePlan] = useState<SimulationPlan | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [showConfiguration, setShowConfiguration] = useState(false);
+
+  const configurationState = useHistoricalImportConfigurationState('ready-for-mapping');
+
   const [isCollapsed, setIsCollapsed] = useState(false);
   const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -95,7 +102,9 @@ export function SurveyImportUploadScreen() {
   }, []);
 
   let currentView: SurveyImportView = state.view === 'idle' ? 'upload-idle' : state.view;
-  if (showPreview) {
+  if (showConfiguration) {
+    currentView = 'historical-configuration';
+  } else if (showPreview) {
     currentView = 'normalization-preview';
   } else if (activePlan) {
     currentView = 'simulated-processing';
@@ -210,7 +219,9 @@ export function SurveyImportUploadScreen() {
   const handleCancelImportFlow = () => {
     setActivePlan(null);
     setShowPreview(false);
+    setShowConfiguration(false);
     binaryMap.current.clear();
+    configurationState.reset();
     reset('Importación cancelada. Regreso a la pantalla inicial.');
   };
 
@@ -218,11 +229,47 @@ export function SurveyImportUploadScreen() {
     setShowPreview(true);
   };
 
+  if (currentView === 'historical-configuration') {
+    return (
+      <HistoricalImportConfigurationScreen
+        source={configurationState.source}
+        draft={configurationState.draft}
+        issues={configurationState.source.inheritedIssues}
+        status={configurationState.draft.draftStatus}
+        canContinue={configurationState.draft.canContinueToMapping}
+
+        onUpdateName={configurationState.updateName}
+        onUpdateType={configurationState.updateType}
+        onConfirmType={configurationState.confirmType}
+        onUpdateYear={configurationState.updateYear}
+        onUpdatePrivacy={configurationState.updatePrivacy}
+        onConfirmIdentifiedMode={configurationState.confirmIdentifiedMode}
+        onUpdateThreshold={configurationState.updateThreshold}
+        onUpdateVisibility={configurationState.updateVisibility}
+
+        isCollapsed={isCollapsed}
+        onToggleCollapse={handleToggleCollapse}
+        onMouseEnterSidebar={handleMouseEnterSidebar}
+        onCancel={handleCancelImportFlow}
+        onBack={() => setShowConfiguration(false)}
+        onContinue={() => {
+          if (!configurationState.draft.canContinueToMapping) return;
+          const boundary = configurationState.buildBoundary();
+          if (boundary) {
+            toast.success('Continuar a revisión y mapeo', {
+              description: 'Review & Mapping todavía no está conectada. Los datos se conservarían y avanzarías al siguiente paso.',
+            });
+          }
+        }}
+      />
+    );
+  }
+
   if (currentView === 'normalization-preview') {
     return (
       <NormalizationPreviewScreen
-        onCancelImportFlow={() => handleReturnToFiles()}
-        onContinueToConfiguration={() => {}}
+        onCancelImportFlow={handleCancelImportFlow}
+        onContinueToConfiguration={() => setShowConfiguration(true)}
       />
     );
   }
@@ -261,8 +308,8 @@ export function SurveyImportUploadScreen() {
       <ImportWizardShell
         header={<ImportWizardHeader onCancel={handleCancelImportFlow} />}
         steps={
-          <ImportWizardSteps 
-            isCollapsed={isCollapsed} 
+          <ImportWizardSteps
+            isCollapsed={isCollapsed}
             onToggleCollapse={handleToggleCollapse}
             activeStepId="upload"
           />
