@@ -234,7 +234,13 @@ export const enrichDraft = (draft: Omit<HistoricalImportMappingDraft, 'domainSum
 };
 
 export const getReviewMappingScenario = (scenarioId: string): HistoricalImportMappingDraft => {
-  const scenario = historicalImportReviewMappingScenarios.find(s => s.scenarioId === scenarioId);
+  let scenario = historicalImportReviewMappingScenarios.find(s => s.scenarioId === scenarioId);
+
+  // Prototype contractual fix: align transition from configuration
+  if (!scenario && scenarioId === 'ready-for-mapping') {
+    scenario = historicalImportReviewMappingScenarios.find(s => s.scenarioId === 'ready-for-confirmation');
+  }
+
   if (!scenario) throw new Error(`Scenario ${scenarioId} not found`);
 
   const enriched = enrichDraft(scenario.initialDraft);
