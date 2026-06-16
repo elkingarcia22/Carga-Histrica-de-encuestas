@@ -1,3 +1,36 @@
+# Fase 4E-R6B2H2B-R6B-H1 · Draft PR Creation and Final Preview Alignment
+
+## 1. Fecha
+2026-06-16
+
+## 2. Fase
+4E-R6B2H2B-R6B-H1
+
+## 3. Estado
+HISTORICAL_IMPORT_NORMALIZATION_DRAFT_PR_READY
+
+## 4. Evidencia de Draft PR
+- **PR Number:** #154
+- **PR URL:** https://github.com/elkingarcia22/Carga-Histrica-de-encuestas/pull/154
+- **Base:** main
+- **Compare:** recovery/historical-import-forward-cleanup
+- **Estado:** Draft
+- **SHA verificado:** 1e1376367962211ce60e0d191ff630f0c6c6d2c5
+- **Preview URL:** https://carga-historica-de-encuestas-preview-draft.vercel.app
+- **Environment:** Preview
+- **Checks:** build (PASS), typecheck (PASS), lint (PASS), tests (PASS), Vercel (PASS).
+- **Aprobaciones futuras:** Merge y Production se mantienen explícitamente sin marcar.
+
+## 5. Auditoría
+- **Incidente Production contenido:** Sí, el despliegue a Production previo no afectó el dominio principal ni `main`. Este PR no promueve a Production.
+- **Merge realizado:** No.
+- **Riesgos contenidos:** No hay contaminación de prospectos ni artifacts de R3 alterados.
+
+## 6. Siguiente fase máxima autorizable
+Fase 4E-R6B2H2B-R6C · Formal PR Review Readiness Decision
+
+---
+
 # Fase 4E-R6B2H2B-R6A-H1 · Preview Target and Final SHA Remediation
 
 ## 1. Fecha
