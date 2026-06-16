@@ -4,7 +4,10 @@ import type {
 } from '@/lib/survey-import/simulation/simulationTypes';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { SIMULATION_ACCESSIBILITY_LABELS } from '@/config/survey-import/simulationConfig';
+import {
+  SIMULATION_ACCESSIBILITY_LABELS,
+  SIMULATION_FULL_VIEW_VISIBLE_FILE_LIMIT
+} from '@/config/survey-import/simulationConfig';
 import {
   FileIcon,
   CheckCircle2Icon,
@@ -24,10 +27,39 @@ export function SimulatedProcessingFileList({
   phases,
 }: SimulatedProcessingFileListProps) {
   const totalPhases = phases.length;
+  const totalFiles = files.length;
+
+  const indexedFiles = files.map((file, index) => ({ file, index }));
+
+  const getPriority = (file: SimulationFileProgress) => {
+    if (file.status === 'active') return 0;
+    if (file.status === 'warning' || file.status === 'failed' || file.hasWarning || file.issueCount > 0) return 1;
+    if (file.status === 'completed') return 2;
+    if (file.status === 'pending') return 3;
+    return 4;
+  };
+
+  const selectedIndexedFiles = [...indexedFiles]
+    .sort((a, b) => {
+      const pA = getPriority(a.file);
+      const pB = getPriority(b.file);
+      if (pA !== pB) return pA - pB;
+
+      if (pA === 2) {
+        return b.index - a.index;
+      }
+      return a.index - b.index;
+    })
+    .slice(0, SIMULATION_FULL_VIEW_VISIBLE_FILE_LIMIT)
+    .sort((a, b) => a.index - b.index);
+
+  const displayFiles = selectedIndexedFiles.map(item => item.file);
+  const hiddenCount = totalFiles - displayFiles.length;
 
   return (
-    <ul className="space-y-3">
-      {files.map((file) => {
+    <div className="flex flex-col gap-4">
+      <ul className="space-y-3">
+        {displayFiles.map((file) => {
         const progressValue =
           totalPhases > 0
             ? (file.completedPhases.length / totalPhases) * 100
@@ -109,7 +141,7 @@ export function SimulatedProcessingFileList({
                       : 'primary'
                   }
                 />
-                
+
                 {file.issueCount > 0 && (
                   <div className="mt-2 text-xs text-destructive">
                     Se encontraron {file.issueCount} problemas
@@ -120,6 +152,18 @@ export function SimulatedProcessingFileList({
           </li>
         );
       })}
-    </ul>
+      </ul>
+
+      {hiddenCount > 0 && (
+        <div className="mt-2 text-center text-sm text-muted-foreground p-4 bg-muted/30 rounded-lg border border-dashed" aria-live="polite">
+          <p className="font-medium text-foreground mb-1">
+            Se muestran {displayFiles.length} de {totalFiles} archivos.
+          </p>
+          <p>
+            {hiddenCount} archivo{hiddenCount !== 1 ? 's' : ''} adicional{hiddenCount !== 1 ? 'es' : ''} continúan en el análisis simulado.
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
