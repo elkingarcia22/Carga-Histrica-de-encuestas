@@ -1,3 +1,20 @@
+# Fase 4G-R7 · Historical Import Review & Mapping Formal Closure
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD Inicial:** 9714196f4e23f4598b0495ebf175001460d1db09
+* **origin/main Inicial:** 9714196f4e23f4598b0495ebf175001460d1db09
+* **Publicación verificada:** Sí, commits funcionales (0b625dd), correctivos y verificación auditados en origin/main.
+* **Inventario:** Intake, Arquitectura, Contrato R3, Estado (hook), Pantalla, Componentes, Integración.
+* **Arquitectura:** MAPPING_OVERVIEW_FIRST, DOMAIN_STATUS_CARDS_WITH_PRIORITY_ISSUES, SINGLE_ORCHESTRATOR_OWNED_MAPPING_STATE, NO_NEW_ROUTE, adapter puro, hook derivado, screen controlada.
+* **Escenarios:** 8 escenarios documentados (ready, ambiguous, incompatible, unmapped, ignored, demographic, inherited, simulated-error).
+* **Hotfixes:** R5H1 (assertions/determinismo/mocks), R5H2 (priority issues extraído de screen).
+* **QA Técnico:** Typecheck, Lint focalizado, Build y comprobación de whitespace pasados.
+* **Documento de cierre:** `docs/HISTORICAL_IMPORT_REVIEW_MAPPING_CLOSURE.md` creado.
+* **Deployment Status:** NO_DEPLOYMENT_TRIGGERED
+* **Riesgos Diferidos:** Catálogo real, parser, backend/persistencia, PII, IA real, volumen.
+* **Estado previo al commit:** HISTORICAL_IMPORT_REVIEW_MAPPING_FORMALLY_CLOSED
+
 # Fase 4G-R6 · Historical Import Review & Mapping Publication Verified
 
 * **Fecha:** 2026-06-16
