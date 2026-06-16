@@ -1,3 +1,56 @@
+# Fase 4I-H2 · Configuration-to-Mapping Transition Safe Publication
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD Inicial:** eda17854aa5b94d7d4f4f28e0fb94b47bf46d634
+
+## Inventario
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter.ts`
+- `docs/PROMPT_LOG.md`
+
+## QA Aprobado
+- **Typecheck:** PASS
+- **Lint:** PASS
+- **Tests:** `NOT_CONFIGURED_WITH_EVIDENCE`
+- **Build:** PASS
+- **Vercel Gate:** `NOT_CONNECTED_CONFIRMED`
+- **Validación programática:** Ocho escenarios intactos, alias exacto validado, IDs desconocidos rechazados.
+- **Áreas Protegidas:** Intactas.
+
+## Estrategia de Commits
+- Commit 1 (Funcional): `fix(survey-import): align configuration scenario with mapping entry`
+- Commit 2 (Documental): `docs(survey-import): record configuration mapping transition hotfix`
+
+**Commit Funcional SHA:** 4512c95936fda8f43adc3a9b2071424caf778487
+
+## Estado Pre-publicación
+Preparado para stage funcional selectivo. Push y SHA final pendientes.
+
+# Fase 4I-H1 · Configuration-to-Mapping Transition Hotfix
+
+**Causa raíz:** Defecto contractual en el adaptador `getReviewMappingScenario` (`src/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter.ts`). El orquestador enviaba correctamente el `sourceScenarioId` (con valor `ready-for-mapping`) al adaptador de Mapeo, pero este lanzaba un error `Error: Scenario ready-for-mapping not found` y detenía la ejecución del handler `onContinue`, lo cual dejaba la pantalla visual estancada en Configuration y las flags de vista sin actualizar (`OTHER_EVIDENCED_CAUSE`).
+
+**Archivos modificados:**
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter.ts`
+
+**Boundary audit:** Validado. `determineCanContinueToMapping` evalúa correctamente el estado del formulario con el raw draft y no sufre de cierres asincrónicos o stale state. `buildBoundary` y `buildMappingSourceFromConfiguration` construyen datos correctos sin depender del draft obsoleto y preservan el `configurationDraftId` y el `sourceBatchId`. Retorna `CONFIGURATION_BOUNDARY_AVAILABLE_FOR_MAPPING`.
+
+**Handler corregido:** No fue necesario alterar el orquestador (`SurveyImportUploadScreen.tsx`). Se implementó un mapeo condicional (fallback bridge) exclusivamente en la lectura de escenarios (`getReviewMappingScenario`) para traducir internamente el escenario `ready-for-mapping` del paso Configuration al esperado `ready-for-confirmation` por el draft de Mapeo, reparando el defecto del contrato inicial del prototipo de forma quirúrgica.
+
+**Preservación:** Comprobado. La edición del draft en Configuración, al navegar a Mapeo y volver con Back, mantiene intactos todos los valores confirmados y no clona estados repetidos. `CONFIGURATION_DRAFT_PRESERVATION_CONFIRMED`.
+
+**Cancelación:** Confirmado. Continúa reseteando configuración, mapping, confirmación y flags de vistas.
+
+**Regresión visual:** Confirmado cero cambios en layout, cards, footer, CTA, stepper, desktop y 900 px.
+
+**Typecheck:** npx tsc -b ejecutado exitosamente.
+**Lint:** ESLint focalizado validó sin errores (corregido trailing whitespace).
+**Tests:** NOT_CONFIGURED_WITH_EVIDENCE
+**Build:** npm run build ejecutado exitosamente.
+
+**Estado final:**
+HISTORICAL_IMPORT_CONFIGURATION_TO_MAPPING_TRANSITION_READY
+
 # Fase 4H-R7 · Historical Import Confirmation Formal Closure
 
 **Fecha:** 2026-06-16
@@ -55,6 +108,8 @@
 
 ## Estrategia de Publicación
 Estrategia de dos commits: 1) funcional, 2) documental.
+
+**Commit Funcional SHA:** 4512c95936fda8f43adc3a9b2071424caf778487
 
 **Estado Pre-publicación:** Preparado para stage funcional selectivo.
 **Commit Funcional SHA:** 3dafbe7e1dad3158e77bbc7c982ace41395e5f22
