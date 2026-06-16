@@ -23,9 +23,12 @@ import type { SimulationPlan } from '@/lib/survey-import/simulation/simulationTy
 import { NormalizationPreviewScreen } from '@/screens/survey-import/NormalizationPreviewScreen';
 import { HistoricalImportConfigurationScreen } from '@/screens/survey-import/HistoricalImportConfigurationScreen';
 import { useHistoricalImportConfigurationState } from '@/hooks/survey-import/useHistoricalImportConfigurationState';
+import { HistoricalImportReviewMappingScreen } from '@/screens/survey-import/HistoricalImportReviewMappingScreen';
+import { useHistoricalImportReviewMappingState } from '@/hooks/survey-import/useHistoricalImportReviewMappingState';
+import { buildMappingSourceFromConfiguration } from '@/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter';
 import { toast } from 'sonner';
 
-type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing' | 'normalization-preview' | 'historical-configuration';
+type SurveyImportView = 'upload-idle' | 'files-selected' | 'simulated-processing' | 'normalization-preview' | 'historical-configuration' | 'review-mapping';
 
 function SimulatedProcessingController({
   plan,
@@ -70,8 +73,10 @@ export function SurveyImportUploadScreen() {
   const [activePlan, setActivePlan] = useState<SimulationPlan | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [showConfiguration, setShowConfiguration] = useState(false);
+  const [showReviewMapping, setShowReviewMapping] = useState(false);
 
   const configurationState = useHistoricalImportConfigurationState('ready-for-mapping');
+  const mappingState = useHistoricalImportReviewMappingState();
 
   const [isCollapsed, setIsCollapsed] = useState(false);
   const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -102,7 +107,9 @@ export function SurveyImportUploadScreen() {
   }, []);
 
   let currentView: SurveyImportView = state.view === 'idle' ? 'upload-idle' : state.view;
-  if (showConfiguration) {
+  if (showReviewMapping) {
+    currentView = 'review-mapping';
+  } else if (showConfiguration) {
     currentView = 'historical-configuration';
   } else if (showPreview) {
     currentView = 'normalization-preview';
@@ -220,8 +227,10 @@ export function SurveyImportUploadScreen() {
     setActivePlan(null);
     setShowPreview(false);
     setShowConfiguration(false);
+    setShowReviewMapping(false);
     binaryMap.current.clear();
     configurationState.reset();
+    mappingState.reset();
     reset('Importación cancelada. Regreso a la pantalla inicial.');
   };
 
@@ -256,8 +265,37 @@ export function SurveyImportUploadScreen() {
           if (!configurationState.draft.canContinueToMapping) return;
           const boundary = configurationState.buildBoundary();
           if (boundary) {
-            toast.success('Continuar a revisión y mapeo', {
-              description: 'Review & Mapping todavía no está conectada. Los datos se conservarían y avanzarías al siguiente paso.',
+            const mappingSource = buildMappingSourceFromConfiguration(boundary, configurationState.source);
+            mappingState.initialize(mappingSource);
+            setShowReviewMapping(true);
+            setShowConfiguration(false);
+          }
+        }}
+      />
+    );
+  }
+
+  if (currentView === 'review-mapping') {
+    return (
+      <HistoricalImportReviewMappingScreen
+        source={mappingState.source!}
+        draft={mappingState.draft!}
+        compatibility={mappingState.compatibility!}
+        priorityIssues={mappingState.priorityIssues}
+        isCollapsed={isCollapsed}
+        onToggleCollapse={handleToggleCollapse}
+        onMouseEnterSidebar={handleMouseEnterSidebar}
+        onBack={() => {
+          setShowReviewMapping(false);
+          setShowConfiguration(true);
+        }}
+        onCancel={handleCancelImportFlow}
+        onContinue={() => {
+          if (!mappingState.draft?.canContinueToConfirmation) return;
+          const finalBoundary = mappingState.buildBoundary();
+          if (finalBoundary) {
+            toast.success('Borrador de mapeo listo', {
+              description: 'La confirmación de importación todavía no está conectada en este prototipo.',
             });
           }
         }}

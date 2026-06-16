@@ -1,3 +1,110 @@
+# Fase 4G-R5H2 · Historical Import Review & Mapping Priority Issues Responsibility Hotfix
+
+* **Fecha**: 16 de junio de 2026
+* **Branch**: `main`
+* **HEAD**: alineado con `origin/main`
+* **Hallazgo**: `MQA-001 · PRIORITY_ISSUES_DERIVATION_LEAKED_INTO_SCREEN` (La screen importaba el adapter y derivaba las incidencias prioritarias durante el render, violando la arquitectura aprobada).
+* **Arquitectura anterior**: `adapter → screen` (`HistoricalImportReviewMappingScreen` llamaba a `getPriorityIssues(draft.issues)`).
+* **Arquitectura corregida**: `adapter → hook → orquestador → screen → componente presentacional`.
+* **Archivos modificados**:
+  * `src/hooks/survey-import/useHistoricalImportReviewMappingState.ts`
+  * `src/screens/survey-import/HistoricalImportReviewMappingScreen.tsx`
+  * `src/screens/survey-import/SurveyImportUploadScreen.tsx`
+* **Selector en adapter**: `getPriorityIssues` validado (ya era puro y respetaba la prioridad central y los límites).
+* **Derivación en hook**: `priorityIssues` derivado de forma síncrona en `useHistoricalImportReviewMappingState` y expuesto.
+* **Screen pasiva**: Removida la importación del adapter y la derivación desde `HistoricalImportReviewMappingScreen`. Ahora recibe `priorityIssues` vía props.
+* **Componente presentacional**: `PriorityMappingIssues` solo recibe el arreglo de incidencias y las renderiza de manera agnóstica.
+* **Readiness global intacto**: `deriveReadiness` continúa utilizando el draft completo sin ser afectado por el subset visual.
+* **Ocho escenarios**: Mantenidos sus resultados, boundaries y CTA.
+* **Typecheck**: PASS (`npx tsc -b`)
+* **Lint**: PASS (Scoped en los archivos modificados)
+* **Tests**: NOT_CONFIGURED (Sin tests en estos componentes)
+* **Build**: PASS
+* **Cero regresión visual**: Verificado; la screen se renderiza de forma idéntica, pero con arquitectura limpia.
+* **Estado final**: `HISTORICAL_IMPORT_REVIEW_MAPPING_PRIORITY_ISSUES_HOTFIX_READY`
+* **Siguiente fase**: `Fase 4G-R5 · Historical Import Review & Mapping Overview QA`
+
+# Fase 4G-R5H1 · Historical Import Review & Mapping Overview Hotfix
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** a1f9f08bccc9a295e06dc86cf7a01fdb28b2c8a3
+* **Hallazgos originales:** Aserción insegura (`as Record`), firma no determinística (`Date.now()`), orquestador contaminado con mocks, consumo de issues obsoleto.
+* **Clasificación del cambio R3:** Same-phase in-memory remediation hotfix.
+* **Corrección del tipado:** Eliminado `domainSummaries`, `globalStatus`, `readiness` y `canContinueToConfirmation` del contrato inicial de mock para evitar el bypass inseguro.
+* **Firma determinística:** Implementado `buildConfigurationSignature` en el Adapter, basado en los valores estables de configuración (surveyType, privacyMode, periodYear).
+* **Eliminación de hardcodes:** Removidos metadatos falsos (`relationsSummary`) y valores no determinísticos del controlador (`SurveyImportUploadScreen`).
+* **Eliminación del lenguaje de parser:** Extraída responsabilidad de generación hacia `buildMappingSourceFromConfiguration` en el Adapter.
+* **Priority issues:** Se eliminó la dependencia `getPriorityIssues` del componente renderizador en favor de procesar previamente e inyectar.
+* **Acción Revisar:** Implementado `toast.info` en `MappingDomainStatusCard` para notificar desconexión interactiva.
+* **Preservación:** Las áreas protegidas (U1, U2, shell) se mantuvieron inalteradas.
+* **Ocho escenarios:** Los 8 escenarios core se adaptaron con éxito para respetar la omisión de estado pre-calculado, confirmando integridad de tipado.
+* **QA Técnico:** `tsc -b`, ESLint y `npm run build` ejecutados y validados limpios. Error de variable no leída solucionado.
+* **QA Visual:** UI kit nativo se renderiza correctamente sin errores en pantalla.
+* **Áreas protegidas:** Confirmadas inalteradas y sin regresiones funcionales.
+* **Estado final:** HISTORICAL_IMPORT_REVIEW_MAPPING_OVERVIEW_QA_APPROVED
+* **Siguiente fase:** Fase 4G-R5H2 · Historical Import Review & Mapping Formal Publish
+
+# Fase 4G-R3 · Historical Import Review & Mapping Mock Data Contract
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** a1f9f08bccc9a295e06dc86cf7a01fdb28b2c8a3
+* **Architecture validada:** Sí, Gate A y B confirmados.
+* **Archivos creados:**
+  * `src/lib/survey-import/review-mapping/historicalImportReviewMappingTypes.ts`
+  * `src/config/survey-import/historicalImportReviewMappingConfig.ts`
+  * `src/mocks/survey-import/review-mapping/historicalImportReviewMappingScenarios.ts`
+  * `src/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter.ts`
+* **Tipos y Configuración:** Strict IDs, domain model, entity status, global status implementados.
+* **Escenarios:** Exactamente 8 escenarios estáticos creados.
+* **Adapter:** Funciones puras (sin estado/hooks/React) añadidas para derivar readiness, summaries y status.
+* **Domain summaries:** Derivados en el adapter de forma determinista.
+* **Ignored columns:** Soporte de exclusión opcional y técnica añadido.
+* **Incidencias y Readiness:** Prioridades definidas y cálculo estricto de bloqueos implementado.
+* **CTA:** Lógica derivada sin redundancia calculada al instante.
+* **Compatibility strategy:** Gate B validado con string de firmas en el Adapter.
+* **Boundary hacia Confirmación:** Estructura tipada añadida al Output y Adapter.
+* **Validación de Referencias:** Implementado chequeo interno que detecta colisiones y faltas de integridad de ID.
+* **Ausencia de PII / Datos Reales:** Auditada visual y conceptualmente.
+* **QA (Typecheck / Lint / Tests / Build):** Todo ejecutado exitosamente. Validación programática de 8 escenarios 100% OK.
+* **Estado final:** HISTORICAL_IMPORT_REVIEW_MAPPING_MOCK_DATA_CONTRACT_READY
+* **Siguiente fase máxima:** Fase 4G-R4 · Historical Import Review & Mapping Overview First Screen Build Prompt
+
+# Fase 4G-R2 · Historical Import Review & Mapping Architecture Lock
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** a1f9f08bccc9a295e06dc86cf7a01fdb28b2c8a3
+* **Documentos revisados:** HISTORICAL_IMPORT_REVIEW_MAPPING_INTAKE.md, HISTORICAL_IMPORT_CONFIGURATION_CLOSURE.md, HISTORICAL_IMPORT_CONFIGURATION_ARCHITECTURE.md, HISTORICAL_IMPORT_NORMALIZATION_ARCHITECTURE.md, HISTORICAL_IMPORT_BATCH_CAPACITY_ARCHITECTURE.md, HISTORICAL_IMPORT_MAIN_CLOSURE.md, PROMPT_LOG.md.
+* **Primera pantalla:** Resumen general de mapeo (`MAPPING_OVERVIEW_FIRST`).
+* **Ownership:** `survey-import` (HistoricalImportReviewMappingScreen).
+* **Boundaries:** Entrada vía metadata serializable (Opción A). Salida pura con `mappingDraftId`.
+* **Estado:** Hook local del dominio en el orquestador (`useHistoricalImportMappingState`), adaptadores puros.
+* **Patrón visual:** DOMAIN_STATUS_CARDS_WITH_PRIORITY_ISSUES.
+* **Dominios:** Preguntas, Escalas, Demográficos, Participantes, Jerarquías, Identificadores técnicos, Relaciones, Columnas ignoradas, Incidencias.
+* **Readiness:** Calculado sobre el draft completo. Requiere cero blocking issues.
+* **Gates cerrados:** Ownership, primera pantalla, alcance del overview, boundaries, modelo conceptual, estado, preservación, dominios, incidencias, estados, readiness, visual architecture, patrón principal, actions, componentization, components reuse, Combobox (diferido), virtualización (no req), IA simulada, scenarios, file structure, no route, stepper, accessibility, scalability.
+* **Gates pendientes:** Pantallas futuras de resolución (drill-downs), parser real, modelo real de preguntas y escalas, Confirmation screen.
+* **Cero cambios en src:** Confirmado.
+* **Estado final:** HISTORICAL_IMPORT_REVIEW_MAPPING_ARCHITECTURE_LOCKED
+* **Siguiente fase:** Fase 4G-R3 · Historical Import Review & Mapping Mock Data Contract
+
+# Fase 4G-R1 · Historical Import Review & Mapping Prototype Intake
+
+* **Fecha:** 2026-06-16
+* **Branch:** main
+* **HEAD:** a1f9f08bccc9a295e06dc86cf7a01fdb28b2c8a3
+* **Objetivo:** Definir con precisión qué debe resolver la primera pantalla de Review & Mapping antes de bloquear arquitectura.
+* **Primera pantalla recomendada:** Opción A · Resumen general de mapeo.
+* **Dominios incluidos:** Preguntas, opciones de respuesta, escalas, participantes, jerarquías, áreas, cargos, sedes, campos demográficos, identificadores técnicos, relaciones entre archivos, columnas ignoradas, incidencias de incompatibilidad. (Resumen global `IN_SCOPE_FIRST_SCREEN`).
+* **Dominios diferidos:** Vistas detalladas de los mapeos individuales.
+* **Gates cerrados:** Usuario principal, nombre de la pantalla, primera pantalla, boundary de entrada y salida, separación analítica.
+* **Gates pendientes:** UI exacta para la vista de detalle, validación cruzada escalas-preguntas, componentes complejos.
+* **Cambios en src:** 0 (CERO cambios en src).
+* **Estado final:** HISTORICAL_IMPORT_REVIEW_MAPPING_INTAKE_READY
+* **Siguiente fase:** Fase 4G-R2 · Historical Import Review & Mapping Architecture Lock
+
 # Fase 4F-R7 · Historical Import Configuration Formal Closure
 
 **Fecha:** 2026-06-16
@@ -2981,3 +3088,37 @@ El diff final entre working tree visual y `56564e7` es **vacío**. Fidelity 100%
 - **Cero force push:** Sí
 - **Siguiente fase:** Fase 4E-R7 · Main Branch Formal Closure and Next Product Phase
 
+
+# Fase 4G-R4 · Historical Import Review & Mapping Overview First Screen Build
+
+## 1. Fecha
+2026-06-16
+
+## 2. Fase
+4G-R4
+
+## 3. Branch y HEAD
+- **Branch:** main
+- **HEAD:** (post R3)
+
+## 4. Estado
+HISTORICAL_IMPORT_REVIEW_MAPPING_OVERVIEW_SCREEN_BUILT
+
+## 5. Implementación UI
+- **Componente Principal:** `HistoricalImportReviewMappingScreen.tsx` creado.
+- **Componentes Creados:** `MappingSimulationDisclosure.tsx`, `InheritedConfigurationSummary.tsx`, `MappingReadinessOverview.tsx`, `PriorityMappingIssues.tsx`, `MappingDomainStatusGrid.tsx`, `IgnoredColumnsSummary.tsx`, `SourceRelationsSummary.tsx`, `MappingReadinessSummary.tsx`.
+- **Componentes Reutilizados:** `ImportWizardShell`, `ImportWizardHeader`, `ImportWizardSteps`, `ImportWizardFooter`, componentes base de UI.
+- **Integración:** Agregado a `SurveyImportUploadScreen.tsx` para mantener el estado del `Draft` centralizado y no perder progreso en navegaciones.
+- **Layout y Grid:** Estructura unificada en columnas, max-w-5xl.
+- **Accesibilidad y Visual:** Contrastes estándar, diseño adaptativo para Desktop y >900px, y estados claros del mapeo.
+
+## 6. QA Técnico y Funcional
+- **QA Funcional:** Probados los 8 escenarios provistos por el contrato R3 sin fallos. El `Draft` se mantiene al ir de Configuración a Mapping y volver.
+- **TypeScript:** Cero errores.
+- **Lint:** ESLint scope `src/components/survey-import` `src/screens/survey-import` limpio.
+- **Build:** Build exitoso.
+- **Archivos Modificados:** `SurveyImportUploadScreen.tsx` y fixes menores en mocks.
+- **Áreas Protegidas:** Intactas, 0 modificaciones fuera del scope.
+
+## 7. Siguiente Fase Máxima Autorizable
+Fase 4G-R5 · Historical Import Review & Mapping Formal Closure
