@@ -1,3 +1,28 @@
+# Fase 4I-H3 · Configuration-to-Mapping Transition Formal Closure
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD Inicial:** abba956c9e1336272e270112e75c82effe530557
+
+## Inventario
+- `docs/HISTORICAL_IMPORT_CONFIGURATION_MAPPING_TRANSITION_CLOSURE.md`
+- `docs/PROMPT_LOG.md`
+
+## QA Aprobado
+- **Causa raíz documentada:** Sí.
+- **Contrato del alias:** Validado.
+- **Flujo completo:** Validado de Configuración a Mapping.
+- **QA visual y accesibilidad:** Intactos.
+- **Typecheck, lint, build:** PASS focalizado.
+- **Tests:** `NOT_CONFIGURED_WITH_EVIDENCE`
+- **Deployment Status:** `NO_DEPLOYMENT_TRIGGERED`
+
+## Estado Final
+`HISTORICAL_IMPORT_CONFIGURATION_MAPPING_TRANSITION_FORMALLY_CLOSED`
+
+## Siguiente Fase
+`Historical Import Mapping Issue Resolution Intake`
+
 # Fase 4I-H2 · Configuration-to-Mapping Transition Safe Publication
 
 **Fecha:** 2026-06-16
