@@ -4592,3 +4592,36 @@ Git preflight superado (cero modificaciones, head en origin/main). No se ejecut�
 `RISK_ACCEPTANCE_AUTHORITY_REQUIRED`
 `SYN2C_NOT_AUTHORIZED`
 `SYN3_PHYSICAL_GENERATION_BLOCKED`
+
+# Fase 4K-SYN2C1 · Post-Installation Audit Decomposition and Reachability Gate
+
+## 1. Alcance
+Descomponer y adjudicar la auditoría posterior a la instalación de `exceljs@4.4.0` (devDependency), determinando el alcance e impacto real de los 11 hallazgos reportados (3 altos, 7 moderados, 1 bajo), sin modificar dependencias ni ejecutar fixes, y asegurando el estricto cumplimiento de controles de uso offline para el generador de fixtures sintéticos.
+
+## 2. Evidencia Revisada
+Se ejecutaron consultas locales en modo read-only de `npm audit`, `npm audit --json`, `npm ls`, y `npm explain` para trazar el árbol de dependencias, clasificar cada hallazgo y determinar su atribuibilidad a `exceljs` o a dependencias preexistentes/independientes, así como su alcance (reachability).
+
+## 3. Archivos Modificados/Creados
+* `docs/HISTORICAL_IMPORT_SYNTHETIC_FIXTURE_POST_INSTALL_AUDIT.md` (Creado)
+* `docs/PROMPT_LOG.md` (Actualizado)
+
+## 4. Gates Cerrados y Abiertos
+**Cerrados:** Gate A (SYN3 autorizable) fue seleccionado tras confirmar la inventariación de hallazgos, la no-afectación de vulnerabilidades altas por ExcelJS, y la inaplicabilidad de la vulnerabilidad transitiva moderada de `uuid` bajo ejecución offline.
+**Abiertos/Bloqueantes:** Parser de aplicación, manipulación de datos reales y configuración productiva.
+
+## 5. Restricciones Cumplidas
+Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modificó package.json, lockfile, dependencias, ni se ejecutaron audit fixes.
+
+## 6. Estado Final
+`PHASE_4K_SYN2C1_COMPLETE`
+`POST_INSTALL_AUDIT_ADJUDICATED`
+`ALL_HIGH_FINDINGS_ATTRIBUTED`
+
+`SYN3_FIXTURE_GENERATION_SECURITY_AUTHORIZED`
+`SYN3_PHYSICAL_GENERATION_READY_FOR_SEPARATE_PHASE`
+
+`FIXTURE_GENERATOR_DEV_ONLY`
+`APPLICATION_PARSER_NOT_AUTHORIZED`
+`NO_APPLICATION_IMPLEMENTATION`
+`PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED`
+`R1H5_DEFINED_BUT_NOT_TRIGGERED`
