@@ -1,3 +1,115 @@
+# Fase 4J-R5H1 · Historical Import Mapping Issue Resolution Lifecycle and Contract Provenance Hotfix
+
+**Fecha:** 2026-06-17
+**Branch:** main
+**HEAD:** 92afaf8490f4250ddcd4bdad567e9201e61ccc79
+**Findings Resueltos:**
+- **MIR-QA-001 (Alta):** Remount forzado en `MappingIssueResolutionSheet` debido a la prop `key`.
+- **MIR-QA-003:** Procedencia contractual no demostrada.
+- **MIR-QA-004 (Baja):** Higiene de diff (trailing whitespace).
+**Auditoría de Procedencia R3:** Los 4 archivos de R3 analizados no contienen drift funcional. El contenido coincide con los requerimientos originales de R3. Resultado: `R3_ACCUMULATED_CONTRACT_PROVENANCE_APPROVED`.
+**Reproducción de Remount:** Se identificó que `key={selectedIssue.id}` en `MappingIssueResolutionSheet` destruía el estado al cambiar la incidencia, afectando el ciclo de vida.
+**Estrategia Seleccionada:** `CONTROLLED_EDITOR_STATE_SELECTED` (Estrategia A). Se trasladó el estado temporal a `HistoricalImportReviewMappingScreen` pasándolo como props controladas al Sheet.
+**Lifecycle Explícito:** Se configuró el reset de estado interno (`setSelectedPolarity(undefined)`, etc.) en la Screen de forma determinística al abrir, cancelar, interactuar fuera del sheet, error de resolución y al éxito.
+**Foco y Efectos:** El foco se mantiene protegido sin hackear componentes con `setTimeout`. Ningún ciclo de vida de efecto re-dispara actualizaciones de UI repetitivas (cero ciclos detectados).
+**Corrección Whitespace:** Se limpió trailing whitespace en `PROMPT_LOG.md`, `PriorityMappingIssues.tsx` y `HistoricalImportReviewMappingScreen.tsx`.
+**QA Funcional y Regresiones:** El estado temporal del editor de resoluciones se inicializa y destruye correctamente bajo todos los escenarios de cierre (cancelar, esc, outside click, resolver) aislando correctamente el switch entre múltiples issues. Accesibilidad, confirmación atómica e integridad R3 están intactas.
+**Typecheck y Lint:** Completados sin errores sobre los archivos intervenidos.
+**Tests:** `NOT_CONFIGURED_WITH_EVIDENCE`
+**Build:** Exitoso.
+**Áreas Protegidas:** Los archivos del contrato R3 y otras configuraciones permanecieron intactas según lo estipulado.
+**Siguiente Fase:** `Fase 4J-R5 · Historical Import Mapping Issue Resolution QA`
+**Estado Final:** `HISTORICAL_IMPORT_MAPPING_ISSUE_RESOLUTION_LIFECYCLE_HOTFIX_READY`
+
+# Fase 4J-R4 · Historical Import Mapping Issue Resolution First Screen Build
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD:** 92afaf8490f4250ddcd4bdad567e9201e61ccc79
+**Arquitectura:** Construida y conectada según el contrato `HISTORICAL_IMPORT_MAPPING_ISSUE_RESOLUTION_MOCK_DATA_CONTRACT_READY`.
+**UI Components:** Creados `ScaleSourceSummary`, `ResolutionImpactSummary`, `AmbiguousPolarityResolution`, `MappingIssueResolutionSheet`.
+**Conexión de Estado:** `HistoricalImportReviewMappingScreen` administra el estado de la hoja de resolución y gestiona la llamada a `resolveIssue` a través de `useHistoricalImportReviewMappingState`.
+**Foco y Accesibilidad:** Implementado el manejo de foco asíncrono para retornar el foco a `overviewSummaryRef` tras la resolución exitosa. Uso de region `aria-live` para anunciar el éxito a lectores de pantalla.
+**QA Técnico:** Las pruebas de TypeScript y ESLint pasaron sin errores (se solucionaron detalles de importaciones y set-state-in-effect).
+**Archivos Modificados:**
+- `src/components/survey-import/review-mapping/PriorityMappingIssues.tsx`
+- `src/screens/survey-import/HistoricalImportReviewMappingScreen.tsx`
+- `src/hooks/survey-import/useHistoricalImportReviewMappingState.ts`
+- `src/components/survey-import/review-mapping/resolution/ScaleSourceSummary.tsx` (Nuevo)
+- `src/components/survey-import/review-mapping/resolution/ResolutionImpactSummary.tsx` (Nuevo)
+- `src/components/survey-import/review-mapping/resolution/AmbiguousPolarityResolution.tsx` (Nuevo)
+- `src/components/survey-import/review-mapping/resolution/MappingIssueResolutionSheet.tsx` (Nuevo)
+**Estado Final:** HISTORICAL_IMPORT_MAPPING_ISSUE_RESOLUTION_FIRST_SCREEN_BUILD_READY
+**Siguiente Fase:** Ejecutar QA integral y formal closure.
+
+# Fase 4J-R3 · Historical Import Mapping Issue Resolution Mock Data Contract
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD:** 92afaf8490f4250ddcd4bdad567e9201e61ccc79
+**Arquitectura:** Validada (SINGLE_CONTROLLED_RESOLUTION_SHEET_LOCKED).
+**Tipos y Contratos:** Creados `HistoricalMappingScalePolarity`, `HistoricalMappingIssueResolutionInput`, `HistoricalMappingIssueResolutionResult`, `HistoricalMappingScaleMetadata`, `HistoricalMappingResolutionOrigin`.
+**Configuración:** Textos y errores añadidos en `historicalImportReviewMappingConfig.ts`.
+**Adapter:** Implementada función `resolveMappingIssue` atómica y pura, manejando validaciones de compatibility y precedencia.
+**Draft Local:** Funciona creando copias con entities, issues y resoluciones actualizadas, enriquecidas por `enrichDraft`.
+**QA Técnico:** `resolveMappingIssue` validada exitosamente mediante un script temporal contra 8 escenarios clave de QA (ambiguous, suggested, simulated-error, manual-required, etc.). Typecheck, Lint focalizado y Build pasados. Script QA temporal removido con `git diff --check` limpio sobre el incremento funcional.
+**Archivos Modificados:**
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingTypes.ts`
+- `src/config/survey-import/historicalImportReviewMappingConfig.ts`
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingAdapter.ts`
+- `src/mocks/survey-import/review-mapping/historicalImportReviewMappingScenarios.ts`
+**Estado Final:** HISTORICAL_IMPORT_MAPPING_ISSUE_RESOLUTION_MOCK_DATA_CONTRACT_READY
+**Siguiente Fase:** Fase 4J-R4 · Historical Import Mapping Issue Resolution Component Build
+
+# Fase 4J-R2 · Historical Import Mapping Issue Resolution Architecture Lock
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD:** 92afaf8490f4250ddcd4bdad567e9201e61ccc79
+**Intake validado:** Sí.
+**Ownership canónico:** `useHistoricalImportReviewMappingState`.
+**Acción atómica:** `resolveMappingIssue`.
+**Lifecycle:** Estados persistidos separados del estado temporal del editor.
+**Patrón:** `SINGLE_CONTROLLED_RESOLUTION_SHEET_LOCKED`.
+**Nesting:** `NESTED_SHEET_ARCHITECTURE_SAFE`.
+**Foco:** Ref al trigger guardado, retorno asíncrono a heading o trigger.
+**Readiness:** Derivado vía Adapter sin sobreescribir el draft persistido.
+**Compatibility:** Se descarta UI o bloquea acciones si es incompatible.
+**Preservation:** Mantenida si compatibility es current o stale sin regenerar draft.
+**Boundaries:** Estables con base en `mappingDraftId`.
+**Escenarios:** Ocho definidos.
+**Estructura futura:** En `src/components/survey-import/review-mapping/resolution/`.
+**IA:** Solo síntesis / explicativa. Cero chat ni porcentajes.
+**Accesibilidad:** Total support WAI-ARIA, live regions, Escape y outside click configurados.
+**Responsive:** Funcional a desktop y 900px, width acotado.
+**Decision Gates:** Cerrados 25+. Pendientes (parser, catálogo, persistencia real).
+**Archivos modificados:** `docs/HISTORICAL_IMPORT_MAPPING_ISSUE_RESOLUTION_ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
+**QA Técnico:** Cero código alterado, git status auditado, cero dependencias introducidas.
+**Estado Final:** HISTORICAL_IMPORT_MAPPING_ISSUE_RESOLUTION_ARCHITECTURE_LOCKED
+**Siguiente Fase:** Fase 4J-R3 · Historical Import Mapping Issue Resolution Mock Data Contract
+
+# Fase 4J-R1 · Historical Import Mapping Issue Resolution Intake
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD:** 92afaf8490f4250ddcd4bdad567e9201e61ccc79
+**Estado Inicial:** Limpio, alineado con origin/main.
+**Objetivo:** Permitir resolver escala incompatible o polaridad ambigua actualizando el draft simulado local.
+**Usuario:** Consultor de implementación UBITS.
+**Incidencia Elegida:** Opción A · Polaridad ambigua.
+**Patrón Visual:** Opción A · Drawer secundario (`Sheet` de shadcn/ui).
+**Ownership:** Hook central `useHistoricalImportReviewMappingState`.
+**Boundary:** Input: `mappingDraftId`, `issueId`, etc. Output: `selectedPolarity`, `resolutionType`, etc.
+**Escenarios:** Ocho escenarios mock.
+**Componentes:** Existentes y listos (`Sheet`, `RadioGroup`, `Visual Selection`).
+**Stack:** React, TS, Tailwind, shadcn/ui.
+**IA:** Solo explicativa, no decisoria.
+**Accesibilidad:** Operable por teclado, focus management.
+**Criterios:** 12 criterios cerrados (readiness, foco, persistencia en draft local).
+**Archivos Modificados:** `docs/HISTORICAL_IMPORT_MAPPING_ISSUE_RESOLUTION_INTAKE.md`, `docs/PROMPT_LOG.md`.
+**QA:** Documental OK, cero cambios en `src/**`.
+**Estado Final:** HISTORICAL_IMPORT_MAPPING_ISSUE_RESOLUTION_INTAKE_READY
+**Siguiente Fase:** Fase 4J-R2 · Historical Import Mapping Issue Resolution Architecture Lock
 
 # Fase 4I-H6 · Historical Import Mapping Compatibility Formal Closure
 
