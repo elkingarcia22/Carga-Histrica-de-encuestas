@@ -1,5 +1,21 @@
 # Prompt Log
 
+## Fase 4K-R1H4K · Main Branch Governance Decision Pack
+
+- **Fecha:** 2026-06-17
+- **Branch:** main
+- **Objetivo:** Crear un paquete documental de decisión para definir las reglas recomendadas de protección de `main` (Branch Governance Decision Pack).
+- **Alcance:** DOCUMENTATION_ONLY. No se activó branch protection ni se modificaron workflows.
+- **Archivos Modificados:**
+  - `docs/HISTORICAL_IMPORT_MAIN_BRANCH_GOVERNANCE_DECISION_PACK.md`
+  - `docs/PROMPT_LOG.md`
+- **Conclusión:** Se documentaron las opciones de protección (A, B, C) con Option B recomendada, pero la implementación permanece pendiente de autorización corporativa. Las reglas de break-glass y rollback fueron definidas sin asignar propietarios.
+- **Estado Pendiente:**
+  - CORPORATE_BRANCH_GOVERNANCE_DECISION_PENDING
+  - BRANCH_PROTECTION_CONFIGURATION_NOT_AUTHORIZED
+  - WAVE_1_OWNERSHIP_GOVERNANCE_STILL_OPEN
+- **Estado Final:** MAIN_BRANCH_GOVERNANCE_DECISION_PACK_COMPLETE
+
 ## Fase 4K-R1H4 · Post-Closure Governance Status Log
 
 PHASE_4K_R1H4_FORMALLY_CLOSED
