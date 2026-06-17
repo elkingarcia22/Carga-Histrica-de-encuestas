@@ -4068,3 +4068,32 @@ No se generó código, no se alteró la estructura ni se instalaron dependencias
 ## 6. Estado Final
 `HISTORICAL_IMPORT_INFRASTRUCTURE_PRIVACY_PERSISTENCE_GATE_DOCUMENTED`
 `ARCHITECTURE_LOCK_STILL_BLOCKED`
+
+# Fase 4K-R1H2B · OWNERSHIP AND GOVERNANCE DECISION ADJUDICATION GATE
+
+## 1. Alcance
+Resolver y clasificar formalmente los ownership gates (Product, Technical, Data, Security, Privacy, Deployment, Incident, Operations) y Workflow Authorities requeridos para las siguientes waves del Historical Import project. La evaluación es documental.
+
+## 2. Evidencia Revisada
+No se proporcionó nueva evidencia documental corporativa durante esta fase.
+
+## 3. Archivos Modificados/Creados
+* `docs/HISTORICAL_IMPORT_STAKEHOLDER_DECISION_PACK.md` (Corrección semántica)
+* `docs/HISTORICAL_IMPORT_OWNERSHIP_GOVERNANCE_GATE.md` (Creado)
+* `docs/HISTORICAL_IMPORT_OWNERSHIP_EVIDENCE_REQUEST.md` (Creado)
+* `docs/HISTORICAL_IMPORT_RACI_MATRIX.md` (Actualizado con reglas de segregación)
+* `docs/HISTORICAL_IMPORT_ARCHITECTURE_PRECONDITIONS_CHECKLIST.md` (Actualizado)
+* `docs/HISTORICAL_IMPORT_DECISION_REGISTER.md` (Actualizado con ownership gates)
+* `docs/PROMPT_LOG.md` (Actualizado)
+
+## 4. Gates Cerrados y Abiertos
+**Cerrados:** Ninguno (Falta de evidencia).
+**Abiertos/Bloqueantes:** Se formalizaron los gates de ownership. Architecture Lock y Wave 2 siguen bloqueados.
+
+## 5. Restricciones Cumplidas
+No se generó código, no se alteró la estructura ni se eligieron proveedores.
+
+## 6. Estado Final
+`HISTORICAL_IMPORT_OWNERSHIP_EVIDENCE_REQUESTED`
+`WAVE_1_OWNERSHIP_GOVERNANCE_STILL_OPEN`
+`WAVE_2_NOT_AUTHORIZED`

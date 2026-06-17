@@ -12,9 +12,9 @@ This document tracks the mandatory decision gates required to advance the Histor
 | HI-DEC-003 | OPEN | Database tenant isolation | TBD | TBD | NO_MULTI_TENANT_PROCESSING | HI-Q-DATA-002 | TBD | 7786d52 |
 | HI-DEC-004 | OPEN | Object storage tenant isolation | TBD | TBD | NO_MULTI_TENANT_PROCESSING | HI-Q-DATA-002 | TBD | 7786d52 |
 | HI-DEC-005 | OPEN | Authentication provider | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | HI-Q-INFRA-003 | TBD | 7786d52 |
-| HI-DEC-006 | OPEN | RBAC authority | TBD | TBD | NO_UNATTENDED_APPROVAL | HI-Q-PROD-002 | TBD | 7786d52 |
-| HI-DEC-007 | OPEN | Approval authority | TBD | TBD | NO_UNATTENDED_APPROVAL | HI-Q-PROD-002 | TBD | 7786d52 |
-| HI-DEC-008 | OPEN | Publication authority | TBD | TBD | NO_CORE_PUBLICATION | HI-Q-PROD-002 | TBD | 7786d52 |
+| HI-DEC-006 | OPEN | RBAC authority | TBD | TBD | NO_UNATTENDED_APPROVAL | HI-Q-PROD-002 | TBD | 5dbc9ed |
+| HI-DEC-007 | OPEN | Approval authority | TBD | TBD | NO_UNATTENDED_APPROVAL | HI-Q-PROD-002 | TBD | 5dbc9ed |
+| HI-DEC-008 | OPEN | Publication authority | TBD | TBD | NO_CORE_PUBLICATION | HI-Q-PROD-002 | TBD | 5dbc9ed |
 | HI-DEC-009 | OPEN | Cloud provider | TBD | TBD | NO_PRODUCTIVE_PERSISTENCE | HI-Q-INFRA-001 | TBD | 7786d52 |
 | HI-DEC-010 | OPEN | Operational database | TBD | TBD | NO_PRODUCTIVE_PERSISTENCE | HI-Q-INFRA-002 | TBD | 7786d52 |
 | HI-DEC-011 | OPEN | Object storage | TBD | TBD | NO_PRODUCTIVE_FILE_UPLOAD | HI-Q-INFRA-002 | TBD | 7786d52 |
@@ -32,8 +32,15 @@ This document tracks the mandatory decision gates required to advance the Histor
 | HI-DEC-023 | OPEN | AI provider | TBD | TBD | AI_PRODUCTIVE_FILE_CONTENT_DISABLED_UNTIL_CORPORATE_APPROVAL | HI-Q-AI-001 | TBD | 7786d52 |
 | HI-DEC-024 | OPEN | AI data-transfer policy | TBD | TBD | AI_PRODUCTIVE_FILE_CONTENT_DISABLED_UNTIL_CORPORATE_APPROVAL | HI-Q-AI-001 | TBD | 7786d52 |
 | HI-DEC-025 | OPEN | Observability | TBD | TBD | NO_PRODUCTIVE_PII_IN_LOGS | HI-Q-OPS-001 | TBD | 7786d52 |
-| HI-DEC-026 | OPEN | Incident ownership | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | HI-Q-OPS-001 | TBD | 7786d52 |
-| HI-DEC-027 | OPEN | Deployment ownership | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | HI-Q-OPS-001 | TBD | 7786d52 |
+| HI-DEC-026 | OPEN | Incident ownership | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | HI-Q-OPS-001 | TBD | 5dbc9ed |
+| HI-DEC-027 | OPEN | Deployment ownership | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | HI-Q-OPS-001 | TBD | 5dbc9ed |
 | HI-DEC-028 | OPEN | Safe sample storage | TBD | TBD | NO_RAW_FILES_IN_GIT | HI-Q-SEC-003 | TBD | 7786d52 |
 | HI-DEC-029 | OPEN | Sample sanitization approval | TBD | TBD | PRODUCTIVE_RAW_SAMPLE_PROCESSING_NOT_AUTHORIZED | HI-Q-SEC-003 | TBD | 7786d52 |
-| HI-DEC-030 | BLOCKED | Architecture Lock authorization | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | N/A | TBD | 7786d52 |
+| HI-DEC-030 | BLOCKED | Architecture Lock authorization | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | N/A | TBD | 5dbc9ed |
+| HI-DEC-031 | OPEN | Product owner | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | N/A | TBD | 5dbc9ed |
+| HI-DEC-032 | OPEN | Technical owner | TBD | TBD | NO_TECHNICAL_PROVIDER_SELECTION_WITHOUT_ACCOUNTABLE_OWNER | N/A | TBD | 5dbc9ed |
+| HI-DEC-033 | OPEN | Data owner | TBD | TBD | NO_CORE_PUBLICATION | N/A | TBD | 5dbc9ed |
+| HI-DEC-034 | OPEN | Security owner | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | N/A | TBD | 5dbc9ed |
+| HI-DEC-035 | OPEN | Privacy/Legal Approver | TBD | TBD | PRODUCTIVE_RAW_SAMPLE_PROCESSING_NOT_AUTHORIZED | N/A | TBD | 5dbc9ed |
+| HI-DEC-036 | OPEN | Operations Owner | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | N/A | TBD | 5dbc9ed |
+| HI-DEC-037 | OPEN | Raw File Deletion Authority | TBD | TBD | NO_PRODUCTIVE_PERSISTENCE | N/A | TBD | 5dbc9ed |

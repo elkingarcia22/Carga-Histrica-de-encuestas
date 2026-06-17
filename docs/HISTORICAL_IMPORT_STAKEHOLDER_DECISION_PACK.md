@@ -1,7 +1,8 @@
 # HISTORICAL_IMPORT_STAKEHOLDER_DECISION_PACK
 
 ## 1. Executive Summary
-The Historical Survey Import project has reached the `4K-R1H2A` architecture preconditions gate. The current state is a functional frontend prototype with in-memory persistence. To proceed to `Architecture Lock` and subsequent implementation, a set of formal corporate, privacy, security, and infrastructure decisions must be resolved and approved by designated stakeholders. This document outlines those required decisions and the necessary steps to unblock the project.
+The Historical Survey Import project has reached the `4K-R1H2A` architecture preconditions gate. The project remains a React/Vite frontend prototype with in-memory persistence.
+A canonical functional model exists, but no authorized physical persistence mapping, persistence engine, or productive tenant-isolation model exists. To proceed to `Architecture Lock` and subsequent implementation, a set of formal corporate, privacy, security, and infrastructure decisions must be resolved and approved by designated stakeholders. This document outlines those required decisions and the necessary steps to unblock the project.
 
 ## 2. Current Verified State
 * **Application:** Frontend React/Vite application.

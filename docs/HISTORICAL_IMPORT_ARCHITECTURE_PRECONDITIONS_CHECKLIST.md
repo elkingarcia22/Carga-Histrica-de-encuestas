@@ -4,11 +4,11 @@ This checklist tracks the mandatory pre-conditions required before `Architecture
 
 | Gate ID | Requirement | Owner | Approver | Required Evidence | Validation Method | Status | Blocking Dependencies | Last Reviewed Commit |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **PRE-001** | Product owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 635b702 |
-| **PRE-002** | Technical owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 635b702 |
-| **PRE-003** | Data owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 635b702 |
-| **PRE-004** | Security owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 635b702 |
-| **PRE-005** | Privacy approver assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 635b702 |
+| **PRE-001** | Product owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 5dbc9ed |
+| **PRE-002** | Technical owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 5dbc9ed |
+| **PRE-003** | Data owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 5dbc9ed |
+| **PRE-004** | Security owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 5dbc9ed |
+| **PRE-005** | Privacy approver assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | None | 5dbc9ed |
 | **PRE-006** | Physical persistence direction approved | TBD | TBD | Architecture Decision Record | Document Review | OPEN | PRE-013, PRE-014 | 635b702 |
 | **PRE-007** | Canonical tenant identifier approved | TBD | TBD | Architecture Decision Record | Document Review | OPEN | PRE-003 | 635b702 |
 | **PRE-008** | Database isolation strategy approved | TBD | TBD | Architecture Decision Record | Document Review | OPEN | PRE-007, PRE-014 | 635b702 |
@@ -28,11 +28,11 @@ This checklist tracks the mandatory pre-conditions required before `Architecture
 | **PRE-022** | Retention approved | TBD | TBD | Privacy Policy Document | Document Review | OPEN | PRE-005 | 635b702 |
 | **PRE-023** | Deletion evidence approved | TBD | TBD | Privacy / Legal Sign-off | Document Review | OPEN | PRE-022 | 635b702 |
 | **PRE-024** | AI policy approved | TBD | TBD | Legal / AI Governance Sign-off | Document Review | OPEN | PRE-005 | 635b702 |
-| **PRE-025** | Observability owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | PRE-002 | 635b702 |
-| **PRE-026** | Incident owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | PRE-002 | 635b702 |
-| **PRE-027** | Deployment owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | PRE-002 | 635b702 |
+| **PRE-025** | Observability owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | PRE-002 | 5dbc9ed |
+| **PRE-026** | Incident owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | PRE-002 | 5dbc9ed |
+| **PRE-027** | Deployment owner assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | PRE-002 | 5dbc9ed |
 | **PRE-028** | Safe sample storage approved | TBD | TBD | Security Sign-off | Document Review | OPEN | PRE-015 | 635b702 |
 | **PRE-029** | Sanitization owner and reviewer assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | PRE-003, PRE-004 | 635b702 |
 | **PRE-030** | Safe samples certified | TBD | TBD | Security Sign-off | Document Review | OPEN | PRE-028, PRE-029, PRE-019, PRE-020 | 635b702 |
 | **PRE-031** | Staging publication contract approved | TBD | TBD | Architecture Decision Record | Document Review | OPEN | PRE-002, PRE-014 | 635b702 |
-| **PRE-032** | Architecture Lock formally authorized | TBD | TBD | Architecture Board Approval | Document Review | BLOCKED | ALL ABOVE | 635b702 |
+| **PRE-032** | Architecture Lock formally authorized | TBD | TBD | Architecture Board Approval | Document Review | BLOCKED | ALL ABOVE | 5dbc9ed |

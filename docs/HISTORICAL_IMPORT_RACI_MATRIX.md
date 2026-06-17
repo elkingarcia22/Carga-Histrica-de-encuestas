@@ -23,3 +23,19 @@ This RACI matrix defines responsibilities for the Historical Survey Import proje
 | **Audit imports (Compliance)** | I | I | A | R | I |
 
 *Note: Roles not currently filled are designated as `ROLE_OWNER_TBD` in the Decision Register.*
+
+## Segregation of Duties & Conflicts
+No owners have been assigned yet. The following conflicts must be assessed when assigning owners:
+* **Uploader + Mapping Corrector:** Candidate, requires policy.
+* **Mapping Corrector + Mapping Approver:** Segregation decision required.
+* **Mapping Approver + Core Publisher:** High-impact segregation decision.
+* **Core Publisher + Auditor:** Preferably separated.
+* **Security Owner + Security Auditor:** Independence review required.
+* **Deletion Operator + Deletion Evidence Approver:** Separation recommended.
+* **Developer + Production Approver:** Change-management decision required.
+
+## Governance Rules
+* Do not replace `ROLE_OWNER_TBD` without verifiable evidence.
+* Differentiate clearly between role, team, and person.
+* Explicitly record who approves (A), executes (R), is consulted (C), and is informed (I).
+* Maintain segregation of duties as listed above.
