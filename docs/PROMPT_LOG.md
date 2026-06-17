@@ -4386,3 +4386,30 @@ No se modificó código. No se instalaron dependencias. No se reprodujeron datos
 `SYNTHETIC_SANDBOX_BOOTSTRAP_VALIDATED`
 `SYNTHETIC_SANDBOX_INTAKE_LOCKED`
 `SYNTHETIC_SANDBOX_ARCHITECTURE_LOCK_READY`
+
+
+# Fase 4K-SYN2B1 · ExcelJS Security, Maintenance and Risk Acceptance Gate
+
+## 1. Alcance
+Evaluar el estado de seguridad y mantenimiento de la dependencia `exceljs@4.4.0` para su uso exclusivo en la generación de archivos sintéticos (offline, devDependency), dados los hallazgos en dependencias transitivas como `glob` y `minimatch`.
+
+## 2. Evidencia Revisada
+Consulta en modo read-only de metadatos del registro npm (`npm info`) y resolución de dependencias transitivas para la rama de `archiver`.
+
+## 3. Archivos Modificados/Creados
+* `docs/HISTORICAL_IMPORT_SYNTHETIC_FIXTURE_SECURITY_DECISION.md` (Creado)
+* `docs/PROMPT_LOG.md` (Actualizado)
+
+## 4. Gates Cerrados y Abiertos
+**Cerrados:** Ninguno (Pendiente de autoridad para aceptación de riesgo).
+**Abiertos/Bloqueantes:** Instalación bloqueada. `SYN2C_NOT_AUTHORIZED` y `SYN3_PHYSICAL_GENERATION_BLOCKED` vigentes hasta aceptar el riesgo residual.
+
+## 5. Restricciones Cumplidas
+Git preflight superado (cero modificaciones, head en origin/main). No se ejecutó `npm install`, no se crearon lockfiles temporales, no se modificaron package files. Cero código generado.
+
+## 6. Estado Final
+`PHASE_4K_SYN2B1_COMPLETE`
+`SYNTHETIC_FIXTURE_DEPENDENCY_LIMITED_RISK_IDENTIFIED`
+`RISK_ACCEPTANCE_AUTHORITY_REQUIRED`
+`SYN2C_NOT_AUTHORIZED`
+`SYN3_PHYSICAL_GENERATION_BLOCKED`
