@@ -1,5 +1,18 @@
 # Prompt Log
 
+## Fase 4K-R1H2C · Ownership and Governance Semantic Hotfix
+- **Objetivo:** Corregir formulaciones que puedan interpretarse como confirmación o aprobación de ownership sin evidencia (hotfix de consistencia semántica).
+- **Archivos Modificados:**
+  - `docs/HISTORICAL_IMPORT_OWNERSHIP_GOVERNANCE_GATE.md`
+  - `docs/HISTORICAL_IMPORT_OWNERSHIP_EVIDENCE_REQUEST.md`
+  - `docs/HISTORICAL_IMPORT_DECISION_REGISTER.md`
+  - `docs/HISTORICAL_IMPORT_ARCHITECTURE_PRECONDITIONS_CHECKLIST.md`
+  - `docs/PROMPT_LOG.md`
+- **Resultados:**
+  - `Product Owner confirmed` y equivalentes cambiados a `confirmation pending` o `designation pending`.
+  - Normalización de Architecture Approval Authority a Decision Status: OPEN, Evidence Status: NOT PROVIDED, Gate Effect: ARCHITECTURE_LOCK_BLOCKED.
+  - Ownership decisions actualizadas para no presentar estado BLOCKED en HI-DEC-030 / PRE-032, cambiando a OPEN con el gate effect correcto.
+- **Estado Final:** `OWNERSHIP_GOVERNANCE_SEMANTIC_HOTFIX_COMPLETE`
 ## Fase 4K-R1H2A · Stakeholder Decision Resolution and Architecture Preconditions Gate
 - **Objetivo:** Ejecutar la Fase 4K-R1H2A (Documental). Convertir gates técnicos en preguntas de decisión de stakeholders y crear paquete de precondiciones de arquitectura.
 - **Alcance:** DOCUMENTATION_ONLY_STAKEHOLDER_DECISION_RESOLUTION. No autoriza implementación.

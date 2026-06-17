@@ -35,4 +35,4 @@ This checklist tracks the mandatory pre-conditions required before `Architecture
 | **PRE-029** | Sanitization owner and reviewer assigned | TBD | TBD | RACI Matrix Update | Manual check | OPEN | PRE-003, PRE-004 | 635b702 |
 | **PRE-030** | Safe samples certified | TBD | TBD | Security Sign-off | Document Review | OPEN | PRE-028, PRE-029, PRE-019, PRE-020 | 635b702 |
 | **PRE-031** | Staging publication contract approved | TBD | TBD | Architecture Decision Record | Document Review | OPEN | PRE-002, PRE-014 | 635b702 |
-| **PRE-032** | Architecture Lock formally authorized | TBD | TBD | Architecture Board Approval | Document Review | BLOCKED | ALL ABOVE | 5dbc9ed |
+| **PRE-032** | Architecture Lock formally authorized | TBD | TBD | Architecture Board Approval | Document Review | OPEN | ALL ABOVE | 5dbc9ed |

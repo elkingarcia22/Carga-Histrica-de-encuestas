@@ -45,18 +45,18 @@ Since no evidence was received, no adjudication took place. All required evidenc
 None.
 
 ## 9. Decisions Pending
-1. Product Owner confirmed.
-2. Technical Owner confirmed.
-3. Data Owner confirmed.
-4. Security Owner confirmed.
-5. Privacy/Legal Approver confirmed.
-6. Deployment Owner confirmed.
-7. Incident Owner confirmed.
-8. Operations Owner confirmed.
-9. Mapping Approval Authority.
-10. Core Publication Authority.
-11. Raw File Deletion Authority.
-12. Architecture Approval Authority.
+1. Product Owner confirmation pending.
+2. Technical Owner confirmation pending.
+3. Data Owner confirmation pending.
+4. Security Owner confirmation pending.
+5. Privacy/Legal Approver confirmation pending.
+6. Deployment Owner confirmation pending.
+7. Incident Owner confirmation pending.
+8. Operations Owner confirmation pending.
+9. Mapping Approval Authority designation pending.
+10. Core Publication Authority designation pending.
+11. Raw File Deletion Authority designation pending.
+12. Architecture Approval Authority designation pending.
 
 ## 10. Conflicts
 No conflicts can be definitively resolved or identified without assigned owners.

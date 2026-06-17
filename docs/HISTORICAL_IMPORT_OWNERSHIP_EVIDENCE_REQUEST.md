@@ -111,9 +111,13 @@ This document serves as an actionable request for the corporate, engineering, da
 * **Expected Owner/Team:** Architecture Board / Principal Engineer.
 * **Expected Approver:** CTO.
 * **Acceptable Evidence:** Board minutes or ADR approval.
-* **Blocker Impact:** `NO_ARCHITECTURE_APPROVAL_WITHOUT_GOVERNANCE_AUTHORITY`. Entire project is blocked at the design phase.
-* **Current Safe Posture:** `NO_IMPLEMENTATION_PHASE_AUTHORIZED`
-* **Target Date:** TBD
+
+```text
+Decision Status: OPEN
+Evidence Status: NOT PROVIDED
+Gate Effect: ARCHITECTURE_LOCK_BLOCKED
+Decision: Pending formal designation and acceptable corporate evidence.
+```
 
 ## 4. Current Status
 `HISTORICAL_IMPORT_OWNERSHIP_EVIDENCE_REQUESTED`

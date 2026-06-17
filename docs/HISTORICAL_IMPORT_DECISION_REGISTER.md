@@ -36,7 +36,7 @@ This document tracks the mandatory decision gates required to advance the Histor
 | HI-DEC-027 | OPEN | Deployment ownership | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | HI-Q-OPS-001 | TBD | 5dbc9ed |
 | HI-DEC-028 | OPEN | Safe sample storage | TBD | TBD | NO_RAW_FILES_IN_GIT | HI-Q-SEC-003 | TBD | 7786d52 |
 | HI-DEC-029 | OPEN | Sample sanitization approval | TBD | TBD | PRODUCTIVE_RAW_SAMPLE_PROCESSING_NOT_AUTHORIZED | HI-Q-SEC-003 | TBD | 7786d52 |
-| HI-DEC-030 | BLOCKED | Architecture Lock authorization | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | N/A | TBD | 5dbc9ed |
+| HI-DEC-030 | OPEN | Architecture Lock authorization | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | N/A | TBD | 5dbc9ed |
 | HI-DEC-031 | OPEN | Product owner | TBD | TBD | NO_IMPLEMENTATION_PHASE_AUTHORIZED | N/A | TBD | 5dbc9ed |
 | HI-DEC-032 | OPEN | Technical owner | TBD | TBD | NO_TECHNICAL_PROVIDER_SELECTION_WITHOUT_ACCOUNTABLE_OWNER | N/A | TBD | 5dbc9ed |
 | HI-DEC-033 | OPEN | Data owner | TBD | TBD | NO_CORE_PUBLICATION | N/A | TBD | 5dbc9ed |
