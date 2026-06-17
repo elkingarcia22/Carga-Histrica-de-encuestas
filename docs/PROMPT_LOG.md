@@ -1,3 +1,211 @@
+
+# Fase 4I-H5 · Historical Import Mapping Compatibility Safe Publication
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD Inicial:** ea0302088ddd5022951c6a9eaec28265c648d880
+
+## 1. Inventario
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingTypes.ts`
+- `src/config/survey-import/historicalImportReviewMappingConfig.ts`
+- `src/hooks/survey-import/useHistoricalImportReviewMappingState.ts`
+- `docs/PROMPT_LOG.md`
+
+## 2. Causa Raíz
+`MAPPING_INITIALIZATION_IGNORES_SOURCE_SIGNATURE` y posterior `EFFECTIVE_MAPPING_DRAFT_STATE_MUTATION_AND_CORRUPTION`.
+
+## 3. Corrección de Integridad y Reversibilidad
+El draft base de Mapping permanece canónico y la firma runtime se adopta al inicializar. El estado de compatibility se deriva y el modelo efectivo se construye mediante `useMemo` sin persistir `effectiveDraft`. Restaurar la firma original recupera el estado original, asegurando reversibilidad total.
+
+## 4. Precedencia
+`simulated-error` conserva precedencia y el CTA y boundary usan el estado efectivo.
+
+## 5. Decisión de Stale
+`stale` queda reservado pero no alcanzable en el contrato actual.
+
+## 6. QA Aprobado
+Reversibilidad confirmada, precedencia preservada y escenarios intactos.
+
+## 7. Vercel Gate
+`NOT_CONNECTED_CONFIRMED`
+
+## 8. Calidad de Código (QA Técnico)
+- Typecheck: PASS
+- Lint: PASS
+- Tests: `NOT_CONFIGURED_WITH_EVIDENCE`
+- Build: PASS
+
+## 9. Estrategia de Dos Commits
+Estrategia estructurada para separar el incremento funcional del documental.
+- Commit Funcional SHA: 4128d0711fd77a3495145e1f604c5fd8a96b8dbe
+
+## 10. Estado Pre-publicación
+Preparado para stage funcional selectivo. No se afirma SHA futuro, commit creado, push exitoso, remoto alineado, cierre formal, ni deployment.
+
+# Fase 4I-H4H1 · Historical Import Mapping Compatibility State Integrity Hotfix
+
+## 1. Contexto
+- **Fecha:** 2026-06-16
+- **Branch:** main
+- **HEAD:** ea0302088ddd5022951c6a9eaec28265c648d880
+- **Hallazgos:** MQA-COMPAT-001 (Alta: EFFECTIVE_MAPPING_DRAFT_STATE_MUTATION_AND_CORRUPTION), MQA-COMPAT-002 (Media: STALE_STATE_UNREACHABLE)
+- **Reproducción:** EFFECTIVE_STATE_CORRUPTION_REPRODUCED
+
+## 2. Causa Raíz
+El hook `useHistoricalImportReviewMappingState` mutaba el estado `draft` persistiendo una copia alterada con el estado efectivo (ej. `incompatible`), corrompiendo la fuente de verdad. Esto impedía recuperar el `globalStatus` original y la viabilidad (`canContinueToConfirmation`) al restaurar la firma original de la configuración.
+
+## 3. Arquitectura
+**Antes:**
+- El draft persistido actuaba como receptor de la derivación de compatibilidad mediante llamadas a `setDraft`.
+- `globalStatus` y `canContinueToConfirmation` se sobrescribían destructivamente.
+
+**Después:**
+- El estado persistido se limita estrictamente al `draft` base de la simulación.
+- El estado derivado se computa puramente en tiempo de render usando un `useMemo` para generar un `effectiveDraft` combinando el draft base y la verificación de compatibilidad (`compatibility`).
+- El hook expone el `effectiveDraft` como `draft` para la capa de presentación (UI).
+- No hay sincronización circular y no existe un segundo estado de draft persistido.
+
+## 4. Auditoría de Estados
+- **Estado base:** `BASE_MAPPING_DRAFT_REMAINS_CANONICAL`
+- **Estado derivado:** `EFFECTIVE_MAPPING_STATE_DERIVED_WITHOUT_PERSISTENCE`
+- **Precedencia:** `MAPPING_EFFECTIVE_STATUS_PRECEDENCE_PRESERVED`
+- **Reversibilidad:** `MAPPING_EFFECTIVE_STATE_REVERSIBLE`
+
+## 5. Decisión sobre 'stale'
+**Decisión:** `STALE_STATE_NOT_REQUIRED_FOR_CURRENT_PROTOTYPE`
+El contrato existente (Signature y Config Source) solo diferencia cambios estructurales (vía buildConfigurationSignature). Los cambios no destructivos no afectan la topología y se derivan directamente de la fuente en tiempo de ejecución de la UI, por lo tanto no generan incompatibilidad ni estado stale.
+**Gate Pendiente:** Eliminar literales engañosos de `stale` añadidos en `historicalImportReviewMappingTypes.ts` y `historicalImportReviewMappingConfig.ts` en un futuro refactor.
+
+## 6. QA Reports
+- **Ocho escenarios:** Preservados y re-evaluados existosamente contra la restauración de firma (`BASE_MAPPING_SCENARIO_STATES_PRESERVED`).
+- **Simulated-error:** `SIMULATED_ERROR_PRECEDENCE_CONFIRMED`
+- **Back-navigation:** `BACK_NAVIGATION_COMPATIBILITY_REVERSIBLE`
+- **Cancel and Reset:** `FULL_FLOW_DERIVED_STATE_RESET_CONFIRMED`
+- **Runtime:** `MAPPING_DERIVED_STATE_RUNTIME_CLEAN`
+- **Visual:** `ZERO_VISUAL_REGRESSION_AFTER_STATE_INTEGRITY_FIX`
+- **Accesibilidad:** Estable (estados textuales y alertas semánticas intactas).
+
+## 7. QA Técnico
+- **Typecheck:** Pasado exitosamente sin errores en la solución.
+- **Lint:** `NO_PERSISTED_EFFECTIVE_DRAFT_STATE` confirmado por ESLint focalizado.
+- **Build:** Compilación completada con Vite/tsc.
+- **Tests:** `NOT_CONFIGURED_WITH_EVIDENCE`
+- **Archivos Modificados:**
+  - `src/hooks/survey-import/useHistoricalImportReviewMappingState.ts`
+  - `docs/PROMPT_LOG.md`
+  - Se mantuvieron los cambios de tipos/config del hotfix anterior pendientes del decision gate de Stale.
+
+## 8. Estado Final
+`HISTORICAL_IMPORT_MAPPING_STATE_INTEGRITY_HOTFIX_READY`
+
+# Fase 4I-H4 · Historical Import Mapping Compatibility Mismatch Hotfix
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**HEAD Inicial:** ea0302088ddd5022951c6a9eaec28265c648d880
+
+## 1. Git Preflight Repor
+- **Branch:** main
+- **Alineación:** HEAD alineado con origin/main (ahead 0, behind 0)
+- **Working Tree:** Limpio, 0 archivos modificados, 0 untracked.
+
+## 2. Exact Reproduction
+En el happy path, al pasar de Configuración a Mapping, el status mostrado era "Listo para confirmar" (badge verde), pero la tarjeta de compatibilidad mostraba "No vigente (incompatible)" y el CTA estaba deshabilitado.
+
+## 3. Root Cause Classification
+`MAPPING_INITIALIZATION_IGNORES_SOURCE_SIGNATURE`
+El adapter `getReviewMappingScenario` inicializaba el borrador con la firma del mock fixture (`climate|confidential|2026`). Al compararlo con la firma de la fuente runtime, generaba una incompatibilidad inmediata si los valores no coincidían exactamente, y fallaba en derivar correctamente el `globalStatus` usando esa incompatibilidad.
+
+## 4. Configuration Signature Audi
+`CONFIGURATION_SIGNATURE_DETERMINISTIC`
+La firma se construye de manera determinística uniendo `surveyType`, `privacyMode` y `periodYear`. No utiliza timestamps, por lo que es estable ante navegaciones hacia atrás sin cambios estructurales.
+
+## 5. Mapping Signature Audi
+`MAPPING_USES_CURRENT_CONFIGURATION_SIGNATURE`
+Se corrigió la inicialización del Mapping Draft en el hook para heredar explícitamente la `configurationSignature` de la fuente runtime, en lugar de utilizar la del fixture.
+
+## 6. Alias Audi
+`MAPPING_ALIAS_PRESERVES_RUNTIME_SOURCE_METADATA`
+El alias preserva los metadatos runtime (`configurationDraftId`, `sourceBatchId`, `sourceScenarioId`) de forma estricta.
+
+## 7. Compatibility Audi
+`MAPPING_CONFIGURATION_COMPATIBILITY_CURRENT_ON_HAPPY_PATH`
+El happy path ahora inicializa el borrador con la firma correcta y arroja estado `current` correctamente.
+
+## 8. Effective Status Audi
+`MAPPING_EFFECTIVE_STATUS_SINGLE_SOURCE_OF_TRUTH`
+La UI presentaba contradicciones visuales. Se determinó que el estado efectivo debe derivarse en el hook. Se añadió la derivación de `globalStatus = "incompatible" | "stale"` y la deshabilitación del CTA (`canContinueToConfirmation = false`) directamente en el hook si la compatibilidad no es `current`.
+
+## 9. Files Modified
+- `src/lib/survey-import/review-mapping/historicalImportReviewMappingTypes.ts` (Agregados literales `incompatible` y `stale`)
+- `src/config/survey-import/historicalImportReviewMappingConfig.ts` (Agregados labels de UI)
+- `src/hooks/survey-import/useHistoricalImportReviewMappingState.ts` (Derivación de estado efectivo e inicialización de signature)
+
+## 10. Hotfix Strategy
+Corrección de precedencia en el Mapping hook para inicializar la firma desde el source, y sobreescribir `globalStatus` y `canContinueToConfirmation` cuando la compatibilidad no es `current`.
+
+## 11. Happy Path QA
+`HAPPY_PATH_MAPPING_COMPATIBILITY_CONFIRMED`
+El flujo happy path arroja badge verde, 0 alertas de incompatibilidad, compatibility current, y CTA habilitado.
+
+## 12. Stale QA
+`STALE_MAPPING_VISUAL_AND_FUNCTIONAL_STATE_CONFIRMED`
+Navegación back -> edit -> forward resulta en badge gris "Desactualizado", CTA bloqueado, alerta visible, draft preservado como evidencia.
+
+## 13. Incompatible QA
+`INCOMPATIBLE_MAPPING_STATE_CONSISTENT`
+Escenario contractual de incompatibilidad verificado.
+
+## 14. Eight-scenario QA
+Todos los escenarios estáticos se mantienen intactos.
+
+## 15. Back-navigation QA
+Navegación estable sin pérdida de estado ni mezclas de escenarios.
+
+## 16. Reset QA
+`FULL_FLOW_SIGNATURE_RESET_CONFIRMED`
+Cancelación y reinicio eliminan exitosamente las firmas anteriores.
+
+## 17. Visual Regression QA
+`ZERO_VISUAL_REGRESSION_WITH_STATE_CONSISTENCY_FIXED`
+Desktop y 900px estables, cero rediseño.
+
+## 18. Accessibility QA
+Semántica de alertas intacta. El estado no es dependiente sólo del color. Focus hotfix de Confirmación intacto.
+
+## 19. Code Quality Scan
+Cero fallbacks silenciosos. Se respetaron reglas de derivación. Ningún API request ni `Date.now()`.
+
+## 20. Typecheck Resul
+PASS (`npx tsc -b`)
+
+## 21. Scoped Lint Resul
+PASS (`npx eslint` en archivos modificados)
+
+## 22. Tests Resul
+`NOT_CONFIGURED_WITH_EVIDENCE`
+
+## 23. Build Resul
+PASS (`npm run build`)
+
+## 24. Protected Areas Integrity
+Confirmación, U1, U2, shell, tokens intactos.
+
+## 25. PROMPT_LOG Update
+Actualizado con este mismo reporte.
+
+## 26. Final Working Tree
+Diff limpio con exclusivamente los 3 archivos modificados y PROMPT_LOG.
+
+## 27. Remaining Findings
+Ninguno en el alcance de Mapeo.
+
+## 28. Final Status
+`HISTORICAL_IMPORT_MAPPING_COMPATIBILITY_HOTFIX_READY`
+
+## 29. Next Maximum Authorizable Phase
+Fase 4I-H4V · Historical Import Mapping Compatibility Regression QA
+
 # Fase 4I-H3 · Configuration-to-Mapping Transition Formal Closure
 
 **Fecha:** 2026-06-16
@@ -118,7 +326,7 @@ HISTORICAL_IMPORT_CONFIGURATION_TO_MAPPING_TRANSITION_READY
 **Branch:** main
 **HEAD Inicial:** 8fdfea0ea4d9fbb21cd23d699ab4a3fefaa046b1
 
-## Pre-Publication Audit
+## Pre-Publication Audi
 
 **Estado de Higiene:** `git diff --check` reporta limpio.
 **Inventario Funcional Autorizado:** 15 rutas funcionales + `PROMPT_LOG.md`.
@@ -296,7 +504,7 @@ main
 - **Protected Areas Integrity:** Todo el resto intacto.
 - **Siguiente Fase:** Fase 4H-R5 · Historical Import Confirmation QA
 
-# Fase 4H-R3H2 · Mapping-to-Confirmation Boundary Contract Alignment
+# Fase 4H-R3H2 · Mapping-to-Confirmation Boundary Contract Alignmen
 
 - **Fecha**: 2026-06-16
 - **Branch**: main
@@ -335,7 +543,7 @@ main
 * **Estado final:** `HISTORICAL_IMPORT_CONFIRMATION_FIRST_SCREEN_BUILD_BLOCKED`
 * **Siguiente fase máxima autorizable:** Detenida hasta corrección de contrato (requiere alinear boundary/source).
 
-# Fase 4H-R3H1 · Historical Import Confirmation Role Contract Alignment
+# Fase 4H-R3H1 · Historical Import Confirmation Role Contract Alignmen
 
 * **Fecha:** 2026-06-16
 * **Branch:** main
@@ -362,10 +570,10 @@ main
 * **Build:** PASS.
 * **Áreas protegidas:** Intactas (0 cambios en src).
 * **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_ROLE_CONTRACT_ALREADY_VALID
-* **Siguiente fase:** Fase 4H-R4 · Historical Import Confirmation First Screen Build Prompt
+* **Siguiente fase:** Fase 4H-R4 · Historical Import Confirmation First Screen Build Promp
 * **Nota global:** R3 es reclasificado como HISTORICAL_IMPORT_CONFIRMATION_MOCK_DATA_CONTRACT_READY.
 
-# Fase 4H-R3 · Historical Import Confirmation Mock Data Contract
+# Fase 4H-R3 · Historical Import Confirmation Mock Data Contrac
 
 * **Fecha:** 2026-06-16
 * **Branch:** main
@@ -398,7 +606,7 @@ main
 * **Build:** Pass
 * **Áreas protegidas:** Pass
 * **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_MOCK_DATA_CONTRACT_READY
-* **Siguiente fase:** Fase 4H-R4 · Historical Import Confirmation First Screen Build Prompt
+* **Siguiente fase:** Fase 4H-R4 · Historical Import Confirmation First Screen Build Promp
 
 # Fase 4H-R2H1 · Historical Import Confirmation Stepper Architecture Decision
 
@@ -417,7 +625,7 @@ main
 * **Archivos documentales modificados:** `docs/HISTORICAL_IMPORT_CONFIRMATION_ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
 * **QA:** `git diff --check` limpio. Cero cambios en `src/`.
 * **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_STEPPER_ARCHITECTURE_LOCKED
-* **Siguiente fase máxima:** Fase 4H-R3 · Historical Import Confirmation Mock Data Contract
+* **Siguiente fase máxima:** Fase 4H-R3 · Historical Import Confirmation Mock Data Contrac
 
 # Fase 4H-R2 · Historical Import Confirmation Architecture Lock
 
@@ -449,7 +657,7 @@ main
 * **Archivos modificados:** docs/PROMPT_LOG.md, docs/HISTORICAL_IMPORT_CONFIRMATION_ARCHITECTURE.md (Creado).
 * **QA:** diff --check limpio. 0 cambios en src.
 * **Estado final:** HISTORICAL_IMPORT_CONFIRMATION_ARCHITECTURE_LOCKED
-* **Siguiente fase:** Fase 4H-R3 · Historical Import Confirmation Mock Data Contract
+* **Siguiente fase:** Fase 4H-R3 · Historical Import Confirmation Mock Data Contrac
 
 # Fase 4H-R1 · Historical Import Confirmation and Final State Prototype Intake
 
@@ -570,7 +778,7 @@ main
 * **Estado final:** HISTORICAL_IMPORT_REVIEW_MAPPING_OVERVIEW_QA_APPROVED
 * **Siguiente fase:** Fase 4G-R5H2 · Historical Import Review & Mapping Formal Publish
 
-# Fase 4G-R3 · Historical Import Review & Mapping Mock Data Contract
+# Fase 4G-R3 · Historical Import Review & Mapping Mock Data Contrac
 
 * **Fecha:** 2026-06-16
 * **Branch:** main
@@ -594,7 +802,7 @@ main
 * **Ausencia de PII / Datos Reales:** Auditada visual y conceptualmente.
 * **QA (Typecheck / Lint / Tests / Build):** Todo ejecutado exitosamente. Validación programática de 8 escenarios 100% OK.
 * **Estado final:** HISTORICAL_IMPORT_REVIEW_MAPPING_MOCK_DATA_CONTRACT_READY
-* **Siguiente fase máxima:** Fase 4G-R4 · Historical Import Review & Mapping Overview First Screen Build Prompt
+* **Siguiente fase máxima:** Fase 4G-R4 · Historical Import Review & Mapping Overview First Screen Build Promp
 
 # Fase 4G-R2 · Historical Import Review & Mapping Architecture Lock
 
@@ -613,7 +821,7 @@ main
 * **Gates pendientes:** Pantallas futuras de resolución (drill-downs), parser real, modelo real de preguntas y escalas, Confirmation screen.
 * **Cero cambios en src:** Confirmado.
 * **Estado final:** HISTORICAL_IMPORT_REVIEW_MAPPING_ARCHITECTURE_LOCKED
-* **Siguiente fase:** Fase 4G-R3 · Historical Import Review & Mapping Mock Data Contract
+* **Siguiente fase:** Fase 4G-R3 · Historical Import Review & Mapping Mock Data Contrac
 
 # Fase 4G-R1 · Historical Import Review & Mapping Prototype Intake
 
@@ -737,7 +945,7 @@ Fase 4F-R6 · Historical Import Configuration Safe Publication
 - **Force Push:** Cero.
 - **Siguiente Fase:** `Fase 4F-R1 · Historical Import Configuration Prototype Intake`
 
-# Fase 4E-R6B2H2B-R6B-H1 · Draft PR Creation and Final Preview Alignment
+# Fase 4E-R6B2H2B-R6B-H1 · Draft PR Creation and Final Preview Alignmen
 
 ## 1. Fecha
 2026-06-16
@@ -753,7 +961,7 @@ HISTORICAL_IMPORT_NORMALIZATION_DRAFT_PR_READY
 - **PR URL:** https://github.com/elkingarcia22/Carga-Histrica-de-encuestas/pull/154
 - **Base:** main
 - **Compare:** recovery/historical-import-forward-cleanup
-- **Estado:** Draft
+- **Estado:** Draf
 - **SHA verificado:** 1e1376367962211ce60e0d191ff630f0c6c6d2c5
 - **Preview URL:** https://carga-historica-de-encuestas-preview-draft.vercel.app
 - **Environment:** Preview
@@ -781,7 +989,7 @@ Fase 4E-R6B2H2B-R6C · Formal PR Review Readiness Decision
 ## 3. Estado
 HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_PREVIEW_READY
 
-## 4. Auditoría y Remedio de Deployment
+## 4. Auditoría y Remedio de Deploymen
 - **Deployment Inicial:** La entrada anterior indicó incorrectamente un despliegue exitoso de tipo Preview.
 - **Target Real:** El deployment reportado (`https://carga-historica-de-encuestas-2dq0sgu24.vercel.app`) apuntaba al target `Production`.
 - **SHA Inicial:** `1c89922d27d39cfdfa15c6295e749b257d85dbe9`
@@ -882,7 +1090,7 @@ Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Baseline Reconstruction
 ## 3. Estado
 `HISTORICAL_IMPORT_NORMALIZATION_BATCH_CAPACITY_ARCHITECTURE_LOCKED`
 
-## 4. Git Preflight Report
+## 4. Git Preflight Repor
 - **Branch**: `main`.
 - **Alignment**: HEAD matches origin/main (ahead 0, behind 0).
 - **Staged files**: 0.
@@ -942,7 +1150,7 @@ Fase 4E-R6B2H2B-R4B2 · U1 Upload Screen Baseline Reconstruction
 ## 3. Estado
 `HISTORICAL_IMPORT_NORMALIZATION_BATCH_CAPACITY_DECISION_BLOCKED`
 
-## 4. Git Preflight Report
+## 4. Git Preflight Repor
 - Rama `main` confirmada.
 - HEAD y origin/main alineados.
 - Working tree limpio sin cambios en `src`.
@@ -1135,7 +1343,7 @@ HISTORICAL_IMPORT_NORMALIZATION_RELEASE_PREFLIGHT_HYGIENE_READY
 - **Git Diff:** `git diff --check` limpio (cero errores de whitespace). Cero staged files. Ningún commit o push fue realizado en esta fase.
 
 ## 8. Siguiente fase autorizable
-Repetir desde el inicio: Fase 4E-R7 · Formal Closure, GitHub Publish and Vercel Deployment
+Repetir desde el inicio: Fase 4E-R7 · Formal Closure, GitHub Publish and Vercel Deploymen
 
 ---
 
@@ -1167,11 +1375,11 @@ HISTORICAL_IMPORT_NORMALIZATION_SIMULATED_ANALYSIS_READY
 - **Build:** `npm run build` exitoso.
 
 ## 6. Siguiente fase autorizable
-Fase 4E-R7 · Formal Closure, Publishing and Vercel Deployment
+Fase 4E-R7 · Formal Closure, Publishing and Vercel Deploymen
 
 ---
 
-# Fase 4E-R6B1 · Upload Screen Visual Alignment
+# Fase 4E-R6B1 · Upload Screen Visual Alignmen
 
 ## 1. Fecha
 2026-06-12
@@ -1201,7 +1409,7 @@ HISTORICAL_IMPORT_NORMALIZATION_UPLOAD_VISUAL_ALIGNMENT_READY
 - **Archivos congelados:** Intactos.
 
 ## 5. Siguiente fase autorizable
-Fase 4E-R6B2 · Selected Files Screen Visual Alignment
+Fase 4E-R6B2 · Selected Files Screen Visual Alignmen
 
 ---
 
@@ -1235,11 +1443,11 @@ HISTORICAL_IMPORT_NORMALIZATION_RECOVERY_ARTIFACTS_CLEANED
 - **QA técnico:** `tsc -b` y `npm run build` ejecutados exitosamente. Cero errores, cero advertencias dentro del alcance.
 
 ## 5. Siguiente fase autorizable
-Repetir: Fase 4E-R6B1 · Upload Screen Visual Alignment
+Repetir: Fase 4E-R6B1 · Upload Screen Visual Alignmen
 
 ---
 
-# Fase 4E-R3R2 · Safe Repository Recovery and Selective Commit
+# Fase 4E-R3R2 · Safe Repository Recovery and Selective Commi
 
 ## 1. Resumen ejecutivo
 Se ha ejecutado la recuperación segura del repositorio y el stage selectivo de los entregables de las fases R1, R2, R2A y R3.
@@ -1319,7 +1527,7 @@ Se autoriza la ejecución de: **Fase 4E-R3R2 · Safe Repository Recovery and Sel
 
 ---
 
-# Fase 4E-R2A · Historical Import Normalization Multi-File Architecture Amendment
+# Fase 4E-R2A · Historical Import Normalization Multi-File Architecture Amendmen
 
 ## 1. Resumen ejecutivo
 Se ha enmendado la arquitectura conceptual para la pantalla U4-SIM · Vista previa de normalización. La arquitectura ya no asume un único workbook raw, sino un lote multiarchivo correspondiente a una única encuesta y a un único periodo.
@@ -1436,7 +1644,7 @@ Se autoriza la **Fase 4E-R2 · Historical Import Normalization Architecture Lock
 
 ---
 
-# Fase 4E5C.2 · Historical Preview Executable Fixture Alignment Hotfix Report
+# Fase 4E5C.2 · Historical Preview Executable Fixture Alignment Hotfix Repor
 
 ## 1. Resumen ejecutivo
 Se alineó el fixture de Historical Preview Simulated con la política `INTEGER_DISPLAY_PERCENTAGE_POLICY` del Mock Data Contract, corrigiendo los flotantes de la distribución comparativa y garantizando la coherencia matemática.
@@ -1516,7 +1724,7 @@ COMPLETED
 
 ---
 
-# Fase 4E3.2 · Historical Preview Mock Contract Mathematical Alignment Hotfix Report
+# Fase 4E3.2 · Historical Preview Mock Contract Mathematical Alignment Hotfix Repor
 
 ## 1. Resumen ejecutivo
 Se ha corregido la contradicción matemática detectada en el Mock Data Contract (Fase 4E5C.1) aplicando la política de precisión entera `INTEGER_DISPLAY_PERCENTAGE_POLICY`. Ahora, el porcentaje del bucket favorable coincide de manera exacta con la favorabilidad (74).
@@ -1591,7 +1799,7 @@ Se **AUTORIZA** **Fase 4E3.2.1 · Historical Preview Mock Contract Math Alignmen
 ## 19. Estado
 COMPLETED
 
-### 2026-06-11 - Fase 4E5C.1 · Historical Preview Favorability and Distribution Consistency Hotfix Report
+### 2026-06-11 - Fase 4E5C.1 · Historical Preview Favorability and Distribution Consistency Hotfix Repor
 
 ## 1. Resumen ejecutivo
 Se ejecutó la auditoría sobre la inconsistencia detectada en el fixture de la Fase 4E5C donde la favorabilidad comparativa (74) no coincidía con el bucket favorable (74.2%). Tras analizar las fuentes de verdad documentales, se determinó que la contradicción reside de forma explícita en el Mock Data Contract publicado, el cual decreta reglas matemáticamente incompatibles de forma simultánea. Debido a la prohibición de modificar documentos aprobados sin un proceso de gobernanza, la fase queda bloqueada.
@@ -1750,7 +1958,7 @@ El principal riesgo es continuar sin una fuente de verdad coherente. Se requiere
 - **QA de Integridad**: 0 dependencias. 0 cambios en el source tree `src/`.
 - **Autorización**: Se autoriza la **Fase 4E4.2.1 · Git Audit Documentation Checkpoint**. No se autoriza todavía 4E5A.
 
-### 2026-06-11 - Fase 4E5C · Historical Preview Simulated Executable Synthetic Fixture Report
+### 2026-06-11 - Fase 4E5C · Historical Preview Simulated Executable Synthetic Fixture Repor
 
 ## 1. Resumen ejecutivo
 Se creó el fixture estático, determinístico y tipado de los escenarios para la previsualización histórica (Historical Preview). El fixture representa la única fuente ejecutable de los valores sintéticos usando los contratos locales definidos previamente, sin integrar todavía transformaciones o adaptadores lógicos.
@@ -1874,7 +2082,7 @@ Ningún riesgo inminente. El adapter requerirá mapear o resolver el `insightId`
 ## 28. Estado
 COMPLETED
 
-### 2026-06-11 - Fase 4E4.1 · Historical Preview Simulated Build Plan Post-Commit Verification Report
+### 2026-06-11 - Fase 4E4.1 · Historical Preview Simulated Build Plan Post-Commit Verification Repor
 - **Objetivo**: Verificar el estado real de Git después del commit no previsto, auditar su inventario y corregir documentalmente el Build Plan para evitar la expansión de alcance y aislar los tipos locales.
 - **Estado formal**: `HISTORICAL_PREVIEW_SIM_BUILD_PLAN_CHECKPOINT_APPROVED`
 - **Resultados**:
@@ -1892,7 +2100,7 @@ COMPLETED
 - **QA de integridad**: No se alteraron dependencias. El commit verificado no tocó `src/**`. Se creó un commit correctivo para los cambios documentales y se publicaron exitosamente a `origin/main`.
 - **Autorización**: Se autoriza **únicamente** la **Fase 4E5A · Historical Preview Simulated Local Types**.
 
-### 2026-06-11 - Fase 4E3 · Historical Preview Simulated Mock Data Contract
+### 2026-06-11 - Fase 4E3 · Historical Preview Simulated Mock Data Contrac
 - **Estado formal**: `HISTORICAL_PREVIEW_SIM_MOCK_CONTRACT_LOCKED`
 - **Resultados**:
   - Se definió el escenario principal con datos sintéticos completos, deltas en puntos porcentuales y 2 periodos.
@@ -1906,7 +2114,7 @@ COMPLETED
 - **QA de integridad**: No se alteraron mocks, no se crearon tipos, no se generó UI. Cero dependencias y cero commits/pushes.
 - **Autorización**: Se autoriza la **Fase 4E3.1 · Historical Preview Simulated Mock Data Contract Documentation Checkpoint**.
 
-### 2026-06-11 - Fase 4E2.1 · Historical Preview Simulated Architecture Documentation Checkpoint
+### 2026-06-11 - Fase 4E2.1 · Historical Preview Simulated Architecture Documentation Checkpoin
 - **Objetivo**: Corregir inconsistencias documentales de Fase 4E2 antes de consolidar el Architecture Lock y pasar al Mock Data Contract.
 - **Estado formal**: `HISTORICAL_PREVIEW_SIM_ARCHITECTURE_LOCKED_WITH_MOCK_DATA_GATE`.
 - **Correcciones realizadas**:
@@ -1964,7 +2172,7 @@ COMPLETED
 - **Autorización**: Se autoriza **Fase 7C · U3-SIM Formal Closure, Commit and Push**.
 - **Confirmación**: Ningún código modificado, ni dependencias instaladas, ni commits efectuados en este gate.
 
-### 2026-06-11 - Fase 4D4F.1 · U3-SIM Ref-Safe Boundary Validation Hotfix Report
+### 2026-06-11 - Fase 4D4F.1 · U3-SIM Ref-Safe Boundary Validation Hotfix Repor
 
 ## 1. Resumen ejecutivo
 Se eliminó la supresión temporal de lint `react-hooks/refs` al validar el boundary binario, garantizando que el estado visual reactivo dependa estrictamente de metadata inmutable de U2 (`f.status === 'valid' || f.status === 'warning'`) y protegiendo la lectura mutable (`binaryMap.current`) mediante un guard imperativo seguro dentro del event handler de "Continuar".
@@ -2122,7 +2330,7 @@ Aprobada localmente.
 - **Autorización**: Se autoriza **Fase 4D4D · U3-SIM Task 4 — Presentational Components**.
 
 
-### 2026-06-11 - Fase 4D3.1 · U3-SIM Build Plan Documentation Checkpoint
+### 2026-06-11 - Fase 4D3.1 · U3-SIM Build Plan Documentation Checkpoin
 - **Objetivo**: Verificar, corregir y publicar el plan técnico detallado de la arquitectura para U3-SIM.
 - **Commit base**: fbdb7b82e6193589ee0858e8c56983b97d5268e5
 - **Estado formal**: `U3_SIM_BUILD_PLAN_APPROVED`.
@@ -2135,7 +2343,7 @@ Aprobada localmente.
 - **Remoto de destino**: `origin/main`
 - **Confirmación**: No se ha escrito, modificado ni stageado código funcional en `src/`.
 
-### 2026-06-11 - Fase 4D2.1 · Simulated Processing Architecture Documentation Checkpoint
+### 2026-06-11 - Fase 4D2.1 · Simulated Processing Architecture Documentation Checkpoin
 - **Objetivo**: Validar, corregir y realizar el checkpoint documental final para la arquitectura de U3-SIM.
 - **Commit base**: 47c69f76a327375320f5c5dd8aac0bbc3844b5f5
 - **Correcciones realizadas**:
@@ -2166,7 +2374,7 @@ Aprobada localmente.
 - **Confirmación de repositoy**: No se hizo commit, no se hizo push.
 
 
-### 2026-06-11 - Fase 4C2D1.3.1 · Lockfile Repair Planning Documentation Checkpoint
+### 2026-06-11 - Fase 4C2D1.3.1 · Lockfile Repair Planning Documentation Checkpoin
 - **Objetivo**: Verificar el inventario documental acumulado y crear un único commit de release.
 - **Commit base**: 5598884858b2a0e85791debb24903a3809ff5814
 - **Inventario incluido**: 6 documentos (`U3_P1_DEPENDENCY_ACQUISITION.md`, `U3_P1_DEPENDENCY_QA.md`, `PACKAGE_MANAGER_LOCKFILE_DECISION.md`, `LOCKFILE_REPRODUCIBILITY_REPAIR_PLAN.md`, `QA_CHECKLIST.md`, `PROMPT_LOG.md`).
@@ -2236,7 +2444,7 @@ Aprobada localmente.
 - **Autorización**: Bloqueo de las fases dependientes directas de SheetJS (`BLOCKED_BY_PACKAGE_MANAGER_REPRODUCIBILITY`). Autorizada auditoría independiente.
 - **Confirmación**: No se hicieron commits ni push.
 
-### 2026-06-10 - Fase 4C2C.1 · Parser Dependency Decision Documentation Checkpoint
+### 2026-06-10 - Fase 4C2C.1 · Parser Dependency Decision Documentation Checkpoin
 - **Objetivo**: Verificar, corregir y publicar el reporte documental de la Fase 4C2C (P0) aislando a SheetJS como único candidato para P1.
 - **Commit base**: 6895e681dbcdae9216157ae2bdc4d7c6931f218d
 - **Documentos incluidos**: `docs/U3_PARSER_DEPENDENCY_DECISION.md`, `docs/PROMPT_LOG.md`.
@@ -2279,7 +2487,7 @@ Aprobada localmente.
   - NO se generó código ni Worker.
   - NO se abrieron archivos Excel.
   - NO se crearon fixtures ni UI.
-  - NO se hizo commit ni push.### 2026-06-10 - Fase 4C2B.1 · Parser and Worker Spike Plan Documentation Checkpoint
+  - NO se hizo commit ni push.### 2026-06-10 - Fase 4C2B.1 · Parser and Worker Spike Plan Documentation Checkpoin
 - **Objetivo**: Revisar integralmente el plan de spikes y publicar los documentos autorizados, corrigiendo terminología, garantizando seguridad y aislando la futura dependencia.
 - **Documentos incluidos**: `docs/U3_PARSER_WORKER_SPIKE_PLAN.md`, `docs/PROMPT_LOG.md`.
 - **Estado formal**: `READY_FOR_DEPENDENCY_GATE`.
@@ -2299,7 +2507,7 @@ Aprobada localmente.
 - **Remoto de destino**: `origin/main`
 - **Confirmación**: Se confirma que NO se ha instalado código, NO se ha implementado UI, NO se construyó U3 y NO se alteró ninguna otra área.
 
-### 2026-06-10 - Fase 4C2A.1 · U3 Architecture Documentation Checkpoint
+### 2026-06-10 - Fase 4C2A.1 · U3 Architecture Documentation Checkpoin
 - **Objetivo**: Verificar, corregir y publicar la arquitectura documental de U3.
 - **Documentos incluidos**: `docs/U3_PARSER_PROFILING_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
 - **Estado formal**: `APPROVED_WITH_BLOCKING_SPIKE_GATES`.
@@ -2337,7 +2545,7 @@ Aprobada localmente.
 - **Estado Técnico**: `APPROVED_WITH_BLOCKING_SPIKE_GATES`. Fase documental aprobada.
 - **Confirmación**: No se alteró código funcional, no se instalaron bibliotecas (`npm install` bloqueado), ni se crearon UI o hooks. No hubo commit ni push. Autorizado el paso a Fase 4C2B documental.
 
-### 2026-06-10 - Fase 5B · U2 Independent QA Audit
+### 2026-06-10 - Fase 5B · U2 Independent QA Audi
 - **Objetivo**: Auditar de forma independiente la implementación de la interacción local de U2 (Archivos seleccionados).
 - **Commit base**: 4b9281f5fd9790d989afcdaf66b39c5f2140bdbf
 - **Archivos revisados**: `src/hooks/survey-import/useLocalUploadState.ts`, `src/screens/survey-import/SurveyImportUploadScreen.tsx`, etc.
@@ -2367,7 +2575,7 @@ Aprobada localmente.
 - **Remoto de destino**: `origin/main`
 - **Confirmación**: No se modificó ni creó código (U2 no está construida).
 
-### 2026-06-10 - Fase 4B2.1 · U2 Architecture Documentation Checkpoint
+### 2026-06-10 - Fase 4B2.1 · U2 Architecture Documentation Checkpoin
 - **Objetivo**: Verificar, precisar y publicar la documentación arquitectónica U1-U2.
 - **Documentos incluidos**: `docs/U2_INTERACTION_ARCHITECTURE.md`, `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`.
 - **Estado formal de la arquitectura**: `APPROVED_WITH_PROVISIONAL_LIMITS`.
@@ -2573,7 +2781,7 @@ Aprobada localmente.
 - Crear mock data contracts.
 - Crear fixtures y esquemas Zod.
 
-## Fase 3B1 · Synthetic Fixture Set
+## Fase 3B1 · Synthetic Fixture Se
 - Fecha: 2026-06-10
 - Objetivo: Crear un conjunto estático de fixtures tipeados estrictamente sin UI.
 - Archivos creados: src/mocks/survey-import/**/*.ts, docs/MOCK_DATA_CONTRACT.md
@@ -2639,7 +2847,7 @@ Aprobada localmente.
 - **Resultado de TypeScript:** Exitoso (0 errores en `npx tsc --noEmit`).
 - **Resultado de build:** Exitoso.
 - **Resultado de lint:** Exitoso en `src/lib/survey-import/schemas/`.
-## Fase 3B2C1 · Session Runtime Contract
+## Fase 3B2C1 · Session Runtime Contrac
 - **Objetivo:** Completar el árbol de schemas de runtime incorporando `ImportSessionSchema`, preview, resultado, progreso de revisión e invariantes matemáticas transversales, sin ejecución ni mutación de código de UI o contratos.
 - **Archivos creados:**
   - `src/lib/survey-import/schemas/reviewSchemas.ts`
@@ -2691,7 +2899,7 @@ Aprobada localmente.
 - **Temporales:** El `tmp/runtime-validation/` directory and sus scripts fueron erradicados finalizando el QA técnico.
 - **Confirmación:** No hubo push, commit, generación de UI ni instalación de nuevas dependencias NPM. Se aprueba la conclusión de la Fase 3B.
 
-## Fase 3B2C2.3 · Exact Fixture Integrity Audit
+## Fase 3B2C2.3 · Exact Fixture Integrity Audi
 **Objetivo:** Ejecutar `ImportSessionSchema.safeParse` directamente sobre los objetos exportados por el catálogo público para confirmar inmutabilidad y probar la falta de adaptación por parte del harness.
 **Mecanismo:** Script de Vite SSR con validación estricta y control de hash SHA-256 antes y después del parse para garantizar 0% mutaciones.
 **Resultado exacto de fixtures:** 8/10 fixtures aprobaron exactamente igual a como estaban en el catálogo. `raw-review-required` y `unknown-blocked` fallaron debido a inconsistencias documentales en las sumatorias de progreso de revisión.
@@ -2766,7 +2974,7 @@ Aprobada localmente.
 - **Resultado visual:** Validado a 1440x900 y 1280x800. UI accesible, con estados disabled reales y consistencia UBITS.
 - **Confirmación:** No hubo commit ni push. No se instalaron dependencias ni se alteraron componentes UI base.
 
-## Fase 5A · U1 Independent QA Audit
+## Fase 5A · U1 Independent QA Audi
 - **Objetivo:** Auditar de forma independiente la implementación real de U1.
 - **Archivos revisados:** `src/components/survey-import/*.tsx`, `src/screens/survey-import/SurveyImportUploadScreen.tsx`, `src/config/survey-import/importWizardContent.ts`, `src/App.tsx`.
 - **Resultado técnico:** Exitoso. Build exitoso, 0 errores en dominio, TypeScript 0 errores.
@@ -2829,7 +3037,7 @@ Aprobada localmente.
 - **Autorización o bloqueo**: Autorización para la Fase 4B2.
 - **Confirmación**: No hubo código, commit ni push en esta fase. Documento de intake creado exitosamente en `docs/U2_INTERACTION_INTAKE.md`.
 
-## Fase 4B1.1 · U2 Intake Documentation Checkpoint
+## Fase 4B1.1 · U2 Intake Documentation Checkpoin
 - **Fecha**: 2026-06-10
 - **Objetivo**: Publicar exclusivamente los entregables documentales de Fase 4B1.
 - **Documentos incluidos**: `docs/U2_INTERACTION_INTAKE.md`, `docs/PROMPT_LOG.md`.
@@ -2879,12 +3087,12 @@ Aprobada localmente.
 - **Regresión dirigida**: Aprobada (QA Visual preservado y política de duplicados intacta según D1-D4).
 - **Confirmación**: No se realizó commit ni push. No se construyó U3.
 
-### 2026-06-10 - Fase 5B.1 · U2 Post-Hotfix Independent Regression Audit
+### 2026-06-10 - Fase 5B.1 · U2 Post-Hotfix Independent Regression Audi
 - **Objetivo**: Auditar independientemente el estado posterior al hotfix de Fase 6B sin modificar código.
 - **Archivos modificados**: `docs/U2_QA_REPORT.md`, `docs/QA_CHECKLIST.md`, `docs/PROMPT_LOG.md`.
 - **Resultados**: TypeScript 0 errores, Build exitoso. Boundary binario y reglas de regresión D1-D4 pasaron satisfactoriamente
 
-### 2026-06-10 - Fase 5B.3 · U2 Final Independent Closure Audit
+### 2026-06-10 - Fase 5B.3 · U2 Final Independent Closure Audi
 - **Objetivo**: Determinar de forma independiente si U2 puede pasar a cierre formal (Fase 7B).
 - **Archivos revisados**: Código de U2, validaciones de TypeScript, Build y Lint.
 - **Resultado técnico**: 0 errores de TypeScript, build exitoso, 0 errores de lint en U2. Cero casts y suppressions detectados.
@@ -2939,7 +3147,7 @@ Aprobada localmente.
 - **Autorización o bloqueo para Fase 4C2**: `READY_WITH_BLOCKING_DECISION_GATES`. Fase 4C2 (Documentación) autorizada.
 - **Confirmación**: No se generó código, no se instalaron dependencias, no hubo commit y no hubo push.
 
-### 2026-06-10 - Fase 4C1.1 · U3 Parser and Profiling Intake Documentation Checkpoint
+### 2026-06-10 - Fase 4C1.1 · U3 Parser and Profiling Intake Documentation Checkpoin
 - **Objetivo**: Verificar y aplicar correcciones técnicas y de gobernanza al intake de U3, consolidando decision gates para el parser, Worker, seguridad, memoria y profiling, dejando el repositorio limpio para Fase 4C2.
 - **Documentos incluidos**: `docs/U3_PARSER_PROFILING_INTAKE.md` y `docs/PROMPT_LOG.md`.
 - **Estado formal**: `READY_WITH_BLOCKING_DECISION_GATES`.
@@ -2972,7 +3180,7 @@ Aprobada localmente.
 - **Autorización o bloqueo para 4C2C**: Autorizada Fase 4C2C · Parser Dependency Decision Gate.
 - **Confirmación**: No se instalaron dependencias. No se escribió código. No se ejecutó spike. No se hizo commit. No se hizo push.
 
-### 2026-06-11 - Fase 4C2D1 · SheetJS Dependency Acquisition and Integrity Checkpoint
+### 2026-06-11 - Fase 4C2D1 · SheetJS Dependency Acquisition and Integrity Checkpoin
 - **Objetivo**: Validar integridad del repositorio, descargar y verificar SheetJS CE 0.20.3 exacto, e instalarlo controladamente sin ejecutar scripts ni afectar el main bundle.
 - **Commit base**: `5598884`
 - **Fuente**: `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz`
@@ -3132,7 +3340,7 @@ Se encuentra autorizada la **Fase 4D4E · U3-SIM Task 5 — Simulated Processing
 
 ---
 
-# Fase 4D4E · U3-SIM Simulated Processing Screen Composition Report
+# Fase 4D4E · U3-SIM Simulated Processing Screen Composition Repor
 
 ## 1. Resumen ejecutivo
 Se implementó `SimulatedProcessingScreen.tsx` ensamblando los cuatro componentes de UI de la Fase 4D4D. La pantalla funciona exclusivamente como capa de composición de vista pura, manejando la derivación condicional de acciones y labels. No contiene dependencias acopladas ni de estado de negocio de U1/U2 ni timers.
@@ -3251,7 +3459,7 @@ Autorizo continuar a la **Fase 4D4F · U3-SIM Task 6 — U2 to U3-SIM Integratio
 - **Autorización:** Se autoriza exclusivamente la **Fase 4E2 · Historical Preview Simulated Architecture Lock**.
 - **Estado:** Completado.
 
-## Fase 4E3.1 · Historical Preview Simulated Mock Data Contract Documentation Checkpoint
+## Fase 4E3.1 · Historical Preview Simulated Mock Data Contract Documentation Checkpoin
 **Descripción:** Auditoría, corrección y consolidación documental del contrato mock para Historical Preview Simulated.
 **Acciones:**
 - Verificación inicial del estado de Git y fuentes de verdad.
@@ -3275,17 +3483,17 @@ Autorizo continuar a la **Fase 4D4F · U3-SIM Task 6 — U2 to U3-SIM Integratio
 - **Autorización:** Pendiente de revisión del usuario.
 - **Estado:** Completado.
 
-## Fase 4E3.2.1 · Historical Preview Mock Contract Math Alignment Documentation Checkpoint
+## Fase 4E3.2.1 · Historical Preview Mock Contract Math Alignment Documentation Checkpoin
 
 - Math aligned (74 / 16 / 10 percentages, 89 / 19 / 12 counts).
 - Single active integer precision policy.
 - Contract document secured.
 
-## Fase 4E-R0 · Historical Import Normalization Scope Recovery Audit
+## Fase 4E-R0 · Historical Import Normalization Scope Recovery Audi
 - **Objetivo:** Ejecutar una auditoría de recuperación de dominio para corregir la desviación detectada en la Fase 4E, estableciendo el enfoque correcto hacia la normalización y el mapeo estructural (sin analíticas ni KPIs de favorabilidad).
 - **Acción:** Creación de reporte de auditoría `HISTORICAL_IMPORT_NORMALIZATION_SCOPE_RECOVERY.md`, definiendo la matriz de recuperación, identificando artefactos obsoletos a reemplazar (superseded) y delimitando la frontera correcta de U3-SIM. Se bloquea la construcción y se autoriza exclusivamente la fase de intake 4E-R1.
 
-## Fase 4E-R3 · Historical Import Normalization Mock Data Contract
+## Fase 4E-R3 · Historical Import Normalization Mock Data Contrac
 - **Fecha:** 2026-06-11
 - **Estado formal:** `HISTORICAL_IMPORT_NORMALIZATION_MOCK_DATA_CONTRACT_READY`
 - **Archivos creados o modificados:**
@@ -3317,7 +3525,7 @@ Autorizo continuar a la **Fase 4D4F · U3-SIM Task 6 — U2 to U3-SIM Integratio
   - Cero componentes y pantallas modificadas.
   - Archivos congelados (`historicalPreviewTypes`, `historicalPreviewConfig`, `historicalPreviewScenarios`) intactos.
   - Ningún dato PII ni binario.
-- **Siguiente fase máxima autorizable:** Fase 4E-R4 · Historical Import Normalization First Screen Build Prompt
+- **Siguiente fase máxima autorizable:** Fase 4E-R4 · Historical Import Normalization First Screen Build Promp
 
 ## 21. Resolución QA Fase 4E-R6P
 **Estado Actual:** `HISTORICAL_IMPORT_NORMALIZATION_WORKTREE_HYGIENE_READY`
