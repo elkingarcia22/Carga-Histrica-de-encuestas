@@ -1,5 +1,56 @@
 # Prompt Log
 
+## Fase 4K-SYN2B1H · Fixture Security Decision Semantic Correction
+
+**Fecha:** 2026-06-17
+**Branch:** main
+**Preflight:** PASS (rama main, HEAD alineado, working tree limpio, 0 ahead/behind).
+**Objetivo:** Corregir el estado y el lenguaje del documento de seguridad de exceljs@4.4.0 (SYN2B1) para diferenciar la recomendación técnica de la aceptación corporativa de riesgo, eliminando formulaciones absolutas de cero riesgo.
+
+**Archivos Modificados:**
+- `docs/HISTORICAL_IMPORT_SYNTHETIC_FIXTURE_SECURITY_DECISION.md`
+- `docs/PROMPT_LOG.md`
+
+**Alcance y QA Técnico:**
+- Git Preflight clean.
+- Only authorized documentation files changed.
+- No dependency installed.
+- No package files modified.
+- No code created.
+- No fixtures generated.
+- No risk acceptance presented as approved.
+- No risk owner invented.
+- Absolute zero-risk wording removed.
+- Static and runtime evidence distinguished.
+- Installation remains unauthorized.
+- SYN2C remains unauthorized.
+- SYN3 remains blocked.
+- Application parser remains unauthorized.
+- Productive processing remains unauthorized.
+- R1H5 remains not triggered.
+
+**Estado Final:**
+PHASE_4K_SYN2B1_CONTENT_APPROVED
+FIXTURE_SECURITY_DECISION_SEMANTIC_HOTFIX_COMPLETE
+
+SYNTHETIC_FIXTURE_DEPENDENCY_TECHNICAL_REVIEW_COMPLETE
+EXCELJS_4_4_0_CONDITIONALLY_RECOMMENDED
+LIMITED_RESIDUAL_RISK_IDENTIFIED
+
+RISK_ACCEPTANCE_AUTHORITY_REQUIRED
+RISK_ACCEPTANCE_NOT_YET_GRANTED
+REVIEW_EXPIRATION_DATE_REQUIRED
+
+INSTALLATION_NOT_AUTHORIZED
+SYN2C_NOT_AUTHORIZED
+SYN3_PHYSICAL_GENERATION_BLOCKED
+
+FIXTURE_GENERATOR_DEV_ONLY
+APPLICATION_PARSER_NOT_AUTHORIZED
+NO_APPLICATION_IMPLEMENTATION
+PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN2B · Synthetic Fixture Generator Dependency Decision Gate
 
 **Fecha:** 2026-06-17
