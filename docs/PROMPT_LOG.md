@@ -1,5 +1,51 @@
 # Prompt Log
 
+## Fase 4K-SYN2B · Synthetic Fixture Generator Dependency Decision Gate
+
+**Fecha:** 2026-06-17
+**Branch:** main
+**Preflight:** PASS (rama main, HEAD alineado, working tree limpio, 0 ahead/behind).
+**Objetivo:** Evaluar y adjudicar una decisión formal sobre una dependencia para generación offline y determinista de XLSX.
+
+**Archivos Modificados/Creados:**
+- `docs/HISTORICAL_IMPORT_SYNTHETIC_FIXTURE_DEPENDENCY_DECISION.md` (Nuevo)
+- `docs/PROMPT_LOG.md`
+
+**Alcance y QA Técnico:**
+- Git Preflight clean.
+- Only authorized documentation files changed.
+- No dependency installed.
+- No package file modified.
+- No lockfile modified.
+- No source code created.
+- No generator created.
+- No fixture created.
+- No XLSX created.
+- No real data inspected.
+- No real values reproduced.
+- At least three candidates evaluated (exceljs, xlsx, xlsx-populate).
+- License reviewed (MIT).
+- Security reviewed (Offline, no network).
+- Node compatibility reviewed (Node v24).
+- Dev-only scope explicit.
+- Generator/parser separation preserved.
+- Installation deferred to separate phase.
+- Productive processing remains unauthorized.
+- R1H5 remains not triggered.
+
+**Estado Final:**
+PHASE_4K_SYN2B_COMPLETE
+SYNTHETIC_FIXTURE_GENERATOR_DEPENDENCY_APPROVED
+SYN2C_DEV_DEPENDENCY_INSTALLATION_READY
+
+FIXTURE_GENERATOR_DEV_ONLY
+APPLICATION_PARSER_NOT_AUTHORIZED
+NO_APPLICATION_IMPLEMENTATION
+NO_PHYSICAL_FIXTURES_CREATED
+
+PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN2A · Synthetic XLSX Generation Mechanism Decision Gate
 
 **Fecha:** 2026-06-17
