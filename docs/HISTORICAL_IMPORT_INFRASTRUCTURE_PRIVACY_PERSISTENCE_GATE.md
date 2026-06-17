@@ -37,7 +37,8 @@ Detailed in `HISTORICAL_IMPORT_PHYSICAL_PERSISTENCE_MAPPING.md`. No physical equ
 No evidence of `tenant_id`, `organization_id`, or isolation mechanisms (like RLS or repository filters) was found in the codebase. Processing multi-tenant data is not authorized until an isolation model is formally introduced.
 
 ## 8. Authentication Findings
-**AUTH_MODEL_PARTIALLY_RECOVERED**
+**AUTH_MODEL_NOT_FOUND**
+**AUTHENTICATION_OWNER_DECISION_REQUIRED**
 No authentication provider configuration, session management, or `jwt` token validators were found. A complete authentication architecture is required.
 
 ## 9. RBAC Findings
@@ -73,7 +74,7 @@ No official retention or deletion periods have been approved for staging imports
 There is no `CODEOWNERS` file or explicitly assigned security engineering team for the ingestion pipeline.
 
 ## 17. AI Provider and Data-Transfer Findings
-**AI_DISABLED_FOR_PRODUCTIVE_FILE_CONTENT**
+**AI_PRODUCTIVE_FILE_CONTENT_DISABLED_UNTIL_CORPORATE_APPROVAL**
 While simulated AI components exist, no corporate DPA or data-transfer agreement has been provided. Zero data retention policies with AI providers are unverified. Architecture Lock must design a deterministic fallback path.
 
 ## 18. Region and Data Residency
@@ -118,7 +119,7 @@ None.
 
 ## 25. Architecture Lock Readiness
 **ARCHITECTURE_LOCK_STILL_BLOCKED**
-Architecture Lock cannot proceed. It fundamentally requires physical persistence definitions, tenant isolation validation, security guidelines, and safe data processing capabilities which are currently missing.
+Architecture Lock está bloqueado porque no existen decisiones autorizadas y verificables sobre persistencia, infraestructura, tenant isolation, autenticación, autorización, privacidad, retención, ownership operativo, residencia de datos y contrato de publicación.
 
 ## 26. Files Created or Modified
 * `docs/HISTORICAL_IMPORT_INFRASTRUCTURE_PRIVACY_PERSISTENCE_GATE.md`

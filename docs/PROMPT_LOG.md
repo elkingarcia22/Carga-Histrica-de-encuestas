@@ -1,6 +1,21 @@
 # Prompt Log
 
-## Fase 4K-R1H1 · Productive Intake Evidence Recovery and Sanitization Gate
+## Fase 4K-R1H2A · Stakeholder Decision Resolution and Architecture Preconditions Gate
+- **Objetivo:** Ejecutar la Fase 4K-R1H2A (Documental). Convertir gates técnicos en preguntas de decisión de stakeholders y crear paquete de precondiciones de arquitectura.
+- **Alcance:** DOCUMENTATION_ONLY_STAKEHOLDER_DECISION_RESOLUTION. No autoriza implementación.
+- **Correcciones documentales:** Semántica de AUTH_MODEL_NOT_FOUND, bloqueo de Architecture Lock y AI_PRODUCTIVE_FILE_CONTENT_DISABLED_UNTIL_CORPORATE_APPROVAL en H2.
+- **Documentos creados:**
+  - `docs/HISTORICAL_IMPORT_STAKEHOLDER_DECISION_PACK.md`
+  - `docs/HISTORICAL_IMPORT_STAKEHOLDER_QUESTIONNAIRE.md`
+  - `docs/HISTORICAL_IMPORT_DECISION_OPTIONS_MATRIX.md`
+  - `docs/HISTORICAL_IMPORT_RACI_MATRIX.md`
+  - `docs/HISTORICAL_IMPORT_ARCHITECTURE_PRECONDITIONS_CHECKLIST.md`
+- **Documentos actualizados:** `docs/HISTORICAL_IMPORT_INFRASTRUCTURE_PRIVACY_PERSISTENCE_GATE.md`, `docs/HISTORICAL_IMPORT_DECISION_REGISTER.md`.
+- **Decisiones abiertas:** Ownership, persistence, tenant isolation, authentication, RBAC, cloud, queue, AI, observability.
+- **Stakeholders requeridos:** Product, Data, Engineering, Security, Privacy, Ops.
+- **Restricciones:** Cero modificaciones de código, cero dependencias, cero selección automática de proveedores.
+- **Git:** Git diff check limpio, commit docs(historical-import): add stakeholder architecture decision pack.
+- **Estado final:** HISTORICAL_IMPORT_STAKEHOLDER_DECISION_PACK_COMPLETED / STAKEHOLDER_DECISIONS_REQUIRED / ARCHITECTURE_LOCK_STILL_BLOCKED.## Fase 4K-R1H1 · Productive Intake Evidence Recovery and Sanitization Gate
 - **Objetivo:** Ejecutar la Fase 4K-R1H1 para validar y recuperar evidencia de la arquitectura y diseño de Carga Histórica de Encuestas.
 - **Resultado:** `HISTORICAL_IMPORT_PRODUCTIVE_INGESTION_EVIDENCE_RECOVERED`
 
