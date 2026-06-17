@@ -42,7 +42,7 @@ Permitir que el consultor resuelva una escala incompatible o una polaridad ambig
 ## 7. Visual Pattern Decision
 - **Opción elegida:** Opción A · Drawer secundario.
 - **Justificación:** Componente `Sheet` existente en `shadcn/ui` y utilizado previamente. Permite mantener el contexto sin navegación destructiva.
-- **Resultados:** 
+- **Resultados:**
   - `SECONDARY_DRAWER_PATTERN_LOCKED`
   - `MODAL_PATTERN_LOCKED` (Evaluado como contingencia)
   - `INTERNAL_PANEL_PATTERN_LOCKED` (Evaluado y descartado)

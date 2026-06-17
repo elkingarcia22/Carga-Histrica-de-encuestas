@@ -1,6 +1,6 @@
-import type { 
-  HistoricalMappingScalePolarity, 
-  HistoricalMappingResolutionOrigin 
+import type {
+  HistoricalMappingScalePolarity,
+  HistoricalMappingResolutionOrigin
 } from '@/lib/survey-import/review-mapping/historicalImportReviewMappingTypes';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
@@ -40,14 +40,14 @@ export function AmbiguousPolarityResolution({
             <p className="text-sm text-slate-600">
               Basado en encuestas similares, sugerimos usar: <br/>
               <strong>
-                {suggestedPolarity === 'high-is-favorable' 
-                  ? 'Puntuación alta = favorable' 
+                {suggestedPolarity === 'high-is-favorable'
+                  ? 'Puntuación alta = favorable'
                   : 'Puntuación baja = favorable'}
               </strong>
             </p>
-            <Button 
-              variant="outline" 
-              size="sm" 
+            <Button
+              variant="outline"
+              size="sm"
               onClick={handleUseSuggestion}
               disabled={disabled || selectedPolarity === suggestedPolarity}
             >
@@ -63,8 +63,8 @@ export function AmbiguousPolarityResolution({
           <p className="text-sm text-slate-500">¿Qué significa una puntuación alta en esta escala?</p>
         </div>
 
-        <RadioGroup 
-          value={selectedPolarity === 'unresolved' ? undefined : selectedPolarity} 
+        <RadioGroup
+          value={selectedPolarity === 'unresolved' ? undefined : selectedPolarity}
           onValueChange={handleValueChange}
           disabled={disabled}
           className="gap-3"
@@ -79,7 +79,7 @@ export function AmbiguousPolarityResolution({
               <p className="text-sm text-slate-500">Ejemplo: 5 es Excelente, 1 es Deficiente</p>
             </div>
           </div>
-          
+
           <div className="flex items-start space-x-3 space-y-0 p-3 border border-slate-200 rounded-md data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-50">
             <RadioGroupItem value="low-is-favorable" id="low-is-favorable" className="mt-1" />
             <div className="space-y-1">

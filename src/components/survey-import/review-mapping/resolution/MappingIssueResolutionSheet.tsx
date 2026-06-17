@@ -1,5 +1,5 @@
-import type { 
-  HistoricalImportMappingEntity, 
+import type {
+  HistoricalImportMappingEntity,
   HistoricalImportMappingIssue,
   HistoricalConfigurationCompatibilityCheck,
   HistoricalMappingScalePolarity,
@@ -57,7 +57,7 @@ export function MappingIssueResolutionSheet({
   const handleSelectionChange = (polarity: HistoricalMappingScalePolarity, origin: HistoricalMappingResolutionOrigin) => {
     // If there is a previously confirmed resolution and they restore it
     if (
-      origin === 'user-confirmed-suggestion' && 
+      origin === 'user-confirmed-suggestion' &&
       scaleMetadata?.resolutionOrigin === 'user-confirmed-suggestion' &&
       polarity === scaleMetadata.suggestedPolarity
     ) {
@@ -91,7 +91,7 @@ export function MappingIssueResolutionSheet({
       if (!isOpen) onCancel();
       else onOpenChange(isOpen);
     }}>
-      <SheetContent 
+      <SheetContent
         className="w-full sm:max-w-lg overflow-y-auto"
         onInteractOutside={(e) => {
           e.preventDefault();
@@ -132,7 +132,7 @@ export function MappingIssueResolutionSheet({
             </p>
           </div>
 
-          <AmbiguousPolarityResolution 
+          <AmbiguousPolarityResolution
             suggestedPolarity={scaleMetadata.suggestedPolarity}
             selectedPolarity={selectedPolarity}
             onSelectionChange={handleSelectionChange}
@@ -162,8 +162,8 @@ export function MappingIssueResolutionSheet({
           <Button variant="outline" onClick={onCancel}>
             Cancelar
           </Button>
-          <Button 
-            onClick={handleConfirm} 
+          <Button
+            onClick={handleConfirm}
             disabled={!selectedPolarity || selectedPolarity === 'unresolved' || !isCompatible}
           >
             Confirmar resolución

@@ -38,7 +38,7 @@ Validado que R1 cerró: objetivo, usuario (Consultor de implementación), incide
 **Resultado:** `CANONICAL_AND_TRANSIENT_STATE_OWNERSHIP_LOCKED`
 
 ## 5. Transient Editor State
-El estado del editor (overlay) no se persiste en el draft. Mantiene el ciclo de vida local durante la sesión de edición y despacha la resolución final. 
+El estado del editor (overlay) no se persiste en el draft. Mantiene el ciclo de vida local durante la sesión de edición y despacha la resolución final.
 
 ## 6. Atomic Resolution Action
 Acción conceptual en el Mapping hook: `resolveMappingIssue`
