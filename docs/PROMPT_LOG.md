@@ -1,5 +1,46 @@
 # Prompt Log
 
+## Fase 4K-SYN2A · Synthetic XLSX Generation Mechanism Decision Gate
+
+**Fecha:** 2026-06-17
+**Branch:** main
+**Preflight:** PASS (rama main, HEAD alineado, working tree limpio, 0 ahead/behind).
+**Objetivo:** Determinar qué mecanismo local y offline puede utilizarse en SYN3 para generar XLSX deterministas sin violar restricciones de dependencias o procesamiento de datos reales.
+
+**Archivos Modificados/Creados:**
+- `docs/HISTORICAL_IMPORT_SYNTHETIC_XLSX_TOOLING_DECISION.md` (Nuevo)
+- `docs/PROMPT_LOG.md`
+
+**Alcance y QA Técnico:**
+- Git Preflight clean.
+- Only authorized documentation files changed.
+- No code created.
+- No fixtures created.
+- No XLSX generated.
+- No JSON generated.
+- No package files modified.
+- No dependencies installed.
+- Existing capabilities verified, not assumed (NPM libs not found, Python libs not found, system CLI tools not found).
+- Offline capability evaluated.
+- Determinism evaluated.
+- Generator and parser decisions separated.
+- No real files inspected.
+- No real data reproduced.
+- No PII introduced.
+- Recommendation is explicitly scoped to synthetic fixtures.
+- Productive processing remains unauthorized.
+- git diff --check passed.
+- R1H5 remains not triggered.
+
+**Estado Final:**
+PHASE_4K_SYN2A_COMPLETE
+SYNTHETIC_XLSX_GENERATION_MECHANISM_PENDING_DEPENDENCY_GATE
+DEPENDENCY_INSTALLATION_NOT_AUTHORIZED
+SYN3_PHYSICAL_GENERATION_BLOCKED
+
+NO_IMPLEMENTATION_PHASE_AUTHORIZED
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN2 · Synthetic Sandbox Mock Data Contract
 
 **Fecha:** 2026-06-17
