@@ -1,5 +1,39 @@
 # Prompt Log
 
+## Fase 4K-SYN1 · Synthetic Sandbox Architecture Lock
+
+**Fecha:** 2026-06-17
+**Branch:** main
+**Preflight:** PASS (rama main, HEAD alineado, working tree limpio).
+**Objetivo:** Definir y aprobar documentalmente la arquitectura funcional y técnica del Synthetic Sandbox.
+**Alcance:** DOCUMENTATION_ONLY. No se construyó UI ni se instalaron dependencias.
+**Módulos Evaluados:** FileAdmission, WorkbookReader, SheetRecognizer, SchemaValidator, etc.
+**Decisiones de Arquitectura:**
+- Sandbox in-memory, sin persistencia.
+- Validación de red: ZERO NETWORK FILE TRANSMISSION.
+- Parser XLSX: XLSX_PARSER_DEPENDENCY_DECISION_REQUIRED.
+**QA Técnico:** Cero archivos fuente (`src/`) modificados. Cero dependencias añadidas. Git diff `--check` limpio.
+**Archivos Modificados:**
+- `docs/HISTORICAL_IMPORT_SYNTHETIC_SANDBOX_ARCHITECTURE.md` (Nuevo)
+- `docs/ARCHITECTURE.md` (Añadido link)
+- `docs/PROMPT_LOG.md`
+**Siguiente Fase Máxima Autorizable:** Fase 4K-SYN2 · Synthetic Sandbox Mock Data Contract
+**Estado Final:**
+PHASE_4K_SYN1_COMPLETE
+SYNTHETIC_SANDBOX_ARCHITECTURE_LOCKED
+SYNTHETIC_MOCK_DATA_CONTRACT_READY
+SYNTHETIC_FILES_ONLY
+LOCAL_BROWSER_PROCESSING_ONLY
+IN_MEMORY_ONLY
+NO_NETWORK_FILE_TRANSMISSION
+NO_PERSISTENCE
+NO_REAL_CLIENT_DATA
+NO_EXTERNAL_AI_FILE_CONTENT
+PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED
+NO_IMPLEMENTATION_PHASE_AUTHORIZED
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+XLSX_PARSER_DEPENDENCY_DECISION_REQUIRED
+DEPENDENCY_INSTALLATION_NOT_AUTHORIZED
 ## Fase 4K-R1H4K · Main Branch Governance Decision Pack
 
 - **Fecha:** 2026-06-17
