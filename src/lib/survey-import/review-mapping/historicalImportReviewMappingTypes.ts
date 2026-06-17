@@ -37,7 +37,9 @@ export type HistoricalImportMappingDraftStatus =
   | 'blocked'
   | 'confirmation-required'
   | 'ready-for-confirmation'
-  | 'simulated-error';
+  | 'simulated-error'
+  | 'incompatible'
+  | 'stale';
 
 export type HistoricalMappingOrigin =
   | 'inherited'

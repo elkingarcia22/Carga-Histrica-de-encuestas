@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useMemo } from 'react';
 import type {
   HistoricalImportMappingDraft,
   HistoricalImportReviewMappingSource,
@@ -20,10 +20,12 @@ export function useHistoricalImportReviewMappingState() {
   const sourceRef = useRef<HistoricalImportReviewMappingSource | null>(null);
 
   const initialize = useCallback((newSource: HistoricalImportReviewMappingSource) => {
-    // Check if we already have a draft that matches this source
-    if (draft && sourceRef.current?.configurationSignature === newSource.configurationSignature && sourceRef.current?.sourceScenarioId === newSource.sourceScenarioId) {
-      // Configuration matches, we can keep the current draft, just re-check compatibility
+    // Check if we already have a draft that matches this source's scenario
+    if (draft && draft.sourceScenarioId === newSource.sourceScenarioId) {
+      // Configuration matches conceptually (same scenario), we can keep the current draft.
+      // But we must re-check compatibility with the new runtime source.
       const comp = checkConfigurationCompatibility(draft.configurationSignature, newSource);
+
       setCompatibility(comp);
       setSource(newSource);
       sourceRef.current = newSource;
@@ -32,8 +34,13 @@ export function useHistoricalImportReviewMappingState() {
 
     // Otherwise, start fresh or from scenario
     const newDraft = getReviewMappingScenario(newSource.sourceScenarioId);
+
+    // The mapping draft must initialize with the real runtime configuration signature
+    // to avoid an immediate mismatch with the mock's signature.
+    newDraft.configurationSignature = newSource.configurationSignature;
+
     const comp = checkConfigurationCompatibility(newDraft.configurationSignature, newSource);
-    
+
     setDraft(newDraft);
     setCompatibility(comp);
     setSource(newSource);
@@ -47,15 +54,33 @@ export function useHistoricalImportReviewMappingState() {
     sourceRef.current = null;
   }, []);
 
-  const buildBoundary = useCallback(() => {
-    if (!draft || !source) return null;
-    return buildConfirmationBoundary(draft, source);
-  }, [draft, source]);
+  const effectiveDraft = useMemo(() => {
+    if (!draft || !compatibility) return null;
 
-  const priorityIssues = draft ? getPriorityIssues(draft.issues) : [];
+    if (draft.globalStatus === 'simulated-error') {
+      return draft;
+    }
+
+    if (compatibility.status === 'incompatible' || compatibility.status === 'stale') {
+      return {
+        ...draft,
+        globalStatus: compatibility.status as import('../../lib/survey-import/review-mapping/historicalImportReviewMappingTypes').HistoricalImportMappingDraftStatus,
+        canContinueToConfirmation: false,
+      };
+    }
+
+    return draft;
+  }, [draft, compatibility]);
+
+  const buildBoundary = useCallback(() => {
+    if (!effectiveDraft || !source) return null;
+    return buildConfirmationBoundary(effectiveDraft, source);
+  }, [effectiveDraft, source]);
+
+  const priorityIssues = effectiveDraft ? getPriorityIssues(effectiveDraft.issues) : [];
 
   return {
-    draft,
+    draft: effectiveDraft,
     source,
     compatibility,
     priorityIssues,

@@ -35,6 +35,8 @@ export const HISTORICAL_MAPPING_DRAFT_STATUS_LABELS: Record<HistoricalImportMapp
   'confirmation-required': 'Confirmación requerida',
   'ready-for-confirmation': 'Listo para confirmar',
   'simulated-error': 'Error de simulación',
+  incompatible: 'Incompatible',
+  stale: 'Desactualizado',
 };
 
 export const HISTORICAL_MAPPING_ISSUE_SEVERITY_LABELS: Record<HistoricalMappingIssueSeverity, string> = {
