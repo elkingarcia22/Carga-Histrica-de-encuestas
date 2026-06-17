@@ -4705,3 +4705,17 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modific√
 `NO_APPLICATION_IMPLEMENTATION`
 `PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED`
 `R1H5_DEFINED_BUT_NOT_TRIGGERED`
+
+## Phase 4K-SYN4A: Application XLSX Parser Decision Gate
+* **Timestamp:** 2026-06-17T18:52:00-05:00
+* **Action:** Evaluated XLSX parser candidates for the Historical Import synthetic sandbox.
+* **Findings:**
+  * Git preflight passed cleanly.
+  * Evaluated `exceljs` (Option A), `read-excel-file` (Option B), and `xlsx` (Option C).
+  * Selected `read-excel-file@5.8.1` due to its strict schema capabilities, excellent browser ArrayBuffer support, and default behavior of ignoring macros and formulas.
+  * Established a strict security model and network guard (no file transmission, local only).
+  * Main thread processing chosen for the initial synthetic golden sandbox.
+  * Parser implementation and productive file processing remain strictly unauthorized.
+* **Outcome:** `docs/HISTORICAL_IMPORT_SYNTHETIC_APPLICATION_PARSER_DECISION.md` created.
+* **Status:** `APPLICATION_XLSX_PARSER_DEPENDENCY_SELECTED`
+* **Next Authorized Step:** `SYN4B_DEPENDENCY_INSTALLATION_GATE_REQUIRED`
