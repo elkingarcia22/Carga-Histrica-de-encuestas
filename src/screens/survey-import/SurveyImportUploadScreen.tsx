@@ -293,6 +293,7 @@ export function SurveyImportUploadScreen() {
         draft={mappingState.draft!}
         compatibility={mappingState.compatibility!}
         priorityIssues={mappingState.priorityIssues}
+        onResolveIssue={mappingState.resolveIssue}
         isCollapsed={isCollapsed}
         onToggleCollapse={handleToggleCollapse}
         onMouseEnterSidebar={handleMouseEnterSidebar}

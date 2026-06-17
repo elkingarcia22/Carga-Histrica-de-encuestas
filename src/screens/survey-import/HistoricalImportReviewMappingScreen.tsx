@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { ImportWizardShell } from '@/components/survey-import/ImportWizardShell';
 import { ImportWizardHeader } from '@/components/survey-import/ImportWizardHeader';
 import { ImportWizardSteps } from '@/components/survey-import/ImportWizardSteps';
@@ -11,12 +12,17 @@ import { MappingDomainStatusGrid } from '@/components/survey-import/review-mappi
 import { IgnoredColumnsSummary } from '@/components/survey-import/review-mapping/IgnoredColumnsSummary';
 import { SourceRelationsSummary } from '@/components/survey-import/review-mapping/SourceRelationsSummary';
 import { MappingReadinessSummary } from '@/components/survey-import/review-mapping/MappingReadinessSummary';
+import { MappingIssueResolutionSheet } from '@/components/survey-import/review-mapping/resolution/MappingIssueResolutionSheet';
 
 import type {
   HistoricalImportMappingDraft,
   HistoricalImportReviewMappingSource,
   HistoricalConfigurationCompatibilityCheck,
-  HistoricalImportMappingIssue
+  HistoricalImportMappingIssue,
+  HistoricalMappingIssueResolutionInput,
+  HistoricalMappingIssueResolutionResult,
+  HistoricalMappingScalePolarity,
+  HistoricalMappingResolutionOrigin
 } from '@/lib/survey-import/review-mapping/historicalImportReviewMappingTypes';
 
 interface Props {
@@ -30,6 +36,7 @@ interface Props {
   onBack: () => void;
   onCancel: () => void;
   onContinue: () => void;
+  onResolveIssue: (input: HistoricalMappingIssueResolutionInput) => HistoricalMappingIssueResolutionResult;
 }
 
 export function HistoricalImportReviewMappingScreen({
@@ -42,12 +49,77 @@ export function HistoricalImportReviewMappingScreen({
   onMouseEnterSidebar,
   onBack,
   onCancel,
-  onContinue
+  onContinue,
+  onResolveIssue
 }: Props) {
   const isCompatible = compatibility.status === 'current';
 
+  const [selectedIssueId, setSelectedIssueId] = useState<string | null>(null);
+  const [selectedPolarity, setSelectedPolarity] = useState<HistoricalMappingScalePolarity | undefined>();
+  const [resolutionOrigin, setResolutionOrigin] = useState<HistoricalMappingResolutionOrigin | undefined>();
+  const [localError, setLocalError] = useState<string | null>(null);
+
+  const [accessibleMessage, setAccessibleMessage] = useState<string>('');
+  const overviewSummaryRef = useRef<HTMLDivElement>(null);
+
+  const selectedIssue = selectedIssueId ? draft.issues.find(i => i.id === selectedIssueId) : undefined;
+  const selectedEntity = selectedIssue?.entityId ? draft.entities.find(e => e.id === selectedIssue.entityId) : undefined;
+
+  const handleReviewIssue = (issueId: string) => {
+    setSelectedIssueId(issueId);
+
+    // Explicit editor initialization
+    const issue = draft.issues.find(i => i.id === issueId);
+    const entity = draft.entities.find(e => e.id === issue?.entityId);
+    const metadata = entity?.scaleMetadata;
+    setSelectedPolarity(metadata?.currentPolarity === 'unresolved' ? undefined : metadata?.currentPolarity);
+    setResolutionOrigin(metadata?.resolutionOrigin);
+    setLocalError(null);
+  };
+
+  const handleResolutionCancel = () => {
+    setSelectedIssueId(null);
+    setSelectedPolarity(undefined);
+    setResolutionOrigin(undefined);
+    setLocalError(null);
+  };
+
+  const handleResolutionConfirm = (input: HistoricalMappingIssueResolutionInput) => {
+    const result = onResolveIssue(input);
+    if (result.ok) {
+      setSelectedIssueId(null);
+      setSelectedPolarity(undefined);
+      setResolutionOrigin(undefined);
+      setLocalError(null);
+      setAccessibleMessage('Incidencia resuelta. El mapeo ha sido actualizado.');
+
+      // Return focus to stable summary element
+      if (overviewSummaryRef.current) {
+        overviewSummaryRef.current.focus();
+      }
+    } else {
+      setLocalError(result.messageKey || 'Ocurrió un error al intentar resolver la incidencia.');
+      const issue = draft.issues.find(i => i.id === selectedIssueId);
+      const entity = draft.entities.find(e => e.id === issue?.entityId);
+      const metadata = entity?.scaleMetadata;
+      setSelectedPolarity(metadata?.currentPolarity === 'unresolved' ? undefined : metadata?.currentPolarity);
+      setResolutionOrigin(metadata?.resolutionOrigin);
+    }
+    return { ok: result.ok, messageKey: !result.ok ? result.messageKey : undefined };
+  };
+
+  const handleSelectionChange = (polarity: HistoricalMappingScalePolarity, origin: HistoricalMappingResolutionOrigin) => {
+    setSelectedPolarity(polarity);
+    setResolutionOrigin(origin);
+  };
+
   const mainContent = (
     <div className="space-y-8 pb-12 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
+      {/* Live region for screen readers */}
+      <div aria-live="polite" className="sr-only">
+        {accessibleMessage}
+      </div>
+
       <MappingSimulationDisclosure />
 
       <div className="space-y-3">
@@ -55,16 +127,22 @@ export function HistoricalImportReviewMappingScreen({
         <InheritedConfigurationSummary source={source} />
       </div>
 
-      <MappingReadinessOverview
-        status={draft.globalStatus}
-        readiness={draft.readiness}
-        compatibility={compatibility}
-      />
+      <div
+        ref={overviewSummaryRef}
+        tabIndex={-1}
+        className="outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 rounded-md"
+      >
+        <MappingReadinessOverview
+          status={draft.globalStatus}
+          readiness={draft.readiness}
+          compatibility={compatibility}
+        />
+      </div>
 
       {isCompatible && (
         <>
           <div className="space-y-3">
-            <PriorityMappingIssues issues={priorityIssues} />
+            <PriorityMappingIssues issues={priorityIssues} onReviewIssue={handleReviewIssue} />
           </div>
 
           <MappingDomainStatusGrid summaries={draft.domainSummaries} />
@@ -86,6 +164,24 @@ export function HistoricalImportReviewMappingScreen({
           compatibility={compatibility}
         />
       </div>
+
+      {selectedIssue && selectedEntity && (
+        <MappingIssueResolutionSheet
+          open={true}
+          issue={selectedIssue}
+          entity={selectedEntity}
+          compatibility={compatibility}
+          selectedPolarity={selectedPolarity}
+          resolutionOrigin={resolutionOrigin}
+          localError={localError}
+          onSelectionChange={handleSelectionChange}
+          onOpenChange={(open) => {
+            if (!open) handleResolutionCancel();
+          }}
+          onCancel={handleResolutionCancel}
+          onConfirm={handleResolutionConfirm}
+        />
+      )}
     </div>
   );
 

@@ -3,12 +3,15 @@ import type {
   HistoricalImportMappingDraft,
   HistoricalImportReviewMappingSource,
   HistoricalConfigurationCompatibilityCheck,
+  HistoricalMappingIssueResolutionInput,
+  HistoricalMappingIssueResolutionResult,
 } from '../../lib/survey-import/review-mapping/historicalImportReviewMappingTypes';
 import {
   checkConfigurationCompatibility,
   getReviewMappingScenario,
   buildConfirmationBoundary,
   getPriorityIssues,
+  resolveMappingIssue,
 } from '../../lib/survey-import/review-mapping/historicalImportReviewMappingAdapter';
 
 export function useHistoricalImportReviewMappingState() {
@@ -16,8 +19,9 @@ export function useHistoricalImportReviewMappingState() {
   const [source, setSource] = useState<HistoricalImportReviewMappingSource | null>(null);
   const [compatibility, setCompatibility] = useState<HistoricalConfigurationCompatibilityCheck | null>(null);
 
-  // We keep a ref to the current source to avoid stale closures in initialize if needed
+  // We keep refs to avoid stale closures in initialize and resolveIssue
   const sourceRef = useRef<HistoricalImportReviewMappingSource | null>(null);
+  const compatibilityRef = useRef<HistoricalConfigurationCompatibilityCheck | null>(null);
 
   const initialize = useCallback((newSource: HistoricalImportReviewMappingSource) => {
     // Check if we already have a draft that matches this source's scenario
@@ -27,6 +31,7 @@ export function useHistoricalImportReviewMappingState() {
       const comp = checkConfigurationCompatibility(draft.configurationSignature, newSource);
 
       setCompatibility(comp);
+      compatibilityRef.current = comp;
       setSource(newSource);
       sourceRef.current = newSource;
       return;
@@ -43,6 +48,7 @@ export function useHistoricalImportReviewMappingState() {
 
     setDraft(newDraft);
     setCompatibility(comp);
+    compatibilityRef.current = comp;
     setSource(newSource);
     sourceRef.current = newSource;
   }, [draft]);
@@ -52,7 +58,30 @@ export function useHistoricalImportReviewMappingState() {
     setSource(null);
     setCompatibility(null);
     sourceRef.current = null;
+    compatibilityRef.current = null;
   }, []);
+
+  const resolveIssue = useCallback(
+    (input: HistoricalMappingIssueResolutionInput): HistoricalMappingIssueResolutionResult => {
+      if (!draft || !compatibilityRef.current) {
+        return {
+          ok: false,
+          errorCode: 'mapping-simulated-error',
+          messageKey: 'historical_import_review_mapping.resolution.error_simulated_error',
+          originalDraft: draft as HistoricalImportMappingDraft,
+        };
+      }
+
+      const result = resolveMappingIssue(draft, compatibilityRef.current.status, input);
+
+      if (result.ok) {
+        setDraft(result.updatedDraft);
+      }
+
+      return result;
+    },
+    [draft]
+  );
 
   const effectiveDraft = useMemo(() => {
     if (!draft || !compatibility) return null;
@@ -86,6 +115,7 @@ export function useHistoricalImportReviewMappingState() {
     priorityIssues,
     initialize,
     reset,
+    resolveIssue,
     buildBoundary,
   };
 }

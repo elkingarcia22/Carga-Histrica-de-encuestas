@@ -107,6 +107,7 @@ export interface HistoricalImportMappingEntity {
   ignoredReason?: HistoricalMappingIgnoredReason;
   relatedEntityId?: HistoricalMappingEntityId;
   metadata?: Record<string, string | number | boolean>;
+  scaleMetadata?: HistoricalMappingScaleMetadata;
 }
 
 export interface HistoricalImportMappingDomainSummary {
@@ -200,6 +201,66 @@ export interface HistoricalImportMappingConfirmationBoundary {
   readiness: HistoricalImportMappingReadiness;
   canContinueToConfirmation: boolean;
 }
+
+export type HistoricalMappingScalePolarity =
+  | 'high-is-favorable'
+  | 'low-is-favorable'
+  | 'unresolved';
+
+export type HistoricalMappingResolutionOrigin =
+  | 'simulated-suggestion'
+  | 'user-confirmed-suggestion'
+  | 'user-selected'
+  | 'restored-to-suggestion';
+
+export type HistoricalMappingResolutionType = 'confirm-polarity';
+
+export type HistoricalMappingIssueResolutionFailureCode =
+  | 'issue-not-found'
+  | 'entity-not-found'
+  | 'issue-entity-mismatch'
+  | 'unsupported-issue'
+  | 'invalid-polarity'
+  | 'mapping-incompatible'
+  | 'mapping-simulated-error'
+  | 'issue-already-resolved';
+
+export interface HistoricalMappingScaleMetadata {
+  sourceScaleName: string;
+  syntheticMinimum: number;
+  syntheticMaximum: number;
+  syntheticMinLabel?: string;
+  syntheticMaxLabel?: string;
+  currentPolarity: HistoricalMappingScalePolarity;
+  suggestedPolarity: HistoricalMappingScalePolarity;
+  confirmedResolutionType?: HistoricalMappingResolutionType;
+  resolutionOrigin?: HistoricalMappingResolutionOrigin;
+}
+
+export interface HistoricalMappingIssueResolutionInput {
+  mappingIssueId: HistoricalMappingIssueId;
+  mappingEntityId: HistoricalMappingEntityId;
+  resolutionType: HistoricalMappingResolutionType;
+  selectedPolarity: HistoricalMappingScalePolarity;
+  resolutionOrigin: HistoricalMappingResolutionOrigin;
+  resolvedByRole: string;
+}
+
+export type HistoricalMappingIssueResolutionResult =
+  | {
+      ok: true;
+      updatedDraft: HistoricalImportMappingDraft;
+      issueId: HistoricalMappingIssueId;
+      entityId: HistoricalMappingEntityId;
+      expectedGlobalStatus: HistoricalImportMappingDraftStatus;
+      expectedBoundaryAvailable: boolean;
+    }
+  | {
+      ok: false;
+      errorCode: HistoricalMappingIssueResolutionFailureCode;
+      messageKey: string;
+      originalDraft: HistoricalImportMappingDraft;
+    };
 
 export interface HistoricalConfigurationCompatibilityCheck {
   status: 'current' | 'stale' | 'incompatible';

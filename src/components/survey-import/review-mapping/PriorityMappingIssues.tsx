@@ -9,9 +9,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 interface Props {
   issues: HistoricalImportMappingIssue[];
+  onReviewIssue?: (issueId: string) => void;
 }
 
-export function PriorityMappingIssues({ issues }: Props) {
+export function PriorityMappingIssues({ issues, onReviewIssue }: Props) {
   if (issues.length === 0) {
     return (
       <Card className="shadow-sm bg-emerald-50/50 border-emerald-100">
@@ -53,19 +54,31 @@ export function PriorityMappingIssues({ issues }: Props) {
                 <p className="text-sm text-muted-foreground">{issue.description}</p>
               </div>
               
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" className="shrink-0 group">
-                      {issue.actionConcept}
-                      <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>La resolución detallada de incidencias todavía no está conectada en el prototipo.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              {issue.code === 'AMBIGUOUS_POLARITY' ? (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="shrink-0 group"
+                  onClick={() => onReviewIssue && onReviewIssue(issue.id)}
+                >
+                  {issue.actionConcept}
+                  <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                </Button>
+              ) : (
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="sm" className="shrink-0 group" disabled>
+                        {issue.actionConcept}
+                        <ArrowRight className="w-4 h-4 ml-2 opacity-50" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>La resolución detallada para esta incidencia todavía no está conectada en el prototipo.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
           ))}
         </div>

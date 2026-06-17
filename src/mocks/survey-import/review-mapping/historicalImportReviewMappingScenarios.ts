@@ -455,3 +455,289 @@ export const historicalImportReviewMappingScenarios: HistoricalImportReviewMappi
     },
   },
 ];
+
+import type {
+  HistoricalMappingIssueResolutionInput,
+  HistoricalMappingScalePolarity,
+  HistoricalMappingResolutionOrigin,
+  HistoricalMappingIssueResolutionFailureCode,
+} from '../../../lib/survey-import/review-mapping/historicalImportReviewMappingTypes';
+
+export interface HistoricalImportResolutionScenario {
+  scenarioId: string;
+  baseDraft: HistoricalImportMappingDraft;
+  compatibility: 'current' | 'stale' | 'incompatible';
+  resolutionInput: HistoricalMappingIssueResolutionInput;
+  expected: {
+    success: boolean;
+    errorCode?: HistoricalMappingIssueResolutionFailureCode;
+    issueStatus: 'open' | 'resolved' | 'deferred';
+    entityPolarity: HistoricalMappingScalePolarity;
+    resolutionOrigin: HistoricalMappingResolutionOrigin;
+    globalStatus: HistoricalImportMappingDraftStatus;
+    cta: boolean;
+    boundaryAvailable: boolean;
+  };
+}
+
+const createBaseDraftWithAmbiguousScale = (
+  suggestedPolarity: HistoricalMappingScalePolarity,
+  otherBlockingIssue: boolean = false,
+  isSimulatedError: boolean = false
+): HistoricalImportMappingDraft => {
+  const issues: import('../../../lib/survey-import/review-mapping/historicalImportReviewMappingTypes').HistoricalImportMappingIssue[] = [
+    {
+      id: 'ISS_S_AMB_01',
+      code: 'AMBIGUOUS_POLARITY',
+      domain: 'scales',
+      entityId: 'ENT_S_AMB_01',
+      title: 'Polaridad ambigua en escala',
+      description: 'No se pudo determinar si una puntuación alta es favorable.',
+      actionConcept: 'Confirmar polaridad',
+      resolutionStatus: 'open',
+      ownershipStage: 'mapping-overview',
+      severity: 'confirmation-required',
+    }
+  ];
+
+  if (otherBlockingIssue) {
+    issues.push({
+      id: 'ISS_BLOCK_01',
+      code: 'REQUIRED_FIELD_UNMAPPED',
+      domain: 'identifiers',
+      entityId: 'ENT_I_MISSING',
+      title: 'Identificador faltante',
+      description: 'Falta email',
+      actionConcept: 'Asignar',
+      resolutionStatus: 'open',
+      ownershipStage: 'mapping-overview',
+      severity: 'blocking',
+    });
+  }
+
+  return {
+    mappingDraftId: 'DRAFT_RES_001',
+    configurationDraftId: 'DRAFT_CONF_001',
+    sourceBatchId: 'BATCH_001',
+    sourceScenarioId: 'resolution-test',
+    configurationSignature: 'climate|confidential|2026',
+    entities: [
+      {
+        id: 'ENT_S_AMB_01',
+        domain: 'scales',
+        sourceLabel: 'Satisfacción',
+        sourceKey: 'scale_sat',
+        status: 'ambiguous',
+        required: true,
+        origin: 'simulated-suggestion',
+        issueIds: ['ISS_S_AMB_01'],
+        scaleMetadata: {
+          sourceScaleName: 'Satisfacción (1-5)',
+          syntheticMinimum: 1,
+          syntheticMaximum: 5,
+          currentPolarity: 'unresolved',
+          suggestedPolarity,
+        }
+      },
+      ...(otherBlockingIssue ? [{
+        id: 'ENT_I_MISSING',
+        domain: 'identifiers' as const,
+        sourceLabel: 'Email missing',
+        sourceKey: 'missing',
+        status: 'unmapped' as const,
+        required: true,
+        origin: 'inherited' as const,
+        issueIds: ['ISS_BLOCK_01']
+      }] : [])
+    ],
+    ignoredColumns: [],
+    issues,
+    resolvedIssueIds: [],
+    deferredIssueIds: [],
+    domainSummaries: {} as import('../../../lib/survey-import/review-mapping/historicalImportReviewMappingTypes').HistoricalImportMappingDraft['domainSummaries'],
+    globalStatus: isSimulatedError ? 'simulated-error' : 'needs-review',
+    readiness: { canContinueToConfirmation: false } as import('../../../lib/survey-import/review-mapping/historicalImportReviewMappingTypes').HistoricalImportMappingReadiness,
+    canContinueToConfirmation: false,
+  };
+};
+
+export const historicalImportResolutionScenarios: HistoricalImportResolutionScenario[] = [
+  {
+    scenarioId: 'polarity-ambiguous-default',
+    baseDraft: createBaseDraftWithAmbiguousScale('unresolved'),
+    compatibility: 'current',
+    resolutionInput: {
+      mappingIssueId: 'ISS_S_AMB_01',
+      mappingEntityId: 'ENT_S_AMB_01',
+      resolutionType: 'confirm-polarity',
+      selectedPolarity: 'high-is-favorable',
+      resolutionOrigin: 'user-selected',
+      resolvedByRole: 'admin',
+    },
+    expected: {
+      success: true,
+      issueStatus: 'resolved',
+      entityPolarity: 'high-is-favorable',
+      resolutionOrigin: 'user-selected',
+      globalStatus: 'ready-for-confirmation',
+      cta: true,
+      boundaryAvailable: true,
+    }
+  },
+  {
+    scenarioId: 'high-is-favorable-suggested',
+    baseDraft: createBaseDraftWithAmbiguousScale('high-is-favorable'),
+    compatibility: 'current',
+    resolutionInput: {
+      mappingIssueId: 'ISS_S_AMB_01',
+      mappingEntityId: 'ENT_S_AMB_01',
+      resolutionType: 'confirm-polarity',
+      selectedPolarity: 'high-is-favorable',
+      resolutionOrigin: 'user-confirmed-suggestion',
+      resolvedByRole: 'admin',
+    },
+    expected: {
+      success: true,
+      issueStatus: 'resolved',
+      entityPolarity: 'high-is-favorable',
+      resolutionOrigin: 'user-confirmed-suggestion',
+      globalStatus: 'ready-for-confirmation',
+      cta: true,
+      boundaryAvailable: true,
+    }
+  },
+  {
+    scenarioId: 'low-is-favorable-suggested',
+    baseDraft: createBaseDraftWithAmbiguousScale('low-is-favorable'),
+    compatibility: 'current',
+    resolutionInput: {
+      mappingIssueId: 'ISS_S_AMB_01',
+      mappingEntityId: 'ENT_S_AMB_01',
+      resolutionType: 'confirm-polarity',
+      selectedPolarity: 'low-is-favorable',
+      resolutionOrigin: 'user-confirmed-suggestion',
+      resolvedByRole: 'admin',
+    },
+    expected: {
+      success: true,
+      issueStatus: 'resolved',
+      entityPolarity: 'low-is-favorable',
+      resolutionOrigin: 'user-confirmed-suggestion',
+      globalStatus: 'ready-for-confirmation',
+      cta: true,
+      boundaryAvailable: true,
+    }
+  },
+  {
+    scenarioId: 'manual-resolution-required',
+    baseDraft: createBaseDraftWithAmbiguousScale('unresolved'),
+    compatibility: 'current',
+    resolutionInput: {
+      mappingIssueId: 'ISS_S_AMB_01',
+      mappingEntityId: 'ENT_S_AMB_01',
+      resolutionType: 'confirm-polarity',
+      selectedPolarity: 'low-is-favorable',
+      resolutionOrigin: 'user-selected',
+      resolvedByRole: 'admin',
+    },
+    expected: {
+      success: true,
+      issueStatus: 'resolved',
+      entityPolarity: 'low-is-favorable',
+      resolutionOrigin: 'user-selected',
+      globalStatus: 'ready-for-confirmation',
+      cta: true,
+      boundaryAvailable: true,
+    }
+  },
+  {
+    scenarioId: 'resolution-restored-to-suggestion',
+    baseDraft: createBaseDraftWithAmbiguousScale('high-is-favorable'),
+    compatibility: 'current',
+    resolutionInput: {
+      mappingIssueId: 'ISS_S_AMB_01',
+      mappingEntityId: 'ENT_S_AMB_01',
+      resolutionType: 'confirm-polarity',
+      selectedPolarity: 'high-is-favorable',
+      resolutionOrigin: 'restored-to-suggestion',
+      resolvedByRole: 'admin',
+    },
+    expected: {
+      success: true,
+      issueStatus: 'resolved',
+      entityPolarity: 'high-is-favorable',
+      resolutionOrigin: 'restored-to-suggestion',
+      globalStatus: 'ready-for-confirmation',
+      cta: true,
+      boundaryAvailable: true,
+    }
+  },
+  {
+    scenarioId: 'other-blocking-issue-remains',
+    baseDraft: createBaseDraftWithAmbiguousScale('high-is-favorable', true),
+    compatibility: 'current',
+    resolutionInput: {
+      mappingIssueId: 'ISS_S_AMB_01',
+      mappingEntityId: 'ENT_S_AMB_01',
+      resolutionType: 'confirm-polarity',
+      selectedPolarity: 'high-is-favorable',
+      resolutionOrigin: 'user-confirmed-suggestion',
+      resolvedByRole: 'admin',
+    },
+    expected: {
+      success: true,
+      issueStatus: 'resolved',
+      entityPolarity: 'high-is-favorable',
+      resolutionOrigin: 'user-confirmed-suggestion',
+      globalStatus: 'blocked',
+      cta: false,
+      boundaryAvailable: false,
+    }
+  },
+  {
+    scenarioId: 'configuration-incompatible',
+    baseDraft: createBaseDraftWithAmbiguousScale('high-is-favorable'),
+    compatibility: 'incompatible',
+    resolutionInput: {
+      mappingIssueId: 'ISS_S_AMB_01',
+      mappingEntityId: 'ENT_S_AMB_01',
+      resolutionType: 'confirm-polarity',
+      selectedPolarity: 'high-is-favorable',
+      resolutionOrigin: 'user-confirmed-suggestion',
+      resolvedByRole: 'admin',
+    },
+    expected: {
+      success: false,
+      errorCode: 'mapping-incompatible',
+      issueStatus: 'open',
+      entityPolarity: 'unresolved',
+      resolutionOrigin: 'simulated-suggestion',
+      globalStatus: 'needs-review',
+      cta: false,
+      boundaryAvailable: false,
+    }
+  },
+  {
+    scenarioId: 'simulated-error',
+    baseDraft: createBaseDraftWithAmbiguousScale('high-is-favorable', false, true),
+    compatibility: 'current',
+    resolutionInput: {
+      mappingIssueId: 'ISS_S_AMB_01',
+      mappingEntityId: 'ENT_S_AMB_01',
+      resolutionType: 'confirm-polarity',
+      selectedPolarity: 'high-is-favorable',
+      resolutionOrigin: 'user-confirmed-suggestion',
+      resolvedByRole: 'admin',
+    },
+    expected: {
+      success: false,
+      errorCode: 'mapping-simulated-error',
+      issueStatus: 'open',
+      entityPolarity: 'unresolved',
+      resolutionOrigin: 'simulated-suggestion',
+      globalStatus: 'simulated-error',
+      cta: false,
+      boundaryAvailable: false,
+    }
+  }
+];

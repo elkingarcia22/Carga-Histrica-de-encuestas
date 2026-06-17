@@ -8,6 +8,9 @@ import type {
   HistoricalImportMappingConfirmationBoundary,
   HistoricalConfigurationCompatibilityCheck,
   HistoricalImportMappingIssue,
+  HistoricalMappingIssueResolutionInput,
+  HistoricalMappingIssueResolutionResult,
+  HistoricalImportMappingEntity,
 } from './historicalImportReviewMappingTypes';
 import type {
   HistoricalImportReviewMappingBoundary,
@@ -87,7 +90,7 @@ export const deriveDomainSummaries = (draft: HistoricalImportMappingDraft): Reco
 
   for (const domain of ALL_DOMAINS) {
     const domainEntities = draft.entities.filter(e => e.domain === domain);
-    const domainIssues = draft.issues.filter(i => i.domain === domain);
+    const domainIssues = draft.issues.filter(i => i.domain === domain && i.resolutionStatus === 'open');
     const blockingIssues = domainIssues.filter(i => i.severity === 'blocking');
 
     let total = domainEntities.length;
@@ -141,15 +144,15 @@ export const deriveDomainSummaries = (draft: HistoricalImportMappingDraft): Reco
 };
 
 export const deriveReadiness = (draft: HistoricalImportMappingDraft): HistoricalImportMappingReadiness => {
-  const blockingIssues = draft.issues.filter(i => i.severity === 'blocking');
-  const pendingIssues = draft.issues.filter(i => i.severity === 'needs-review' || i.severity === 'confirmation-required');
-  const simErrorIssues = draft.issues.filter(i => i.severity === 'simulated-error');
+  const blockingIssues = draft.issues.filter(i => i.severity === 'blocking' && i.resolutionStatus === 'open');
+  const pendingIssues = draft.issues.filter(i => (i.severity === 'needs-review' || i.severity === 'confirmation-required') && i.resolutionStatus === 'open');
+  const simErrorIssues = draft.issues.filter(i => i.severity === 'simulated-error' && i.resolutionStatus === 'open');
 
   const unmappedRequired = draft.entities.filter(e => e.required && e.status === 'unmapped').length;
   const unresolvedScales = draft.entities.filter(e => e.domain === 'scales' && (e.status === 'ambiguous' || e.status === 'needs-review')).length;
   const missingIdentifiers = draft.entities.filter(e => e.domain === 'identifiers' && e.required && e.status === 'unmapped').length;
 
-  const hasInheritedBlock = draft.issues.some(i => i.code === 'INHERITED_CONFIG_BLOCK');
+  const hasInheritedBlock = draft.issues.some(i => i.code === 'INHERITED_CONFIG_BLOCK' && i.resolutionStatus === 'open');
 
   const canContinue =
     !hasInheritedBlock &&
@@ -328,5 +331,93 @@ export const buildMappingSourceFromConfiguration = (
       boundary.confirmedConfiguration.privacyMode,
       boundary.confirmedConfiguration.periodYear
     ),
+  };
+};
+
+export const resolveMappingIssue = (
+  baseDraft: HistoricalImportMappingDraft,
+  compatibilityStatus: 'current' | 'stale' | 'incompatible',
+  input: HistoricalMappingIssueResolutionInput
+): HistoricalMappingIssueResolutionResult => {
+  if (compatibilityStatus !== 'current') {
+    return {
+      ok: false,
+      errorCode: 'mapping-incompatible',
+      messageKey: 'resolution.error.mapping_incompatible',
+      originalDraft: baseDraft,
+    };
+  }
+
+  if (baseDraft.globalStatus === 'simulated-error') {
+    return {
+      ok: false,
+      errorCode: 'mapping-simulated-error',
+      messageKey: 'resolution.error.mapping_simulated_error',
+      originalDraft: baseDraft,
+    };
+  }
+
+  const issue = baseDraft.issues.find(i => i.id === input.mappingIssueId);
+  if (!issue) {
+    return { ok: false, errorCode: 'issue-not-found', messageKey: 'resolution.error.issue_not_found', originalDraft: baseDraft };
+  }
+
+  if (issue.resolutionStatus !== 'open') {
+    return { ok: false, errorCode: 'issue-already-resolved', messageKey: 'resolution.error.issue_already_resolved', originalDraft: baseDraft };
+  }
+
+  const entity = baseDraft.entities.find(e => e.id === input.mappingEntityId);
+  if (!entity) {
+    return { ok: false, errorCode: 'entity-not-found', messageKey: 'resolution.error.entity_not_found', originalDraft: baseDraft };
+  }
+
+  if (issue.entityId !== entity.id) {
+    return { ok: false, errorCode: 'issue-entity-mismatch', messageKey: 'resolution.error.issue_entity_mismatch', originalDraft: baseDraft };
+  }
+
+  if (input.resolutionType !== 'confirm-polarity' || issue.code !== 'AMBIGUOUS_POLARITY') {
+    return { ok: false, errorCode: 'unsupported-issue', messageKey: 'resolution.error.unsupported_issue', originalDraft: baseDraft };
+  }
+
+  if (input.selectedPolarity === 'unresolved') {
+    return { ok: false, errorCode: 'invalid-polarity', messageKey: 'resolution.error.invalid_polarity', originalDraft: baseDraft };
+  }
+
+  const updatedEntity: HistoricalImportMappingEntity = {
+    ...entity,
+    status: 'confirmed',
+    scaleMetadata: entity.scaleMetadata ? {
+      ...entity.scaleMetadata,
+      currentPolarity: input.selectedPolarity,
+      confirmedResolutionType: input.resolutionType,
+      resolutionOrigin: input.resolutionOrigin,
+    } : undefined
+  };
+
+  const updatedIssue: HistoricalImportMappingIssue = {
+    ...issue,
+    resolutionStatus: 'resolved',
+  };
+
+  const updatedEntities = baseDraft.entities.map(e => e.id === entity.id ? updatedEntity : e);
+  const updatedIssues = baseDraft.issues.map(i => i.id === issue.id ? updatedIssue : i);
+  const updatedResolvedIssueIds = [...baseDraft.resolvedIssueIds, issue.id].sort();
+
+  const tempDraft: HistoricalImportMappingDraft = {
+    ...baseDraft,
+    entities: updatedEntities,
+    issues: updatedIssues,
+    resolvedIssueIds: updatedResolvedIssueIds,
+  };
+
+  const enrichedDraft = enrichDraft(tempDraft);
+
+  return {
+    ok: true,
+    updatedDraft: enrichedDraft,
+    issueId: issue.id,
+    entityId: entity.id,
+    expectedGlobalStatus: enrichedDraft.globalStatus,
+    expectedBoundaryAvailable: enrichedDraft.canContinueToConfirmation,
   };
 };
