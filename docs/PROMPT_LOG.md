@@ -4203,3 +4203,27 @@ No se modificó código. Se mantiene estricto el "Safe Posture" con prohibición
 `GOVERNANCE_EXTERNAL_ACTION_REQUIRED`
 `REPOSITORY_PHASES_PAUSED_PENDING_EVIDENCE`
 `WAVE_1_OWNERSHIP_GOVERNANCE_STILL_OPEN`
+
+# Fase 4K-SYN0 · SYNTHETIC SANDBOX BOOTSTRAP VALIDATION AND INTAKE LOCK
+
+## 1. Alcance
+Validación técnica del entorno para la importación histórica de encuestas mediante archivos sintéticos sin persistencia, garantizando los bloqueos vigentes.
+
+## 2. Evidencia Revisada
+Se completó el Git preflight confirmando rama limpia. Se inventariaron componentes existentes (Upload, Survey Analytics, etc.). Se comprobó la presencia de los documentos de arquitectura y QA del Starter Kit.
+
+## 3. Archivos Modificados/Creados
+* `docs/HISTORICAL_IMPORT_SYNTHETIC_SANDBOX_INTAKE.md` (Creado)
+* `docs/PROMPT_LOG.md` (Actualizado)
+
+## 4. Gates Cerrados y Abiertos
+**Cerrados:** Intake para el Synthetic Sandbox (Bloqueo de arquitectura ahora preparado).
+**Abiertos/Bloqueantes:** Fases de Implementación reales, Wave 2 y persistencia física continúan estrictamente bloqueadas.
+
+## 5. Restricciones Cumplidas
+No se modificó código. No se instalaron dependencias. No se reprodujeron datos de clientes ni se generaron archivos de UI. Todo se ajustó a operaciones read-only/documentales.
+
+## 6. Estado Final
+`SYNTHETIC_SANDBOX_BOOTSTRAP_VALIDATED`
+`SYNTHETIC_SANDBOX_INTAKE_LOCKED`
+`SYNTHETIC_SANDBOX_ARCHITECTURE_LOCK_READY`
