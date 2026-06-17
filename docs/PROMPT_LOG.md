@@ -4025,3 +4025,31 @@ HISTORICAL_IMPORT_REVIEW_MAPPING_OVERVIEW_SCREEN_BUILT
 
 ## 7. Siguiente Fase Máxima Autorizable
 Fase 4G-R5 · Historical Import Review & Mapping Formal Closure
+
+# Fase 4K-R1H2 · Infrastructure, Privacy and Persistence Decision Gate
+
+## 1. Alcance
+Recuperar, verificar y documentar la evidencia real disponible para cerrar o clasificar los decision gates relacionados con Persistencia física, Infraestructura, Tenant isolation, Autenticación y autorización, PII, Retención, Seguridad, IA, Observabilidad, Ownership y Readiness de muestras sanitizadas, sin realizar implementaciones productivas.
+
+## 2. Evidencia Revisada
+- Se resolvió la discrepancia Git de H1 y se comiteó independientemente.
+- `package.json`, `vite.config.ts`, `docs/DATA_MODEL.md` e interfaces TypeScript (`src/types/survey-import/*`).
+- Ausencia verificada de ORMs, migraciones, buckets, configuraciones de infraestructura (IaC), servicios de autenticación y mecanismos de tenant isolation (`grep` en codebase por `tenant`, `auth`, `organization`, `workspace`).
+
+## 3. Archivos Creados
+- `docs/HISTORICAL_IMPORT_INFRASTRUCTURE_PRIVACY_PERSISTENCE_GATE.md`
+- `docs/HISTORICAL_IMPORT_DECISION_REGISTER.md`
+- `docs/HISTORICAL_IMPORT_PHYSICAL_PERSISTENCE_MAPPING.md`
+- `docs/HISTORICAL_IMPORT_PRIVACY_RETENTION_MATRIX.md`
+- `docs/HISTORICAL_IMPORT_INFRASTRUCTURE_OWNERSHIP_MATRIX.md`
+
+## 4. Gates Cerrados y Abiertos
+**Cerrados:** Ninguno.
+**Abiertos/Bloqueantes:** Todos (30 gates documentados en Decision Register), dado que la aplicación es puramente frontend sin definiciones corporativas aprobadas de persistencia, seguridad o infraestructura.
+
+## 5. Restricciones Cumplidas
+No se generó código, no se alteró la estructura ni se instalaron dependencias.
+
+## 6. Estado Final
+`HISTORICAL_IMPORT_INFRASTRUCTURE_PRIVACY_PERSISTENCE_GATE_DOCUMENTED`
+`ARCHITECTURE_LOCK_STILL_BLOCKED`
