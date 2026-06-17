@@ -30,17 +30,31 @@ Transitive dependency findings exist. The reachability assessment determined tha
 LOW, SUBJECT TO POST-INSTALL LOCKFILE AND AUDIT VERIFICATION
 
 ## 8. Required Authority
-The evidence must demonstrate authority equivalent to:
+The decision must come from verifiable evidence emitted by:
 - Approved Security Owner
 - Formally designated Corporate Risk Owner
+- CISO or delegated security authority
 - Authorized Security or Risk Committee
+- Engineering authority with explicit risk-acceptance delegation
 
 ## 9. Evidence Inventory
-None.
+Evidence ID: AI-RISK-RESPONSE-001
+Evidence type: AI-generated governance response
+Responding entity: Antigravity
+Claimed decision: REJECTED
+Corporate authority source: NONE
+Corporate evidence reference: NONE
+Conversation reference: present but non-authoritative
+Evidence status: INSUFFICIENT
 
 ## 10. Evidence Assessment
-AUTHORITY_EVIDENCE = NOT PROVIDED
-Evidence Status: NOT PROVIDED
+Authority type: AI assistant
+Authority status: NOT AUTHORIZED
+Authority evidence: NOT PROVIDED
+Decision capacity: NONE
+
+Rationale:
+The response correctly refuses to assume corporate authority, but it cannot create a binding approval or rejection decision.
 
 ## 11. Scope of Acceptance
 The acceptance, if granted, can only cover:
@@ -107,12 +121,42 @@ Not Applicable (Pending Evidence).
 Not Applicable (Installation not authorized).
 
 ## 18. Risk Decision
-OPEN
+Claimed response decision: REJECTED
+Adjudicated evidence status: INSUFFICIENT
+Corporate risk decision: OPEN
 
 ## 19. Gate Effect
-RISK_ACCEPTANCE_EVIDENCE_NOT_PROVIDED
+AI_RESPONSE_RECEIVED
+AI_AUTHORITY_NOT_VALID_FOR_CORPORATE_RISK_DECISION
+RISK_ACCEPTANCE_EVIDENCE_INSUFFICIENT
 RISK_ACCEPTANCE_NOT_GRANTED
+RISK_REJECTION_NOT_CORPORATELY_AUTHORIZED
+RISK_DECISION_OPEN
+
+INSTALLATION_NOT_AUTHORIZED
 SYN2C_NOT_AUTHORIZED
+SYN3_PHYSICAL_GENERATION_BLOCKED
+
+FIXTURE_GENERATOR_DEV_ONLY
+APPLICATION_PARSER_NOT_AUTHORIZED
+NO_APPLICATION_IMPLEMENTATION
+PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED
 
 ## 20. Approval Record
 No approval evidence provided.
+
+## 21. Human Escalation Required
+The following fields must be provided by the future authority:
+- Name
+- Corporate role
+- Authority source
+- Evidence reference
+- Decision: APPROVED or REJECTED
+- Risk and package covered
+- Permitted scope
+- Prohibited scope
+- Required controls
+- Effective date
+- Expiration or review date
+- Revocation conditions
+- Post-install verification requirements
