@@ -4110,3 +4110,28 @@ No se generó código, no se alteró la estructura ni se eligieron proveedores.
 `HISTORICAL_IMPORT_OWNERSHIP_EVIDENCE_REQUESTED`
 `WAVE_1_OWNERSHIP_GOVERNANCE_STILL_OPEN`
 `WAVE_2_NOT_AUTHORIZED`
+
+# Fase 4K-R1H4 · CORPORATE OWNERSHIP EVIDENCE COLLECTION PACK
+
+## 1. Alcance
+Formalizar la solicitud y criterios de recopilación de evidencia corporativa para adjudicar los doce roles de ownership requeridos y validar la segregación de funciones del proyecto Historical Import.
+
+## 2. Evidencia Revisada
+Se recibió el instruction pack detallado para la colección de evidencia. No se adjuntó evidencia específica para evaluar en este paso, sino la estructura del request hacia los stakeholders.
+
+## 3. Archivos Modificados/Creados
+* `docs/HISTORICAL_IMPORT_CORPORATE_OWNERSHIP_EVIDENCE_COLLECTION_PACK.md` (Creado)
+* `docs/PROMPT_LOG.md` (Actualizado)
+
+## 4. Gates Cerrados y Abiertos
+**Cerrados:** Ninguno.
+**Abiertos/Bloqueantes:** Wave 1 Ownership Governance (A la espera de la evidencia solicitada), Architecture Lock (Bloqueado), Wave 2 (No Autorizado), Fases de Implementación (No Autorizado).
+
+## 5. Restricciones Cumplidas
+No se modificó código. Se mantiene estricto el "Safe Posture" con prohibición expresa de enviar información productiva o sensible.
+
+## 6. Estado Final
+`CORPORATE_OWNERSHIP_EVIDENCE_COLLECTION_REQUESTED`
+`GOVERNANCE_EXTERNAL_ACTION_REQUIRED`
+`REPOSITORY_PHASES_PAUSED_PENDING_EVIDENCE`
+`WAVE_1_OWNERSHIP_GOVERNANCE_STILL_OPEN`
