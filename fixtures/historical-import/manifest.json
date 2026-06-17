@@ -1,0 +1,110 @@
+{
+  "contractName": "Historical Import Synthetic Mock Data Contract",
+  "contractVersion": "1.0.0",
+  "schemaVersion": "SYN-HI-1",
+  "generatorVersion": "1.0.0",
+  "generatorSeed": "HISTORICAL-IMPORT-SYNTHETIC-V1",
+  "exceljsVersion": "4.4.0",
+  "generatedArtifacts": [
+    "synthetic-survey-base.xlsx",
+    "synthetic-survey-comparison.xlsx"
+  ],
+  "sheetOrder": [
+    "answers",
+    "Dimensions",
+    "colaboradores",
+    "Jerarquía"
+  ],
+  "rowCounts": {
+    "synthetic-survey-base.xlsx": {
+      "answers": 18,
+      "Dimensions": 17,
+      "colaboradores": 24,
+      "Jerarquía": 9
+    },
+    "synthetic-survey-comparison.xlsx": {
+      "answers": 22,
+      "Dimensions": 17,
+      "colaboradores": 28,
+      "Jerarquía": 11
+    }
+  },
+  "columnCounts": {
+    "answers": 31
+  },
+  "questionCounts": {
+    "physicalPerWorkbook": 17
+  },
+  "canonicalQuestionUnionCount": 18,
+  "participationAssertions": {
+    "base": "16 / 24 = 66.67%",
+    "comparison": "20 / 28 = 71.43%",
+    "delta": "+4.76 pp"
+  },
+  "metricAssertions": {
+    "Q-CLM-001": {
+      "baseFavorability": "62.50%",
+      "comparisonFavorability": "80.00%",
+      "delta": "+17.50 pp"
+    },
+    "Q-LDR-001": {
+      "baseFavorability": "75.00%",
+      "comparisonFavorability": "60.00%",
+      "delta": "-15.00 pp"
+    },
+    "Q-DEV-001": {
+      "baseFavorability": "50.00%",
+      "comparisonFavorability": "70.00%",
+      "delta": "+20.00 pp",
+      "status": "ID_CHANGED_MATCHED"
+    },
+    "Q-COM-001": {
+      "status": "TEXT_CHANGED_REVIEW_REQUIRED"
+    },
+    "eNPS": {
+      "baseScore": "0",
+      "comparisonScore": "+20",
+      "delta": "+20"
+    },
+    "Q-COL-004": {
+      "baseValidValues": 14,
+      "baseBlanks": 2,
+      "baseValidResponseRate": "87.50%",
+      "comparisonValidValues": 19,
+      "comparisonBlanks": 1,
+      "comparisonValidResponseRate": "95.00%"
+    }
+  },
+  "privacyAssertions": {
+    "minimumCompletedResponsesForVisibleSegment": 4,
+    "base": {
+      "DIV-A": "VISIBLE",
+      "DIV-B": "VISIBLE",
+      "DIV-C": "SUPPRESSED_SMALL_SEGMENT"
+    },
+    "comparison": {
+      "DIV-A": "VISIBLE",
+      "DIV-B": "VISIBLE",
+      "DIV-C": "SUPPRESSED_SMALL_SEGMENT",
+      "DIV-D": "SUPPRESSED_SMALL_SEGMENT"
+    }
+  },
+  "openTextAssertions": {
+    "baseNonEmpty": 8,
+    "comparisonNonEmpty": 10,
+    "maxLength": 120
+  },
+  "contentSafetyAssertions": {
+    "noRealClientData": true,
+    "noPII": true,
+    "noNetworkGeneration": true,
+    "noFormulas": true,
+    "noMacros": true,
+    "noExternalLinks": true
+  },
+  "sha256": {
+    "base": "aac30d979cadabe5e5cfcd1d84ee910cd1e2b278fb08a7142667f973886e429b",
+    "comparison": "1f54b5e32874eb6f0e4f8c9633fcadfb821e0e55c04f994a172c0d44be7e98c5"
+  },
+  "determinismStatus": "BINARY_DETERMINISM_VERIFIED"
+}

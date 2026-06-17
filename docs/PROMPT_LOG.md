@@ -1,5 +1,85 @@
 # Prompt Log
 
+## Fase 4K-SYN3 · Deterministic Golden Synthetic Workbook Generation
+
+**Scope Confirmation:** SYN3 phase scope correctly limited to offline generation of deterministic golden synthetic workbooks.
+**Git Preflight:** PASS (branch = main, HEAD = origin/main, clean working tree)
+**Security Audit Recheck:** PASS (No new critical vulnerabilities attributable to ExcelJS)
+**Generator Created:** `scripts/historical-import/generate-synthetic-fixtures.mjs`
+**Files Generated:**
+- `fixtures/historical-import/synthetic-survey-base.xlsx`
+- `fixtures/historical-import/synthetic-survey-comparison.xlsx`
+- `fixtures/historical-import/manifest.json`
+**Base Workbook Structure:** Validated 4 canonical sheets (answers, Dimensions, colaboradores, Jerarquía), 24 collaborators, 16 completes, 9 hierarchy nodes.
+**Comparison Workbook Structure:** Validated 4 canonical sheets, 28 collaborators, 20 completes, 11 hierarchy nodes.
+**Question Catalog Validation:** 18 canonical questions, 17 physical columns per workbook. Correct states for MATCHED, ID_CHANGED_MATCHED, NEW, REMOVED, TEXT_CHANGED_REVIEW_REQUIRED.
+**Participant and Segment Validation:** Distributions accurately modeled as per contract for DIV-A, DIV-B, DIV-C, DIV-D.
+**Metric Assertions:** Q-CLM-001 (+17.50 pp), Q-LDR-001 (-15.00 pp), eNPS (+20), valid response rate calculated correctly.
+**Privacy Assertions:** DIV-A/B visible, DIV-C/D suppressed due to small segments.
+**Open-text Validation:** Synthetic text generation, max 120 chars, counts accurate.
+**Content Safety Validation:** 0 formulas, 0 macros, 0 hyperlinks. No PII, no real IDs.
+**Workbook Reopen Validation:** Reopening via ExcelJS passes. Valid rows, no orphans, stable identifiers.
+**First Generation Hashes:** Calculated.
+**Second Generation Hashes:** Calculated.
+**Determinism Assessment:** BINARY_DETERMINISM_VERIFIED. Hashes matched exactly across runs.
+**Network Guard Validation:** No fetch, XMLHttpRequest, WebSocket, or API usage in generator.
+**Files Created or Modified:**
+- `scripts/historical-import/generate-synthetic-fixtures.mjs` (NEW)
+- `fixtures/historical-import/synthetic-survey-base.xlsx` (NEW)
+- `fixtures/historical-import/synthetic-survey-comparison.xlsx` (NEW)
+- `fixtures/historical-import/manifest.json` (NEW)
+- `docs/PROMPT_LOG.md` (MODIFIED)
+
+**QA Results:**
+- [x] Generator is outside src/**.
+- [x] ExcelJS imports in src/** remain zero.
+- [x] Application code unchanged.
+- [x] No browser parser created.
+- [x] No UI created.
+- [x] No routes created.
+- [x] No real data read.
+- [x] No network code in generator.
+- [x] Base workbook valid.
+- [x] Comparison workbook valid.
+- [x] Manifest valid JSON.
+- [x] Workbook hashes recorded.
+- [x] Golden assertions validated from generated rows.
+- [x] No formulas.
+- [x] No hyperlinks.
+- [x] No hidden sheets.
+- [x] No duplicate response IDs.
+- [x] No orphan valid responses.
+- [x] No invalid hierarchy references.
+- [x] Likert ranges valid.
+- [x] eNPS ranges valid.
+- [x] Open-text counts valid.
+- [x] Privacy assertions valid.
+- [x] R1H5 remains not triggered.
+
+**SYN3 Decision:** APPROVED.
+**Blocking Findings:** NONE.
+**Next Maximum Authorized Phase:** Fase 4K-SYN4 · Synthetic Parser
+
+**Final Status:**
+PHASE_4K_SYN3_COMPLETE
+GOLDEN_SYNTHETIC_WORKBOOKS_GENERATED
+SYNTHETIC_FIXTURE_MANIFEST_CREATED
+SYNTHETIC_FIXTURE_ASSERTIONS_VERIFIED
+
+NO_REAL_CLIENT_DATA
+NO_PII
+NO_NETWORK_GENERATION
+NO_FORMULAS
+NO_MACROS
+NO_EXTERNAL_LINKS
+
+BINARY_DETERMINISM_VERIFIED
+
+FIXTURE_GENERATOR_DEV_ONLY
+APPLICATION_PARSER_NOT_AUTHORIZED
+NO_APPLICATION_IMPLEMENTATION
+PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED
+R1H5_DEFINED_BUT_NOT_TRIGGERED
 ## Fase 4K-SYN2C · ExcelJS Dev Dependency Installation and Lockfile Audit
 
 **Phase:** Fase 4K-SYN2C
