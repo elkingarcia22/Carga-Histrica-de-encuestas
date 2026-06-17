@@ -4719,3 +4719,14 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modificÃ
 * **Outcome:** `docs/HISTORICAL_IMPORT_SYNTHETIC_APPLICATION_PARSER_DECISION.md` created.
 * **Status:** `APPLICATION_XLSX_PARSER_DEPENDENCY_SELECTED`
 * **Next Authorized Step:** `SYN4B_DEPENDENCY_INSTALLATION_GATE_REQUIRED`
+
+## 4K-SYN4A1 Â· Parser Decision Version and Semantic Correction Gate
+* **Timestamp:** 2026-06-17T18:56:59-05:00
+* **Objective:** Correct the decision of SYN4A, substituting the obsolete 5.8.1 evaluation with the current 9.2.0 evaluation for read-excel-file.
+* **Findings:**
+    - Corrected execution strategy from Main thread to Internal Worker (BROWSER_IMPORT_USES_INTERNAL_WORKER).
+    - Blank cell semantics updated to reflect null/undefined defaults and necessity for QA.
+    - Security classification corrected (NO_PUBLISHED_GITHUB_ADVISORIES_FOUND, NO_SECURITY_POLICY_PUBLISHED).
+    - Formulas classified as NOT SUPPORTED.
+    - Added gates for implementation, security, and verification of runtime features.
+* **Status:** `PHASE_4K_SYN4A1_COMPLETE`, `SYN4A_PARSER_DECISION_CORRECTED`

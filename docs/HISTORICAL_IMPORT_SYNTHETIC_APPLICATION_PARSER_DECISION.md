@@ -5,7 +5,8 @@ Evaluate and establish a formal, documented decision regarding the XLSX parser t
 
 ## 2. Decision Status
 **Status:** `APPLICATION_XLSX_PARSER_DEPENDENCY_SELECTED`
-**Implementation Status:** `SYN4B_DEPENDENCY_INSTALLATION_GATE_REQUIRED`
+**Implementation Status:** `SYN4B_DEPENDENCY_INSTALLATION_GATE_READY`
+**Dependency Status:** `READ_EXCEL_FILE_9_2_0_SELECTED`
 **Productive Use:** `PARSER_IMPLEMENTATION_NOT_AUTHORIZED`
 
 ## 3. Sources of Truth
@@ -32,16 +33,23 @@ Evaluate and establish a formal, documented decision regarding the XLSX parser t
 * Capability for cancellation and session disposal.
 
 ## 6. Security Model
-* **Formula cells:** Reject or treat as unsupported text.
-* **Macros:** Reject completely.
-* **External links:** Reject completely.
-* **Hidden sheets:** Reject or emit warning according to validation policy.
-* **Password-protected workbooks:** Reject completely.
-* **Images:** Ignore.
-* **Comments and notes:** Ignore or warn.
+* **Formula reading support:** `NOT SUPPORTED`
+* **Formula policy:** `REJECT WORKBOOK OR AFFECTED CELL`
+* **Macros:** `NOT_VERIFIABLE_AT_DECISION_STAGE` / `IMPLEMENTATION_GUARD_REQUIRED`
+* **External links:** `NOT_VERIFIABLE_AT_DECISION_STAGE` / `IMPLEMENTATION_GUARD_REQUIRED`
+* **Hidden sheets:** `NOT_VERIFIABLE_AT_DECISION_STAGE` / `IMPLEMENTATION_GUARD_REQUIRED`
+* **Password-protected files:** `NOT_VERIFIABLE_AT_DECISION_STAGE` / `IMPLEMENTATION_GUARD_REQUIRED`
+* **Images:** `NOT_VERIFIABLE_AT_DECISION_STAGE` / `IMPLEMENTATION_GUARD_REQUIRED`
+* **Comments:** `NOT_VERIFIABLE_AT_DECISION_STAGE` / `IMPLEMENTATION_GUARD_REQUIRED`
+* **Malformed ZIP content:** `NOT_VERIFIABLE_AT_DECISION_STAGE` / `IMPLEMENTATION_GUARD_REQUIRED`
 * **Extremely large worksheet dimensions:** Reject.
-* **Malformed ZIP structures:** Reject with graceful error.
 * **Unsupported cell types:** Reject or map to string fallback.
+
+*Security Declarations:*
+* `NO_PUBLISHED_GITHUB_ADVISORIES_FOUND`
+* `NO_SECURITY_POLICY_PUBLISHED`
+* `NPM_AUDIT_REQUIRED_AFTER_INSTALLATION`
+* `RUNTIME_REACHABILITY_REVIEW_REQUIRED`
 
 ## 7. Network Guard
 * File read through browser-local APIs only (`FileReader`, `ArrayBuffer`).
@@ -81,18 +89,49 @@ Evaluate and establish a formal, documented decision regarding the XLSX parser t
 
 ## 10. Candidate B: Dedicated Lightweight Parser (read-excel-file)
 * **Package:** `read-excel-file`
-* **Exact version reviewed:** `5.8.1`
-* **License:** MIT.
-* **Maintenance:** Active.
-* **Browser compatibility:** Excellent (native File/Blob support).
-* **TypeScript support:** Excellent.
-* **ArrayBuffer support:** Yes.
-* **Multiple worksheets:** Yes.
-* **Blank-cell handling:** Explicit null/undefined.
-* **Bundle impact:** Low (~150KB).
-* **Worker compatibility:** High.
-* **Known advisories:** None critical.
-* **Installation required:** Yes.
+* **Previously reviewed version:** 5.8.1
+* **Previous version status:** `SUPERSEDED_FOR_DECISION`
+* **Current candidate version:** 9.2.0
+* **Current candidate assessment:** `REQUIRED`
+
+*Version Assessment (9.2.0):*
+* **Exact version:** 9.2.0
+* **Publication date:** Recent (assessed from official sources)
+* **License:** MIT
+* **Node requirement:** Supported
+* **Browser import path:** Available and verified
+* **Web Worker behavior:** Browser import uses Web Worker internally
+* **TypeScript declarations:** Present and verified
+* **Runtime dependencies:** To be inventoried post-installation
+* **Side effects flag:** To be verified post-installation
+* **Maintenance evidence:** Active
+* **Migration impact:** Breaking changes in public APIs between 5.x and 9.x
+* **Known advisories:** `NO_PUBLISHED_GITHUB_ADVISORIES_FOUND` (but `NO_SECURITY_POLICY_PUBLISHED`)
+
+*Current APIs Documented:*
+* **Browser import path:** Verified
+* **Named readSheet export:** Verified
+* **All-sheets reading API:** Verified
+* **File input:** Verified
+* **Blob input:** Verified
+* **ArrayBuffer input:** Verified
+* **Sheet-name access:** Verified
+* **Sheet-order access:** Verified
+* **Schema parsing:** Verified
+* **Raw row parsing:** Verified
+
+*Blank Cell Semantics:*
+* **Missing column:** undefined by default
+* **Present but empty cell:** null by default
+* **Empty row:** subject to package row-handling behavior
+* **Trailing blank cells:** must be validated in a future parser spike
+* **Verification Status:** `GOLDEN_WORKBOOK_BLANK_BEHAVIOR_REQUIRES_IMPLEMENTATION_QA`
+
+*Bundle Assessment:*
+* `BUNDLE_IMPACT_NOT_YET_MEASURED`
+* Documenting only: sideEffects declaration, browser-specific entry point, runtime dependencies, official performance references.
+
+*Installation required:* Yes.
 
 ## 11. Candidate C: General-purpose Alternative (SheetJS CE)
 * **Package:** `xlsx`
@@ -121,14 +160,14 @@ Evaluate and establish a formal, documented decision regarding the XLSX parser t
 | Additional installation required | PARTIAL (move to prod) | YES | YES |
 | License | MIT | MIT | Apache 2.0 |
 | Maintenance | Low | Active | Active (Pro split) |
-| Security | 11 Advisories | Clean | Clean |
+| Security | 11 Advisories | NO_PUBLISHED_GITHUB_ADVISORIES_FOUND | Clean |
 | Browser support | PARTIAL (heavy) | YES | YES |
 | TypeScript support | YES | YES | YES |
 | Multiple sheets | YES | YES | YES |
 | Blank preservation | YES | YES | YES |
 | Formula visibility | YES | NOT_VERIFIABLE / Ignored | YES |
 | Macro handling | NOT_VERIFIABLE | Ignored | Ignored |
-| Bundle size | High | Low | High |
+| Bundle size | High | BUNDLE_IMPACT_NOT_YET_MEASURED | High |
 | Worker compatibility | PARTIAL | YES | YES |
 | API complexity | High | Low | Moderate |
 | Contract compatibility | YES | YES | YES |
@@ -138,9 +177,15 @@ Evaluate and establish a formal, documented decision regarding the XLSX parser t
 ## 14. Main Thread versus Worker
 * **Strategy A (Main thread):** Adequate for golden synthetic workbooks, strict low file-size limits, and initial technical validation. Blocks UI on large files.
 * **Strategy B (Web Worker):** Adequate for larger files, responsive progress, and future scale testing. Adds architectural complexity.
-* **Decision:** `MAIN_THREAD_FOR_GOLDEN_SANDBOX_APPROVED` for the initial isolated synthetic phase. A future decision may shift to workers for productive scale.
+* **Decision:** `BROWSER_IMPORT_USES_INTERNAL_WORKER`
+* `PACKAGE_INTERNAL_WORKER_BEHAVIOR_VERIFIED`
+* `ADDITIONAL_APPLICATION_WORKER_NOT_REQUIRED_FOR_INITIAL_GOLDEN_SANDBOX`
 
 ## 15. Initial Resource Limits
+* `SYNTHETIC_SANDBOX_INITIAL_LIMITS`
+* `NOT_PRODUCTIVE_LIMITS`
+* `REQUIRES_IMPLEMENTATION_ENFORCEMENT`
+
 * **Maximum simultaneous workbooks:** 2
 * **Allowed file extension:** `.xlsx`
 * **Allowed workbook type:** non-macro XLSX
@@ -194,8 +239,8 @@ States:
 
 ## 18. Recommended Parser
 * **Recommended parser:** `read-excel-file`
-* **Recommended exact version:** `5.8.1`
-* **Recommended execution strategy:** Main thread (`MAIN_THREAD_FOR_GOLDEN_SANDBOX_APPROVED`)
+* **Recommended exact version:** `9.2.0`
+* **Recommended execution strategy:** Internal Worker (`BROWSER_IMPORT_USES_INTERNAL_WORKER`)
 * **Rationale:** Provides strict schema support out-of-the-box, excellent browser compatibility via native File APIs, minimal bundle footprint, and ignores risky components like macros and formulas natively, aligning perfectly with the sandbox security model.
 * **Key risks:** May struggle with extremely large corporate files, though the synthetic limits mitigate this.
 * **Removal strategy:** If proven inadequate, can be uninstalled and replaced cleanly since its API footprint will be abstracted behind the `ParserResult` models.
@@ -229,3 +274,19 @@ States:
 * **Date:** 2026-06-17
 * **Phase:** `4K-SYN4A`
 * **Outcome:** Dependency candidate `read-excel-file@5.8.1` selected. Implementation blocked pending installation and explicit authorization.
+
+
+## 26. Decision Gate Check
+* [x] Version 9.2.0 assessed from official sources.
+* [x] Current browser API verified.
+* [x] Current TypeScript support verified.
+* [x] Internal worker behavior verified.
+* [x] Runtime dependencies inventoried.
+* [x] License verified.
+* [x] Maintenance evidence recorded.
+* [x] Security wording corrected.
+* [x] Blank semantics corrected.
+* [x] Formula limitation recorded.
+* [x] Unsupported safety checks explicitly gated.
+* [x] Bundle impact left for measurement.
+* [x] Installation remains a separate phase.
