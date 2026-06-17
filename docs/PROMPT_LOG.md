@@ -1,5 +1,43 @@
 # Prompt Log
 
+## Fase 4K-SYN2 · Synthetic Sandbox Mock Data Contract
+
+**Fecha:** 2026-06-17
+**Branch:** main
+**Preflight:** PASS (rama main, HEAD alineado, working tree limpio).
+**Objetivo:** Definir de manera determinista y auditable el contrato de datos que utilizará la futura generación de workbooks sintéticos.
+**QA Técnico:** Cero archivos fuente (`src/`) modificados. Cero dependencias añadidas. Git diff `--check` limpio. Archivos físicos (XLSX, CSV, JSON) no creados.
+
+**Archivos Modificados/Creados:**
+- `docs/HISTORICAL_IMPORT_SYNTHETIC_MOCK_DATA_CONTRACT.md` (Nuevo)
+- `docs/PROMPT_LOG.md`
+
+**Estado Final:**
+PHASE_4K_SYN2_COMPLETE
+SYNTHETIC_MOCK_DATA_CONTRACT_LOCKED
+SYN3_CONTRACT_READY
+
+SYNTHETIC_FILES_ONLY
+NO_REAL_CLIENT_DATA
+NO_PII
+NO_PHYSICAL_FIXTURES_CREATED
+NO_XLSX_CREATED
+
+SYNTHETIC_TEST_METRIC_POLICY_DOCUMENTED
+PRODUCTION_LIKERT_POLICY_NOT_APPROVED
+
+SYNTHETIC_TEST_PRIVACY_POLICY_DOCUMENTED
+PRODUCTION_PRIVACY_THRESHOLD_NOT_APPROVED
+
+XLSX_PARSER_DEPENDENCY_DECISION_REQUIRED
+SYNTHETIC_XLSX_GENERATION_MECHANISM_DECISION_REQUIRED
+DEPENDENCY_INSTALLATION_NOT_AUTHORIZED
+SYN3_PHYSICAL_GENERATION_PENDING_TOOLING_GATE
+
+PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED
+NO_IMPLEMENTATION_PHASE_AUTHORIZED
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN1 · Synthetic Sandbox Architecture Lock
 
 **Fecha:** 2026-06-17
