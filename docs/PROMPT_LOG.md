@@ -1,4 +1,28 @@
 
+# Fase 4I-H6 · Historical Import Mapping Compatibility Formal Closure
+
+**Fecha:** 2026-06-16
+**Branch:** main
+**SHA Inicial:** 0c01aea307d7135e93b99773fa6a9db5c43d3c1e
+**Publicación verificada:** Sí, history forward-only y commits funcionales auditados.
+**Incidente:** Contradicción visual en la que el readiness era positivo y compatibility incompatible simultáneamente.
+**Causa Raíz:** MAPPING_INITIALIZATION_IGNORES_SOURCE_SIGNATURE (Firma fija del fixture).
+**Primer Intento:** Firma runtime adoptada pero modelo efectivo persistido de forma destructiva.
+**Corrupción:** EFFECTIVE_MAPPING_DRAFT_STATE_MUTATION_AND_CORRUPTION.
+**Solución Final:** Separación estricta entre draft persistido canónico y estado derivado en el renderizado (compatibility, globalStatus, CTA, boundary) sin alterar el draft base.
+**Reversibilidad:** Validada, la restauración de configuración original permite continuar exitosamente recuperando el readiness y status original.
+**Precedencia:** Conservada; simulated-error precede a incompatible.
+**CTA y Boundary:** El boundary solo existe y CTA habilita con compatibility current y status ready.
+**Escenarios:** Ocho escenarios estáticos intactos.
+**Stale:** STALE_RESERVED_NOT_REACHABLE_IN_CURRENT_CONTRACT. Se mantiene reservado pero funcionalmente inalcanzable en la fase actual.
+**QA:** Typecheck PASS, Lint PASS, Build PASS. Visual y Accessibility estables.
+**Tests:** NOT_CONFIGURED_WITH_EVIDENCE.
+**Deployment Status:** NO_DEPLOYMENT_TRIGGERED.
+**Documento Creado:** docs/HISTORICAL_IMPORT_MAPPING_COMPATIBILITY_CLOSURE.md.
+**Archivos Modificados:** docs/HISTORICAL_IMPORT_MAPPING_COMPATIBILITY_CLOSURE.md, docs/PROMPT_LOG.md.
+**Estado Final:** HISTORICAL_IMPORT_MAPPING_COMPATIBILITY_FORMALLY_CLOSED.
+**Siguiente Fase:** Historical Import Mapping Issue Resolution Intake.
+
 # Fase 4I-H5 · Historical Import Mapping Compatibility Safe Publication
 
 **Fecha:** 2026-06-16
