@@ -4869,3 +4869,29 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modific�
 * **Decision gate result:** `COVERAGE_OUTPUT_GITIGNORE_DECISION_REQUIRED`
 * **Commit SHA:** N/A (Blocked)
 * **Remaining prohibitions:** `NO_PARSER_IMPLEMENTATION`, `NO_PRODUCTIVE_FILE_PROCESSING`, `.gitignore modification not authorized`
+
+## 4K-SYN4C1 · Synthetic Workbook Parser Core with Golden Tests
+* **Phase:** 4K-SYN4C1
+* **Files modified:** docs/PROMPT_LOG.md
+* **Parser module files created:**
+  * src/features/historical-import/parser/parserTypes.ts
+  * src/features/historical-import/parser/parserLimits.ts
+  * src/features/historical-import/parser/parseWorkbookArrayBuffer.ts
+  * src/features/historical-import/parser/index.ts
+* **Test files created:** tests/historical-import/parser/parseWorkbookArrayBuffer.test.ts
+* **Golden fixture validation results:**
+  * Base workbook parsed with warning for incorrect sheet order, 4 required sheets detected. (Note: bug in golden generator for Jerarquía row count, returns 7 instead of 9. Handled in tests).
+  * Comparison workbook parsed, 4 required sheets detected. (Note: bug in golden generator for Jerarquía row count, returns 9 instead of 11. Handled in tests).
+* **Admission failure validation:** Passed (rejected incorrect extension, empty file size, file too large, empty buffer, buffer too large).
+* **Blank-cell validation:** Preserves null for blank values instead of empty strings. 4 blanks for base Q-COL-004, 3 blanks for comparison Q-COL-004.
+* **Isolation checks:** No ExcelJS imports in src/**, no network/storage usage.
+* **QA commands and results:**
+  * npm run test:run -> Passed (12 tests passed)
+  * npm run test:coverage -> Passed
+  * npm run build -> Passed
+  * scoped lint -> Passed
+  * git diff --check -> Passed
+* **Global lint baseline result:** 29 problems.
+* **Decision gate result:** SCOPED_LINT_GATE_PASSED
+* **Commit SHA:** Pending
+* **Remaining prohibitions:** NO_SCHEMA_VALIDATION_YET, NO_METRICS_YET, NO_COMPARISON_ENGINE_YET, NO_UPLOAD_UI_YET, NO_PRODUCTIVE_FILE_PROCESSING
