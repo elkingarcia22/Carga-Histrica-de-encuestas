@@ -4809,3 +4809,12 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modificÃ
     - Formulas classified as NOT SUPPORTED.
     - Added gates for implementation, security, and verification of runtime features.
 * **Status:** `PHASE_4K_SYN4A1_COMPLETE`, `SYN4A_PARSER_DECISION_CORRECTED`
+
+## 4K-SYN4C0 Â· Parser Test Infrastructure Decision
+
+- Evaluated test infrastructure options: Vitest, Node test runner, Build-time validation, and Jest.
+- Recommended Vitest due to Vite ecosystem alignment, ESM and TS native support, and ArrayBuffer handling.
+- Documented baseline lint findings (26 pre-existing problems) and instituted a SCOPED_LINT_GATE_RECOMMENDED policy.
+- Defined the ArrayBuffer binary fixture access strategy via relative paths.
+- Formalized SYN4C0A_TEST_DEPENDENCY_INSTALLATION_REQUIRED and blocked parser implementation until completion of test setup phases.
+- Created docs/HISTORICAL_IMPORT_SYNTHETIC_PARSER_TEST_INFRASTRUCTURE_DECISION.md.
