@@ -20,7 +20,7 @@ Drilldown behavior summary:
 Implemented question selection directly from the ComparisonResultsDashboard table using local state. Renders a dedicated drilldown panel below the table containing comparative metrics, delta explanation, and distribution response buckets. Supported clear state modeling for lack of selection, empty distributions, non-comparable states (base-only and comparison-only), as well as error and mock loading visualizations without connecting to actual APIs.
 
 Data boundary verification:
-The implementation solely relies on the pre-existing ComparisonViewModelResult data models. No APIs, real files, schemas, upload elements, nor AI insights were required nor utilized. 
+The implementation solely relies on the pre-existing ComparisonViewModelResult data models. No APIs, real files, schemas, upload elements, nor AI insights were required nor utilized.
 
 QA results:
 - build PASS required: YES
@@ -488,14 +488,14 @@ R1H5_DEFINED_BUT_NOT_TRIGGERED
   - Fix available: yes (via `npm audit fix --force`, breaking change)
   - Scope impact: offline sandbox generation only (synthetic fixtures).
 **Isolation verification:** Imports from src/**: 0. Imports from public/**: 0. Application runtime integration: NO.
-**Decision gate result:** 
+**Decision gate result:**
 - SYN2C_DEV_DEPENDENCY_INSTALLATION_COMPLETE
 - EXCELJS_4_4_0_DEV_ONLY_VERIFIED
 - LOCKFILE_AUDIT_COMPLETE
 - SYN3_FIXTURE_GENERATION_READY_FOR_SEPARATE_PHASE
 - SYN2C_SECURITY_REVIEW_REQUIRED
 - SYN3_PHYSICAL_GENERATION_BLOCKED
-**Remaining prohibitions:** 
+**Remaining prohibitions:**
 - APPLICATION_PARSER_NOT_AUTHORIZED
 - NO_APPLICATION_IMPLEMENTATION
 - PRODUCTIVE_FILE_PROCESSING_NOT_AUTHORIZED
