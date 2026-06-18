@@ -183,3 +183,5 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - [NEXT_CAPABILITY_INTAKE.md](./NEXT_CAPABILITY_INTAKE.md)
 - [CONVERSATIONAL_IMPORT_INTAKE.md](./CONVERSATIONAL_IMPORT_INTAKE.md)
 - [CONVERSATIONAL_IMPORT_ARCHITECTURE.md](./CONVERSATIONAL_IMPORT_ARCHITECTURE.md)
+
+- [Conversational Import Mock Contract](./CONVERSATIONAL_IMPORT_MOCK_CONTRACT.md) - Definición del contrato sintético para el Workspace Conversacional.

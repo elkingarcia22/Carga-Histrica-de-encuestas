@@ -5994,3 +5994,63 @@ BUILD_PASSED
 SCOPED_LINT_GATE_PASSED
 SYN4C12_FIRST_SCREEN_CLOSURE_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## 4K-CHAT2 · Conversational Import Mock Data Contract
+**Date**: 2026-06-18
+**Status**: COMPLETED
+
+### Decision:
+- CONVERSATIONAL_IMPORT_MOCK_CONTRACT_LOCKED = YES
+- MOCK_CONTRACT_SCOPE = SYNTHETIC_ONLY
+
+### Files created/modified:
+- `docs/CONVERSATIONAL_IMPORT_MOCK_CONTRACT.md` (Created)
+- `docs/PROMPT_LOG.md` (Modified)
+- `docs/ARCHITECTURE.md` (Modified)
+- `docs/QA_CHECKLIST.md` (Modified)
+
+### Mock contract summary:
+Defined strict TypeScript interfaces for `ConversationalImportSessionMock`, `SyntheticAttachmentMock`, `DetectedStructureMock` (workbooks, sheets, demographics, dimensions, questions), `QuestionDimensionMappingMock`, `IssueMock`, `UserValidationActionMock`, `ApprovalBlocksMock`, and `ApprovedSurveyImportContractMock`.
+
+### Mock scenarios:
+1. SCENARIO_EMPTY_SESSION
+2. SCENARIO_FILES_STAGED
+3. SCENARIO_STRUCTURE_PROPOSED_WITH_WARNINGS
+4. SCENARIO_REVIEWING_MAPPINGS_WITH_UNMAPPED_QUESTIONS
+5. SCENARIO_CONTRACT_APPROVED_READY_FOR_COMPARISON
+6. SCENARIO_ERROR_UNSUPPORTED_FILE_TYPE
+
+### Data boundary:
+Strict synthetic data only. No real client data, PII, APIs, or database connections allowed. Upload logic is purely mock file staging.
+
+### AI boundary:
+No real AI execution. Chat messages are static mock text based on mock scenarios. No real LLM API connections.
+
+### Remaining prohibitions:
+No UI construction, no real APIs, no code modifications in `src/**`, no real data processing, no storage implementation.
+
+### Next authorized phase:
+CHAT3 · Conversational Import First Screen Build Prompt Ready
+
+### Commit SHA:
+Pending commit.
+
+### State Markers:
+```text
+PHASE_4K_CHAT2_COMPLETE
+CONVERSATIONAL_IMPORT_MOCK_CONTRACT_LOCKED
+CONVERSATIONAL_IMPORT_SESSION_MOCK_DEFINED
+DETECTED_STRUCTURE_MOCK_DEFINED
+USER_VALIDATION_ACTIONS_MOCK_DEFINED
+APPROVED_IMPORT_CONTRACT_MOCK_DEFINED
+MOCK_SCENARIOS_DEFINED
+FIRST_SCREEN_CONVERSATIONAL_IMPORT_WORKSPACE_RECONFIRMED
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+CHAT3_CONVERSATIONAL_IMPORT_FIRST_SCREEN_BUILD_PROMPT_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+```
