@@ -4854,3 +4854,18 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modificÃ
   * `SYN4C0B_TEST_CONFIGURATION_READY`
 * **Remaining prohibitions:** `NO_TEST_CONFIGURATION_YET`, `NO_TEST_FILES_YET`, `NO_PARSER_IMPLEMENTATION`
 * **Commit SHA:** Pending commit
+
+## 4K-SYN4C0B Â· Parser Test Configuration and Smoke Verification
+* **Phase:** 4K-SYN4C0B
+* **Timestamp:** 2026-06-18T08:13:25-05:00
+* **Files modified:** `vitest.config.ts` (created), `tests/historical-import/vitest.smoke.test.ts` (created), `package.json`, `docs/PROMPT_LOG.md`
+* **Scripts added:** `test`, `test:run`, `test:watch`, `test:coverage`
+* **Vitest configuration summary:** `environment: node`, `globals: false`, `coverage provider: v8`, `exclude: node_modules, dist, coverage`
+* **Smoke test scope:** Executes basic assertions, verifies node environment, and checks ArrayBuffer availability without touching the DOM, parsing UI, or fixtures.
+* **Commands executed:** `npm run test:run`, `npm run test:coverage`, `npm run build`, `npm run lint`, `git diff --check`, `npx eslint vitest.config.ts tests/historical-import/vitest.smoke.test.ts`
+* **Global lint baseline result:** Failed with pre-existing 26 findings (`GLOBAL_LINT_BASELINE_STILL_FAILING`)
+* **Scoped lint result:** Passed
+* **Coverage result:** Generated output in untracked `coverage/` directory (`COVERAGE_OUTPUT_GITIGNORE_DECISION_REQUIRED`)
+* **Decision gate result:** `COVERAGE_OUTPUT_GITIGNORE_DECISION_REQUIRED`
+* **Commit SHA:** N/A (Blocked)
+* **Remaining prohibitions:** `NO_PARSER_IMPLEMENTATION`, `NO_PRODUCTIVE_FILE_PROCESSING`, `.gitignore modification not authorized`
