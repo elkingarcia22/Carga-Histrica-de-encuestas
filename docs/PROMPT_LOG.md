@@ -4829,3 +4829,28 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modificÃ
     - Maintained scoped lint gate (zero findings on new files).
     - Installation, configuration, and implementation phases strictly separated.
 * **Status:** `PHASE_4K_SYN4C0H_COMPLETE`, `PARSER_TEST_INFRASTRUCTURE_DECISION_CORRECTED`
+
+## 4K-SYN4C0A Â· Parser Test Dependency Installation Gate
+* **Phase:** 4K-SYN4C0A
+* **Timestamp:** 2026-06-17T20:20:01-05:00
+* **Installed packages and exact versions:**
+  * `vitest` v4.1.9
+  * `@vitest/coverage-v8` v4.1.9
+* **Dependency classification:** `devDependencies` only.
+* **Files modified:** `package.json`, `package-lock.json`, `docs/PROMPT_LOG.md`
+* **Resolved dependency tree:** Validated exact `4.1.9` versions for both runner and coverage. No peers issues.
+* **Audit results:** Full audit found 11 vulnerabilities (3 high, 7 mod, 1 low), none attributable to Vitest in runtime. Runtime-only audit found 8 vulnerabilities, unchanged from previous state. No `npm audit fix` executed.
+* **Isolation verification:**
+  * Vitest/Coverage imports in src/**: 0
+  * Test files created: NO
+  * Vitest config created: NO
+  * Package scripts changed: NO
+  * Parser created: NO
+  * UI/Routes/Fixtures changed: NO
+* **Decision gate result:** 
+  * `VITEST_4_1_9_INSTALLED`
+  * `VITEST_COVERAGE_V8_4_1_9_INSTALLED`
+  * `TEST_DEPENDENCY_LOCKFILE_AUDITED`
+  * `SYN4C0B_TEST_CONFIGURATION_READY`
+* **Remaining prohibitions:** `NO_TEST_CONFIGURATION_YET`, `NO_TEST_FILES_YET`, `NO_PARSER_IMPLEMENTATION`
+* **Commit SHA:** Pending commit
