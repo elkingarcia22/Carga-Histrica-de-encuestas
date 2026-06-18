@@ -1,5 +1,22 @@
 # Prompt Log
 
+## Fase 4K-SYN4C1 · Synthetic Workbook Parser Core
+
+**Scope Confirmation:** SYN4C1 phase scope to build the parser core.
+**Git Preflight:** PASS (branch = main, HEAD = origin/main, clean working tree)
+**Test Infrastructure Validation:** FAILED. No test runner (Vitest/Jest) found in `package.json`.
+**SYN4C1 Decision:** TEST_INFRASTRUCTURE_DECISION_REQUIRED. Implementation is blocked.
+**Blocking Findings:**
+- TEST_INFRASTRUCTURE_DECISION_REQUIRED
+- SYN4C1_IMPLEMENTATION_BLOCKED
+
+**Final Status:**
+PHASE_4K_SYN4C1_INCOMPLETE
+SYNTHETIC_WORKBOOK_PARSER_CORE_NOT_APPROVED
+
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+R1H5_DEFINED_BUT_NOT_TRIGGERED
 ## Fase 4K-SYN4B · Application XLSX Parser Dependency Installation and Audit
 
 **Scope Confirmation:** SYN4B phase scope correctly limited to exact installation of read-excel-file@9.2.0 as application dependency and strict read-only auditing.
