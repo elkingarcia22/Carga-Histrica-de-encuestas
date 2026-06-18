@@ -1,5 +1,48 @@
 # Prompt Log
 
+## Fase 4K-SYN4C15-H1 · Drilldown Visual Hygiene Hotfix
+
+Phase: 4K-SYN4C15-H1 · Drilldown Visual Hygiene Hotfix
+
+Reason:
+- SYN4C15-G1 detected Tailwind arbitrary value text-[10px].
+- Formal closure required removal before SYN4C16 QA.
+
+Files modified:
+- `src/features/historical-import/dashboard/QuestionDrilldownPanel.tsx`
+- `docs/PROMPT_LOG.md`
+
+Visual hygiene fix:
+- Replaced `text-[10px]` with `text-xs` in Badge components.
+- Verified absence of other arbitrary Tailwind values.
+- UBITS semantic classes preserved.
+
+QA results:
+- BUILD_PASSED: YES
+- SCOPED_LINT_GATE_PASSED: YES
+- TESTS_PASSED: YES
+- COVERAGE_COMMAND_PASSED: YES
+- git diff --check: CLEAN
+
+Remaining prohibitions:
+- NO_UPLOAD_UI_YET
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_SYN4C15_H1_COMPLETE
+DRILLDOWN_TAILWIND_ARBITRARY_VALUE_REMOVED
+DRILLDOWN_VISUAL_HYGIENE_REVALIDATED
+PHASE_4K_SYN4C15_FORMALLY_CLOSED
+SYN4C16_DRILLDOWN_QA_READY
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN4C15 · Drilldown Build
 
 Phase: 4K-SYN4C15 · Drilldown Build

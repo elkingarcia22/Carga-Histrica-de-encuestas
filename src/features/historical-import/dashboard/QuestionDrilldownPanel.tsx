@@ -153,9 +153,9 @@ export function QuestionDrilldownPanel({ dashboard, selectionState }: QuestionDr
             <div>
               <span className="text-muted-foreground block">Métricas soportadas:</span>
               <div className="flex gap-2 mt-1">
-                {question.hasLikertMetrics && <Badge variant="outline" className="text-[10px]">Likert</Badge>}
-                {question.hasEnpsMetrics && <Badge variant="outline" className="text-[10px]">eNPS</Badge>}
-                {question.hasOpenTextMetrics && <Badge variant="outline" className="text-[10px]">Open Text</Badge>}
+                {question.hasLikertMetrics && <Badge variant="outline" className="text-xs">Likert</Badge>}
+                {question.hasEnpsMetrics && <Badge variant="outline" className="text-xs">eNPS</Badge>}
+                {question.hasOpenTextMetrics && <Badge variant="outline" className="text-xs">Open Text</Badge>}
               </div>
             </div>
           </div>
