@@ -9,7 +9,7 @@ export interface ChatMessage {
   timestamp: string;
 }
 
-export type SessionState = 
+export type SessionState =
   | "EMPTY_SESSION"
   | "AWAITING_FILES"
   | "FILES_STAGED"

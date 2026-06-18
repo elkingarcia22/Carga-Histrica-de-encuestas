@@ -25,20 +25,20 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
             }`}>
               {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
             </div>
-            
+
             <div className={`flex flex-col gap-2 max-w-[80%] ${
               msg.role === "user" ? "items-end" : "items-start"
             }`}>
               {msg.type === "text" && (
                 <div className={`rounded-lg px-3 py-2 text-sm ${
-                  msg.role === "user" 
-                    ? "bg-primary text-primary-foreground" 
+                  msg.role === "user"
+                    ? "bg-primary text-primary-foreground"
                     : "bg-muted"
                 }`}>
                   {msg.content}
                 </div>
               )}
-              
+
               {msg.type === "file_staging" && (
                 <div className="w-full">
                   <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-2">
@@ -47,7 +47,7 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
                   <SyntheticAttachmentStaging />
                 </div>
               )}
-              
+
               {msg.type === "structure_summary" && (
                 <Card className="w-full">
                   <CardContent className="p-3 text-sm text-muted-foreground">
@@ -55,7 +55,7 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
                   </CardContent>
                 </Card>
               )}
-              
+
               {msg.type === "warning" && (
                 <Card className="w-full border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20 dark:border-yellow-900">
                   <CardContent className="p-3 text-sm text-yellow-800 dark:text-yellow-200">
@@ -63,7 +63,7 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
                   </CardContent>
                 </Card>
               )}
-              
+
               {msg.type === "approval_request" && (
                 <Card className="w-full border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900">
                   <CardContent className="p-3 text-sm text-blue-800 dark:text-blue-200">
@@ -71,7 +71,7 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
                   </CardContent>
                 </Card>
               )}
-              
+
               {msg.type === "contract_summary" && (
                 <div className="w-full">
                    <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-2">

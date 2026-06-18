@@ -8,8 +8,8 @@ export function MessageComposer() {
       <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground" disabled>
         <Paperclip size={20} />
       </Button>
-      <Input 
-        placeholder="Escribe un mensaje al asistente..." 
+      <Input
+        placeholder="Escribe un mensaje al asistente..."
         className="flex-1"
         disabled
       />

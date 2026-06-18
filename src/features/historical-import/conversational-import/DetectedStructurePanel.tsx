@@ -9,7 +9,7 @@ export function DetectedStructurePanel() {
     <ScrollArea className="h-full">
       <div className="p-4 flex flex-col gap-4">
         <h3 className="font-semibold text-lg mb-2">Estructura Detectada</h3>
-        
+
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm flex items-center gap-2">
