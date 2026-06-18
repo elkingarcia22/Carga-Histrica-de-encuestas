@@ -5445,3 +5445,70 @@ NON_COMPARABLE_QUESTION_INVENTORY_EXPOSED
 BASE_ONLY_QUESTION_COUNT_EXPOSED
 COMPARISON_ONLY_QUESTION_COUNT_EXPOSED
 SYN4C7_VIEW_MODEL_CONTRACT_RESTORED
+
+## Phase: 4K-SYN4C9 · First Screen Build
+First screen:
+- SYNTHETIC_COMPARISON_RESULTS_DASHBOARD
+
+Files created
+- src/features/historical-import/dashboard/comparisonDashboardMock.ts
+- src/features/historical-import/dashboard/ComparisonResultsDashboard.tsx
+- src/features/historical-import/dashboard/index.ts
+
+Files modified
+- src/App.tsx
+- docs/PROMPT_LOG.md
+
+Data boundary
+- ComparisonViewModelResult mapped accurately into a static mock interface to disconnect the UI from active parser logic.
+
+UI sections built
+- Page shell
+- Header
+- Summary Cards
+- KPI Cards
+- Non-comparable Inventory
+- Question Table
+- Distribution Detail Section
+- Filters section (UI only)
+- Empty/Error/Loading/Warnings states (UI only)
+
+Mock data strategy
+- A typed local mock representing `ComparisonViewModelResult` (16 comparable questions, 1 base only, 1 comp only).
+
+QA command results
+- build: PASS
+- scoped lint: PASS
+- global lint baseline: 29 problems
+- tests: PASS (66 tests)
+- git diff --check: PASS
+
+Global lint baseline
+- 29 problems (25 errors, 4 warnings)
+
+Remaining prohibitions
+- No upload UI created
+- No productive file processing
+- No insights AI created
+- No real client data
+
+Commit SHA: [Pending]
+
+### Status Markers
+PHASE_4K_SYN4C9_COMPLETE
+FIRST_SCREEN_SYNTHETIC_COMPARISON_RESULTS_DASHBOARD_BUILT
+COMPARISON_VIEW_MODEL_MOCK_CONSUMED
+SUMMARY_CARDS_RENDERED
+KPI_CARDS_RENDERED
+QUESTION_ROWS_RENDERED
+DISTRIBUTION_ROWS_RENDERED
+FILTER_CONTROLS_RENDERED
+NON_COMPARABLE_INVENTORY_RENDERED
+EMPTY_ERROR_LOADING_STATES_MODELED
+NO_UPLOAD_UI_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_INSIGHTS_AI_CREATED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+SYN4C10_FIRST_SCREEN_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
