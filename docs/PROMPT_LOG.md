@@ -5170,3 +5170,62 @@ QA:
 Decision:
 - PHASE_4K_SYN4C4_FORMALLY_CLOSED
 - SYN4C5_SINGLE_WORKBOOK_METRICS_READY
+
+## Phase 4K-SYN4C5: Synthetic Single Workbook Metrics Core
+
+### Execution Summary
+- **Phase**: 4K-SYN4C5
+- **Files created**:
+  - `src/features/historical-import/parser/metrics/metricsTypes.ts`
+  - `src/features/historical-import/parser/metrics/metricsContract.ts`
+  - `src/features/historical-import/parser/metrics/calculateWorkbookMetrics.ts`
+  - `src/features/historical-import/parser/metrics/index.ts`
+  - `tests/historical-import/parser/metrics/calculateWorkbookMetrics.test.ts`
+- **Files modified**:
+  - `src/features/historical-import/parser/index.ts`
+  - `docs/PROMPT_LOG.md`
+- **Metrics scope**: Implemented a pure, single-workbook metrics engine taking CanonicalWorkbook as input. Calculates participation, completion, Likert/eNPS, Open Text, blank distributions, and question-level summaries.
+- **Positive golden metrics results**: Both `base` and `comparison` golden fixtures calculate metrics successfully, preserving non-mutated `CanonicalWorkbook` state and matching expected counts.
+- **Negative mutation test results**: Rejected missing/empty workbooks, flagged missing datasets, and emitted warnings for invalid numeric values in metrics scales (`LIKERT` and `ENPS` variables).
+
+### QA Results
+- **Test command**: `npm run test:run` -> PASS
+- **Coverage command**: `npm run test:coverage` -> PASS (Coverage: 93.64% Stmts, 84.16% Branch, 97.67% Funcs, 93.64% Lines)
+- **Build command**: `npm run build` -> PASS
+- **Scoped lint**: `npx eslint src/features/historical-import/parser tests/historical-import/parser` -> PASS
+- **Global lint baseline**: `npm run lint` -> FAILED (29 problems: 25 errors, 4 warnings) OUTSIDE metrics parser scope.
+- `GLOBAL_LINT_BASELINE_REVALIDATED = 29`
+- `SCOPED_LINT_GATE_PASSED`
+
+### Remaining Prohibitions
+- No comparison engine yet.
+- No period deltas yet.
+- No trends yet.
+- No upload UI yet.
+- No productive file processing.
+
+### Decision Gate
+- `PHASE_4K_SYN4C5_COMPLETE`
+- `SYNTHETIC_SINGLE_WORKBOOK_METRICS_CORE_IMPLEMENTED`
+- `CANONICAL_WORKBOOK_METRICS_BOUNDARY_ESTABLISHED`
+- `WORKBOOK_SUMMARY_METRICS_GENERATED`
+- `PARTICIPATION_METRICS_CALCULATED`
+- `COMPLETION_METRICS_CALCULATED`
+- `QUESTION_METRICS_GENERATED`
+- `LIKERT_METRICS_CALCULATED`
+- `ENPS_METRICS_CALCULATED`
+- `OPEN_TEXT_METRICS_CALCULATED`
+- `BLANK_ANSWER_METRICS_PRESERVED`
+- `NEGATIVE_METRICS_MUTATION_TESTS_PASSED`
+- `METRICS_INPUT_IMMUTABILITY_VERIFIED`
+- `TESTS_PASSED`
+- `COVERAGE_COMMAND_PASSED`
+- `BUILD_PASSED`
+- `SCOPED_LINT_GATE_PASSED`
+- `NO_COMPARISON_ENGINE_YET`
+- `NO_PERIOD_DELTAS_YET`
+- `NO_TRENDS_YET`
+- `NO_UPLOAD_UI_YET`
+- `NO_PRODUCTIVE_FILE_PROCESSING`
+- `SYN4C6_PERIOD_COMPARISON_ENGINE_READY`
+- `R1H5_DEFINED_BUT_NOT_TRIGGERED`
