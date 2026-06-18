@@ -4924,3 +4924,21 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modificÃ
 * **Decision:**
   * SYN4C1_REVALIDATION_READY
   * SYN4C2_SCHEMA_VALIDATION_NOT_AUTHORIZED
+
+## Fase 4K-SYN4C1-R Â· Parser Core Formal Revalidation After Fixture Hotfix
+* **Commit chain verified:** YES
+* **Fixture contract restored:** YES
+* **Manifest/hash verification:** YES
+* **Parser tests passed:** YES
+* **Coverage passed:** YES
+* **Build passed:** YES
+* **Scoped lint passed:** YES
+* **Global lint baseline:** 29 findings
+* **Decision:** SYN4C1 formally approved
+* **Next:** SYN4C2_SCHEMA_VALIDATION_READY
+* **Remaining prohibitions:**
+  * no upload UI yet
+  * no productive processing
+  * no metrics
+  * no comparison engine
+  * no schema validation before next phase approval
