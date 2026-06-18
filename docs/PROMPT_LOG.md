@@ -4936,9 +4936,10 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modific√
 * **Global lint baseline:** 29 findings
 * **Decision:** SYN4C1 formally approved
 * **Next:** SYN4C2_SCHEMA_VALIDATION_READY
-* **Remaining prohibitions:**
-  * no upload UI yet
-  * no productive processing
-  * no metrics
-  * no comparison engine
-  * no schema validation before next phase approval
+* **Status Markers:**
+  * PHASE_4K_SYN4C1_R_COMPLETE
+  * SYN4C1_PARSER_CORE_FORMALLY_APPROVED
+  * SYN4C2_SCHEMA_VALIDATION_READY
+  * NO_UPLOAD_UI_YET
+  * NO_PRODUCTIVE_FILE_PROCESSING
+  * R1H5_DEFINED_BUT_NOT_TRIGGERED
