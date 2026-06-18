@@ -5003,3 +5003,79 @@ NO_PRODUCTIVE_FILE_PROCESSING
 
 SYN4C3_CROSS_SHEET_VALIDATION_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+---
+
+## Phase 4K-SYN4C3 · Synthetic Workbook Cross-sheet Validation Core
+
+**Date:** 2026-06-18
+
+**Files created:**
+- `src/features/historical-import/parser/cross-sheet/crossSheetTypes.ts`
+- `src/features/historical-import/parser/cross-sheet/crossSheetContract.ts`
+- `src/features/historical-import/parser/cross-sheet/validateWorkbookCrossSheet.ts`
+- `src/features/historical-import/parser/cross-sheet/index.ts`
+- `tests/historical-import/parser/cross-sheet/validateWorkbookCrossSheet.test.ts`
+
+**Files modified:**
+- `src/features/historical-import/parser/index.ts`
+- `docs/PROMPT_LOG.md`
+
+**Cross-sheet validation scope:**
+- Validated `answers` against `colaboradores` (duplicate IDs, orphan answers).
+- Validated `answers` against `Dimensions` (missing definition, unused dimensions).
+- Validated `colaboradores` against `Jerarquía` (invalid node mapping).
+- Validated `Jerarquía` against itself (cycles, invalid parents, duplicate nodes).
+- Input isolation verified (no mutation to parserResult or schemaResult).
+
+**Positive golden validation results:**
+- Base: `CROSS_SHEET_VALID` with zero errors.
+- Comparison: `CROSS_SHEET_VALID` with zero errors.
+
+**Negative mutation test results:**
+- Tests passed for missing answers/respondent.
+- Tests passed for duplicate dimensions/respondents.
+- Tests passed for hierarchy parents/nodes/cycles.
+- Tests passed for rejected parser/schema inputs.
+- All 13 tests passed.
+
+**QA command results:**
+- `test:run`: PASS
+- `test:coverage`: PASS (85%+ branch coverage on cross-sheet)
+- `build`: PASS
+- scoped lint: PASS
+
+**Global lint baseline:**
+- GLOBAL_LINT_BASELINE_REVALIDATED = 25 errors, 4 warnings.
+- SCOPED_LINT_GATE_PASSED = true
+
+**Remaining prohibitions:**
+- No UI components.
+- No real data usage.
+- No metrics calculation.
+- No segmentation, grouping or normalizations.
+
+**Decision gate result:**
+PHASE_4K_SYN4C3_COMPLETE
+SYNTHETIC_CROSS_SHEET_VALIDATION_CORE_IMPLEMENTED
+PARSER_AND_SCHEMA_RESULT_CROSS_SHEET_VALIDATOR_ESTABLISHED
+
+ANSWERS_COLLABORADORES_RELATION_VALIDATED
+ANSWERS_DIMENSIONS_RELATION_VALIDATED
+COLABORADORES_JERARQUIA_RELATION_VALIDATED
+JERARQUIA_SELF_REFERENCE_VALIDATED
+NEGATIVE_CROSS_SHEET_MUTATION_TESTS_PASSED
+PARSER_SCHEMA_RESULT_IMMUTABILITY_VERIFIED
+
+TESTS_PASSED
+COVERAGE_COMMAND_PASSED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+
+NO_METRICS_YET
+NO_COMPARISON_ENGINE_YET
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+
+SYN4C4_CANONICAL_NORMALIZATION_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
