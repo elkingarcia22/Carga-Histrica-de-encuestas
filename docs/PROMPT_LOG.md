@@ -1,5 +1,66 @@
 # Prompt Log
 
+## Fase 4K-SYN4C4 · Synthetic Workbook Canonical Normalization Core
+
+**Scope Confirmation:** SYN4C4 phase scope to build the Canonical Normalization Core.
+**Git Preflight:** PASS (branch = main, HEAD = origin/main, clean working tree)
+**Normalization Boundary:** ParserResult, SchemaValidationResult, and CrossSheetValidationResult are strictly separated and not mutated. Input validation defined in `NormalizationContract`.
+**Files Created or Modified:**
+- `src/features/historical-import/parser/normalization/normalizationTypes.ts` (NEW)
+- `src/features/historical-import/parser/normalization/normalizationContract.ts` (NEW)
+- `src/features/historical-import/parser/normalization/normalizeWorkbook.ts` (NEW)
+- `src/features/historical-import/parser/normalization/index.ts` (NEW)
+- `tests/historical-import/parser/normalization/normalizeWorkbook.test.ts` (NEW)
+- `src/features/historical-import/parser/index.ts` (MODIFIED)
+- `docs/PROMPT_LOG.md` (MODIFIED)
+**Canonical Contract Source:** `normalizeWorkbook` uses the correct schema constants and columns mapped implicitly from the parsed cross-sheet inputs and manifest expectations.
+**Canonical Workbook Output:** Generated with full metadata, sheets, and issue summaries.
+**Canonical Questions:** Generated from Dimensions (17 elements).
+**Canonical Respondents:** Generated from colaboradores (24/28 elements).
+**Canonical Hierarchy:** Generated from Jerarquía (9/11 elements).
+**Canonical Responses:** Generated from answers (18/22 elements).
+**Canonical Answer Values:** Mapped individually (306/374 values).
+**Blank Value Preservation:** Tested and verified correctly mapped as BLANK.
+**Negative Mutation Test Coverage:** Tested rejections on invalid upstream results and mutation detection for missing canonical sheets, invalid types, and unsupported values.
+**Input Immutability:** Explicit test stringifying JSON snapshots verifies no mutation of inputs occurs.
+**Isolation Verification:** No metrics, no comparison, no UI, no Shadcn changes.
+**Test Execution:** PASS
+**Coverage Execution:** PASS
+**Build QA:** PASS
+**Scoped Lint QA:** PASS
+**Global Lint Baseline:** 0 errors
+**Documentation QA:** Passed, all elements documented.
+**Normalization Gate Decision:** SYNTHETIC_CANONICAL_NORMALIZATION_CORE_IMPLEMENTED
+**Blocking Findings:** NONE
+**Next Maximum Authorized Phase:** SYN4C5_SINGLE_WORKBOOK_METRICS_READY
+
+**Final Status:**
+PHASE_4K_SYN4C4_COMPLETE
+SYNTHETIC_CANONICAL_NORMALIZATION_CORE_IMPLEMENTED
+PARSER_SCHEMA_CROSS_SHEET_NORMALIZATION_BOUNDARY_ESTABLISHED
+
+CANONICAL_QUESTIONS_GENERATED
+CANONICAL_RESPONDENTS_GENERATED
+CANONICAL_HIERARCHY_GENERATED
+CANONICAL_RESPONSES_GENERATED
+CANONICAL_ANSWER_VALUES_GENERATED
+BLANK_VALUES_PRESERVED
+NEGATIVE_NORMALIZATION_MUTATION_TESTS_PASSED
+NORMALIZATION_INPUT_IMMUTABILITY_VERIFIED
+
+TESTS_PASSED
+COVERAGE_COMMAND_PASSED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+
+NO_METRICS_YET
+NO_COMPARISON_ENGINE_YET
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+
+SYN4C5_SINGLE_WORKBOOK_METRICS_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN4C1 · Synthetic Workbook Parser Core
 
 **Scope Confirmation:** SYN4C1 phase scope to build the parser core.
