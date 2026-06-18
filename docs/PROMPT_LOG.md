@@ -1,5 +1,44 @@
 # Prompt Log
 
+## Fase 4K-SYN4C13 · Next Capability Intake
+
+Phase: 4K-SYN4C13 · Next Capability Intake
+Decision:
+- NEXT_CAPABILITY_INTAKE_COMPLETED = YES
+- Recommended capability = Opción C · Drilldown Architecture
+
+Files created/modified:
+- docs/NEXT_CAPABILITY_INTAKE.md
+- docs/PROMPT_LOG.md
+- docs/ARCHITECTURE.md
+
+Decision matrix summary:
+- Options evaluated: A (Upload UI), B (Polish), C (Drilldown), D (Runtime Pipeline), E (Insights AI).
+- Selected Option C (Drilldown) to maximize product value (analytical view) without requiring real file uploads, APIs, or AI layer. High product value, low risk.
+
+Remaining prohibitions:
+- FIRST_SCREEN_REMAINS_FORMALLY_CLOSED
+- NO_UPLOAD_UI_YET
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+
+Next authorized phase:
+- SYN4C14_DRILLDOWN_ARCHITECTURE_READY
+
+Commit SHA: [pending_commit]
+
+PHASE_4K_SYN4C13_COMPLETE
+NEXT_CAPABILITY_INTAKE_COMPLETED
+NEXT_CAPABILITY_DECISION_MATRIX_DOCUMENTED
+FIRST_SCREEN_REMAINS_FORMALLY_CLOSED
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+SYN4C14_DRILLDOWN_ARCHITECTURE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN4C12 · First Screen Formal Closure
 
 Phase: 4K-SYN4C12 · First Screen Formal Closure
