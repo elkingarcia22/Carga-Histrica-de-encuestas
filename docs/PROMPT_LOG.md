@@ -1,5 +1,49 @@
 # Prompt Log
 
+## Fase 4K-SYN4C14 · Drilldown Architecture
+
+Phase: 4K-SYN4C14 · Drilldown Architecture
+Decision:
+- DRILLDOWN_ARCHITECTURE_LOCKED = YES
+- DRILLDOWN_TYPE = QUESTION_DETAIL
+
+Files created/modified:
+- docs/DRILLDOWN_ARCHITECTURE.md
+- docs/PROMPT_LOG.md
+- docs/ARCHITECTURE.md
+- docs/ANTIGRAVITY.md
+- docs/QA_CHECKLIST.md
+
+Architecture summary:
+Defined architecture for a future question drilldown feature. Decided to build it as a "Dedicated detail section below table" layout, consuming data solely through the existing ComparisonViewModelResult boundary. Designed a clear conceptual input contract and data sections for comparable questions, while defining safe failure states for non-comparable questions (base-only or comparison-only).
+
+Data boundary:
+The future drilldown may consume only data derived from ComparisonViewModelResult. No raw workbook. No parser runtime. No real XLSX. No APIs. No storage.
+
+Remaining prohibitions:
+- FIRST_SCREEN_REMAINS_FORMALLY_CLOSED
+- NO_UPLOAD_UI_YET
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+
+Next authorized phase:
+- SYN4C15_DRILLDOWN_BUILD_PROMPT_READY
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_SYN4C14_COMPLETE
+DRILLDOWN_ARCHITECTURE_LOCKED
+DRILLDOWN_TYPE_QUESTION_DETAIL
+FIRST_SCREEN_REMAINS_FORMALLY_CLOSED
+COMPARISON_VIEW_MODEL_BOUNDARY_RECONFIRMED
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+SYN4C15_DRILLDOWN_BUILD_PROMPT_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN4C13 · Next Capability Intake
 
 Phase: 4K-SYN4C13 · Next Capability Intake
