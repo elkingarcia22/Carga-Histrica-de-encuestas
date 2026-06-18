@@ -4895,3 +4895,32 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modific�
 * **Decision gate result:** SCOPED_LINT_GATE_PASSED
 * **Commit SHA:** Pending
 * **Remaining prohibitions:** NO_SCHEMA_VALIDATION_YET, NO_METRICS_YET, NO_COMPARISON_ENGINE_YET, NO_UPLOAD_UI_YET, NO_PRODUCTIVE_FILE_PROCESSING
+
+## 4K-SYN3H2 · Atomic Fixture and Parser Test Contract Hotfix
+* **Commit SHA:** 632e5dd1e42374e1e076cc479d44d1d5d2df74a2
+* **Commit subject:** fix(historical-import): align synthetic fixtures with parser contract
+* **Files modified:**
+  * scripts/historical-import/generate-synthetic-fixtures.mjs
+  * fixtures/historical-import/synthetic-survey-base.xlsx
+  * fixtures/historical-import/synthetic-survey-comparison.xlsx
+  * fixtures/historical-import/manifest.json
+  * tests/historical-import/parser/parseWorkbookArrayBuffer.test.ts
+* **Technical outcome:**
+  * Base Jerarquía data rows restored to 9.
+  * Comparison Jerarquía data rows restored to 11.
+  * Generator assertions strengthened.
+  * Parser tests restored to contract values.
+  * Q-COL-004 assertions clarified as raw physical blanks.
+  * No parser source changed.
+  * No schema validation implemented.
+  * No UI created.
+  * No productive processing authorized.
+* **QA:**
+  * npm run test:run: PASS
+  * npm run test:coverage: PASS
+  * npm run build: PASS
+  * scoped lint: PASS
+  * global lint baseline: 29 findings, pre-existing / outside scope
+* **Decision:**
+  * SYN4C1_REVALIDATION_READY
+  * SYN4C2_SCHEMA_VALIDATION_NOT_AUTHORIZED
