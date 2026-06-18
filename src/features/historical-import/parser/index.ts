@@ -5,3 +5,4 @@ export * from "./schema";
 export * from "./cross-sheet";
 export * from "./normalization";
 export * from "./metrics";
+export * from "./comparison";

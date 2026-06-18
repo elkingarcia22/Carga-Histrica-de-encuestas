@@ -5262,3 +5262,58 @@ QA:
 Decision:
 - PHASE_4K_SYN4C5_FORMALLY_CLOSED
 - SYN4C6_PERIOD_COMPARISON_ENGINE_READY
+
+## Phase 4K-SYN4C6: Synthetic Period Comparison Engine
+
+**Context:**
+Implemented the comparison engine to calculate deltas between base and comparison synthetic `WorkbookMetricsResult`s without mutating the inputs.
+
+**Files created:**
+- `src/features/historical-import/parser/comparison/comparisonTypes.ts`
+- `src/features/historical-import/parser/comparison/comparisonContract.ts`
+- `src/features/historical-import/parser/comparison/compareWorkbookPeriods.ts`
+- `src/features/historical-import/parser/comparison/index.ts`
+- `tests/historical-import/parser/comparison/compareWorkbookPeriods.test.ts`
+
+**Files modified:**
+- `src/features/historical-import/parser/index.ts`
+- `docs/PROMPT_LOG.md`
+
+**Comparison scope:**
+- Summary comparison generated
+- Participation, Completion, and Blank Answer deltas calculated
+- Question deltas generated
+- Likert and eNPS deltas calculated
+- Open text deltas calculated
+- Distribution deltas calculated
+- Handled different states correctly and rejected incomplete statuses
+
+**Positive golden comparison results:** PASSED
+**Negative mutation test results:** PASSED
+**Input Immutability verified:** PASSED
+
+**QA command results:**
+- test:run: PASSED (60 tests passed)
+- test:coverage: PASSED
+- build: PASSED
+- scoped lint: PASSED
+- git diff --check: PASSED
+- git diff --cached --check: PASSED
+
+**Global lint baseline:**
+- 29 problems (25 errors, 4 warnings) - None related to parser/comparison
+
+**Decision gate result:**
+- PHASE_4K_SYN4C6_COMPLETE
+- SYNTHETIC_PERIOD_COMPARISON_ENGINE_IMPLEMENTED
+- WORKBOOK_METRICS_COMPARISON_BOUNDARY_ESTABLISHED
+- SYN4C7_COMPARISON_VIEW_MODEL_READY
+
+**Remaining prohibitions:**
+- NO_UI_YET
+- NO_UPLOAD_UI_YET
+- NO_INSIGHTS_AI_YET
+- NO_PRODUCTIVE_FILE_PROCESSING
+- R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+**Commit SHA:** [Pending commit]
