@@ -10,20 +10,34 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 import { mockDashboardResult } from './comparisonDashboardMock';
 import type { ComparisonViewModelResult, ComparisonViewModelStatus } from '../parser/view-model/viewModelTypes';
+import { QuestionDrilldownPanel } from './QuestionDrilldownPanel';
+import type { DrilldownSelectionState } from './questionDrilldownTypes';
 
 export function ComparisonResultsDashboard() {
   const [data] = useState<ComparisonViewModelResult>(mockDashboardResult);
   const [uiState, setUiState] = useState<ComparisonViewModelStatus>('VIEW_MODEL_READY');
+  const [drilldownState, setDrilldownState] = useState<DrilldownSelectionState>({ type: 'NO_QUESTION_SELECTED' });
 
   const { dashboard } = data;
 
   const renderQAControls = () => (
-    <div className="mt-4 flex gap-2">
-      <Badge variant="secondary" className="flex items-center">QA States:</Badge>
-      <Button size="sm" variant={uiState === 'VIEW_MODEL_READY' ? 'default' : 'outline'} onClick={() => setUiState('VIEW_MODEL_READY')}>READY</Button>
-      <Button size="sm" variant={uiState === 'VIEW_MODEL_READY_WITH_WARNINGS' ? 'default' : 'outline'} onClick={() => setUiState('VIEW_MODEL_READY_WITH_WARNINGS')}>WARNINGS</Button>
-      <Button size="sm" variant={uiState === 'VIEW_MODEL_REJECTED' ? 'default' : 'outline'} onClick={() => setUiState('VIEW_MODEL_REJECTED')}>EMPTY</Button>
-      <Button size="sm" variant={uiState === 'VIEW_MODEL_FAILED' ? 'default' : 'outline'} onClick={() => setUiState('VIEW_MODEL_FAILED')}>ERROR</Button>
+    <div className="mt-4 space-y-2">
+      <div className="flex gap-2 items-center flex-wrap">
+        <Badge variant="secondary">QA States:</Badge>
+        <Button size="sm" variant={uiState === 'VIEW_MODEL_READY' ? 'default' : 'outline'} onClick={() => setUiState('VIEW_MODEL_READY')}>READY</Button>
+        <Button size="sm" variant={uiState === 'VIEW_MODEL_READY_WITH_WARNINGS' ? 'default' : 'outline'} onClick={() => setUiState('VIEW_MODEL_READY_WITH_WARNINGS')}>WARNINGS</Button>
+        <Button size="sm" variant={uiState === 'VIEW_MODEL_REJECTED' ? 'default' : 'outline'} onClick={() => setUiState('VIEW_MODEL_REJECTED')}>EMPTY</Button>
+        <Button size="sm" variant={uiState === 'VIEW_MODEL_FAILED' ? 'default' : 'outline'} onClick={() => setUiState('VIEW_MODEL_FAILED')}>ERROR</Button>
+      </div>
+      <div className="flex gap-2 items-center flex-wrap">
+        <Badge variant="secondary">Drilldown Mocks:</Badge>
+        <Button size="sm" variant="outline" onClick={() => setDrilldownState({ type: 'NO_QUESTION_SELECTED' })}>CLEAR</Button>
+        <Button size="sm" variant="outline" onClick={() => setDrilldownState({ type: 'LOADING_MOCK' })}>LOADING</Button>
+        <Button size="sm" variant="outline" onClick={() => setDrilldownState({ type: 'ERROR', message: 'Simulated connection error loading question details.' })}>ERROR</Button>
+        <Button size="sm" variant="outline" onClick={() => setDrilldownState({ type: 'BASE_ONLY_SELECTED', questionId: 'Q-LEGACY-001' })}>Q-LEGACY-001 (Base only)</Button>
+        <Button size="sm" variant="outline" onClick={() => setDrilldownState({ type: 'COMPARISON_ONLY_SELECTED', questionId: 'Q-NEW-001' })}>Q-NEW-001 (Comp only)</Button>
+        <Button size="sm" variant="outline" onClick={() => setDrilldownState({ type: 'COMPARABLE_SELECTED', questionId: 'Q-COMP-002' })}>EMPTY_DIST (Q-COMP-002)</Button>
+      </div>
     </div>
   );
 
@@ -195,9 +209,16 @@ export function ComparisonResultsDashboard() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dashboard.questionRows.map((row) => (
-                <TableRow key={row.questionId}>
-                  <TableCell className="font-medium text-foreground">{row.questionLabel}</TableCell>
+              {dashboard.questionRows.map((row) => {
+                const isSelected = drilldownState.type === 'COMPARABLE_SELECTED' && drilldownState.questionId === row.questionId;
+                return (
+                  <TableRow
+                    key={row.questionId}
+                    onClick={() => setDrilldownState({ type: 'COMPARABLE_SELECTED', questionId: row.questionId })}
+                    className={`cursor-pointer transition-colors hover:bg-muted/50 ${isSelected ? 'bg-muted/80' : ''}`}
+                    aria-selected={isSelected}
+                  >
+                    <TableCell className="font-medium text-foreground">{row.questionLabel}</TableCell>
                   <TableCell>
                     <Badge variant="outline">{row.questionType}</Badge>
                   </TableCell>
@@ -218,50 +239,20 @@ export function ComparisonResultsDashboard() {
                     </Badge>
                   </TableCell>
                 </TableRow>
-              ))}
+                );
+              })}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
 
-      {/* Distribution Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Detalle de distribuciones (Ejemplo Q-COMP-001)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Opción de respuesta</TableHead>
-                <TableHead className="text-right">Conteo Base</TableHead>
-                <TableHead className="text-right">Conteo Comp.</TableHead>
-                <TableHead className="text-right">Delta N</TableHead>
-                <TableHead className="text-right">Tasa Base</TableHead>
-                <TableHead className="text-right">Tasa Comp.</TableHead>
-                <TableHead className="text-right">Delta %</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {dashboard.distributionRows.map((d) => (
-                <TableRow key={`${d.questionId}-${d.bucketLabel}`}>
-                  <TableCell className="text-foreground">{d.bucketLabel}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">{d.baseCount}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">{d.comparisonCount}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">{d.countDelta.displayValue}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">{d.baseRate.displayValue}</TableCell>
-                  <TableCell className="text-right text-muted-foreground">{d.comparisonRate.displayValue}</TableCell>
-                  <TableCell className="text-right font-medium">
-                     <span className={d.tone === 'POSITIVE' ? 'text-success' : d.tone === 'NEGATIVE' ? 'text-destructive' : 'text-muted-foreground'}>
-                      {d.rateDelta.displayValue}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      {/* Drilldown Panel */}
+      <div id="drilldown-panel">
+        <QuestionDrilldownPanel
+          dashboard={dashboard}
+          selectionState={drilldownState}
+        />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,65 @@
 # Prompt Log
 
+## Fase 4K-SYN4C15 · Drilldown Build
+
+Phase: 4K-SYN4C15 · Drilldown Build
+
+Decision:
+- DRILLDOWN_BUILD_COMPLETED = YES
+- DRILLDOWN_TYPE = QUESTION_DETAIL
+
+Files created/modified
+- `src/features/historical-import/dashboard/ComparisonResultsDashboard.tsx`
+- `src/features/historical-import/dashboard/index.ts`
+- `src/features/historical-import/dashboard/questionDrilldownTypes.ts` (NEW)
+- `src/features/historical-import/dashboard/QuestionDrilldownPanel.tsx` (NEW)
+- `docs/PROMPT_LOG.md`
+- `docs/QA_CHECKLIST.md`
+
+Drilldown behavior summary:
+Implemented question selection directly from the ComparisonResultsDashboard table using local state. Renders a dedicated drilldown panel below the table containing comparative metrics, delta explanation, and distribution response buckets. Supported clear state modeling for lack of selection, empty distributions, non-comparable states (base-only and comparison-only), as well as error and mock loading visualizations without connecting to actual APIs.
+
+Data boundary verification:
+The implementation solely relies on the pre-existing ComparisonViewModelResult data models. No APIs, real files, schemas, upload elements, nor AI insights were required nor utilized. 
+
+QA results:
+- build PASS required: YES
+- scoped lint PASS required: YES
+- tests PASS required: YES
+- coverage PASS required: YES
+- git diff hygiene PASS: YES
+
+Remaining prohibitions:
+- FIRST_SCREEN_REMAINS_FORMALLY_CLOSED
+- NO_UPLOAD_UI_YET
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+
+Next authorized phase:
+- SYN4C16_DRILLDOWN_QA_READY
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_SYN4C15_COMPLETE
+DRILLDOWN_BUILD_COMPLETED
+DRILLDOWN_TYPE_QUESTION_DETAIL
+QUESTION_SELECTION_ENABLED
+QUESTION_DETAIL_PANEL_RENDERED
+NON_COMPARABLE_QUESTION_STATES_RENDERED
+EMPTY_DISTRIBUTION_STATE_RENDERED
+LOADING_AND_ERROR_STATES_MODELED
+FIRST_SCREEN_REMAINS_FORMALLY_CLOSED
+COMPARISON_VIEW_MODEL_BOUNDARY_RECONFIRMED
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+SYN4C16_DRILLDOWN_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN4C14-H1 · Drilldown Architecture Closure Hygiene Hotfix
 
 Phase: 4K-SYN4C14-H1 · Drilldown Architecture Closure Hygiene Hotfix

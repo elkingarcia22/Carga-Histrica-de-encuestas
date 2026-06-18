@@ -137,3 +137,15 @@
 - [x] QA Técnico: TS 0 errores, Build pass, Lint U3-SIM 0 errores.
 - [x] Componentes visuales y QA Funcional (E1-E14) aprobados.
 - [x] Fase 7C (Formal Closure) Autorizada.
+
+## Fase 4K-SYN4C15: Drilldown Build (Implementada)
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Crear e integrar componente `QuestionDrilldownPanel.tsx`.
+- [x] Modelar estados de Drilldown en `questionDrilldownTypes.ts`.
+- [x] Modificar mock en `ComparisonResultsDashboard.tsx` para interactividad de filas.
+- [x] Modelar estado de comparables, vacíos, errores, loading, base only y comp only.
+- [x] Modificar QA controls para exponer simulación de estados de mock drilldown.
+- [x] Verificado el respeto al Data Boundary (solo mock, 0 APIs, 0 Real files, 0 Parser runtime, 0 Upload UI).
+- [x] Verificada accesibilidad de teclado, color delta descriptivo (direction) sin usar solo color, y tags (ARIA selected) en filas.
+- [x] QA Técnico: TS 0 errores, Build Exitoso, Scoped Lint Exitoso, Test Exitoso.
+- [x] Clean diff hygiene.
