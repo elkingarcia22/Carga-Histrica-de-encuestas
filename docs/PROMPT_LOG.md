@@ -4847,7 +4847,7 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modific√
   * Package scripts changed: NO
   * Parser created: NO
   * UI/Routes/Fixtures changed: NO
-* **Decision gate result:** 
+* **Decision gate result:**
   * `VITEST_4_1_9_INSTALLED`
   * `VITEST_COVERAGE_V8_4_1_9_INSTALLED`
   * `TEST_DEPENDENCY_LOCKFILE_AUDITED`
