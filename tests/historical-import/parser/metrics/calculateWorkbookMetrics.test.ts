@@ -12,7 +12,7 @@ describe('calculateWorkbookMetrics', () => {
   let baseSchemaResult: SchemaValidationResult;
   let baseCrossSheetResult: CrossSheetValidationResult;
   let baseNormalizationResult: NormalizationResult;
-  
+
   let compParserResult: ParserResult;
   let compSchemaResult: SchemaValidationResult;
   let compCrossSheetResult: CrossSheetValidationResult;
@@ -76,7 +76,7 @@ describe('calculateWorkbookMetrics', () => {
     it('should calculate metrics for base golden fixture successfully', () => {
       expect(baseNormalizationResult.workbook).toBeDefined();
       const canonicalWorkbook = baseNormalizationResult.workbook!;
-      
+
       const originalWorkbookStr = JSON.stringify(canonicalWorkbook);
 
       const result = calculateWorkbookMetrics({
@@ -97,7 +97,7 @@ describe('calculateWorkbookMetrics', () => {
         expect(result.summary.totalAnswerValues).toBe(306);
         expect(result.summary.questionMetricsCount).toBe(17);
         expect(result.summary.participationRate).toBe(18 / 24);
-        
+
         // Count blanks directly from canonical to verify match
         let manualBlanks = 0;
         canonicalWorkbook.responses.forEach(r => {
@@ -120,7 +120,7 @@ describe('calculateWorkbookMetrics', () => {
       let hasLikert = false;
       let hasEnps = false;
       let hasOpenText = false;
-      
+
       Object.values(result.questionMetrics).forEach(qm => {
         if (qm.questionType === 'LIKERT' || qm.questionType === 'LIKERT_1_TO_5') {
           hasLikert = true;
@@ -158,7 +158,7 @@ describe('calculateWorkbookMetrics', () => {
         expect(result.summary.totalAnswerValues).toBe(374);
         expect(result.summary.questionMetricsCount).toBe(17);
         expect(result.summary.participationRate).toBe(22 / 28);
-        
+
         let manualBlanks = 0;
         canonicalWorkbook.responses.forEach(r => {
           const answeredQuestionIds = new Set(r.answers.map(a => a.questionId));
@@ -289,7 +289,7 @@ describe('calculateWorkbookMetrics', () => {
         ])
       );
     });
-    
+
     it('should warn on invalid numeric answer for eNPS', () => {
       const enpsQ = clonedWorkbook.questions.find(q => q.questionType === 'ENPS' || q.questionType === 'ENPS_EXPORTED_1_TO_11');
       let mutated = false;

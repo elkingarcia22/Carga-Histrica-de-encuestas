@@ -5229,3 +5229,36 @@ Decision:
 - `NO_PRODUCTIVE_FILE_PROCESSING`
 - `SYN4C6_PERIOD_COMPARISON_ENGINE_READY`
 - `R1H5_DEFINED_BUT_NOT_TRIGGERED`
+
+## Fase 4K-SYN4C5-H1 · Metrics Whitespace Hygiene Hotfix
+
+Reason:
+- SYN4C5-V1 detected trailing whitespace in metrics implementation/test files.
+
+Files modified:
+- src/features/historical-import/parser/metrics/calculateWorkbookMetrics.ts
+- tests/historical-import/parser/metrics/calculateWorkbookMetrics.test.ts
+- docs/PROMPT_LOG.md
+
+Technical impact:
+- No logic changed.
+- No types changed.
+- No metrics behavior changed.
+- No fixtures changed.
+- No package files changed.
+- No UI created.
+- No comparison engine created.
+
+QA:
+- npm run test:run
+- npm run test:coverage
+- npm run build
+- scoped lint
+- npm run lint baseline
+- git diff --check
+- git diff --cached --check
+- git show --check HEAD after commit
+
+Decision:
+- PHASE_4K_SYN4C5_FORMALLY_CLOSED
+- SYN4C6_PERIOD_COMPARISON_ENGINE_READY

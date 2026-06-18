@@ -59,7 +59,7 @@ export function calculateWorkbookMetrics(input: WorkbookMetricsInput): WorkbookM
 
   for (const response of responses) {
     let responseBlankCount = 0;
-    
+
     // Create a lookup for answers in this response by questionId
     const responseAnswerMap = new Map<string, CanonicalAnswerValue>();
     for (const answer of response.answers) {
@@ -69,12 +69,12 @@ export function calculateWorkbookMetrics(input: WorkbookMetricsInput): WorkbookM
     for (const question of questions) {
       const answer = responseAnswerMap.get(question.questionId);
       const isBlank = !answer || answer.valueKind === 'BLANK' || answer.rawValue === null || answer.rawValue === undefined || answer.rawValue === '';
-      
+
       const qm = questionMetricsMap[question.questionId];
       if (qm) {
         qm.totalAnswers++;
         totalAnswerValues++;
-        
+
         if (isBlank) {
           qm.blankAnswers++;
           responseBlankCount++;
@@ -120,7 +120,7 @@ export function calculateWorkbookMetrics(input: WorkbookMetricsInput): WorkbookM
           if (!isNaN(val)) {
             sum += val;
             count++;
-            
+
             // Provisional rule for single-workbook likert: 1-2=unfavorable, 3=neutral, 4-5=favorable
             // (Assuming 5-point scale, if exported scale is 1-11, this needs adjustment based on contract,
             // but the prompt explicitly said "Regla provisional permitida solo para single-workbook: 1-2 = unfavorable 3 = neutral 4-5 = favorable")
@@ -155,7 +155,7 @@ export function calculateWorkbookMetrics(input: WorkbookMetricsInput): WorkbookM
       for (const response of responses) {
         const answer = response.answers.find(a => a.questionId === question.questionId);
         if (answer && answer.valueKind === 'NUMBER') {
-          // If the exported scale is 1-11, mapping needs to be handled carefully. 
+          // If the exported scale is 1-11, mapping needs to be handled carefully.
           // The contract says: 0-6 = detractor, 7-8 = passive, 9-10 = promoter
           // However, if raw values are 1-11, we shift by -1. Let's assume standard 0-10 or 1-11 shift.
           const val = Number(answer.rawValue);
@@ -164,15 +164,15 @@ export function calculateWorkbookMetrics(input: WorkbookMetricsInput): WorkbookM
             // "Regla provisional: 0-6 = detractor, 7-8 = passive, 9-10 = promoter. Si los fixtures usan escala exportada 1-11, mapear con cuidado y documentar la equivalencia técnica sin cambiar rawValue."
             // If the maximum value across all answers is 11, it might be a 1-11 scale.
             count++;
-            
+
             // For now, let's just check the value directly, but if we need a 1-11 mapping we can do:
             // if it's 1-11, detractor = 1-7, passive = 8-9, promoter = 10-11
             // Let's deduce scale:
             // Actually, wait, let's keep it simple and just use the rule: 0-6 detractor, 7-8 passive, 9-10 promoter.
             // But wait, the fixtures might have 1-11. We can map: 1-7 (detractor), 8-9 (passive), 10-11 (promoter).
-            
+
             // To be safe, let's compute max value for ENPS to detect 1-11 scale.
-            
+
             const strVal = String(val);
             distributionMap.set(strVal, (distributionMap.get(strVal) || 0) + 1);
           } else {
@@ -214,7 +214,7 @@ export function calculateWorkbookMetrics(input: WorkbookMetricsInput): WorkbookM
     } else if (question.questionType === 'OPEN_TEXT') {
       let commentCount = 0;
       let totalLength = 0;
-      
+
       for (const response of responses) {
         const answer = response.answers.find(a => a.questionId === question.questionId);
         if (answer && answer.valueKind === 'STRING') {
