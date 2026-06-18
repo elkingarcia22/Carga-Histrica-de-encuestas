@@ -4943,3 +4943,63 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modificÃ
   * NO_UPLOAD_UI_YET
   * NO_PRODUCTIVE_FILE_PROCESSING
   * R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 4K-SYN4C2 Â· Synthetic Workbook Schema Contract Validation Core
+
+**Scope Confirmation:** SYN4C2 phase scope confirmed. Implementing schema validation core on ParserResult without productive side effects.
+**Git Preflight:** PASS (branch = main, HEAD = origin/main, clean working tree)
+**Files Created:**
+- `src/features/historical-import/parser/schema/schemaTypes.ts`
+- `src/features/historical-import/parser/schema/schemaContract.ts`
+- `src/features/historical-import/parser/schema/validateWorkbookSchema.ts`
+- `src/features/historical-import/parser/schema/index.ts`
+- `tests/historical-import/parser/schema/validateWorkbookSchema.test.ts`
+**Files Modified:**
+- `src/features/historical-import/parser/index.ts`
+- `docs/PROMPT_LOG.md`
+**Schema validation scope:** Validates required sheets, expected headers, missing/unexpected/duplicate headers, row counts for base/comparison, column counts, and known question types in Dimensions.
+**Positive golden validation results:** Base and Comparison fixtures successfully parsed and validated as SCHEMA_VALID.
+**Negative mutation test results:** In-memory mutations successfully correctly caught MISSING_REQUIRED_SHEET_FOR_SCHEMA, MISSING_REQUIRED_HEADER, DUPLICATE_HEADER, WRONG_COLUMN_COUNT, WRONG_ROW_COUNT, UNKNOWN_QUESTION_TYPE.
+**QA command results:**
+- `npm run test:run`: PASS
+- `npm run test:coverage`: PASS
+- `npm run build`: PASS
+- `npx eslint src/features/historical-import/parser tests/historical-import/parser`: PASS
+- `npm run lint`: FAIL (25 errors, 4 warnings) baseline intact.
+**Global lint baseline:** GLOBAL_LINT_BASELINE_REVALIDATED = 29
+**Decision gate result:** SYNTHETIC_SCHEMA_VALIDATION_CORE_IMPLEMENTED
+**Remaining prohibitions:**
+- NO_CROSS_SHEET_VALIDATION_YET
+- NO_METRICS_YET
+- NO_COMPARISON_ENGINE_YET
+- NO_UPLOAD_UI_YET
+- NO_PRODUCTIVE_FILE_PROCESSING
+**Commit SHA:** Pending commit
+
+**Final Status:**
+PHASE_4K_SYN4C2_COMPLETE
+SYNTHETIC_SCHEMA_VALIDATION_CORE_IMPLEMENTED
+PARSER_RESULT_SCHEMA_VALIDATOR_ESTABLISHED
+
+GOLDEN_BASE_SCHEMA_VALIDATED
+GOLDEN_COMPARISON_SCHEMA_VALIDATED
+HEADER_CONTRACT_VALIDATED
+COLUMN_COUNT_CONTRACT_VALIDATED
+ROW_COUNT_CONTRACT_VALIDATED
+QUESTION_TYPE_CONTRACT_VALIDATED
+NEGATIVE_SCHEMA_MUTATION_TESTS_PASSED
+PARSER_RESULT_IMMUTABILITY_VERIFIED
+
+TESTS_PASSED
+COVERAGE_COMMAND_PASSED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+
+NO_CROSS_SHEET_VALIDATION_YET
+NO_METRICS_YET
+NO_COMPARISON_ENGINE_YET
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+
+SYN4C3_CROSS_SHEET_VALIDATION_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
