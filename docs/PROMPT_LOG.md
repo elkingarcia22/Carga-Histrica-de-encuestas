@@ -5140,3 +5140,33 @@ NO_PRODUCTIVE_FILE_PROCESSING
 
 SYN4C4_CANONICAL_NORMALIZATION_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 4K-SYN4C4-H1 · Normalization Whitespace Hygiene Hotfix
+
+Reason:
+- SYN4C4-V1 detected trailing whitespace in normalizeWorkbook.ts.
+
+Files modified:
+- src/features/historical-import/parser/normalization/normalizeWorkbook.ts
+- docs/PROMPT_LOG.md
+
+Technical impact:
+- No logic changed.
+- No types changed.
+- No tests changed.
+- No fixtures changed.
+- No package files changed.
+
+QA:
+- npm run test:run
+- npm run test:coverage
+- npm run build
+- scoped lint
+- npm run lint baseline
+- git diff --check
+- git diff --cached --check
+- git show --check HEAD after commit
+
+Decision:
+- PHASE_4K_SYN4C4_FORMALLY_CLOSED
+- SYN4C5_SINGLE_WORKBOOK_METRICS_READY

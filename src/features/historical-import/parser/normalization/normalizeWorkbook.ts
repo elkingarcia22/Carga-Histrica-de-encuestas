@@ -120,7 +120,7 @@ export function normalizeWorkbook(input: NormalizationInput): NormalizationResul
     const nodeId = String(row["hierarchy_node_id"]);
     const parentNodeIdRaw = row["parent_node_id"];
     const nodeName = String(row["hierarchy_node_label"]);
-    
+
     let parentNodeId: string | undefined = undefined;
     if (typeof parentNodeIdRaw === "string" && parentNodeIdRaw.trim() !== "") {
       parentNodeId = parentNodeIdRaw;
@@ -139,7 +139,7 @@ export function normalizeWorkbook(input: NormalizationInput): NormalizationResul
     const row = colabSheet.rawRows[i];
     const collaboratorId = String(row["collaborator_id"]);
     const hierarchyLeafIdRaw = row["hierarchy_leaf_id"];
-    
+
     let hierarchyLeafId: string | undefined = undefined;
     if (typeof hierarchyLeafIdRaw === "string" && hierarchyLeafIdRaw.trim() !== "") {
       hierarchyLeafId = hierarchyLeafIdRaw;
@@ -176,7 +176,7 @@ export function normalizeWorkbook(input: NormalizationInput): NormalizationResul
     for (const qCol of physicalQuestionColumns) {
       const rawValue = row[qCol];
       let valueKind: CanonicalAnswerPrimitive = "UNSUPPORTED";
-      
+
       if (rawValue === null || rawValue === undefined || rawValue === "") {
         valueKind = "BLANK";
       } else if (typeof rawValue === "number") {
