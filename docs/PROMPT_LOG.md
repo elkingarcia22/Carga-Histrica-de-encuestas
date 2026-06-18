@@ -4818,3 +4818,14 @@ Preflight de Git validado en clean, HEAD apuntando a origin/main. No se modificÃ
 - Defined the ArrayBuffer binary fixture access strategy via relative paths.
 - Formalized SYN4C0A_TEST_DEPENDENCY_INSTALLATION_REQUIRED and blocked parser implementation until completion of test setup phases.
 - Created docs/HISTORICAL_IMPORT_SYNTHETIC_PARSER_TEST_INFRASTRUCTURE_DECISION.md.
+
+## 4K-SYN4C0H Â· Test Runner Version and Coverage Policy Correction
+* **Timestamp:** 2026-06-17T20:11:15-05:00
+* **Objective:** Correct the decision for parser test infrastructure to Vitest 4.1.9, update coverage policy, and maintain scoped lint gate.
+* **Findings:**
+    - Corrected test runner to Vitest 4.1.9 and coverage provider to @vitest/coverage-v8@4.1.9.
+    - Verified Node 24, Vite 8, TypeScript 6, and ESM compatibility.
+    - Coverage threshold deferred until implementation, with critical branches mandated.
+    - Maintained scoped lint gate (zero findings on new files).
+    - Installation, configuration, and implementation phases strictly separated.
+* **Status:** `PHASE_4K_SYN4C0H_COMPLETE`, `PARSER_TEST_INFRASTRUCTURE_DECISION_CORRECTED`

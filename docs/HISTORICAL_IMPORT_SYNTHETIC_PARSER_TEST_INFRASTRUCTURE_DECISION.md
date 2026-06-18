@@ -37,22 +37,20 @@ The `package.json` currently has the following scripts:
 - **ESLint version:** ^10.2.1
 
 ## 7. Vitest Assessment
-- **Exact candidate version:** 3.0.7
-- **License:** MIT
-- **Node compatibility:** YES (v24.13.0 supported)
-- **Vite compatibility:** YES (Aligned with Vite config)
-- **TypeScript compatibility:** YES (Out of the box)
-- **ESM support:** YES (Native)
+- **Previous candidate:** 3.0.7
+- **Previous candidate status:** SUPERSEDED_FOR_DECISION
+
+- **Selected runner:** vitest
+- **Selected exact version:** 4.1.9
+- **Dependency classification:** devDependency
+
+- **Node 24 compatibility:** YES
+- **Vite 8 compatibility:** YES
+- **TypeScript 6 compatibility:** YES
+- **ESM compatibility:** YES
 - **Node environment support:** YES
 - **ArrayBuffer support:** YES
-- **Binary fixture access:** YES (Via Node.js `fs`)
-- **Watch mode:** YES (Fast and reliable)
-- **Coverage support:** YES (Via `@vitest/coverage-v8`)
-- **CI suitability:** YES
-- **Required dependencies:** `vitest`, `@vitest/coverage-v8`
-- **Required configuration:** `vitest.config.ts` (or integrated in `vite.config.ts`)
-- **Package impact:** Development only
-- **Maintenance:** Low (Aligned with the existing Vite ecosystem)
+- **Binary fixture access:** YES
 
 ## 8. Node Test Runner Assessment
 - **node:test availability:** YES (Built-in Node >= 18)
@@ -131,16 +129,25 @@ The tests must strictly access:
 ## 16. Scoped Lint Policy
 **Status:** SCOPED_LINT_GATE_RECOMMENDED
 - **Policy:**
-  - No errors in new parser files.
-  - No warnings in new parser files.
-  - No `eslint-disable` without explicit justification.
-  - No increase in the global finding count.
-  - No global ignore modifications.
-  - The preexisting debt will not be fixed as part of the parser scope.
+  - zero lint errors
+  - zero lint warnings
+  - no unjustified eslint-disable
+  - no increase in global finding count
+  - no global ignore changes
+  - PRE_EXISTING_LINT_FINDINGS_REPORTED = 26
+  - BASELINE_REQUIRES_REVALIDATION
+  - SCOPED_LINT_GATE_RECOMMENDED
 
 ## 17. Coverage Policy
-- **Coverage tool required:** `@vitest/coverage-v8`
-- **Coverage threshold:** Defined organically based on critical parsing branches, targeting 100% on the core parser logic. No arbitrary overall project percentage is fixed.
+- **Coverage tool required:** YES
+- **Runner and coverage versions aligned:** YES
+- **Coverage provider:** V8
+- **Dependency classification:** devDependency
+- **Coverage execution:** disabled by default, invoked explicitly
+- **Initial percentage threshold:** DEFERRED
+- **Critical branch testing:** REQUIRED
+- **Coverage baseline establishment:** REQUIRED_AFTER_FIRST_PARSER_TEST_SUITE
+
 - **Critical branches requiring direct tests:**
   - golden base workbook
   - golden comparison workbook
@@ -153,20 +160,28 @@ The tests must strictly access:
   - worksheet order warning
   - unexpected sheet warning
 
+- **States:**
+  - COVERAGE_THRESHOLD_DEFERRED
+  - CRITICAL_BRANCH_COVERAGE_REQUIRED
+  - NO_UNTESTED_ADMISSION_OR_REJECTION_BRANCHES
+
+The numeric threshold can only be fixed after:
+- first parser implementation
+- first complete test execution
+- coverage report inspection
+- unreachable branch assessment
+- generated-code exclusion review
+
 ## 18. Recommended Runner
 - **Recommended test runner:** Vitest
-- **Recommended exact version:** 3.0.7
-- **Recommended environment:** `node`
-- **Recommended test path:** `src/historical-import/parser/__tests__` (or equivalent scoped parser directory)
-- **Recommended fixture access strategy:** Node `fs.readFileSync` converted to `ArrayBuffer`
-- **Recommended test script:** `"test": "vitest run"`
-- **Recommended run-once script:** `"test:run": "vitest run"`
-- **Recommended watch script:** `"test:watch": "vitest"`
-- **Recommended coverage script:** `"test:coverage": "vitest run --coverage"`
-- **Recommended TypeScript command:** `"typecheck": "tsc --noEmit"`
-- **Recommended scoped lint command:** `"lint:parser": "eslint src/historical-import/parser"`
-- **Recommended global lint policy:** SCOPED_LINT_GATE_RECOMMENDED
-- **Recommended coverage policy:** 100% on core parser files, covering the 10 critical branches.
+- **Recommended exact version:** 4.1.9
+- **Recommended coverage provider:** @vitest/coverage-v8
+- **Recommended coverage exact version:** 4.1.9
+- **Recommended environment:** node
+- **Recommended fixture access:** node:fs with repository-relative paths
+- **Recommended test path:** parser-local __tests__ directory
+- **Recommended lint policy:** scoped zero-findings gate
+- **Recommended coverage policy:** critical branches mandatory; numeric threshold deferred
 
 ## 19. Required Dependencies
 - `vitest` (devDependencies)
@@ -197,4 +212,16 @@ The tests must strictly access:
 - **R1H5:** Remains untriggered.
 
 ## 24. Approval Record
-This decision documents the transition pathway for testing the parser, formally triggering the need for a dependency installation phase (`SYN4C0A_TEST_DEPENDENCY_INSTALLATION_REQUIRED`).
+- **Gate Status:**
+  - PARSER_TEST_RUNNER_SELECTED
+  - VITEST_4_1_9_SELECTED
+  - VITEST_COVERAGE_V8_4_1_9_SELECTED
+  - SYN4C0A_TEST_DEPENDENCY_INSTALLATION_READY
+  - SYN4C1_IMPLEMENTATION_NOT_AUTHORIZED
+
+The selection does not authorize:
+- test configuration
+- test files
+- parser implementation
+- upload UI
+- productive processing
