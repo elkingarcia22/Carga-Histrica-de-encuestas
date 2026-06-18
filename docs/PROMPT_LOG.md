@@ -1,5 +1,38 @@
 # Prompt Log
 
+## Fase 4K-SYN4C8 · First Screen Architecture Lock
+
+Phase: 4K-SYN4C8 · First Screen Architecture Lock
+Decision:
+- FIRST_SCREEN_SELECTED = SYNTHETIC_COMPARISON_RESULTS_DASHBOARD
+
+Files created/modified:
+- docs/FIRST_SCREEN_ARCHITECTURE.md
+- docs/PROMPT_LOG.md
+
+Important constraints:
+- No UI created
+- No routes created
+- No source files changed
+- No fixtures changed
+- No package files changed
+- No upload UI created
+- No productive file processing
+
+PHASE_4K_SYN4C8_COMPLETE
+FIRST_SCREEN_ARCHITECTURE_LOCKED
+FIRST_SCREEN_SELECTED_SYNTHETIC_COMPARISON_RESULTS_DASHBOARD
+COMPARISON_VIEW_MODEL_BOUNDARY_APPROVED_FOR_UI_CONSUMPTION
+NO_UI_CREATED
+NO_ROUTES_CREATED
+NO_SOURCE_FILES_CHANGED
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_INSIGHTS_AI_YET
+SYN4C9_FIRST_SCREEN_BUILD_PROMPT_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+
 ## Fase 4K-SYN4C4 · Synthetic Workbook Canonical Normalization Core
 
 **Scope Confirmation:** SYN4C4 phase scope to build the Canonical Normalization Core.
