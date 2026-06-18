@@ -89,18 +89,18 @@ describe('buildComparisonViewModel', () => {
 
       expect(result.status).toBe('VIEW_MODEL_READY');
       expect(result.dashboard).not.toBeNull();
-      
+
       const dashboard = result.dashboard!;
       expect(dashboard.dashboardTitle).toBe('Comparativo de Periodos');
       expect(dashboard.summaryCards).toHaveLength(4);
       expect(dashboard.kpiCards).toHaveLength(4);
-      
+
       // question rows count = 16
       expect(dashboard.questionRows).toHaveLength(16);
-      
+
       // distribution rows exist
       expect(dashboard.distributionRows.length).toBeGreaterThan(0);
-      
+
       // filters contain options
       expect(dashboard.filters.questionTypes.length).toBeGreaterThan(0);
       expect(dashboard.filters.directions.length).toBeGreaterThan(0);
@@ -109,7 +109,7 @@ describe('buildComparisonViewModel', () => {
       // semantic tones assigned
       const hasTones = dashboard.questionRows.some(row => row.tone !== 'NEUTRAL');
       expect(hasTones).toBe(true);
-      
+
       // check no colors or classes exist (e.g. no hex colors, no 'text-white')
       const jsonDump = JSON.stringify(dashboard);
       expect(jsonDump).not.toMatch(/#[0-9A-Fa-f]{6}/);
@@ -160,14 +160,14 @@ describe('buildComparisonViewModel', () => {
       expect(result.dashboard?.emptyState).not.toBeNull();
       expect(result.dashboard?.emptyState?.title).toBe('No hay preguntas comparables');
     });
-    
+
     it('handles unsupported directions gracefully', () => {
       const clonedResult: PeriodComparisonResult = JSON.parse(JSON.stringify(comparisonResult));
       if (clonedResult.participation?.participationRate) {
         // We cast because TypeScript won't allow invalid enum values naturally
         (clonedResult.participation.participationRate.direction as string) = 'SOME_WEIRD_DIRECTION';
       }
-      
+
       const result = buildComparisonViewModel({ comparisonResult: clonedResult });
       expect(result.status).toBe('VIEW_MODEL_READY');
       const partCard = result.dashboard?.summaryCards.find(c => c.id === 'participation');
