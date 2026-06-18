@@ -100,7 +100,7 @@ Evita crear rutas nuevas y mantiene el alcance dentro de la primera experiencia 
 
 ## 11. Screen or Panel Decision
 
-Decisión: **Inline expanded row** o **Dedicated detail section below table** (collapsible/expandable section that appears below the main table, scoped to the current view). 
+Decisión: **Inline expanded row** o **Dedicated detail section below table** (collapsible/expandable section that appears below the main table, scoped to the current view).
 
 Confirmado: Dedicated detail section below table.
 
