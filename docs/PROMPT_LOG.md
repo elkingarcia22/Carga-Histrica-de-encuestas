@@ -1,5 +1,76 @@
 # Prompt Log
 
+## Fase 4K-CHAT1 · Conversational Import Architecture Lock
+
+Phase: 4K-CHAT1 · Conversational Import Architecture Lock
+
+Decision:
+- CONVERSATIONAL_IMPORT_ARCHITECTURE_LOCKED = YES
+- FIRST_SCREEN = CONVERSATIONAL_IMPORT_WORKSPACE
+- DASHBOARD_FLOW = DOWNSTREAM_RESULT
+- DRILLDOWN_FLOW = PAUSED
+
+Files created/modified:
+- docs/CONVERSATIONAL_IMPORT_ARCHITECTURE.md
+- docs/PROMPT_LOG.md
+- docs/ARCHITECTURE.md
+- docs/ANTIGRAVITY.md
+- docs/QA_CHECKLIST.md
+
+Architecture summary:
+Blocked the architecture for the new conversational flow. Defined the layout, modules, session state machine, and data contracts for file intake, structure detection, and user validation.
+
+Data boundary:
+NO_REAL_CLIENT_DATA
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_API_CONNECTIONS
+NO_STORAGE
+NO_UPLOAD_UI_YET
+NO_PARSER_RUNTIME_IN_UI_YET
+
+AI boundary:
+No IA real en esta fase. Simulated using mocks/rules. No LLM API. No clasificación real de datos. No inferencia sobre datos reales.
+
+UX boundary:
+Main area: chat timeline. Input area: message composer + synthetic attachment action. Side panel: detected structure proposal.
+
+Open questions:
+- ¿La primera build usará mock attachments o selección desde fixtures?
+- ¿Se permite un componente visual tipo upload dropzone simulado?
+- ¿El usuario puede editar estructura inline o mediante mensajes?
+- ¿El panel derecho será siempre visible?
+- ¿El contrato aprobado se muestra como JSON conceptual o como resumen visual?
+- ¿El dashboard actual se mantiene accesible como resultado posterior?
+
+Remaining prohibitions:
+- NO_UPLOAD_UI_YET
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+- NO_API_CONNECTIONS
+- NO_STORAGE
+
+Next authorized phase:
+CHAT2_CONVERSATIONAL_IMPORT_MOCK_CONTRACT_READY
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_CHAT1_COMPLETE
+CONVERSATIONAL_IMPORT_ARCHITECTURE_LOCKED
+FIRST_SCREEN_CONVERSATIONAL_IMPORT_WORKSPACE_LOCKED
+DASHBOARD_FLOW_MARKED_AS_DOWNSTREAM_RESULT
+DRILLDOWN_FLOW_PAUSED
+APPROVED_IMPORT_CONTRACT_CONCEPT_DEFINED
+CONVERSATIONAL_SESSION_STATE_MACHINE_DEFINED
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+CHAT2_CONVERSATIONAL_IMPORT_MOCK_CONTRACT_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-CHAT0 · Conversational Import Pivot Intake
 
 Phase: 4K-CHAT0 · Conversational Import Pivot Intake

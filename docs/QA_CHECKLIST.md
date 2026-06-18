@@ -149,3 +149,15 @@
 - [x] Verificada accesibilidad de teclado, color delta descriptivo (direction) sin usar solo color, y tags (ARIA selected) en filas.
 - [x] QA Técnico: TS 0 errores, Build Exitoso, Scoped Lint Exitoso, Test Exitoso.
 - [x] Clean diff hygiene.
+
+## Fase 4K-CHAT1: Conversational Import Architecture Lock
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Crear documento `CONVERSATIONAL_IMPORT_ARCHITECTURE.md`.
+- [x] Registrar la nueva first screen como `Conversational Import Workspace`.
+- [x] Definir modelo conceptual de módulos, contratos (DetectedStructureContract, ValidationContract, ApprovedContract).
+- [x] Establecer AI Boundary (No real AI) y Data Boundary (No real files, APIs, storage).
+- [x] Confirmar UX Layout Concept (Chat timeline, Side panel, Validation area).
+- [x] Documentar QA Criteria y Open Questions.
+- [x] Modificar `PROMPT_LOG.md` con marcadores correctos.
+- [x] Modificar `ARCHITECTURE.md` y `ANTIGRAVITY.md` agregando referencias a `CONVERSATIONAL_IMPORT_ARCHITECTURE.md`.
+- [x] No source changes, no tests changes, clean diff hygiene.
