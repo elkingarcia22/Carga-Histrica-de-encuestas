@@ -95,8 +95,17 @@ describe('buildComparisonViewModel', () => {
       expect(dashboard.summaryCards).toHaveLength(4);
       expect(dashboard.kpiCards).toHaveLength(4);
 
-      // question rows count = 16
+      // question rows count = 16 (only comparable questions)
       expect(dashboard.questionRows).toHaveLength(16);
+
+      const questionIds = dashboard.questionRows.map(r => r.questionId);
+      expect(questionIds).not.toContain('Q-LEGACY-001');
+      expect(questionIds).not.toContain('Q-NEW-001');
+
+      // verify explicitly exposed counts
+      expect(dashboard.metadata.totalComparableQuestions).toBe(16);
+      expect(dashboard.metadata.totalBaseOnlyQuestions).toBe(1);
+      expect(dashboard.metadata.totalComparisonOnlyQuestions).toBe(1);
 
       // distribution rows exist
       expect(dashboard.distributionRows.length).toBeGreaterThan(0);

@@ -265,6 +265,8 @@ export function buildComparisonViewModel(input: ComparisonViewModelInput): Compa
       baseWorkbookId: result.summary.baseWorkbookId,
       comparisonWorkbookId: result.summary.comparisonWorkbookId,
       totalComparableQuestions: result.summary.totalComparableQuestions,
+      totalBaseOnlyQuestions: result.summary.totalBaseOnlyQuestions,
+      totalComparisonOnlyQuestions: result.summary.totalComparisonOnlyQuestions,
       generatedAt: new Date().toISOString()
     }
   };

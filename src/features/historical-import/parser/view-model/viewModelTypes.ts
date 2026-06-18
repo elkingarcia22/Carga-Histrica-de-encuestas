@@ -114,6 +114,8 @@ export interface ComparisonDashboardViewModel {
     baseWorkbookId: string;
     comparisonWorkbookId: string;
     totalComparableQuestions: number;
+    totalBaseOnlyQuestions: number;
+    totalComparisonOnlyQuestions: number;
     generatedAt: string;
   };
 }

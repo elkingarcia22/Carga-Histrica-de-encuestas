@@ -5384,3 +5384,31 @@ SYN4C8_FIRST_SCREEN_ARCHITECTURE_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
 
 **Commit SHA:** [Pending commit]
+
+## Phase: 4K-SYN4C7-H1 · Comparison View Model Count Contract Reconciliation
+
+**Reason:**
+- SYN4C7-V1 confirmed 16 comparable questions, not 17.
+- Q-LEGACY-001 is base-only.
+- Q-NEW-001 is comparison-only.
+- View model should expose non-comparable inventory instead of forcing rows.
+
+**Files modified:**
+- src/features/historical-import/parser/view-model/viewModelTypes.ts
+- src/features/historical-import/parser/view-model/buildComparisonViewModel.ts
+- tests/historical-import/parser/view-model/buildComparisonViewModel.test.ts
+- docs/PROMPT_LOG.md
+
+**Decision:**
+- questionRows represents comparable questions only.
+- Expected comparable questionRows count is 16.
+- base-only and comparison-only counts are exposed separately.
+
+### Status Markers
+PHASE_4K_SYN4C7_H1_COMPLETE
+COMPARABLE_QUESTION_COUNT_CONTRACT_RECONCILED
+QUESTION_ROWS_COMPARABLE_COUNT_LOCKED
+NON_COMPARABLE_QUESTION_INVENTORY_EXPOSED
+BASE_ONLY_QUESTION_COUNT_EXPOSED
+COMPARISON_ONLY_QUESTION_COUNT_EXPOSED
+SYN4C7_VIEW_MODEL_CONTRACT_RESTORED
