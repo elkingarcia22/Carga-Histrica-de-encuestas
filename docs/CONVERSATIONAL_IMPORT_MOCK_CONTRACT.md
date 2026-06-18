@@ -31,7 +31,7 @@ interface ConversationalImportSessionMock {
 Estados permitidos (`SessionStatus`):
 
 ```typescript
-type SessionStatus = 
+type SessionStatus =
   | 'EMPTY_SESSION'
   | 'AWAITING_FILES'
   | 'FILES_STAGED'
@@ -176,7 +176,7 @@ interface QuestionDimensionMappingMock {
 ## 12. Issues and Warnings Contract
 
 ```typescript
-type IssueType = 
+type IssueType =
   | 'BLOCKING_SCHEMA_ERROR'
   | 'MISSING_REQUIRED_SHEET'
   | 'UNKNOWN_COLUMN'
@@ -205,7 +205,7 @@ interface IssueMock {
 Acciones mock permitidas para el usuario:
 
 ```typescript
-type ActionType = 
+type ActionType =
   | 'approveAll'
   | 'approveBlock'
   | 'renameDemographic'
