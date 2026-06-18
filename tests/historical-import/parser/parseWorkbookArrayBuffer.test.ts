@@ -112,7 +112,7 @@ describe("parseWorkbookArrayBuffer", () => {
 
       const jerarquiaSheet = result.sheets.find(s => s.sheetName === "Jerarquía");
       expect(jerarquiaSheet).toBeDefined();
-      expect(jerarquiaSheet?.dataRowCount).toBe(7); // Bug in generator
+      expect(jerarquiaSheet?.dataRowCount).toBe(9);
     });
   });
 
@@ -142,7 +142,7 @@ describe("parseWorkbookArrayBuffer", () => {
 
       const jerarquiaSheet = result.sheets.find(s => s.sheetName === "Jerarquía");
       expect(jerarquiaSheet).toBeDefined();
-      expect(jerarquiaSheet?.dataRowCount).toBe(9); // Bug in generator
+      expect(jerarquiaSheet?.dataRowCount).toBe(11);
     });
   });
 
@@ -157,14 +157,15 @@ describe("parseWorkbookArrayBuffer", () => {
       const baseAnswers = baseResult.sheets.find(s => s.sheetName === "answers");
       expect(baseAnswers).toBeDefined();
 
-      let baseBlankCount = 0;
+      let rawPhysicalBlankCountBase = 0;
       for (const row of baseAnswers!.rawRows) {
         if (row["Q-COL-004"] === null || row["Q-COL-004"] === undefined) {
-          baseBlankCount++;
+          rawPhysicalBlankCountBase++;
         }
         expect(row["Q-COL-004"]).not.toBe("");
       }
-      expect(baseBlankCount).toBe(4); // 2 blanks + 2 non-participants
+      // SYN4C1 validates raw parser physical blanks only. Participation-aware blank semantics belong to SYN4C2.
+      expect(rawPhysicalBlankCountBase).toBe(4); // 2 intentional + 2 from non-participants
 
       const compBuffer = getFixtureBuffer("synthetic-survey-comparison.xlsx");
       const compResult = await parseWorkbookArrayBuffer({
@@ -175,14 +176,15 @@ describe("parseWorkbookArrayBuffer", () => {
       const compAnswers = compResult.sheets.find(s => s.sheetName === "answers");
       expect(compAnswers).toBeDefined();
 
-      let compBlankCount = 0;
+      let rawPhysicalBlankCountComparison = 0;
       for (const row of compAnswers!.rawRows) {
         if (row["Q-COL-004"] === null || row["Q-COL-004"] === undefined) {
-          compBlankCount++;
+          rawPhysicalBlankCountComparison++;
         }
         expect(row["Q-COL-004"]).not.toBe("");
       }
-      expect(compBlankCount).toBe(3); // 1 blank + 2 non-participants
+      // SYN4C1 validates raw parser physical blanks only. Participation-aware blank semantics belong to SYN4C2.
+      expect(rawPhysicalBlankCountComparison).toBe(3); // 1 intentional + 2 from non-participants
     });
   });
 });

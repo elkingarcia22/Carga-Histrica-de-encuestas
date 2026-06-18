@@ -265,9 +265,12 @@ async function createWorkbook(filepath, ansRows, cols, periodId, qs, numNodes) {
   wsHier.addRow(['H-ROOT-001', 'Organización Sintética', 'ROOT', null, null, true, 1]);
   // Build divisions based on segment
   let currentOrder = 2;
+  wsHier.addRow(['H-DEP-SYN', 'Departamento Sintético', 'DEPARTMENT', 'H-ROOT-001', 'SYN-DEP', true, currentOrder++]);
+  wsHier.addRow(['H-AREA-SYN', 'Área Sintética', 'AREA', 'H-DEP-SYN', 'SYN-AREA', true, currentOrder++]);
+
   const segments = periodId === 'SYN-BASE' ? baseSegments : compSegments;
   for (const seg of segments) {
-    wsHier.addRow([`H-DIV-${seg.div}`, `División ${seg.div}`, 'DIVISION', 'H-ROOT-001', seg.div, true, currentOrder++]);
+    wsHier.addRow([`H-DIV-${seg.div}`, `División ${seg.div}`, 'DIVISION', 'H-AREA-SYN', seg.div, true, currentOrder++]);
     wsHier.addRow([`H-TEAM-${seg.div}`, `Equipo ${seg.div}`, 'TEAM', `H-DIV-${seg.div}`, seg.div, true, currentOrder++]);
   }
 
@@ -295,7 +298,20 @@ async function validateAndGenerate() {
   if (wb2.worksheets.length !== 4) throw new Error("Comp WB sheet count wrong");
 
   const expectedSheets = ['answers', 'Dimensions', 'colaboradores', 'Jerarquía'];
-  wb1.worksheets.forEach((ws, i) => { if (ws.name !== expectedSheets[i]) throw new Error("Sheet order/name wrong"); });
+  wb1.worksheets.forEach((ws, i) => { if (ws.name !== expectedSheets[i]) throw new Error("Base sheet order/name wrong"); });
+  wb2.worksheets.forEach((ws, i) => { if (ws.name !== expectedSheets[i]) throw new Error("Comp sheet order/name wrong"); });
+
+  const getRowCount = (wb, name) => wb.getWorksheet(name).rowCount - 1; // ex header
+
+  if (getRowCount(wb1, 'answers') !== 18) throw new Error(`Base answers rows wrong: ${getRowCount(wb1, 'answers')}`);
+  if (getRowCount(wb1, 'Dimensions') !== 17) throw new Error("Base Dimensions rows wrong");
+  if (getRowCount(wb1, 'colaboradores') !== 24) throw new Error("Base colaboradores rows wrong");
+  if (getRowCount(wb1, 'Jerarquía') !== 9) throw new Error(`Base Jerarquía physical data rows wrong: ${getRowCount(wb1, 'Jerarquía')} expected 9`);
+
+  if (getRowCount(wb2, 'answers') !== 22) throw new Error("Comp answers rows wrong");
+  if (getRowCount(wb2, 'Dimensions') !== 17) throw new Error("Comp Dimensions rows wrong");
+  if (getRowCount(wb2, 'colaboradores') !== 28) throw new Error("Comp colaboradores rows wrong");
+  if (getRowCount(wb2, 'Jerarquía') !== 11) throw new Error(`Comp Jerarquía physical data rows wrong: ${getRowCount(wb2, 'Jerarquía')} expected 11`);
 
   // Generate manifest
   const manifest = {
