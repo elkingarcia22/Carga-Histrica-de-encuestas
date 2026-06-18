@@ -13,7 +13,7 @@ export function ConversationalImportWorkspace() {
       <header className="flex-none border-b px-6 py-4 bg-card">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-semibold">Asistente de importación de encuestas</h1>
-          <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300">
+          <Badge variant="secondary">
             Sandbox sintético
           </Badge>
         </div>

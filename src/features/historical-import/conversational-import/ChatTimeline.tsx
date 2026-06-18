@@ -57,16 +57,16 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
               )}
 
               {msg.type === "warning" && (
-                <Card className="w-full border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20 dark:border-yellow-900">
-                  <CardContent className="p-3 text-sm text-yellow-800 dark:text-yellow-200">
+                <Card className="w-full bg-muted border-border">
+                  <CardContent className="p-3 text-sm text-foreground">
                     {msg.content}
                   </CardContent>
                 </Card>
               )}
 
               {msg.type === "approval_request" && (
-                <Card className="w-full border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-900">
-                  <CardContent className="p-3 text-sm text-blue-800 dark:text-blue-200">
+                <Card className="w-full bg-muted border-border">
+                  <CardContent className="p-3 text-sm text-foreground">
                     {msg.content}
                   </CardContent>
                 </Card>

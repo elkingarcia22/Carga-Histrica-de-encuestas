@@ -6130,3 +6130,65 @@ BUILD_PASSED
 SCOPED_LINT_GATE_PASSED
 CHAT4_CONVERSATIONAL_IMPORT_QA_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+
+## Phase: 4K-CHAT3-H1 · Conversational Import Visual Token Hotfix
+
+Reason:
+- CHAT3-G1 detected literal blue and green Tailwind classes in the conversational import workspace.
+- Formal closure required replacing literal color utilities with semantic UBITS tokens or approved component variants.
+
+Files modified:
+- src/features/historical-import/conversational-import/ChatTimeline.tsx
+- src/features/historical-import/conversational-import/ConversationalImportWorkspace.tsx
+- src/features/historical-import/conversational-import/SyntheticAttachmentStaging.tsx
+- src/features/historical-import/conversational-import/ApprovedContractSummary.tsx
+- docs/PROMPT_LOG.md
+
+Visual token replacements:
+- Replaced literal colors (blue, green, yellow) with generic `bg-muted border-border text-foreground` or similar neutral compositions.
+- Preserved existing warning and success texts to maintain visual meaning.
+
+Boundary verification:
+NO_REAL_UPLOAD_CREATED
+NO_FILE_INPUT_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+
+QA results:
+- BUILD_PASSED: YES
+- SCOPED_LINT_GATE_PASSED: YES
+- TESTS_PASSED: YES
+- COVERAGE_COMMAND_PASSED: YES
+- git diff --check: CLEAN
+- git diff --cached --check: CLEAN
+- git show --check HEAD: CLEAN
+
+Remaining prohibitions:
+- No modifying dashboard.
+- No modifying drilldown.
+- No modifying parser, metrics, comparison.
+- No connecting APIs.
+- No real data processing.
+
+Commit SHA:
+1480e32d631e21c4270cc8d2ffda1024c3867924
+
+Markers:
+PHASE_4K_CHAT3_H1_COMPLETE
+CONVERSATIONAL_IMPORT_LITERAL_COLOR_CLASSES_REMOVED
+CONVERSATIONAL_IMPORT_VISUAL_TOKENS_REVALIDATED
+CHAT3_VISUAL_TOKEN_HOTFIX_COMPLETED
+PHASE_4K_CHAT3_FORMALLY_CLOSED
+CHAT4_CONVERSATIONAL_IMPORT_QA_READY
+NO_REAL_UPLOAD_CREATED
+NO_FILE_INPUT_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+R1H5_DEFINED_BUT_NOT_TRIGGERED
