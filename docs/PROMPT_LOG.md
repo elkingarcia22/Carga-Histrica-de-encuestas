@@ -6052,3 +6052,81 @@ NO_API_CONNECTIONS
 NO_STORAGE
 CHAT3_CONVERSATIONAL_IMPORT_FIRST_SCREEN_BUILD_PROMPT_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Phase 4K-CHAT3 · Conversational Import First Screen Build
+
+**Decision:**
+- CONVERSATIONAL_IMPORT_WORKSPACE_BUILT = YES
+- FIRST_SCREEN = CONVERSATIONAL_IMPORT_WORKSPACE
+
+**Files created/modified:**
+- `src/features/historical-import/conversational-import/conversationalImportTypes.ts` (created)
+- `src/features/historical-import/conversational-import/conversationalImportMock.ts` (created)
+- `src/features/historical-import/conversational-import/SyntheticAttachmentStaging.tsx` (created)
+- `src/features/historical-import/conversational-import/ChatTimeline.tsx` (created)
+- `src/features/historical-import/conversational-import/ApprovedContractSummary.tsx` (created)
+- `src/features/historical-import/conversational-import/MessageComposer.tsx` (created)
+- `src/features/historical-import/conversational-import/DetectedStructurePanel.tsx` (created)
+- `src/features/historical-import/conversational-import/ApprovalProgressTracker.tsx` (created)
+- `src/features/historical-import/conversational-import/ValidationActionPanel.tsx` (created)
+- `src/features/historical-import/conversational-import/ConversationalImportWorkspace.tsx` (created)
+- `src/features/historical-import/conversational-import/index.ts` (created)
+- `src/App.tsx` (modified)
+- `docs/PROMPT_LOG.md` (modified)
+
+**Screen summary:**
+The Conversational Import Workspace has been built using a desktop-first layout, strict semantic tokens from UBITS, and mock data. It includes a chat timeline with simulated messages, synthetic staging for file uploads, a detected structure summary panel, progress blocks, validation actions, and an approved contract summary.
+
+**Mock data strategy:**
+Mock data definitions, interfaces, and state representations were encapsulated within `conversationalImportMock.ts`. Visual components strictly consume these mock references. The data structure represents a fully synthetic workflow from `FILES_STAGED` through multiple review phases, culminating in `READY_FOR_COMPARISON`.
+
+**Data boundary verification:**
+- NO_REAL_CLIENT_DATA
+- NO_REAL_UPLOAD_CREATED
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_API_CONNECTIONS
+- NO_STORAGE
+- NO_FILE_INPUT_CREATED
+- Mock scenarios rely on pure data constants mapped accurately to `SessionState`.
+
+**AI boundary verification:**
+- NO_INSIGHTS_AI_YET
+
+**QA results:**
+- BUILD_PASSED
+- SCOPED_LINT_GATE_PASSED
+- Tests passed
+- Coverage passed
+- Diff checks passed
+- Global lint findings exist out of scope of this feature, as baselined.
+
+**Remaining prohibitions:**
+- No processing real XLSX.
+- No LLM integrations.
+- No routing or state logic modifying the dashboard or drilldown layers.
+
+**Next authorized phase:**
+CHAT4_CONVERSATIONAL_IMPORT_QA_READY
+
+**Markers:**
+PHASE_4K_CHAT3_COMPLETE
+CONVERSATIONAL_IMPORT_WORKSPACE_BUILT
+FIRST_SCREEN_CONVERSATIONAL_IMPORT_WORKSPACE_RENDERED
+CHAT_TIMELINE_RENDERED
+SYNTHETIC_ATTACHMENT_STAGING_RENDERED
+DETECTED_STRUCTURE_PANEL_RENDERED
+APPROVAL_PROGRESS_RENDERED
+USER_VALIDATION_ACTIONS_RENDERED
+APPROVED_IMPORT_CONTRACT_SUMMARY_RENDERED
+MOCK_SCENARIOS_RENDERED
+NO_REAL_UPLOAD_CREATED
+NO_FILE_INPUT_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+CHAT4_CONVERSATIONAL_IMPORT_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED

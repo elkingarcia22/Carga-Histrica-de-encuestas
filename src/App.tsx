@@ -1,13 +1,13 @@
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { UbitsToaster } from "@/components/feedback";
-import { ComparisonResultsDashboard } from "@/features/historical-import/dashboard/ComparisonResultsDashboard";
+import { ConversationalImportWorkspace } from "@/features/historical-import/conversational-import";
 
 function App() {
   return (
     <TooltipProvider>
       <UbitsToaster />
-      <ComparisonResultsDashboard />
+      <ConversationalImportWorkspace />
     </TooltipProvider>
   );
 }
