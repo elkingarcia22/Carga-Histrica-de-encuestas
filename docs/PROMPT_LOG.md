@@ -5549,3 +5549,58 @@ SCOPED_LINT_GATE_PASSED
 
 SYN4C11_FIRST_SCREEN_HOTFIX_OR_CLOSURE_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 4K-SYN4C11 · First Screen Visual Token Hotfix
+
+**Reason:**
+- SYN4C10 found non-blocking Tailwind literal color classes in the first screen.
+
+**Files modified:**
+- `src/features/historical-import/dashboard/ComparisonResultsDashboard.tsx`
+- `docs/PROMPT_LOG.md`
+
+**Visual token changes:**
+- `bg-slate-50` -> `bg-background`
+- `text-slate-900` -> `text-foreground`
+- `text-slate-500`, `text-slate-600`, `text-slate-700` -> `text-muted-foreground`
+- `bg-slate-100` -> `bg-muted`
+- `border-slate-200` -> `border-border`
+- `text-green-600`, `text-green-800` -> `text-success`
+- `bg-green-100` -> `bg-success/10`
+- `border-green-200` -> `border-success/20`
+- `text-red-600`, `text-red-800` -> `text-destructive`
+- `bg-red-100` -> `bg-destructive/10`
+- `border-red-200` -> `border-destructive/20`
+- `bg-amber-50` -> `bg-warning/10`
+- `border-amber-200` -> `border-warning/20`
+- `text-amber-800`, `text-amber-700` -> `text-warning`
+
+**Classes retained, if any, and justification:**
+None. All reported literals were successfully replaced with semantic UBITS tokens or standard shadcn/ui tokens mapping to UBITS styles.
+
+**QA command results:**
+- `npm run build`: Passed
+- `npx eslint src/features/historical-import`: Passed
+- `npm run test:run`: Passed (66 tests)
+- `npm run test:coverage`: Passed
+- `git diff --check`: Clean
+
+**Remaining prohibitions:**
+- No upload UI created.
+- No productive file processing.
+- No insights AI created.
+- No shadcn/ui base modification.
+- No logic changes.
+
+**Commit SHA:** [To be assigned on commit]
+
+PHASE_4K_SYN4C11_COMPLETE
+FIRST_SCREEN_VISUAL_TOKEN_HOTFIX_APPLIED
+UBITS_VISUAL_ALIGNMENT_REVALIDATED
+NO_UPLOAD_UI_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_INSIGHTS_AI_CREATED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+SYN4C12_FIRST_SCREEN_CLOSURE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
