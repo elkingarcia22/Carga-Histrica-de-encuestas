@@ -6,3 +6,4 @@ export * from "./cross-sheet";
 export * from "./normalization";
 export * from "./metrics";
 export * from "./comparison";
+export * from "./view-model";

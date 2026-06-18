@@ -5336,3 +5336,51 @@ SYN4C6_FORCE_PUSH_BLOCKER_RESOLVED
 NO_HISTORY_LOSS_DETECTED
 
 **Commit SHA:** [Pending commit]
+
+## Phase 4K-SYN4C7 · Synthetic Comparison View Model Adapter
+
+### Scope
+- Created `src/features/historical-import/parser/view-model/viewModelTypes.ts`
+- Created `src/features/historical-import/parser/view-model/viewModelContract.ts`
+- Created `src/features/historical-import/parser/view-model/buildComparisonViewModel.ts`
+- Created `src/features/historical-import/parser/view-model/index.ts`
+- Created `tests/historical-import/parser/view-model/buildComparisonViewModel.test.ts`
+- Modified `src/features/historical-import/parser/index.ts` to export view-model.
+
+### Execution Results
+- Positive golden view model results: `VIEW_MODEL_READY` achieved with 16 comparable questions, all cards and filters present.
+- Negative mutation test results: Passed (handles rejected input, missing summaries, missing question comparisons, missing comparable questions gracefully).
+- QA command results: `npm run test:run`, `npm run test:coverage`, `npm run build`, and scoped lint passed.
+- Global lint baseline: 29 problems (25 errors, 4 warnings) - unchanged baseline.
+- Decision gate result: `PHASE_4K_SYN4C7_COMPLETE`
+- Remaining prohibitions: No UI, no insights AI, no productive data, no styles/colors.
+
+### Final Status
+PHASE_4K_SYN4C7_COMPLETE
+SYNTHETIC_COMPARISON_VIEW_MODEL_IMPLEMENTED
+PERIOD_COMPARISON_VIEW_MODEL_BOUNDARY_ESTABLISHED
+
+SUMMARY_CARDS_VIEW_MODEL_GENERATED
+KPI_CARDS_VIEW_MODEL_GENERATED
+QUESTION_ROWS_VIEW_MODEL_GENERATED
+DISTRIBUTION_ROWS_VIEW_MODEL_GENERATED
+FILTER_OPTIONS_VIEW_MODEL_GENERATED
+EMPTY_STATE_VIEW_MODEL_GENERATED
+SEMANTIC_TONES_ASSIGNED
+NEGATIVE_VIEW_MODEL_MUTATION_TESTS_PASSED
+VIEW_MODEL_INPUT_IMMUTABILITY_VERIFIED
+
+TESTS_PASSED
+COVERAGE_COMMAND_PASSED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+
+NO_UI_YET
+NO_UPLOAD_UI_YET
+NO_INSIGHTS_AI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+
+SYN4C8_FIRST_SCREEN_ARCHITECTURE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+**Commit SHA:** [Pending commit]
