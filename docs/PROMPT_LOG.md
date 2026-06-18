@@ -1,5 +1,62 @@
 # Prompt Log
 
+## Fase 4K-CHAT0 · Conversational Import Pivot Intake
+
+Phase: 4K-CHAT0 · Conversational Import Pivot Intake
+
+Decision:
+- CONVERSATIONAL_IMPORT_PIVOT = YES
+- PREVIOUS_DASHBOARD_FLOW_PAUSED = YES
+- SYN4C16_DRILLDOWN_QA_PAUSED = YES
+
+Files created/modified:
+- docs/CONVERSATIONAL_IMPORT_INTAKE.md
+- docs/PROMPT_LOG.md
+- docs/ARCHITECTURE.md
+- docs/ANTIGRAVITY.md
+
+Pivot summary:
+Se definió un cambio de dirección de producto donde la experiencia principal pasa a ser conversacional. El usuario cargará archivos en un chat, el sistema analizará la estructura de forma mock y propondrá hallazgos, para que el usuario apruebe y genere el contrato comparativo.
+
+Intake decisions:
+El objetivo es el asistente de importación, no implementará APIs reales ni IA real aún. Se definió la nueva pantalla como Conversational Import Workspace. El pipeline existente será reutilizado después.
+
+Open questions:
+- ¿El chat será solo para importación o también para análisis posterior?
+- ¿El usuario aprueba todo o por bloques?
+- ¿La primera versión usará fixtures sintéticos o archivos adjuntos mock?
+- ¿El análisis será 100% reglas/mock?
+- ¿La UI será una pantalla nueva o reemplazará el dashboard como primera experiencia?
+- ¿El dashboard actual queda como resultado posterior?
+
+Remaining prohibitions:
+- NO_UPLOAD_UI_YET
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+- NO_API_CONNECTIONS
+- NO_STORAGE
+
+Next authorized phase:
+- CHAT1_CONVERSATIONAL_IMPORT_ARCHITECTURE_READY
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_CHAT0_COMPLETE
+CONVERSATIONAL_IMPORT_PIVOT_INTAKE_COMPLETED
+CONVERSATIONAL_IMPORT_PIVOT_APPROVED_FOR_ARCHITECTURE
+PREVIOUS_DASHBOARD_FLOW_PAUSED
+SYN4C16_DRILLDOWN_QA_PAUSED
+FIRST_SCREEN_REDEFINED_AS_CONVERSATIONAL_IMPORT_WORKSPACE
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+CHAT1_CONVERSATIONAL_IMPORT_ARCHITECTURE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN4C15-H1 · Drilldown Visual Hygiene Hotfix
 
 Phase: 4K-SYN4C15-H1 · Drilldown Visual Hygiene Hotfix
