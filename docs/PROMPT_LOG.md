@@ -1,5 +1,67 @@
 # Prompt Log
 
+## Fase 4K-SYN4B · Application XLSX Parser Dependency Installation and Audit
+
+**Scope Confirmation:** SYN4B phase scope correctly limited to exact installation of read-excel-file@9.2.0 as application dependency and strict read-only auditing.
+**Git Preflight:** PASS (branch = main, HEAD = origin/main, clean working tree)
+**Package Manager:** NPM
+**Installation Command:** `npm install --save-exact read-excel-file@9.2.0`
+**Package.json Assessment:** PASS. `read-excel-file` is under dependencies exactly at 9.2.0. `exceljs` remains devDependency exactly at 4.4.0. No other dependencies changed. Scripts unchanged.
+**Lockfile Assessment:** PASS. Lockfile format updated, read-excel-file@9.2.0 resolved, registry integrity present.
+**Installed Package Manifest:**
+- Package: read-excel-file
+- Installed version: 9.2.0
+- License: MIT
+- Module type: module
+- Main entry: ./universal/index.js (from exports)
+- Browser entry: ./browser/index.js
+- Exports: ./universal, ./browser, ./node, ./web-worker, ./package.json
+- TypeScript declarations: Available (via exports types)
+- Runtime dependencies: @xmldom/xmldom, fflate, unzipper-esm
+- Optional dependencies: NONE
+- Peer dependencies: NONE
+- sideEffects: false
+- Node engine: >=18
+**Browser and Worker Exports:** Available.
+**Dependency Tree:**
+- Direct application dependency: YES
+- Resolved version: 9.2.0
+- Dependency path: read-excel-file@9.2.0
+- Deduplicated packages: 0
+- Invalid peer dependencies: 0
+- Extraneous packages: 0
+**Full Audit Result:** 11 vulnerabilities (1 low, 7 moderate, 3 high)
+**Runtime-only Audit Result:** 8 vulnerabilities (1 low, 5 moderate, 2 high)
+**Parser-attributable Findings:** NONE. No vulnerabilities attributable to read-excel-file, fflate, @xmldom/xmldom, or unzipper-esm. The vulnerabilities found are related to @babel/core, brace-expansion, fast-uri, hono, ip-address, js-yaml, qs, uuid, vite.
+**Application Isolation Verification:** Imports in src/**: 0. References in public/**: 0. Parser implementation: NO. Worker implementation: NO. Upload UI implementation: NO.
+**Files Modified:** package.json, package-lock.json, docs/PROMPT_LOG.md
+**Documentation QA:** PASS. Only authorized files changed.
+**Commit and Push Evidence:** Prepared.
+**Installation Gate Decision:** READ_EXCEL_FILE_9_2_0_DEPENDENCY_INSTALLED, SYN4C_PARSER_IMPLEMENTATION_READY_FOR_SEPARATE_PHASE
+**Blocking Findings:** NONE.
+**Next Maximum Authorized Phase:** Fase 4K-SYN4C · Parser Implementation Phase
+
+**Final Status:**
+PHASE_4K_SYN4B_COMPLETE
+
+READ_EXCEL_FILE_9_2_0_INSTALLED
+APPLICATION_XLSX_PARSER_DEPENDENCY_INSTALLED
+PARSER_DEPENDENCY_LOCKFILE_AUDITED
+
+EXCELJS_REMAINS_FIXTURE_GENERATOR_DEV_ONLY
+APPLICATION_IMPORTS_ZERO
+PARSER_IMPLEMENTATION_NOT_YET_CREATED
+
+SYN4C_PARSER_IMPLEMENTATION_READY_FOR_SEPARATE_PHASE
+
+SYNTHETIC_FILES_ONLY
+NO_REAL_CLIENT_DATA
+NO_NETWORK_FILE_TRANSMISSION
+NO_PERSISTENCE
+NO_UPLOAD_UI_YET
+NO_PRODUCTIVE_FILE_PROCESSING
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-SYN3 · Deterministic Golden Synthetic Workbook Generation
 
 **Scope Confirmation:** SYN3 phase scope correctly limited to offline generation of deterministic golden synthetic workbooks.
