@@ -5995,24 +5995,24 @@ SCOPED_LINT_GATE_PASSED
 SYN4C12_FIRST_SCREEN_CLOSURE_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
 
-## 4K-CHAT2 · Conversational Import Mock Data Contract
-**Date**: 2026-06-18
-**Status**: COMPLETED
+## Fase 4K-CHAT2 · Conversational Import Mock Data Contract
 
-### Decision:
+Phase: 4K-CHAT2 · Conversational Import Mock Data Contract
+
+Decision:
 - CONVERSATIONAL_IMPORT_MOCK_CONTRACT_LOCKED = YES
 - MOCK_CONTRACT_SCOPE = SYNTHETIC_ONLY
 
-### Files created/modified:
-- `docs/CONVERSATIONAL_IMPORT_MOCK_CONTRACT.md` (Created)
-- `docs/PROMPT_LOG.md` (Modified)
-- `docs/ARCHITECTURE.md` (Modified)
-- `docs/QA_CHECKLIST.md` (Modified)
+Files created/modified
+- docs/CONVERSATIONAL_IMPORT_MOCK_CONTRACT.md
+- docs/PROMPT_LOG.md
+- docs/ARCHITECTURE.md
+- docs/QA_CHECKLIST.md
 
-### Mock contract summary:
-Defined strict TypeScript interfaces for `ConversationalImportSessionMock`, `SyntheticAttachmentMock`, `DetectedStructureMock` (workbooks, sheets, demographics, dimensions, questions), `QuestionDimensionMappingMock`, `IssueMock`, `UserValidationActionMock`, `ApprovalBlocksMock`, and `ApprovedSurveyImportContractMock`.
+Mock contract summary
+Defined strict TypeScript interfaces for ConversationalImportSessionMock, SyntheticAttachmentMock, DetectedStructureMock, QuestionDimensionMappingMock, IssueWarningMock, UserValidationActionMock, ApprovalBlocksMock, and ApprovedSurveyImportContractMock.
 
-### Mock scenarios:
+Mock scenarios
 1. SCENARIO_EMPTY_SESSION
 2. SCENARIO_FILES_STAGED
 3. SCENARIO_STRUCTURE_PROPOSED_WITH_WARNINGS
@@ -6020,23 +6020,22 @@ Defined strict TypeScript interfaces for `ConversationalImportSessionMock`, `Syn
 5. SCENARIO_CONTRACT_APPROVED_READY_FOR_COMPARISON
 6. SCENARIO_ERROR_UNSUPPORTED_FILE_TYPE
 
-### Data boundary:
-Strict synthetic data only. No real client data, PII, APIs, or database connections allowed. Upload logic is purely mock file staging.
+Data boundary
+Solo datos sintéticos. No datos de clientes reales. No storage persistente.
 
-### AI boundary:
-No real AI execution. Chat messages are static mock text based on mock scenarios. No real LLM API connections.
+AI boundary
+No IA real. No LLM API. No clasificación real. No inferencia sobre datos reales. Respuestas del asistente serán mock/reglas sintéticas. Cualquier IA-first real requiere intake separado.
 
-### Remaining prohibitions:
-No UI construction, no real APIs, no code modifications in `src/**`, no real data processing, no storage implementation.
+Remaining prohibitions
+- No UI construction.
+- No code modifications.
+- No API connections.
 
-### Next authorized phase:
-CHAT3 · Conversational Import First Screen Build Prompt Ready
+Next authorized phase
+CHAT3_CONVERSATIONAL_IMPORT_FIRST_SCREEN_BUILD_PROMPT_READY
 
-### Commit SHA:
-Pending commit.
+Commit SHA: PENDING_COMMIT
 
-### State Markers:
-```text
 PHASE_4K_CHAT2_COMPLETE
 CONVERSATIONAL_IMPORT_MOCK_CONTRACT_LOCKED
 CONVERSATIONAL_IMPORT_SESSION_MOCK_DEFINED
@@ -6053,4 +6052,3 @@ NO_API_CONNECTIONS
 NO_STORAGE
 CHAT3_CONVERSATIONAL_IMPORT_FIRST_SCREEN_BUILD_PROMPT_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
-```

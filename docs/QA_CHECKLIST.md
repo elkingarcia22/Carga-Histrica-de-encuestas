@@ -161,3 +161,15 @@
 - [x] Modificar `PROMPT_LOG.md` con marcadores correctos.
 - [x] Modificar `ARCHITECTURE.md` y `ANTIGRAVITY.md` agregando referencias a `CONVERSATIONAL_IMPORT_ARCHITECTURE.md`.
 - [x] No source changes, no tests changes, clean diff hygiene.
+
+## Fase 4K-CHAT2: Conversational Import Mock Data Contract
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Crear documento `CONVERSATIONAL_IMPORT_MOCK_CONTRACT.md`.
+- [x] Definir Mock Session Overview y Session States.
+- [x] Definir Chat Message Contract.
+- [x] Definir Synthetic Attachment Contract, Detected Structure Contracts, y Validation Actions.
+- [x] Definir Approval Blocks Contract y Approved Survey Import Contract.
+- [x] Definir Mock Scenarios.
+- [x] Establecer UI Consumption Boundary, Pipeline Handoff Boundary, AI Boundary, y Data Boundary.
+- [x] Modificar `PROMPT_LOG.md`, `ARCHITECTURE.md`, y `QA_CHECKLIST.md` con marcadores correctos.
+- [x] No source changes, no tests changes, clean diff hygiene.
