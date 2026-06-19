@@ -237,7 +237,7 @@
 - [x] HEAD whitespace fixed
 - [x] QA Passed
 
-## Phase 4K-CHAT-VIS1-H1: Chat Shell Visual Alignment Hotfix (Completada - 2026-06-19)
+## Phase 4K-CHAT-VIS1-H1: Formalize and Align Initial Chat Shell Visual Build (Completada - 2026-06-19)
 - [x] Configure canvas background and layout in `ConversationalImportWorkspace.tsx`
 - [x] Redesign left sidebar in `ChatHistorySidebar.tsx` (card style, header, bottom new chat button with gradient)
 - [x] Redesign main panel in `ConversationalImportWorkspace.tsx` (card style, header inside, greeting, quick action buttons, hidden panels)

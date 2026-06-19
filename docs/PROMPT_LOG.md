@@ -6602,34 +6602,44 @@ SCOPED_LINT_GATE_PASSED
 CHAT11_INLINE_REVIEW_HOTFIX_OR_CLOSURE_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
 
-## Fase 4K-CHAT-VIS1-H1 · Chat Shell Visual Alignment Hotfix
+## Fase 4K-CHAT-VIS1-H1 · Formalize and Align Initial Chat Shell Visual Build
 
-Phase: 4K-CHAT-VIS1-H1 · Chat Shell Visual Alignment Hotfix
+Phase: 4K-CHAT-VIS1-H1 · Formalize and Align Initial Chat Shell Visual Build
 
 Summary:
-- Visual shell aligned closer to reference screenshots.
-- Sidebar converted to contained card.
-- New chat button moved to bottom.
-- Main panel converted to contained card with internal header.
-- Initial empty chat state centered.
+- Formalized local VIS1 build.
+- Added/confirmed ChatHistorySidebar within authorized feature scope.
+- Sidebar aligned closer to reference screenshots.
+- New chat button positioned at bottom.
+- Main chat panel aligned as contained card.
+- Initial state centered.
 - Composer adjusted to large chat input.
 - Quick actions adjusted to button/pill style.
-- Initial structure and inline review remain hidden.
+- Structure/inline review hidden by default.
+- walkthrough.md excluded from repo.
 
-Markers:
 PHASE_4K_CHAT_VIS1_H1_COMPLETE
+INITIAL_CHAT_SHELL_VISUAL_BUILT
 CHAT_SHELL_VISUAL_ALIGNMENT_HOTFIX_COMPLETE
 REFERENCE_LAYOUT_ALIGNMENT_IMPROVED
 LEFT_SIDEBAR_CARD_RENDERED
+LEFT_PANEL_CHAT_HISTORY_RENDERED
 NEW_CHAT_BUTTON_BOTTOM_RENDERED
 MAIN_CHAT_CARD_RENDERED
+MAIN_PANEL_CHAT_CONVERSATION_RENDERED
 MAIN_CHAT_HEADER_RENDERED
 INITIAL_EMPTY_CHAT_STATE_CENTERED
+INITIAL_EMPTY_CHAT_STATE_RENDERED
 LARGE_CHAT_COMPOSER_RENDERED
+CHAT_COMPOSER_RENDERED
 QUICK_ACTIONS_BUTTON_STYLE_RENDERED
+QUICK_ACTIONS_RENDERED
+SURVEY_FILE_MOUNT_ENTRY_POINT_RENDERED
 INITIAL_STRUCTURE_PANEL_HIDDEN
 INITIAL_INLINE_REVIEW_HIDDEN
 OLD_WORKSPACE_LAYOUT_NOT_VISIBLE_BY_DEFAULT
+CHAT9_PARALLEL_BOUNDARY_PRESERVED
+WALKTHROUGH_MD_EXCLUDED_FROM_REPO
 NO_REAL_UPLOAD_CREATED
 NO_FILE_INPUT_CREATED
 NO_PRODUCTIVE_FILE_PROCESSING
