@@ -247,3 +247,11 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - **No parser:** No se usa `FileReader` ni bibliotecas de parseo de excel.
 - **No Claude:** No se envían datos al LLM en esta etapa.
 - **No storage:** No se suben archivos a S3 ni a un servidor backend.
+
+### Local Parser Architecture
+- **Ubicación documental**: `docs/LOCAL_PARSER_ARCHITECTURE.md`
+- **Parser como fuente estructural**: Actúa como fuente de verdad estructural.
+- **Output**: Genera el `SurveyFileAnalysisContract`.
+- **Dependency decision gate**: Requiere validación antes de introducir dependencias.
+- **No runtime parser todavía**: Solo se define la arquitectura.
+- **Claude fuera de scope**: Claude no participa en esta etapa.

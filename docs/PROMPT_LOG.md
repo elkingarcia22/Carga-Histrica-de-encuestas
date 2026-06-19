@@ -7766,3 +7766,32 @@ Markers:
 - NO_PRODUCTIVE_PROCESSING
 - PHASE_5C_SANDBOX_UPLOAD_QA_READY
 - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 6A · Local Parser Architecture Lock
+
+Phase: Fase 6A · Local Parser Architecture Lock
+
+Summary:
+- Local parser architecture defined.
+- Parser responsibilities locked.
+- Parsing pipeline defined.
+- Sheet/header/column profiling strategy defined.
+- Demographic/question/participant/PII detection strategies defined.
+- Multi-survey detection strategy defined.
+- Contract assembly defined.
+- Dependency decision gate required before implementation.
+
+PHASE_6A_LOCAL_PARSER_ARCHITECTURE_COMPLETE
+LOCAL_PARSER_ARCHITECTURE_LOCKED
+PARSER_IS_STRUCTURAL_SOURCE_OF_TRUTH
+AI_NOT_SOURCE_OF_TRUTH
+DEPENDENCY_DECISION_GATE_REQUIRED
+NO_RUNTIME_PARSER_YET
+NO_FILE_CONTENT_READING_YET
+NO_CLAUDE_AT_PARSER_STAGE
+SURVEY_FILE_ANALYSIS_CONTRACT_OUTPUT
+PII_DETECTION_REQUIRED
+MULTI_SURVEY_DETECTION_REQUIRED
+PARTICIPANT_DETECTION_REQUIRED
+PHASE_6B_PARSER_DEPENDENCY_DECISION_GATE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
