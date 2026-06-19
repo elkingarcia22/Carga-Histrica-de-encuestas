@@ -6557,3 +6557,48 @@ CHAT9_DOCUMENTATION_HOTFIX_COMPLETED
 CHAT9_HEAD_WHITESPACE_FIXED
 CHAT9_HOTFIX_QA_PASSED
 PHASE_4K_CHAT9_FORMALLY_CLOSED
+
+## Phase: 4K-CHAT10 · Inline Structure Review QA
+
+**QA summary**
+Functional QA, mock data separation, upload/file boundaries, API/storage/AI boundaries, visual tokens, accessibility, and technical hygiene were evaluated for the `4K-CHAT9` phase. No code or UI files were modified during this phase.
+
+**Functional QA:** Passed
+**Mock data separation QA:** Passed
+**Upload boundary QA:** Passed
+**Data boundary QA:** Passed
+**API/storage/AI QA:** Passed
+**Visual token QA:** Passed with minor non-blocking finding
+**Accessibility QA:** Passed
+**Technical QA:** Passed (Scoped linting and tests passed)
+
+**Findings:**
+1. Visual tokens: `text-white` and `bg-black/80` literal classes were introduced in `InlineReviewPanel.tsx` line 156 (inside a `<pre>` element for the JSON payload preview). This is a minor violation of the UBITS visual token standards but does not compromise the structure or functionality of the application.
+
+**Blocking findings:** None.
+
+**Next authorized phase:** CHAT11_INLINE_REVIEW_HOTFIX_OR_CLOSURE_READY
+
+**Markers:**
+PHASE_4K_CHAT10_COMPLETE_WITH_FINDINGS
+INLINE_STRUCTURE_REVIEW_QA_PASSED_WITH_NON_BLOCKING_FINDINGS
+INLINE_REVIEW_FUNCTIONAL_QA_PASSED
+INLINE_REVIEW_MOCK_DATA_QA_PASSED
+INLINE_REVIEW_UPLOAD_BOUNDARY_QA_PASSED
+INLINE_REVIEW_DATA_BOUNDARY_QA_PASSED
+INLINE_REVIEW_AI_API_STORAGE_QA_PASSED
+INLINE_REVIEW_VISUAL_QA_PASSED
+INLINE_REVIEW_ACCESSIBILITY_QA_PASSED
+NO_REAL_UPLOAD_VERIFIED
+NO_FILE_INPUT_VERIFIED
+NO_PRODUCTIVE_FILE_PROCESSING_VERIFIED
+NO_REAL_CLIENT_DATA_VERIFIED
+NO_INSIGHTS_AI_VERIFIED
+NO_API_CONNECTIONS_VERIFIED
+NO_STORAGE_VERIFIED
+NO_PARSER_RUNTIME_IN_UI_VERIFIED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+CHAT11_INLINE_REVIEW_HOTFIX_OR_CLOSURE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
