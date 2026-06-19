@@ -189,3 +189,20 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - [Conversational Import Next Capability](./CONVERSATIONAL_IMPORT_NEXT_CAPABILITY.md) - Definición de la siguiente capacidad del workspace conversacional.
 - [Inline Structure Review Architecture](./INLINE_STRUCTURE_REVIEW_ARCHITECTURE.md) - Definición de arquitectura para la revisión de estructura inline.
 - [Synthetic File Mount Flow Architecture](./SYNTHETIC_FILE_MOUNT_FLOW_ARCHITECTURE.md) - Definición del flujo de montaje sintético de archivos en el chat.
+
+## Conversational Structure Review
+
+* **Architecture Decision:** CONVERSATIONAL_STRUCTURE_REVIEW_ARCHITECTURE_LOCKED
+* **Review Mode:** CONVERSATIONAL_STEP_BY_STEP
+* **Review Panel CTA:** NO DIRECT CTA
+* **Reveal Mode:** ONE_STEP_AT_A_TIME
+* **Inline Panel Visibility:** HIDDEN BY DEFAULT
+* **Approval Flow Location:** CHAT_TIMELINE
+
+### Step-by-Step Flow
+1. REVIEW_FILES_STEP
+2. REVIEW_DEMOGRAPHICS_STEP
+3. REVIEW_DIMENSIONS_STEP
+4. REVIEW_QUESTIONS_STEP
+5. REVIEW_MAPPINGS_STEP
+6. REVIEW_APPROVED_CONTRACT_STEP

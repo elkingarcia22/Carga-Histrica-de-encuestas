@@ -325,3 +325,12 @@
 - [x] BUILD_PASSED
 - [x] SCOPED_LINT_GATE_PASSED
 - [x] CHAT_VIS4_STRUCTURE_REVIEW_REVEAL_FLOW_READY
+
+## Conversational Structure Review Architecture QA
+
+- [x] CONVERSATIONAL_STRUCTURE_REVIEW_ARCHITECTURE_LOCKED
+- [x] REVIEW_MODE = CONVERSATIONAL_STEP_BY_STEP
+- [x] REVIEW_PANEL_DIRECT_CTA disabled
+- [x] ONE_STEP_AT_A_TIME defined
+- [x] INLINE_REVIEW_PANEL is supporting only
+- [x] No real upload/file input/API
