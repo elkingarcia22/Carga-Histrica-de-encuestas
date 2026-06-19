@@ -1,5 +1,38 @@
 # Prompt Log
 
+## Fase 6B · Parser Dependency Decision Gate
+
+Phase: Fase 6B · Parser Dependency Decision Gate
+
+Summary:
+- Parser dependency options evaluated.
+- xlsx recommended for future prototype parsing.
+- CSV fallback strategy defined.
+- Backend parser future option documented.
+- Web Worker future option documented.
+- Dynamic header detection required.
+- SIIS-like header offset case documented.
+- No dependency installed in this phase.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_6B_PARSER_DEPENDENCY_DECISION_COMPLETE
+PARSER_DEPENDENCY_DECISION_LOCKED
+XLSX_LIBRARY_RECOMMENDED_FOR_PROTOTYPE
+DEPENDENCY_INSTALLATION_NOT_DONE
+PACKAGE_FILES_UNCHANGED
+PACKAGE_CHANGE_ALLOWED_NEXT_PHASE_ONLY
+CSV_FALLBACK_STRATEGY_DEFINED
+BACKEND_PARSER_FUTURE_OPTION_DEFINED
+WEB_WORKER_FUTURE_OPTION_DEFINED
+SIIS_LIKE_HEADER_OFFSET_CASE_DOCUMENTED
+DYNAMIC_HEADER_DETECTION_REQUIRED
+NO_RUNTIME_PARSER_YET
+NO_FILE_CONTENT_READING_YET
+NO_CLAUDE_AT_PARSER_STAGE
+PHASE_6C_PARSER_DEPENDENCY_INSTALL_AND_SCAFFOLD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 5C · Sandbox Upload UI QA
 
 Phase: Fase 5C · Sandbox Upload UI QA

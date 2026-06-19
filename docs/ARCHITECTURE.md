@@ -255,3 +255,10 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - **Dependency decision gate**: Requiere validación antes de introducir dependencias.
 - **No runtime parser todavía**: Solo se define la arquitectura.
 - **Claude fuera de scope**: Claude no participa en esta etapa.
+
+### Parser Dependency Decision
+- **Documento fuente**: `docs/PARSER_DEPENDENCY_DECISION.md`
+- **Recomendación de dependencia futura**: Se recomienda `xlsx` para el prototipo.
+- **No instalación en esta fase**: Ningún cambio en dependencias.
+- **Header detection dinámico requerido**: Obligatorio, por ej. para compensar offset SIIS.
+- **Parser sigue sin implementarse**: Evaluación documental completada.
