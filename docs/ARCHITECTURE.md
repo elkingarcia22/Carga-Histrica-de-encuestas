@@ -236,3 +236,14 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - **No procesa archivos**: Sin capacidades de parser.
 - **No conecta IA**: Completamente aislado del razonamiento semántico.
 - **Uso futuro**: Será consultado por las fases de simulación de AI o matching determinista para encontrar correspondencias.
+
+### Sandbox Upload UI (Phase 5B)
+
+- **Ubicación:** `src/features/historical-import/conversational-import/SandboxUploadPanel.tsx`
+- **Acción visible:** Cargar encuesta (reemplaza "Montar archivos sintéticos").
+- **Selección local controlada:** Permite seleccionar archivos locales con extensiones `.xlsx`, `.xls`, `.csv`.
+- **Metadata-only:** Solo se extrae `name`, `size`, `type`, `lastModified` del objeto File.
+- **Files in memory only:** No se guarda nada en persistencia, sessionStorage ni localStorage.
+- **No parser:** No se usa `FileReader` ni bibliotecas de parseo de excel.
+- **No Claude:** No se envían datos al LLM en esta etapa.
+- **No storage:** No se suben archivos a S3 ni a un servidor backend.

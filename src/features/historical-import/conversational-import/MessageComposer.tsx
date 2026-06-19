@@ -5,7 +5,7 @@ export function MessageComposer() {
   return (
     <div className="relative border border-border bg-card rounded-2xl p-4 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all shadow-sm w-full">
       <textarea
-        placeholder="Cuéntame qué encuesta quieres comparar o monta archivos sintéticos"
+        placeholder="Cuéntame qué encuesta quieres cargar"
         className="w-full min-h-[144px] bg-transparent outline-none resize-none text-sm placeholder:text-muted-foreground/75 pr-12 text-foreground"
         disabled
       />

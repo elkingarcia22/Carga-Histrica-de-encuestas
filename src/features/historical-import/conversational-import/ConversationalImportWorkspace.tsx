@@ -38,6 +38,8 @@ import {
   simulatedContractReturnToMappingsMessages
 } from "./conversationalImportMock";
 
+let globalMsgCounter = 0;
+
 export function ConversationalImportWorkspace() {
   const [chatStarted, setChatStarted] = useState(false);
   const [viewMode, setViewMode] = useState<"chat" | "review">("chat");
@@ -71,35 +73,65 @@ export function ConversationalImportWorkspace() {
   };
 
   const handleMountSynthetic = () => {
+    // Legacy support for mock session click
+    handleSandboxUploadStart();
+  };
+
+  const handleSandboxUploadStart = () => {
+    globalMsgCounter += 1;
+    const isoString = new Date().toISOString();
     setChatStarted(true);
     setViewMode("chat");
     setMessages([
       initialMessages[0],
       {
-        id: `msg_user_mount_${Date.now()}`,
+        id: `msg_user_upload_${globalMsgCounter}`,
         role: "user",
         type: "text",
-        content: "Montar archivos sintéticos",
-        timestamp: new Date().toISOString(),
+        content: "Cargar encuesta",
+        timestamp: isoString,
       },
       {
-        id: `msg_assistant_analyzing_${Date.now()}`,
+        id: `msg_assistant_upload_panel_${globalMsgCounter}`,
         role: "assistant",
-        type: "analysis_progress",
-        content: "Analizando archivos y revisando estructura detectada...",
-        timestamp: new Date().toISOString(),
+        type: "sandbox_upload_panel",
+        content: "Selecciona los archivos que quieres cargar en el sandbox.",
+        timestamp: isoString,
       }
     ]);
+  };
 
-    setTimeout(() => {
-      setMessages((prev) => {
-        const withoutTyping = prev.filter(m => m.type !== "analysis_progress");
-        return [
-          ...withoutTyping,
-          ...simulatedDemographicsReviewStartMessages()
-        ];
-      });
-    }, 2000);
+  const handleSandboxFilesSelected = (files: import("./SandboxUploadPanel").SandboxFileMetadata[]) => {
+    globalMsgCounter += 1;
+    const isoString = new Date().toISOString();
+    setMessages((prev) => {
+      // Remove the upload panel
+      const withoutPanel = prev.filter(m => m.type !== "sandbox_upload_panel");
+
+      const fileCardsMessage: import("./conversationalImportTypes").ChatMessage = {
+        id: `msg_assistant_files_selected_${globalMsgCounter}`,
+        role: "assistant",
+        type: "sandbox_files_selected",
+        content: "Recibí los archivos en modo sandbox.\nTodavía no los estoy procesando.\nPrimero validaré si pertenecen a una sola encuesta y si hay señales de datos personales.\nSi detecto más de una encuesta, te pediré elegir cuál procesar primero.",
+        sandboxFiles: files,
+        timestamp: isoString,
+      };
+
+      const safetyGateMessage: import("./conversationalImportTypes").ChatMessage = {
+        id: `msg_assistant_safety_gate_${globalMsgCounter}`,
+        role: "assistant",
+        type: "analysis_summary_blocks",
+        content: files.length > 1 ? "⚠️ Detecté varios archivos.\nEn la siguiente fase validaré si pertenecen a una misma encuesta o a encuestas diferentes.\nSi son encuestas diferentes, solo podrás procesar una a la vez.\n\nSiguiente paso: validación preliminar" : "Siguiente paso: validación preliminar",
+        visualBlocks: [
+          { icon: "file", title: "Revisar formatos", description: "Verificar compatibilidad" },
+          { icon: "users", title: "Identificar PII", description: "La detección se realizará cuando el parser local lea encabezados en una fase posterior." },
+          { icon: "arrow_right", title: "Confirmar", description: "Confirmar si quieres continuar (fuera de scope actual)" }
+        ],
+        timestamp: isoString,
+      };
+
+      return [...withoutPanel, fileCardsMessage, safetyGateMessage];
+    });
   };
 
   const handleCompareClimate = () => {
@@ -280,7 +312,7 @@ export function ConversationalImportWorkspace() {
                     key={item.id}
                     variant="outline"
                     onClick={() => {
-                      if (item.id === "montar") handleMountSynthetic();
+                      if (item.id === "cargar") handleSandboxUploadStart();
                       else if (item.id === "comparar") handleCompareClimate();
                       else if (item.id === "revisar") handleReviewStructure();
                       else if (item.id === "formato") handleExpectedFormat();
@@ -296,7 +328,11 @@ export function ConversationalImportWorkspace() {
             /* Estado Activo */
             viewMode === "chat" ? (
               <div className="flex-1 flex flex-col min-h-0 relative">
-                <ChatTimeline messages={messages} onAction={handleAction} />
+                <ChatTimeline
+                  messages={messages}
+                  onAction={handleAction}
+                  onSandboxFilesSelected={handleSandboxFilesSelected}
+                />
                 <div className="p-4 mx-auto w-full max-w-4xl shrink-0">
                   <MessageComposer />
                 </div>

@@ -1,5 +1,5 @@
 export type MessageRole = "system" | "assistant" | "user";
-export type MessageType = "text" | "file_staging" | "structure_summary" | "warning" | "approval_request" | "correction" | "contract_summary" | "synthetic_file_mount_summary" | "guided_review_step" | "analysis_progress" | "demographics_guided_review" | "analysis_summary_blocks";
+export type MessageType = "text" | "file_staging" | "structure_summary" | "warning" | "approval_request" | "correction" | "contract_summary" | "synthetic_file_mount_summary" | "guided_review_step" | "analysis_progress" | "demographics_guided_review" | "analysis_summary_blocks" | "sandbox_upload_panel" | "sandbox_files_selected";
 
 export interface SyntheticMountedSurveyFile {
   id: string;
@@ -27,6 +27,7 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
   files?: SyntheticMountedSurveyFile[];
+  sandboxFiles?: import("./SandboxUploadPanel").SandboxFileMetadata[];
   boundaryNote?: string;
   nextActions?: SyntheticMountNextAction[];
   visualBlocks?: { icon?: string; title: string; description: string; status?: string }[];

@@ -8,12 +8,15 @@ import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
 import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
 
+import { SandboxUploadPanel } from "./SandboxUploadPanel";
+
 interface ChatTimelineProps {
   onAction?: (actionType: string) => void;
+  onSandboxFilesSelected?: (files: import("./SandboxUploadPanel").SandboxFileMetadata[]) => void;
   messages: ChatMessage[];
 }
 
-export function ChatTimeline({ messages, onAction }: ChatTimelineProps) {
+export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: ChatTimelineProps) {
   return (
     <ScrollArea className="flex-1 p-4">
       <div className="flex flex-col gap-4">
@@ -216,6 +219,40 @@ export function ChatTimeline({ messages, onAction }: ChatTimelineProps) {
                         >
                           {action.label}
                         </Button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {msg.type === "sandbox_upload_panel" && (
+                <div className="w-full">
+                  <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-2">
+                    {msg.content}
+                  </div>
+                  <SandboxUploadPanel onFilesSelected={(files) => onSandboxFilesSelected?.(files)} />
+                </div>
+              )}
+
+              {msg.type === "sandbox_files_selected" && (
+                <div className="w-full flex flex-col gap-3">
+                  <div className="rounded-lg px-4 py-3 text-sm bg-muted whitespace-pre-wrap">
+                    {msg.content}
+                  </div>
+                  {msg.sandboxFiles && msg.sandboxFiles.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {msg.sandboxFiles.map((file, idx) => (
+                        <Card key={idx} className="bg-card border-border shadow-sm">
+                          <CardContent className="p-3 flex items-start justify-between">
+                             <div className="flex flex-col gap-0.5">
+                               <p className="font-medium text-sm text-foreground truncate max-w-[200px]" title={file.name}>{file.name}</p>
+                               <p className="text-xs text-muted-foreground">{(file.size / 1024).toFixed(1)} KB • {file.type}</p>
+                             </div>
+                             <Badge variant="outline" className="text-[10px] shrink-0 ml-2">
+                               Listo para validación
+                             </Badge>
+                          </CardContent>
+                        </Card>
                       ))}
                     </div>
                   )}

@@ -757,7 +757,7 @@ export interface QuickActionItem {
 }
 
 export const quickActionItems: QuickActionItem[] = [
-  { id: "montar", label: "Montar archivos sintéticos" },
+  { id: "cargar", label: "Cargar encuesta" },
   { id: "comparar", label: "Comparar clima 2024 vs 2025" },
   { id: "revisar", label: "Revisar estructura" },
   { id: "formato", label: "Ver formato esperado" },
