@@ -517,8 +517,11 @@ export const simulatedMappingsApprovedMessages = (): ChatMessage[] => [
   {
     id: "msg_assistant_mappings_approved",
     role: "assistant",
-    type: "text",
+    type: "guided_review_step",
     content: "Mapeos aprobados. En el siguiente paso revisaremos el contrato sintético antes de preparar el comparativo.",
+    nextActions: [
+      { id: "action_start_contract", label: "Continuar con contrato sintético", actionType: "start_contract_review" }
+    ],
     timestamp: new Date(Date.now() - 20).toISOString(),
   }
 ];
@@ -594,6 +597,79 @@ export const simulatedQuestionsChangesMessages = (): ChatMessage[] => [
     type: "text",
     content: "Entendido. Dejamos las preguntas en revisión para ajustar comparabilidad, redacción o inclusión antes de continuar.",
     timestamp: new Date(Date.now() - 200).toISOString(),
+  }
+];
+
+export const simulatedContractReviewStartMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_start_contract",
+    role: "user",
+    type: "text",
+    content: "Continuar con contrato sintético",
+    timestamp: new Date(Date.now() - 15).toISOString(),
+  },
+  {
+    id: "msg_assistant_contract_review",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Ya revisamos archivos, demográficos, dimensiones, preguntas y mapeos.\n\nResumen del contrato sintético:\n1. Archivos sintéticos aprobados.\n2. Demográficos aprobados.\n3. Dimensiones aprobadas.\n4. Preguntas aprobadas.\n5. Mapeos pregunta-dimensión aprobados.\n\n¿Apruebas este contrato sintético para preparar el comparativo?",
+    nextActions: [
+      { id: "action_approve_contract", label: "Aprobar contrato", actionType: "approve_contract" },
+      { id: "action_review_contract_summary", label: "Revisar resumen", actionType: "review_contract_summary" },
+      { id: "action_return_to_mappings", label: "Volver a mapeos", actionType: "return_to_mappings" }
+    ],
+    timestamp: new Date(Date.now() - 10).toISOString(),
+  }
+];
+
+export const simulatedContractApprovedMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_approve_contract",
+    role: "user",
+    type: "text",
+    content: "Aprobar contrato",
+    timestamp: new Date(Date.now() - 8).toISOString(),
+  },
+  {
+    id: "msg_assistant_contract_approved",
+    role: "assistant",
+    type: "text",
+    content: "Contrato sintético aprobado. El comparativo queda listo para prepararse en el siguiente paso.",
+    timestamp: new Date(Date.now() - 5).toISOString(),
+  }
+];
+
+export const simulatedContractReviewSummaryMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_review_contract_summary",
+    role: "user",
+    type: "text",
+    content: "Revisar resumen",
+    timestamp: new Date(Date.now() - 8).toISOString(),
+  },
+  {
+    id: "msg_assistant_contract_summary",
+    role: "assistant",
+    type: "text",
+    content: "Resumen: el contrato sintético contiene dos periodos aprobados, campos demográficos validados, dimensiones confirmadas, preguntas revisadas y mapeos aprobados.",
+    timestamp: new Date(Date.now() - 5).toISOString(),
+  }
+];
+
+export const simulatedContractReturnToMappingsMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_return_to_mappings",
+    role: "user",
+    type: "text",
+    content: "Volver a mapeos",
+    timestamp: new Date(Date.now() - 8).toISOString(),
+  },
+  {
+    id: "msg_assistant_contract_return_to_mappings",
+    role: "assistant",
+    type: "text",
+    content: "Podemos volver al paso de mapeos antes de aprobar el contrato sintético.",
+    timestamp: new Date(Date.now() - 5).toISOString(),
   }
 ];
 

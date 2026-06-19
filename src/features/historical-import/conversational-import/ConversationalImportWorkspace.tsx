@@ -32,7 +32,11 @@ import {
   simulatedMappingsPendingReviewMessages,
   simulatedMappingsAutomaticApprovedMessages,
   simulatedMappingsApprovedMessages,
-  simulatedMappingsChangesMessages
+  simulatedMappingsChangesMessages,
+  simulatedContractReviewStartMessages,
+  simulatedContractApprovedMessages,
+  simulatedContractReviewSummaryMessages,
+  simulatedContractReturnToMappingsMessages
 } from "./conversationalImportMock";
 
 export function ConversationalImportWorkspace() {
@@ -173,6 +177,14 @@ export function ConversationalImportWorkspace() {
           timestamp: new Date().toISOString(),
         }
       ]);
+    } else if (actionType === "start_contract_review") {
+      setMessages((prev) => [...prev, ...simulatedContractReviewStartMessages()]);
+    } else if (actionType === "approve_contract") {
+      setMessages((prev) => [...prev, ...simulatedContractApprovedMessages()]);
+    } else if (actionType === "review_contract_summary") {
+      setMessages((prev) => [...prev, ...simulatedContractReviewSummaryMessages()]);
+    } else if (actionType === "return_to_mappings") {
+      setMessages((prev) => [...prev, ...simulatedContractReturnToMappingsMessages()]);
     } else if (actionType === "review_structure") {
       handleReviewStructure();
     }

@@ -104,7 +104,10 @@ export function ChatTimeline({ messages, onAction }: ChatTimelineProps) {
                             action.actionType === "approve_files" ||
                             action.actionType === "approve_demographics" ||
                             action.actionType === "approve_dimensions" ||
-                            action.actionType === "approve_questions"
+                            action.actionType === "approve_questions" ||
+                            action.actionType === "approve_mappings" ||
+                            action.actionType === "approve_automatic_mappings" ||
+                            action.actionType === "approve_contract"
                               ? "default"
                               : "outline"
                           }
