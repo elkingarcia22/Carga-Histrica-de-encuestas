@@ -289,3 +289,13 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Ambigüedades requieren usuario.
 - IA fuera de source of truth.
 - No implementación todavía.
+
+### Contract Assembler Type Scaffolding
+- Ubicación: `src/features/historical-import/contract-assembler/`.
+- Input futuro: ParsedWorkbookPreview.
+- Output futuro: SurveyFileAnalysisContract.
+- En esta fase solo tipos y placeholders.
+- Sin contrato real.
+- Sin UI.
+- Sin Claude.
+- Sin matching.
