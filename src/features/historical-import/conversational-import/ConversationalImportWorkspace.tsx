@@ -21,7 +21,13 @@ import {
   simulatedDemographicsChangesMessages,
   simulatedDimensionsReviewStartMessages,
   simulatedDimensionsApprovedMessages,
-  simulatedDimensionsChangesMessages
+  simulatedDimensionsChangesMessages,
+  simulatedQuestionsReviewStartMessages,
+  simulatedQuestionsComparableReviewMessages,
+  simulatedQuestionsNewReviewMessages,
+  simulatedQuestionsHistoricalReviewMessages,
+  simulatedQuestionsApprovedMessages,
+  simulatedQuestionsChangesMessages
 } from "./conversationalImportMock";
 
 export function ConversationalImportWorkspace() {
@@ -129,6 +135,18 @@ export function ConversationalImportWorkspace() {
           timestamp: new Date().toISOString(),
         }
       ]);
+    } else if (actionType === "start_questions_review") {
+      setMessages((prev) => [...prev, ...simulatedQuestionsReviewStartMessages()]);
+    } else if (actionType === "review_comparable_questions") {
+      setMessages((prev) => [...prev, ...simulatedQuestionsComparableReviewMessages()]);
+    } else if (actionType === "review_new_questions") {
+      setMessages((prev) => [...prev, ...simulatedQuestionsNewReviewMessages()]);
+    } else if (actionType === "review_historical_questions") {
+      setMessages((prev) => [...prev, ...simulatedQuestionsHistoricalReviewMessages()]);
+    } else if (actionType === "approve_questions") {
+      setMessages((prev) => [...prev, ...simulatedQuestionsApprovedMessages()]);
+    } else if (actionType === "correct_questions") {
+      setMessages((prev) => [...prev, ...simulatedQuestionsChangesMessages()]);
     } else if (actionType === "review_structure") {
       handleReviewStructure();
     }

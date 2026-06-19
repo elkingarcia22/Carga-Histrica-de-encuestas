@@ -100,7 +100,14 @@ export function ChatTimeline({ messages, onAction }: ChatTimelineProps) {
                       {msg.nextActions.map((action) => (
                         <Button
                           key={action.id}
-                          variant={action.actionType === "approve_files" || action.actionType === "approve_demographics" ? "default" : "outline"}
+                          variant={
+                            action.actionType === "approve_files" ||
+                            action.actionType === "approve_demographics" ||
+                            action.actionType === "approve_dimensions" ||
+                            action.actionType === "approve_questions"
+                              ? "default"
+                              : "outline"
+                          }
                           size="sm"
                           className="text-xs"
                           onClick={() => {

@@ -17,7 +17,7 @@ export interface SyntheticMountedSurveyFile {
 export interface SyntheticMountNextAction {
   id: string;
   label: string;
-  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics" | "start_dimensions_review" | "approve_dimensions" | "correct_dimensions" | "detail_dimensions";
+  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics" | "start_dimensions_review" | "approve_dimensions" | "correct_dimensions" | "detail_dimensions" | "start_questions_review" | "review_comparable_questions" | "review_new_questions" | "review_historical_questions" | "approve_questions" | "correct_questions";
 }
 
 export interface ChatMessage {
@@ -67,7 +67,13 @@ export type SessionState =
   | "REVIEW_DEMOGRAPHICS_STEP"
   | "REVIEW_DIMENSIONS_STEP"
   | "REVIEW_QUESTIONS_STEP"
+  | "QUESTIONS_COMPARABLE_REVIEW_SELECTED"
+  | "QUESTIONS_NEW_REVIEW_SELECTED"
+  | "QUESTIONS_HISTORICAL_REVIEW_SELECTED"
+  | "QUESTIONS_APPROVED"
+  | "QUESTIONS_CHANGES_REQUESTED"
   | "REVIEW_MAPPINGS_STEP"
+  | "REVIEW_APPROVED_CONTRACT_STEP"
   | "READY_TO_REVIEW_STRUCTURE"
   | "SYNTHETIC_MOUNT_ERROR";
 

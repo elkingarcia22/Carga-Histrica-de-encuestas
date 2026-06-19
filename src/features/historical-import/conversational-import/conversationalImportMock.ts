@@ -357,8 +357,11 @@ export const simulatedDimensionsApprovedMessages = (): ChatMessage[] => [
   {
     id: "msg_assistant_dimensions_approved",
     role: "assistant",
-    type: "text",
+    type: "guided_review_step",
     content: "Dimensiones aprobadas. En el siguiente paso revisaremos las preguntas detectadas.",
+    nextActions: [
+      { id: "action_start_questions", label: "Continuar con preguntas", actionType: "start_questions_review" }
+    ],
     timestamp: new Date(Date.now() - 1000).toISOString(),
   }
 ];
@@ -377,6 +380,123 @@ export const simulatedDimensionsChangesMessages = (): ChatMessage[] => [
     type: "text",
     content: "Entendido. Dejamos las dimensiones en revisión para ajustar nombres, inclusiones o agrupaciones antes de continuar.",
     timestamp: new Date(Date.now() - 1000).toISOString(),
+  }
+];
+
+export const simulatedQuestionsReviewStartMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_start_questions",
+    role: "user",
+    type: "text",
+    content: "Continuar con preguntas",
+    timestamp: new Date(Date.now() - 800).toISOString(),
+  },
+  {
+    id: "msg_assistant_questions_review",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Ahora revisemos las preguntas detectadas.\n\nEncontré preguntas comparables entre los dos periodos y algunas preguntas nuevas o históricas.\n\n¿Quieres revisar primero las preguntas comparables?",
+    nextActions: [
+      { id: "action_review_comparable", label: "Revisar comparables", actionType: "review_comparable_questions" },
+      { id: "action_review_new", label: "Ver preguntas nuevas", actionType: "review_new_questions" },
+      { id: "action_review_historical", label: "Ver preguntas históricas", actionType: "review_historical_questions" }
+    ],
+    timestamp: new Date(Date.now() - 600).toISOString(),
+  }
+];
+
+export const simulatedQuestionsComparableReviewMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_review_comparable",
+    role: "user",
+    type: "text",
+    content: "Revisar comparables",
+    timestamp: new Date(Date.now() - 500).toISOString(),
+  },
+  {
+    id: "msg_assistant_questions_comparable",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Comparables: 24 preguntas comparables entre 2024 y 2025.\n\nEstas preguntas coinciden en redacción o intención. ¿Apruebas estas preguntas?",
+    nextActions: [
+      { id: "action_approve_questions", label: "Aprobar preguntas", actionType: "approve_questions" },
+      { id: "action_correct_questions", label: "Corregir preguntas", actionType: "correct_questions" }
+    ],
+    timestamp: new Date(Date.now() - 400).toISOString(),
+  }
+];
+
+export const simulatedQuestionsNewReviewMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_review_new",
+    role: "user",
+    type: "text",
+    content: "Ver preguntas nuevas",
+    timestamp: new Date(Date.now() - 500).toISOString(),
+  },
+  {
+    id: "msg_assistant_questions_new",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Nuevas: 4 preguntas nuevas en 2025.\n\nEstas preguntas no tienen un equivalente en el periodo anterior.",
+    nextActions: [
+      { id: "action_review_comparable_back", label: "Revisar comparables", actionType: "review_comparable_questions" }
+    ],
+    timestamp: new Date(Date.now() - 400).toISOString(),
+  }
+];
+
+export const simulatedQuestionsHistoricalReviewMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_review_historical",
+    role: "user",
+    type: "text",
+    content: "Ver preguntas históricas",
+    timestamp: new Date(Date.now() - 500).toISOString(),
+  },
+  {
+    id: "msg_assistant_questions_historical",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Históricas: 3 preguntas presentes solo en 2024.\n\nEstas preguntas no se incluyeron en la evaluación más reciente.",
+    nextActions: [
+      { id: "action_review_comparable_back", label: "Revisar comparables", actionType: "review_comparable_questions" }
+    ],
+    timestamp: new Date(Date.now() - 400).toISOString(),
+  }
+];
+
+export const simulatedQuestionsApprovedMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_approve_questions",
+    role: "user",
+    type: "text",
+    content: "Aprobar preguntas",
+    timestamp: new Date(Date.now() - 300).toISOString(),
+  },
+  {
+    id: "msg_assistant_questions_approved",
+    role: "assistant",
+    type: "text",
+    content: "Preguntas aprobadas. En el siguiente paso revisaremos los mapeos pregunta-dimensión.",
+    timestamp: new Date(Date.now() - 200).toISOString(),
+  }
+];
+
+export const simulatedQuestionsChangesMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_correct_questions",
+    role: "user",
+    type: "text",
+    content: "Corregir preguntas",
+    timestamp: new Date(Date.now() - 300).toISOString(),
+  },
+  {
+    id: "msg_assistant_questions_changes",
+    role: "assistant",
+    type: "text",
+    content: "Entendido. Dejamos las preguntas en revisión para ajustar comparabilidad, redacción o inclusión antes de continuar.",
+    timestamp: new Date(Date.now() - 200).toISOString(),
   }
 ];
 
