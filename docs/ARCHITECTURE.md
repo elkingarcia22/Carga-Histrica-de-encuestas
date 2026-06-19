@@ -211,3 +211,10 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 ## Realistic Survey Import Architecture
 - [Realistic Survey Import Architecture](./REALISTIC_SURVEY_IMPORT_ARCHITECTURE.md)
 - [Survey File Analysis Contract](./SURVEY_FILE_ANALYSIS_CONTRACT.md)
+
+### Survey File Analysis Contract Module
+- **Ubicación**: `src/features/historical-import/survey-file-analysis/`
+- **Propósito**: Define el contrato estricto de tipos de dominio para el análisis de archivos de encuesta.
+- **No ejecuta parser**: Este módulo no procesa archivos.
+- **No conecta IA**: No tiene conexión con servicios de IA externos.
+- **Uso futuro**: Será la base tipada sobre la cual se implementará el deterministic parser y la capa de validación conversacional posterior.
