@@ -280,3 +280,12 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - No Claude.
 - No matching.
 - No full SurveyFileAnalysisContract yet.
+
+### Parser to Contract Assembly Architecture
+- Documento fuente: `docs/PARSER_TO_CONTRACT_ASSEMBLY_ARCHITECTURE.md`.
+- Input: ParsedWorkbookPreview.
+- Output futuro: SurveyFileAnalysisContract.
+- Parser no se mezcla con assembler.
+- Ambigüedades requieren usuario.
+- IA fuera de source of truth.
+- No implementación todavía.
