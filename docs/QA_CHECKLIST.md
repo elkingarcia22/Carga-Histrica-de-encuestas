@@ -900,3 +900,17 @@
 - [x] PARTICIPANT_DETECTION_REQUIRED
 - [x] PHASE_6B_PARSER_DEPENDENCY_DECISION_GATE_READY
 - [x] R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 6C-QA · Local Parser Scaffold QA
+- [x] XLSX dependency verified
+- [x] Package changes verified as dependency-only
+- [x] Local parser module verified
+- [x] Capabilities verified
+- [x] Metadata-only placeholder verified
+- [x] Runtime parsing boundary verified (no FileReader, etc.)
+- [x] UI/Claude/storage/matching boundaries verified
+- [x] No `any` usage confirmed
+- [x] Build passed
+- [x] Scoped lint passed
+- [x] Tests passed
+- [x] Git diff --check passed
