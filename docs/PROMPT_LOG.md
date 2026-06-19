@@ -7518,3 +7518,12 @@ SCOPED_LINT_GATE_PASSED
 CHAT_VIS4G_QA_READY
 CHAT_VIS5_COMPARISON_PREPARATION_ARCHITECTURE_READY_AFTER_QA
 R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Phase CHAT-VIS-H2: Conversational Polish & Flow Adjustment
+- **Objective**: Fix composer margins, implement natural analysis/typing states, replace rigid CTA with a direct jump to guided demographics review, and adjust tone.
+- **Modifications**: 
+  - Adjusted margins for `MessageComposer` in `ConversationalImportWorkspace.tsx`.
+  - Added new message types `analysis_progress` and `demographics_guided_review` in `conversationalImportTypes.ts` and `ChatTimeline.tsx`.
+  - Replaced rigid CTA in file mount sequence with a conversational analysis state.
+  - Set the first interactive block to be demographics with clear explanations about survey alignment and filter impact in `conversationalImportMock.ts`.
+- **Status**: Completed successfully while respecting boundaries.

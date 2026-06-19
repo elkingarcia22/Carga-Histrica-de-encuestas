@@ -2,7 +2,8 @@ import type { ChatMessage } from "./conversationalImportTypes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, User } from "lucide-react";
+import { Bot, User, Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
 import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
@@ -133,6 +134,60 @@ export function ChatTimeline({ messages, onAction }: ChatTimelineProps) {
                     {msg.content}
                   </div>
                   <ApprovedContractSummary />
+                </div>
+              )}
+
+              {msg.type === "analysis_progress" && (
+                <div className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm bg-muted border border-border animate-pulse">
+                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                  <span className="text-muted-foreground">{msg.content}</span>
+                </div>
+              )}
+
+              {msg.type === "demographics_guided_review" && (
+                <div className="w-full flex flex-col gap-3">
+                  <div className="rounded-lg px-4 py-3 text-sm bg-muted whitespace-pre-wrap">
+                    {msg.content}
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {[
+                      { name: "Gerencia", status: "Alineado", action: "Mantener" },
+                      { name: "Área", status: "Requiere creación", action: "Crear en encuesta" },
+                      { name: "Cargo", status: "Requiere creación", action: "Crear en encuesta" },
+                      { name: "Antigüedad", status: "Alineado", action: "Mantener" }
+                    ].map(demo => (
+                      <Card key={demo.name} className="bg-card border-border shadow-sm">
+                        <CardContent className="p-3 flex items-center justify-between">
+                           <div>
+                             <p className="font-medium text-sm text-foreground">{demo.name}</p>
+                             <p className="text-xs text-muted-foreground">{demo.status}</p>
+                           </div>
+                           <Badge variant={demo.status === "Alineado" ? "secondary" : "outline"} className="text-[10px]">
+                             {demo.action}
+                           </Badge>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                  {msg.nextActions && msg.nextActions.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {msg.nextActions.map((action) => (
+                        <Button
+                          key={action.id}
+                          variant={action.actionType === "approve_demographics" ? "default" : "outline"}
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => {
+                            if (onAction) {
+                              onAction(action.actionType);
+                            }
+                          }}
+                        >
+                          {action.label}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 

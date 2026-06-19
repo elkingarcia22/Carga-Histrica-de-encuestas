@@ -274,16 +274,22 @@ export const simulatedFilesApprovedMessages = (): ChatMessage[] => [
 
 export const simulatedDemographicsReviewStartMessages = (): ChatMessage[] => [
   {
+    id: "msg_assistant_files_summary",
+    role: "assistant",
+    type: "text",
+    content: "Listo. Analicé los archivos sintéticos y encontré una estructura inicial.\nDetecté 2 archivos, 4 demográficos, 4 dimensiones y 24 preguntas comparables, además de algunos elementos que necesitan revisión.\n\nVamos a revisarlo paso a paso para dejar todo aprobado antes de preparar el comparativo.",
+    timestamp: new Date(Date.now() - 4000).toISOString(),
+  },
+  {
     id: "msg_assistant_demographics_review",
     role: "assistant",
-    type: "guided_review_step",
-    content: "Ahora revisemos los demográficos detectados.\n\nEncontré estos campos:\n1. Gerencia\n2. Área\n3. Cargo\n4. Antigüedad\n\n¿Apruebas estos demográficos?",
+    type: "demographics_guided_review",
+    content: "Primero revisemos los demográficos, porque eso define qué filtros podrán usarse después en los resultados.\n\nDetecté estos demográficos en los archivos:\n\n- Gerencia\n- Área\n- Cargo\n- Antigüedad\n\nAlgunos ya están alineados con la estructura esperada y otros no.\n\nNota: Esto se crearía en la encuesta, no en la plataforma.\nLos demográficos que no se creen no podrán ser usados como filtros dentro de los dashboards de resultados de la encuesta.",
     nextActions: [
       { id: "action_approve_demographics", label: "Aprobar demográficos", actionType: "approve_demographics" },
-      { id: "action_correct_demographics", label: "Corregir demográficos", actionType: "correct_demographics" },
-      { id: "action_detail_demographics", label: "Ver detalle", actionType: "detail_demographics" }
+      { id: "action_correct_demographics", label: "Solicitar ajuste", actionType: "correct_demographics" }
     ],
-    timestamp: new Date(Date.now() - 8000).toISOString(),
+    timestamp: new Date(Date.now() - 3000).toISOString(),
   }
 ];
 

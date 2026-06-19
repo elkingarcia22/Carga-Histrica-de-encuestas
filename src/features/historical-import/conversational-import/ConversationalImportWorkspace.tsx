@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "./conversationalImportTypes";
 import {
   initialMessages,
-  simulatedMountMessages,
   simulatedCompareMessages,
   simulatedFormatMessages,
   quickActionItems,
@@ -72,9 +71,35 @@ export function ConversationalImportWorkspace() {
   };
 
   const handleMountSynthetic = () => {
-    setMessages(simulatedMountMessages());
     setChatStarted(true);
     setViewMode("chat");
+    setMessages([
+      initialMessages[0],
+      {
+        id: `msg_user_mount_${Date.now()}`,
+        role: "user",
+        type: "text",
+        content: "Montar archivos sintéticos",
+        timestamp: new Date().toISOString(),
+      },
+      {
+        id: `msg_assistant_analyzing_${Date.now()}`,
+        role: "assistant",
+        type: "analysis_progress",
+        content: "Analizando archivos y revisando estructura detectada...",
+        timestamp: new Date().toISOString(),
+      }
+    ]);
+
+    setTimeout(() => {
+      setMessages((prev) => {
+        const withoutTyping = prev.filter(m => m.type !== "analysis_progress");
+        return [
+          ...withoutTyping,
+          ...simulatedDemographicsReviewStartMessages()
+        ];
+      });
+    }, 2000);
   };
 
   const handleCompareClimate = () => {
@@ -244,7 +269,7 @@ export function ConversationalImportWorkspace() {
               </p>
 
               {/* Composer Grande */}
-              <div className="w-full mb-8">
+              <div className="w-full mb-8 max-w-2xl mx-auto px-4">
                 <MessageComposer />
               </div>
 
@@ -270,9 +295,11 @@ export function ConversationalImportWorkspace() {
           ) : (
             /* Estado Activo */
             viewMode === "chat" ? (
-              <div className="flex-1 flex flex-col min-h-0">
+              <div className="flex-1 flex flex-col min-h-0 relative">
                 <ChatTimeline messages={messages} onAction={handleAction} />
-                <MessageComposer />
+                <div className="p-4 mx-auto w-full max-w-4xl shrink-0">
+                  <MessageComposer />
+                </div>
               </div>
             ) : (
               /* Vista secundaria de revisión inline y detected structure panel */
