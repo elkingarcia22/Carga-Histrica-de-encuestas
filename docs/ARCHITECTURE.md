@@ -211,6 +211,15 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 ## Realistic Survey Import Architecture
 - [Realistic Survey Import Architecture](./REALISTIC_SURVEY_IMPORT_ARCHITECTURE.md)
 - [Survey File Analysis Contract](./SURVEY_FILE_ANALYSIS_CONTRACT.md)
+- [Sandbox Upload Architecture](./SANDBOX_UPLOAD_ARCHITECTURE.md)
+
+### Sandbox Upload Architecture
+- **Ubicación documental**: `docs/SANDBOX_UPLOAD_ARCHITECTURE.md`
+- **Propósito**: Define el flujo y reglas de montaje de archivos en un entorno seguro antes del procesamiento.
+- **Acción futura**: Transición a "Cargar encuesta" desde el estado sintético.
+- **Regla principal**: Una encuesta activa por sesión (Single Survey Rule).
+- **Seguridad**: Pre-analysis safety gate implementado para prevenir filtraciones de datos e IA prematura.
+- **Restricción actual**: No parser/upload runtime todavía; solo arquitectura y validaciones en memoria definidas.
 
 ### Survey File Analysis Contract Module
 - **Ubicación**: `src/features/historical-import/survey-file-analysis/`

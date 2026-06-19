@@ -1,5 +1,36 @@
 # Prompt Log
 
+## Fase 5A · Sandbox Upload Architecture Lock
+
+Phase: Fase 5A · Sandbox Upload Architecture Lock
+
+Summary:
+- Sandbox upload architecture defined.
+- Upload action renamed conceptually to Cargar encuesta.
+- Single active survey rule defined.
+- Multi-survey selection rule defined.
+- Pre-analysis safety gate defined.
+- Upload lifecycle and privacy boundaries defined.
+- Parser/Claude remain out of scope.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_5A_SANDBOX_UPLOAD_ARCHITECTURE_COMPLETE
+SANDBOX_UPLOAD_ARCHITECTURE_LOCKED
+UPLOAD_ACTION_LABEL_CARGAR_ENCUESTA
+SINGLE_ACTIVE_SURVEY_PER_SESSION
+MULTI_SURVEY_SELECTION_REQUIRED
+PRE_ANALYSIS_SAFETY_GATE_REQUIRED
+FILES_IN_MEMORY_ONLY
+NO_STORAGE
+NO_PRODUCTIVE_UPLOAD
+NO_CLAUDE_AT_UPLOAD_STAGE
+NO_FRONTEND_API_KEY
+NO_RUNTIME_PARSER_YET
+SURVEY_FILE_ANALYSIS_CONTRACT_DOWNSTREAM
+PHASE_5B_SANDBOX_UPLOAD_UI_BUILD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 3 · File Analysis Contract Detail Lock
 
 Phase: Fase 3 · File Analysis Contract Detail Lock
