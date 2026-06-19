@@ -1,5 +1,5 @@
 export type MessageRole = "system" | "assistant" | "user";
-export type MessageType = "text" | "file_staging" | "structure_summary" | "warning" | "approval_request" | "correction" | "contract_summary" | "synthetic_file_mount_summary";
+export type MessageType = "text" | "file_staging" | "structure_summary" | "warning" | "approval_request" | "correction" | "contract_summary" | "synthetic_file_mount_summary" | "guided_review_step";
 
 export interface SyntheticMountedSurveyFile {
   id: string;
@@ -17,7 +17,7 @@ export interface SyntheticMountedSurveyFile {
 export interface SyntheticMountNextAction {
   id: string;
   label: string;
-  actionType: "review_structure" | "change_files" | "view_format";
+  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files";
 }
 
 export interface ChatMessage {
@@ -59,6 +59,13 @@ export type SessionState =
   | "INITIAL_CHAT_SHELL"
   | "MOUNTING_SYNTHETIC_FILES"
   | "SYNTHETIC_FILES_STAGED"
+  | "REVIEW_FILES_STEP"
+  | "FILES_APPROVED"
+  | "FILES_CHANGES_REQUESTED"
+  | "REVIEW_DEMOGRAPHICS_STEP"
+  | "REVIEW_DIMENSIONS_STEP"
+  | "REVIEW_QUESTIONS_STEP"
+  | "REVIEW_MAPPINGS_STEP"
   | "READY_TO_REVIEW_STRUCTURE"
   | "SYNTHETIC_MOUNT_ERROR";
 

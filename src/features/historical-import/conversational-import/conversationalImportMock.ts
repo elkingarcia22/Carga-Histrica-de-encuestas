@@ -227,9 +227,65 @@ export const simulatedMountMessages = (): ChatMessage[] => [
     boundaryNote: "Sandbox sintético: no se cargaron archivos reales ni se procesaron XLSX reales.",
     files: mockSyntheticFiles,
     nextActions: [
-      { id: "action_review", label: "Revisar estructura detectada", actionType: "review_structure" }
+      { id: "action_review", label: "Empezar revisión guiada", actionType: "start_guided_review" }
     ],
     timestamp: new Date(Date.now() - 30000).toISOString(),
+  }
+];
+
+export const simulatedGuidedReviewStartMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_start_review",
+    role: "user",
+    type: "text",
+    content: "Empezar revisión guiada",
+    timestamp: new Date(Date.now() - 25000).toISOString(),
+  },
+  {
+    id: "msg_assistant_files_review",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Listo. Antes de comparar, revisemos primero los archivos sintéticos detectados.\n\nEncontré:\n1. encuesta-clima-2024-sintetica.xlsx\n2. encuesta-clima-2025-sintetica.xlsx\n\n¿Apruebas estos archivos para continuar?",
+    nextActions: [
+      { id: "action_approve_files", label: "Aprobar archivos", actionType: "approve_files" },
+      { id: "action_change_files", label: "Cambiar archivos sintéticos", actionType: "change_files" },
+      { id: "action_detail_files", label: "Ver detalle", actionType: "detail_files" }
+    ],
+    timestamp: new Date(Date.now() - 20000).toISOString(),
+  }
+];
+
+export const simulatedFilesApprovedMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_approve_files",
+    role: "user",
+    type: "text",
+    content: "Aprobar archivos",
+    timestamp: new Date(Date.now() - 15000).toISOString(),
+  },
+  {
+    id: "msg_assistant_files_approved",
+    role: "assistant",
+    type: "text",
+    content: "Archivos aprobados. En el siguiente paso revisaremos los demográficos detectados.",
+    timestamp: new Date(Date.now() - 10000).toISOString(),
+  }
+];
+
+export const simulatedFilesChangesMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_change_files",
+    role: "user",
+    type: "text",
+    content: "Cambiar archivos sintéticos",
+    timestamp: new Date(Date.now() - 15000).toISOString(),
+  },
+  {
+    id: "msg_assistant_files_changes",
+    role: "assistant",
+    type: "text",
+    content: "Perfecto. Podemos cambiar los archivos sintéticos de ejemplo antes de continuar.\n\nPor ahora seguimos en sandbox: no se cargan archivos reales ni se procesan XLSX reales.",
+    timestamp: new Date(Date.now() - 10000).toISOString(),
   }
 ];
 

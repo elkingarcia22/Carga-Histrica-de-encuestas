@@ -7,10 +7,10 @@ interface SyntheticMountedFilesPanelProps {
   files: SyntheticMountedSurveyFile[];
   boundaryNote?: string;
   nextActions?: SyntheticMountNextAction[];
-  onReviewStructure?: () => void;
+  onAction?: (actionType: string) => void;
 }
 
-export function SyntheticMountedFilesPanel({ files, boundaryNote, nextActions, onReviewStructure }: SyntheticMountedFilesPanelProps) {
+export function SyntheticMountedFilesPanel({ files, boundaryNote, nextActions, onAction }: SyntheticMountedFilesPanelProps) {
   return (
     <div className="flex flex-col gap-4 w-full">
       {boundaryNote && (
@@ -54,17 +54,17 @@ export function SyntheticMountedFilesPanel({ files, boundaryNote, nextActions, o
           {nextActions.map((action) => (
             <Button
               key={action.id}
-              variant={action.actionType === "review_structure" ? "default" : "outline"}
+              variant={action.actionType === "start_guided_review" ? "default" : "outline"}
               size="sm"
               className="text-xs"
               onClick={() => {
-                if (action.actionType === "review_structure" && onReviewStructure) {
-                  onReviewStructure();
+                if (onAction) {
+                  onAction(action.actionType);
                 }
               }}
             >
               {action.label}
-              {action.actionType === "review_structure" && <ArrowRight className="w-3 h-3 ml-2" />}
+              {action.actionType === "start_guided_review" && <ArrowRight className="w-3 h-3 ml-2" />}
             </Button>
           ))}
         </div>

@@ -334,3 +334,17 @@
 - [x] ONE_STEP_AT_A_TIME defined
 - [x] INLINE_REVIEW_PANEL is supporting only
 - [x] No real upload/file input/API
+
+## Phase 4K-CHAT-VIS4B: Conversational Files Review Step Build
+- [x] Direct review CTA replaced with conversational guided review entry
+- [x] Files review step rendered in chat timeline
+- [x] Assistant asks one decision: approve files or request change
+- [x] Approve files action rendered
+- [x] Change files action rendered
+- [x] Detail action rendered
+- [x] Inline review remains hidden
+- [x] No demographics/dimensions/questions/mappings rendered yet
+- [x] No real upload, no file input, no parser runtime
+- [x] Build passed
+- [x] Scoped lint passed
+- [x] Tests passed

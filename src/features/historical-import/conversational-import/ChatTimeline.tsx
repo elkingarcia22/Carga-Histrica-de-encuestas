@@ -1,5 +1,6 @@
 import type { ChatMessage } from "./conversationalImportTypes";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bot, User } from "lucide-react";
 import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
@@ -7,11 +8,11 @@ import { ApprovedContractSummary } from "./ApprovedContractSummary";
 import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
 
 interface ChatTimelineProps {
-  onReviewStructure?: () => void;
+  onAction?: (actionType: string) => void;
   messages: ChatMessage[];
 }
 
-export function ChatTimeline({ messages, onReviewStructure }: ChatTimelineProps) {
+export function ChatTimeline({ messages, onAction }: ChatTimelineProps) {
   return (
     <ScrollArea className="flex-1 p-4">
       <div className="flex flex-col gap-4">
@@ -84,8 +85,35 @@ export function ChatTimeline({ messages, onReviewStructure }: ChatTimelineProps)
                     files={msg.files || []}
                     boundaryNote={msg.boundaryNote}
                     nextActions={msg.nextActions}
-                    onReviewStructure={onReviewStructure}
+                    onAction={onAction}
                   />
+                </div>
+              )}
+
+              {msg.type === "guided_review_step" && (
+                <div className="w-full">
+                  <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-3 whitespace-pre-wrap">
+                    {msg.content}
+                  </div>
+                  {msg.nextActions && msg.nextActions.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {msg.nextActions.map((action) => (
+                        <Button
+                          key={action.id}
+                          variant={action.actionType === "approve_files" ? "default" : "outline"}
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => {
+                            if (onAction) {
+                              onAction(action.actionType);
+                            }
+                          }}
+                        >
+                          {action.label}
+                        </Button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
 

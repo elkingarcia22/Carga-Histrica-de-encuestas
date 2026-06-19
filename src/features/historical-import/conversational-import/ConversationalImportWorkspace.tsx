@@ -12,7 +12,10 @@ import {
   simulatedMountMessages,
   simulatedCompareMessages,
   simulatedFormatMessages,
-  quickActionItems
+  quickActionItems,
+  simulatedGuidedReviewStartMessages,
+  simulatedFilesApprovedMessages,
+  simulatedFilesChangesMessages
 } from "./conversationalImportMock";
 
 export function ConversationalImportWorkspace() {
@@ -68,6 +71,29 @@ export function ConversationalImportWorkspace() {
     setMessages(simulatedFormatMessages());
     setChatStarted(true);
     setViewMode("chat");
+  };
+
+  const handleAction = (actionType: string) => {
+    if (actionType === "start_guided_review") {
+      setMessages((prev) => [...prev, ...simulatedGuidedReviewStartMessages()]);
+    } else if (actionType === "approve_files") {
+      setMessages((prev) => [...prev, ...simulatedFilesApprovedMessages()]);
+    } else if (actionType === "change_files") {
+      setMessages((prev) => [...prev, ...simulatedFilesChangesMessages()]);
+    } else if (actionType === "detail_files") {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_detail_${Date.now()}`,
+          role: "assistant",
+          type: "text",
+          content: "Detalle de archivos: Se detectaron 2 archivos XLSX con estructura estándar. Total filas: ~2.7k.",
+          timestamp: new Date().toISOString(),
+        }
+      ]);
+    } else if (actionType === "review_structure") {
+      handleReviewStructure();
+    }
   };
 
   return (
@@ -151,7 +177,7 @@ export function ConversationalImportWorkspace() {
             /* Estado Activo */
             viewMode === "chat" ? (
               <div className="flex-1 flex flex-col min-h-0">
-                <ChatTimeline messages={messages} onReviewStructure={handleReviewStructure} />
+                <ChatTimeline messages={messages} onAction={handleAction} />
                 <MessageComposer />
               </div>
             ) : (
