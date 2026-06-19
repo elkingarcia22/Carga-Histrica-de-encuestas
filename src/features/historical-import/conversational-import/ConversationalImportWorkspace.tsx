@@ -15,7 +15,10 @@ import {
   quickActionItems,
   simulatedGuidedReviewStartMessages,
   simulatedFilesApprovedMessages,
-  simulatedFilesChangesMessages
+  simulatedFilesChangesMessages,
+  simulatedDemographicsReviewStartMessages,
+  simulatedDemographicsApprovedMessages,
+  simulatedDemographicsChangesMessages
 } from "./conversationalImportMock";
 
 export function ConversationalImportWorkspace() {
@@ -77,7 +80,7 @@ export function ConversationalImportWorkspace() {
     if (actionType === "start_guided_review") {
       setMessages((prev) => [...prev, ...simulatedGuidedReviewStartMessages()]);
     } else if (actionType === "approve_files") {
-      setMessages((prev) => [...prev, ...simulatedFilesApprovedMessages()]);
+      setMessages((prev) => [...prev, ...simulatedFilesApprovedMessages(), ...simulatedDemographicsReviewStartMessages()]);
     } else if (actionType === "change_files") {
       setMessages((prev) => [...prev, ...simulatedFilesChangesMessages()]);
     } else if (actionType === "detail_files") {
@@ -88,6 +91,21 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "text",
           content: "Detalle de archivos: Se detectaron 2 archivos XLSX con estructura estándar. Total filas: ~2.7k.",
+          timestamp: new Date().toISOString(),
+        }
+      ]);
+    } else if (actionType === "approve_demographics") {
+      setMessages((prev) => [...prev, ...simulatedDemographicsApprovedMessages()]);
+    } else if (actionType === "correct_demographics") {
+      setMessages((prev) => [...prev, ...simulatedDemographicsChangesMessages()]);
+    } else if (actionType === "detail_demographics") {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_detail_demo_${Date.now()}`,
+          role: "assistant",
+          type: "text",
+          content: "Detalle de demográficos: Los campos Gerencia y Área parecen jerárquicos. Antigüedad y Cargo son categóricos simples.",
           timestamp: new Date().toISOString(),
         }
       ]);

@@ -17,7 +17,7 @@ export interface SyntheticMountedSurveyFile {
 export interface SyntheticMountNextAction {
   id: string;
   label: string;
-  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files";
+  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics";
 }
 
 export interface ChatMessage {
@@ -62,6 +62,8 @@ export type SessionState =
   | "REVIEW_FILES_STEP"
   | "FILES_APPROVED"
   | "FILES_CHANGES_REQUESTED"
+  | "DEMOGRAPHICS_APPROVED"
+  | "DEMOGRAPHICS_CHANGES_REQUESTED"
   | "REVIEW_DEMOGRAPHICS_STEP"
   | "REVIEW_DIMENSIONS_STEP"
   | "REVIEW_QUESTIONS_STEP"

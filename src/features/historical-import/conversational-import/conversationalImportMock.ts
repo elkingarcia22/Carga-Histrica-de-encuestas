@@ -272,6 +272,55 @@ export const simulatedFilesApprovedMessages = (): ChatMessage[] => [
   }
 ];
 
+export const simulatedDemographicsReviewStartMessages = (): ChatMessage[] => [
+  {
+    id: "msg_assistant_demographics_review",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Ahora revisemos los demográficos detectados.\n\nEncontré estos campos:\n1. Gerencia\n2. Área\n3. Cargo\n4. Antigüedad\n\n¿Apruebas estos demográficos?",
+    nextActions: [
+      { id: "action_approve_demographics", label: "Aprobar demográficos", actionType: "approve_demographics" },
+      { id: "action_correct_demographics", label: "Corregir demográficos", actionType: "correct_demographics" },
+      { id: "action_detail_demographics", label: "Ver detalle", actionType: "detail_demographics" }
+    ],
+    timestamp: new Date(Date.now() - 8000).toISOString(),
+  }
+];
+
+export const simulatedDemographicsApprovedMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_approve_demographics",
+    role: "user",
+    type: "text",
+    content: "Aprobar demográficos",
+    timestamp: new Date(Date.now() - 6000).toISOString(),
+  },
+  {
+    id: "msg_assistant_demographics_approved",
+    role: "assistant",
+    type: "text",
+    content: "Demográficos aprobados. En el siguiente paso revisaremos las dimensiones detectadas.",
+    timestamp: new Date(Date.now() - 4000).toISOString(),
+  }
+];
+
+export const simulatedDemographicsChangesMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_correct_demographics",
+    role: "user",
+    type: "text",
+    content: "Corregir demográficos",
+    timestamp: new Date(Date.now() - 6000).toISOString(),
+  },
+  {
+    id: "msg_assistant_demographics_changes",
+    role: "assistant",
+    type: "text",
+    content: "Entendido. Dejamos los demográficos en revisión para ajustar nombres o inclusiones antes de continuar.",
+    timestamp: new Date(Date.now() - 4000).toISOString(),
+  }
+];
+
 export const simulatedFilesChangesMessages = (): ChatMessage[] => [
   {
     id: "msg_user_change_files",
