@@ -151,3 +151,118 @@ export const mockIssues: MockIssue[] = [
 ];
 
 export const mockSessionState: SessionState = "REVIEWING_DIMENSIONS";
+
+export interface MockChatSession {
+  id: string;
+  title: string;
+  date: string;
+  isActive?: boolean;
+}
+
+export const mockChatSessions: MockChatSession[] = [
+  { id: "sess_1", title: "Comparativo 2024 vs 2025", date: "Hoy", isActive: true },
+  { id: "sess_2", title: "Importación Clima Q3", date: "Ayer" },
+  { id: "sess_3", title: "Encuesta Engagement Mkt", date: "Hace 3 días" },
+  { id: "sess_4", title: "Pulsos semanales Ago", date: "Semana pasada" },
+];
+
+export const initialMessages: ChatMessage[] = [
+  {
+    id: "msg_init",
+    role: "assistant",
+    type: "text",
+    content: "¡Hola! Soy el asistente de importación de encuestas. Por favor, selecciona una acción rápida o sube tus archivos de datos históricos para comenzar.",
+    timestamp: new Date().toISOString(),
+  }
+];
+
+export const simulatedMountMessages = (): ChatMessage[] => [
+  {
+    id: "msg_init",
+    role: "assistant",
+    type: "text",
+    content: "¡Hola! Soy el asistente de importación de encuestas. Por favor, selecciona una acción rápida o sube tus archivos de datos históricos para comenzar.",
+    timestamp: new Date(Date.now() - 60000).toISOString(),
+  },
+  {
+    id: "msg_user_mount",
+    role: "user",
+    type: "text",
+    content: "Montar archivos sintéticos de encuesta",
+    timestamp: new Date(Date.now() - 45000).toISOString(),
+  },
+  {
+    id: "msg_assistant_staged",
+    role: "assistant",
+    type: "file_staging",
+    content: "Listo. Preparé archivos sintéticos de encuesta para revisión.",
+    timestamp: new Date(Date.now() - 30000).toISOString(),
+  },
+  {
+    id: "msg_assistant_summary",
+    role: "assistant",
+    type: "structure_summary",
+    content: "He analizado la estructura sintética: detecté 6 demográficos, 8 dimensiones y 42 preguntas. Las advertencias de consistencia están listas para tu aprobación.",
+    timestamp: new Date(Date.now() - 15000).toISOString(),
+  }
+];
+
+export const simulatedCompareMessages = (): ChatMessage[] => [
+  {
+    id: "msg_init",
+    role: "assistant",
+    type: "text",
+    content: "¡Hola! Soy el asistente de importación de encuestas. Por favor, selecciona una acción rápida o sube tus archivos de datos históricos para comenzar.",
+    timestamp: new Date(Date.now() - 60000).toISOString(),
+  },
+  {
+    id: "msg_user_compare",
+    role: "user",
+    type: "text",
+    content: "Comparar clima 2024 vs 2025",
+    timestamp: new Date(Date.now() - 45000).toISOString(),
+  },
+  {
+    id: "msg_assistant_compare_res",
+    role: "assistant",
+    type: "text",
+    content: "Iniciando comparativo para clima 2024 vs 2025. Los datos sintéticos anteriores han sido cargados exitosamente.",
+    timestamp: new Date(Date.now() - 30000).toISOString(),
+  }
+];
+
+export const simulatedFormatMessages = (): ChatMessage[] => [
+  {
+    id: "msg_init",
+    role: "assistant",
+    type: "text",
+    content: "¡Hola! Soy el asistente de importación de encuestas. Por favor, selecciona una acción rápida o sube tus archivos de datos históricos para comenzar.",
+    timestamp: new Date(Date.now() - 60000).toISOString(),
+  },
+  {
+    id: "msg_user_format",
+    role: "user",
+    type: "text",
+    content: "Ver formato esperado",
+    timestamp: new Date(Date.now() - 45000).toISOString(),
+  },
+  {
+    id: "msg_assistant_format_res",
+    role: "assistant",
+    type: "text",
+    content: "El formato de importación esperado requiere una estructura de columnas bien definida. Puedes ver las directrices en la pestaña 'Revisar estructura'.",
+    timestamp: new Date(Date.now() - 30000).toISOString(),
+  }
+];
+
+export interface QuickActionItem {
+  id: string;
+  label: string;
+}
+
+export const quickActionItems: QuickActionItem[] = [
+  { id: "montar", label: "Montar archivos sintéticos" },
+  { id: "comparar", label: "Comparar clima 2024 vs 2025" },
+  { id: "revisar", label: "Revisar estructura" },
+  { id: "formato", label: "Ver formato esperado" },
+];

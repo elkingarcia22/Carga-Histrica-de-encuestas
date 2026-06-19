@@ -1,21 +1,23 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Send, Paperclip } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function MessageComposer() {
   return (
-    <div className="flex items-center gap-2 p-4 border-t bg-background">
-      <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground" disabled>
-        <Paperclip size={20} />
-      </Button>
-      <Input
-        placeholder="Escribe un mensaje al asistente..."
-        className="flex-1"
+    <div className="relative border border-border bg-card rounded-2xl p-4 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all shadow-sm w-full">
+      <textarea
+        placeholder="Cuéntame qué encuesta quieres comparar o monta archivos sintéticos"
+        className="w-full min-h-[96px] bg-transparent outline-none resize-none text-sm placeholder:text-muted-foreground/75 pr-12 text-foreground"
         disabled
       />
-      <Button size="icon" className="shrink-0" disabled>
-        <Send size={18} />
-      </Button>
+      <div className="absolute bottom-3 right-3">
+        <Button
+          size="icon"
+          className="h-8 w-8 rounded-full bg-muted text-muted-foreground/75 cursor-not-allowed border-0 hover:bg-muted"
+          disabled
+        >
+          <ArrowRight className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 }

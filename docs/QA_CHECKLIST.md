@@ -236,3 +236,12 @@
 - [x] Documentation hotfix completed
 - [x] HEAD whitespace fixed
 - [x] QA Passed
+
+## Phase 4K-CHAT-VIS1-H1: Chat Shell Visual Alignment Hotfix (Completada - 2026-06-19)
+- [x] Configure canvas background and layout in `ConversationalImportWorkspace.tsx`
+- [x] Redesign left sidebar in `ChatHistorySidebar.tsx` (card style, header, bottom new chat button with gradient)
+- [x] Redesign main panel in `ConversationalImportWorkspace.tsx` (card style, header inside, greeting, quick action buttons, hidden panels)
+- [x] Redesign composer in `MessageComposer.tsx` (textarea box, circular button)
+- [x] Update mock data and actions strategy in `ConversationalImportWorkspace.tsx` and `conversationalImportMock.ts`
+- [x] Scoped lint and tests pass.
+- [x] Git diff hygiene checked and trailing whitespace resolved.
