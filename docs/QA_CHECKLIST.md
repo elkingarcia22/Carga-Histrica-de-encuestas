@@ -9,6 +9,20 @@
 - [x] Cero dependencias nuevas instaladas.
 - [x] Nota Informativa: Se registró ajuste visual heredado en Sidebar (independiente de 8.7A).
 
+## Fase 4K-CHAT-VIS4G-QA · Conversational Contract Approval Step QA
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Contract approval step verificado en chat timeline.
+- [x] One decision per assistant turn verificado.
+- [x] Short contract summary verificado.
+- [x] Full contract dump avoidance verificado.
+- [x] Deferred comparison/dashboard/analytics verificado.
+- [x] Inline review visibilidad validada.
+- [x] Previous steps preservados.
+- [x] Boundaries y Mock data isolation verificados.
+- [x] QA Técnico: TS 0 errores, Build pass, Scoped Lint pass, Test pass.
+- [x] Clean diff hygiene.
+
+
 ## Fase 8.7B: Lightweight Status & AI Controls (Implementada - 2026-05-06)
 - [x] `src/components/ai-interaction/aiInteractionTypes.ts` creado.
 - [x] `Chip.tsx` (Selección, Removible, Tones, Icons, Count).
