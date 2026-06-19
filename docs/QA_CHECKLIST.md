@@ -214,3 +214,16 @@
 - [x] Validar boundaries (No real upload, no type="file", no API, no storage).
 - [x] Technical QA (Build, scoped lint, test, coverage: PASS).
 - [x] Clean diff hygiene.
+
+## Fase 4K-CHAT8: Inline Structure Review Architecture
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Crear documento `INLINE_STRUCTURE_REVIEW_ARCHITECTURE.md`.
+- [x] Definir Architecture Decision (Scope, Primer screen, Flow).
+- [x] Documentar Review Scope, User Roles, Editable Entity Model.
+- [x] Establecer reglas de revisión para Demográficos, Dimensiones, Preguntas y Mapeos.
+- [x] Definir Issue/Warning Resolution Rules y Approval Block Rules.
+- [x] Confirmar UX Layout y listado de candidatos a componentes.
+- [x] Registrar Data, AI y Upload Boundaries.
+- [x] Modificar `PROMPT_LOG.md` con los marcadores de la fase.
+- [x] Modificar `ARCHITECTURE.md` para enlazar el documento de arquitectura.
+- [x] Clean diff hygiene, 0 source files changed, 0 test files changed.

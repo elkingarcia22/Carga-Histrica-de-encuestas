@@ -1,5 +1,90 @@
 # Prompt Log
 
+## Fase 4K-CHAT8 · Inline Structure Review Architecture
+
+Phase: 4K-CHAT8 · Inline Structure Review Architecture
+
+Decision:
+- INLINE_STRUCTURE_REVIEW_ARCHITECTURE_LOCKED = YES
+- INLINE_REVIEW_SCOPE = DEMOGRAPHICS_DIMENSIONS_QUESTIONS_MAPPINGS
+- FIRST_SCREEN = CONVERSATIONAL_IMPORT_WORKSPACE
+- DASHBOARD_FLOW = DOWNSTREAM_RESULT
+
+Files created/modified:
+- docs/INLINE_STRUCTURE_REVIEW_ARCHITECTURE.md
+- docs/PROMPT_LOG.md
+- docs/ARCHITECTURE.md
+- docs/QA_CHECKLIST.md
+
+Architecture summary:
+Defined architecture for the inline structure review within the Conversational Import Workspace. It covers how the user will review, correct, and approve the detected structure (demographics, dimensions, questions, mappings) before approving the import contract.
+
+Editable entities:
+- Demographics (approvedLabel, status, included, acceptedWarnings)
+- Dimensions (approvedLabel, status, included, questionCount)
+- Questions (approvedLabel, approvedDimensionId, included, status, acceptedWarnings)
+- Mappings (approvedDimensionId, status, userEdited, acceptedWarnings)
+
+Review rules:
+Defined specific actions and constraints for reviewing demographics, dimensions, questions, and mappings. Changes are mock/synthetic and don't affect underlying real data.
+
+Approval rules:
+Structured in blocks: files, demographics, dimensions, questions, questionDimensionMappings, finalContract. The final contract can only be approved if all mandatory blocks are approved and no blocking issues remain.
+
+Boundary confirmations:
+- NO_REAL_UPLOAD_CREATED
+- NO_FILE_INPUT_CREATED
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+- NO_API_CONNECTIONS
+- NO_STORAGE
+- NO_PARSER_RUNTIME_IN_UI_YET
+
+Open questions:
+- ¿Las correcciones serán por botones, inline fields o comandos de chat?
+- ¿Se permitirá edición textual directa en el primer build?
+- ¿Las acciones mock actualizan estado local o solo muestran estados preparados?
+- ¿El usuario puede saltar bloques?
+- ¿Qué bloque es obligatorio para generar contrato aprobado?
+- ¿Q-LEGACY-001 y Q-NEW-001 se aceptan como no comparables o se excluyen por defecto?
+
+Remaining prohibitions:
+- NO_REAL_UPLOAD_CREATED
+- NO_FILE_INPUT_CREATED
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+- NO_API_CONNECTIONS
+- NO_STORAGE
+
+Next authorized phase:
+- CHAT9_INLINE_STRUCTURE_REVIEW_BUILD_PROMPT_READY
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_CHAT8_COMPLETE
+INLINE_STRUCTURE_REVIEW_ARCHITECTURE_LOCKED
+INLINE_REVIEW_SCOPE_DEMOGRAPHICS_DIMENSIONS_QUESTIONS_MAPPINGS
+EDITABLE_ENTITY_MODEL_DEFINED
+DEMOGRAPHIC_REVIEW_RULES_DEFINED
+DIMENSION_REVIEW_RULES_DEFINED
+QUESTION_REVIEW_RULES_DEFINED
+QUESTION_DIMENSION_MAPPING_RULES_DEFINED
+APPROVAL_BLOCK_RULES_DEFINED
+APPROVED_CONTRACT_UPDATE_RULES_DEFINED
+CONVERSATIONAL_IMPORT_WORKSPACE_REMAINS_FORMALLY_CLOSED
+DASHBOARD_FLOW_MARKED_AS_DOWNSTREAM_RESULT
+NO_REAL_UPLOAD_CREATED
+NO_FILE_INPUT_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+CHAT9_INLINE_STRUCTURE_REVIEW_BUILD_PROMPT_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-CHAT7 · Next Capability Intake
 
 Phase: 4K-CHAT7 · Next Capability Intake
