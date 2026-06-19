@@ -270,3 +270,13 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - **No instalación en esta fase**: Ningún cambio en dependencias.
 - **Header detection dinámico requerido**: Obligatorio, por ej. para compensar offset SIIS.
 - **Parser sigue sin implementarse**: Evaluación documental completada.
+
+### Local Parser Prototype v1
+- Workbook extraction local.
+- Dynamic header detection.
+- SIIS-like header offset supported as robust header detection case.
+- Output: ParsedWorkbookPreview.
+- No UI integration.
+- No Claude.
+- No matching.
+- No full SurveyFileAnalysisContract yet.

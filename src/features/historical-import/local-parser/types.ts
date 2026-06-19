@@ -16,17 +16,65 @@ export interface LocalParserCapability {
   dependencyStatus: ParserDependencyStatus;
 }
 
-export interface HeaderDetectionCandidate {
-  rowIndex: number;
-  confidenceScore: number;
-  matchedKeywords: string[];
-  isLikelySiisHeader: boolean;
+export interface HeaderDetectionScore {
+  score: number;
+  density: number;
+  diversity: number;
+  keywordMatch: boolean;
+  isLikelyTitle: boolean;
 }
 
-export interface DetectedHeaderRow {
+export type HeaderDetectionReason =
+  | 'HIGH_DENSITY'
+  | 'KNOWN_KEYWORDS'
+  | 'FIRST_NON_EMPTY'
+  | 'SIIS_OFFSET_PATTERN'
+  | 'FALLBACK_FIRST_ROW';
+
+export interface HeaderDetectionResult {
+  headerRowIndex: number;
+  headerValues: string[];
+  dataStartRowIndex: number;
+  confidenceScore: number;
+  reason: HeaderDetectionReason;
+}
+
+export interface ParserPreviewColumn {
+  index: number;
+  rawHeader: string;
+  normalizedHeader: string;
+  isEmpty: boolean;
+}
+
+export interface ParserPreviewRow {
   rowIndex: number;
-  columns: string[];
-  headerType: 'STANDARD' | 'SIIS_OFFSET' | 'UNKNOWN';
+  data: Record<string, unknown>;
+}
+
+export interface ParsedSheetPreview {
+  sheetName: string;
+  rangeRef?: string;
+  rowCount: number;
+  columnCount: number;
+  headerDetection: HeaderDetectionResult;
+  columns: ParserPreviewColumn[];
+  previewRows: ParserPreviewRow[];
+  warnings: LocalParserWarning[];
+}
+
+export interface ParsedWorkbookPreview {
+  fileName: string;
+  fileKind: LocalParserFileKind;
+  sheetNames: string[];
+  sheets: ParsedSheetPreview[];
+  selectedSheetName?: string;
+  warnings: LocalParserWarning[];
+  errors: LocalParserError[];
+  contractAssemblyStatus: 'not_started';
+}
+
+export interface WorkbookExtractionResult {
+  workbookPreview: ParsedWorkbookPreview;
 }
 
 export interface LocalParserOptions {
@@ -50,7 +98,7 @@ export interface LocalParserWarning {
 export interface LocalParserResult {
   status: LocalParserStatus;
   fileKind: LocalParserFileKind;
-  detectedHeaders?: DetectedHeaderRow[];
+  workbookPreview?: ParsedWorkbookPreview;
   errors: LocalParserError[];
   warnings: LocalParserWarning[];
 }
