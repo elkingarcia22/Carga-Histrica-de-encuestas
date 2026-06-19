@@ -38,8 +38,6 @@ import {
   simulatedContractReturnToMappingsMessages
 } from "./conversationalImportMock";
 
-let globalMsgCounter = 0;
-
 export function ConversationalImportWorkspace() {
   const [chatStarted, setChatStarted] = useState(false);
   const [viewMode, setViewMode] = useState<"chat" | "review">("chat");
@@ -78,21 +76,21 @@ export function ConversationalImportWorkspace() {
   };
 
   const handleSandboxUploadStart = () => {
-    globalMsgCounter += 1;
+    const ts = crypto.randomUUID();
     const isoString = new Date().toISOString();
     setChatStarted(true);
     setViewMode("chat");
     setMessages([
       initialMessages[0],
       {
-        id: `msg_user_upload_${globalMsgCounter}`,
+        id: `msg_user_upload_${ts}`,
         role: "user",
         type: "text",
         content: "Cargar encuesta",
         timestamp: isoString,
       },
       {
-        id: `msg_assistant_upload_panel_${globalMsgCounter}`,
+        id: `msg_assistant_upload_panel_${crypto.randomUUID()}`,
         role: "assistant",
         type: "sandbox_upload_panel",
         content: "Selecciona los archivos que quieres cargar en el sandbox.",
@@ -102,14 +100,14 @@ export function ConversationalImportWorkspace() {
   };
 
   const handleSandboxFilesSelected = (files: import("./SandboxUploadPanel").SandboxFileMetadata[]) => {
-    globalMsgCounter += 1;
+    const ts = crypto.randomUUID();
     const isoString = new Date().toISOString();
     setMessages((prev) => {
       // Remove the upload panel
       const withoutPanel = prev.filter(m => m.type !== "sandbox_upload_panel");
 
       const fileCardsMessage: import("./conversationalImportTypes").ChatMessage = {
-        id: `msg_assistant_files_selected_${globalMsgCounter}`,
+        id: `msg_assistant_files_selected_${ts}`,
         role: "assistant",
         type: "sandbox_files_selected",
         content: "Recibí los archivos en modo sandbox.\nTodavía no los estoy procesando.\nPrimero validaré si pertenecen a una sola encuesta y si hay señales de datos personales.\nSi detecto más de una encuesta, te pediré elegir cuál procesar primero.",
@@ -118,7 +116,7 @@ export function ConversationalImportWorkspace() {
       };
 
       const safetyGateMessage: import("./conversationalImportTypes").ChatMessage = {
-        id: `msg_assistant_safety_gate_${globalMsgCounter}`,
+        id: `msg_assistant_safety_gate_${crypto.randomUUID()}`,
         role: "assistant",
         type: "analysis_summary_blocks",
         content: files.length > 1 ? "⚠️ Detecté varios archivos.\nEn la siguiente fase validaré si pertenecen a una misma encuesta o a encuestas diferentes.\nSi son encuestas diferentes, solo podrás procesar una a la vez.\n\nSiguiente paso: validación preliminar" : "Siguiente paso: validación preliminar",
