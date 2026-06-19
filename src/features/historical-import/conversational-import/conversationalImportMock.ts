@@ -276,18 +276,25 @@ export const simulatedDemographicsReviewStartMessages = (): ChatMessage[] => [
   {
     id: "msg_assistant_files_summary",
     role: "assistant",
-    type: "text",
-    content: "Listo. Analicé los archivos sintéticos y encontré una estructura inicial.\nDetecté 2 archivos, 4 demográficos, 4 dimensiones y 24 preguntas comparables, además de algunos elementos que necesitan revisión.\n\nVamos a revisarlo paso a paso para dejar todo aprobado antes de preparar el comparativo.",
+    type: "analysis_summary_blocks",
+    content: "Listo. Analicé los archivos sintéticos y encontré una estructura inicial. Vamos a validarlo paso a paso.",
+    visualBlocks: [
+      { icon: "file", title: "Archivos detectados", description: "2 archivos sintéticos listos para revisión." },
+      { icon: "users", title: "Demográficos detectados", description: "4 campos encontrados. Algunos requieren confirmación." },
+      { icon: "database", title: "Preguntas detectadas", description: "24 comparables, 4 nuevas y 3 históricas." },
+      { icon: "arrow_right", title: "Siguiente paso", description: "Primero revisaremos los demográficos para definir qué filtros estarán disponibles." }
+    ],
     timestamp: new Date(Date.now() - 4000).toISOString(),
   },
   {
     id: "msg_assistant_demographics_review",
     role: "assistant",
     type: "demographics_guided_review",
-    content: "Primero revisemos los demográficos, porque eso define qué filtros podrán usarse después en los resultados.\n\nDetecté estos demográficos en los archivos:\n\n- Gerencia\n- Área\n- Cargo\n- Antigüedad\n\nAlgunos ya están alineados con la estructura esperada y otros no.\n\nNota: Esto se crearía en la encuesta, no en la plataforma.\nLos demográficos que no se creen no podrán ser usados como filtros dentro de los dashboards de resultados de la encuesta.",
+    content: "Estos campos definen qué filtros estarán disponibles en los dashboards de resultados.\n\nNota: Esto se crearía en la encuesta, no en la plataforma.\n\n⚠️ Los demográficos que no se creen no podrán usarse como filtros dentro de los resultados.",
     nextActions: [
-      { id: "action_approve_demographics", label: "Aprobar demográficos", actionType: "approve_demographics" },
-      { id: "action_correct_demographics", label: "Solicitar ajuste", actionType: "correct_demographics" }
+      { id: "action_approve_all", label: "Crear todos los recomendados", actionType: "approve_demographics" },
+      { id: "action_choose_one_by_one", label: "Elegir uno por uno", actionType: "correct_demographics" },
+      { id: "action_no_new", label: "No crear nuevos demográficos", actionType: "correct_demographics" }
     ],
     timestamp: new Date(Date.now() - 3000).toISOString(),
   }

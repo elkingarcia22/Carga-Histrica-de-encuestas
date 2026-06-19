@@ -7521,9 +7521,52 @@ R1H5_DEFINED_BUT_NOT_TRIGGERED
 
 ## Phase CHAT-VIS-H2: Conversational Polish & Flow Adjustment
 - **Objective**: Fix composer margins, implement natural analysis/typing states, replace rigid CTA with a direct jump to guided demographics review, and adjust tone.
-- **Modifications**: 
+- **Modifications**:
   - Adjusted margins for `MessageComposer` in `ConversationalImportWorkspace.tsx`.
   - Added new message types `analysis_progress` and `demographics_guided_review` in `conversationalImportTypes.ts` and `ChatTimeline.tsx`.
   - Replaced rigid CTA in file mount sequence with a conversational analysis state.
   - Set the first interactive block to be demographics with clear explanations about survey alignment and filter impact in `conversationalImportMock.ts`.
 - **Status**: Completed successfully while respecting boundaries.
+
+## Phase: CHAT-VIS-H3 · Composer Size & Visual Conversation Blocks Hotfix
+
+Summary:
+- Composer enlarged and made more comfortable.
+- Safe margins preserved.
+- Assistant messages improved with visual blocks.
+- Initial file analysis summary converted into structured visual blocks.
+- Demographics review converted into structured visual cards.
+- Non-aligned demographics warning clarified.
+- Filter impact warning clarified.
+- Current-step-only conversational flow preserved.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_CHAT_VIS_H3_COMPLETE
+COMPOSER_LARGER_AND_COMFORTABLE
+COMPOSER_SAFE_MARGINS_PRESERVED
+ASSISTANT_MESSAGES_USE_VISUAL_BLOCKS
+ANALYSIS_SUMMARY_USES_ICON_BLOCKS
+DEMOGRAPHICS_REVIEW_USES_STRUCTURED_CARDS
+NON_ALIGNED_DEMOGRAPHICS_ARE_VISUALIZED
+CREATE_IN_SURVEY_NOTE_RENDERED
+FILTER_IMPACT_WARNING_RENDERED
+ACTIONS_ARE_CONTEXTUAL_TO_CURRENT_STEP
+ONE_DECISION_PER_STEP
+NO_FULL_STRUCTURE_DUMP
+CURRENT_STEP_ONLY
+INITIAL_CHAT_SHELL_PRESERVED
+NO_REAL_UPLOAD_CREATED
+NO_FILE_INPUT_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_API_CONNECTIONS
+NO_STORAGE
+NO_PARSER_RUNTIME_IN_UI
+NO_COMPARISON_RENDERED
+NO_DASHBOARD_RENDERED
+NO_ANALYTICS_RENDERED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+CHAT_VIS_H3_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED

@@ -2,7 +2,7 @@ import type { ChatMessage } from "./conversationalImportTypes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, User, Loader2 } from "lucide-react";
+import { Bot, User, Loader2, FileText, Users, Database, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
@@ -141,6 +141,37 @@ export function ChatTimeline({ messages, onAction }: ChatTimelineProps) {
                 <div className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm bg-muted border border-border animate-pulse">
                   <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                   <span className="text-muted-foreground">{msg.content}</span>
+                </div>
+              )}
+
+              {msg.type === "analysis_summary_blocks" && (
+                <div className="w-full flex flex-col gap-3">
+                  <div className="rounded-lg px-4 py-3 text-sm bg-muted whitespace-pre-wrap">
+                    {msg.content}
+                  </div>
+                  {msg.visualBlocks && msg.visualBlocks.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {msg.visualBlocks.map((block, idx) => {
+                        const Icon = block.icon === "file" ? FileText :
+                                     block.icon === "users" ? Users :
+                                     block.icon === "database" ? Database :
+                                     block.icon === "arrow_right" ? ArrowRight : FileText;
+                        return (
+                          <Card key={idx} className="bg-card border-border shadow-sm">
+                            <CardContent className="p-3 flex items-start gap-3">
+                              <div className="mt-0.5 shrink-0 text-primary bg-primary/10 p-1.5 rounded-md">
+                                <Icon className="w-4 h-4" />
+                              </div>
+                              <div className="flex flex-col gap-0.5">
+                                <span className="font-medium text-sm text-foreground">{block.title}</span>
+                                <span className="text-xs text-muted-foreground leading-snug">{block.description}</span>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
 

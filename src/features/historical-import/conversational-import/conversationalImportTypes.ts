@@ -1,5 +1,5 @@
 export type MessageRole = "system" | "assistant" | "user";
-export type MessageType = "text" | "file_staging" | "structure_summary" | "warning" | "approval_request" | "correction" | "contract_summary" | "synthetic_file_mount_summary" | "guided_review_step" | "analysis_progress" | "demographics_guided_review";
+export type MessageType = "text" | "file_staging" | "structure_summary" | "warning" | "approval_request" | "correction" | "contract_summary" | "synthetic_file_mount_summary" | "guided_review_step" | "analysis_progress" | "demographics_guided_review" | "analysis_summary_blocks";
 
 export interface SyntheticMountedSurveyFile {
   id: string;
@@ -29,6 +29,7 @@ export interface ChatMessage {
   files?: SyntheticMountedSurveyFile[];
   boundaryNote?: string;
   nextActions?: SyntheticMountNextAction[];
+  visualBlocks?: { icon?: string; title: string; description: string; status?: string }[];
 }
 
 export interface MockMapping {
