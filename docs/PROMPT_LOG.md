@@ -1,5 +1,65 @@
 # Prompt Log
 
+## Fase 4K-CHAT7 · Next Capability Intake
+
+Phase: 4K-CHAT7 · Next Capability Intake
+
+Decision:
+- NEXT_CAPABILITY_INTAKE_COMPLETED = YES
+- CONVERSATIONAL_IMPORT_WORKSPACE_REMAINS_FORMALLY_CLOSED = YES
+
+Files created/modified:
+- docs/CONVERSATIONAL_IMPORT_NEXT_CAPABILITY.md
+- docs/PROMPT_LOG.md
+- docs/ARCHITECTURE.md
+- docs/QA_CHECKLIST.md
+
+Candidate options:
+- Opción A · Connect Mock Contract to Downstream Dashboard
+- Opción B · Conversational Interaction Polish
+- Opción C · Inline Structure Review Architecture
+- Opción D · Simulated Upload Experience Architecture
+- Opción E · Future AI-first Intake
+
+Decision matrix:
+- Evaluated business value, technical complexity, governance risk, data dependency, and architectural needs.
+- Recommended Option C (Inline Review) as it is required before connecting downstreams or simulating complex uploads.
+
+Recommended next capability:
+- Opción C · Inline Structure Review Architecture
+
+Deferred options:
+- Options A, B, D, E deferred based on technical, timing, and risk criteria.
+
+Remaining prohibitions:
+- NO_REAL_UPLOAD_CREATED
+- NO_FILE_INPUT_CREATED
+- NO_PRODUCTIVE_FILE_PROCESSING
+- NO_REAL_CLIENT_DATA
+- NO_INSIGHTS_AI_YET
+- NO_API_CONNECTIONS
+- NO_STORAGE
+
+Next authorized phase:
+- CHAT8_INLINE_STRUCTURE_REVIEW_ARCHITECTURE_READY
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_CHAT7_COMPLETE
+NEXT_CAPABILITY_INTAKE_COMPLETED
+CONVERSATIONAL_IMPORT_WORKSPACE_REMAINS_FORMALLY_CLOSED
+NEXT_CAPABILITY_DECISION_MATRIX_DOCUMENTED
+INLINE_STRUCTURE_REVIEW_RECOMMENDED
+NO_REAL_UPLOAD_CREATED
+NO_FILE_INPUT_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+CHAT8_INLINE_STRUCTURE_REVIEW_ARCHITECTURE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-CHAT6 · Conversational Import Formal Closure
 
 Phase: 4K-CHAT6 · Conversational Import Formal Closure

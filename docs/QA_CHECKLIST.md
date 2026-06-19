@@ -195,6 +195,17 @@
 - [x] Modificar `ARCHITECTURE.md` para enlazar el closure.
 - [x] No source changes, no tests changes, clean diff hygiene.
 
+## Fase 4K-CHAT7: Next Capability Intake
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Crear documento `CONVERSATIONAL_IMPORT_NEXT_CAPABILITY.md`.
+- [x] Evaluar opciones para la siguiente capacidad: Conectar dashboard, Polish, Inline Review, Simulated Upload, AI Intake.
+- [x] Definir Decision Matrix.
+- [x] Recomendar Opción C (Inline Structure Review Architecture).
+- [x] Modificar `PROMPT_LOG.md` con los marcadores de la fase y decisión tomada.
+- [x] Modificar `ARCHITECTURE.md` para enlazar el documento de intake.
+- [x] Validar boundaries (No real upload, no type="file", no API, no storage).
+- [x] Clean diff hygiene.
+
 ## Fase 4K-CHAT5: Conversational Import Visual Utility Hotfix
 - [x] Ejecutar preflight y verificar main branch limpio.
 - [x] Remover Tailwind arbitrary values de ChatTimeline, ApprovalProgressTracker, ConversationalImportWorkspace.
