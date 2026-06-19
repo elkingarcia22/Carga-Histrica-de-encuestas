@@ -1,5 +1,38 @@
 # Prompt Log
 
+## Fase 6C · Parser Dependency Installation and Scaffolding
+
+Phase: Fase 6C · Parser Dependency Installation and Scaffolding
+
+Summary:
+- xlsx dependency installed.
+- Local parser module scaffolded.
+- Parser options/capabilities/types defined.
+- Metadata-only placeholder validation created.
+- Runtime parsing remains out of scope.
+- UI/Claude/matching remain disconnected.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_6C_PARSER_DEPENDENCY_INSTALL_AND_SCAFFOLD_COMPLETE
+XLSX_DEPENDENCY_INSTALLED
+LOCAL_PARSER_MODULE_CREATED
+LOCAL_PARSER_TYPES_DEFINED
+LOCAL_PARSER_CAPABILITIES_DEFINED
+DYNAMIC_HEADER_DETECTION_CAPABILITY_DECLARED
+SIIS_LIKE_HEADER_OFFSET_CAPABILITY_DECLARED
+METADATA_ONLY_PLACEHOLDER_CREATED
+NO_RUNTIME_FILE_READING
+NO_FILEREADER_USAGE
+NO_XLSX_RUNTIME_PARSING_YET
+NO_UI_IMPORTS_ADDED
+NO_CLAUDE_CONNECTION_CREATED
+NO_MATCHING_ENGINE_CREATED
+NO_REAL_CLIENT_DATA
+NO_PRODUCTIVE_PROCESSING
+PHASE_6D_LOCAL_PARSER_PROTOTYPE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 6B · Parser Dependency Decision Gate
 
 Phase: Fase 6B · Parser Dependency Decision Gate

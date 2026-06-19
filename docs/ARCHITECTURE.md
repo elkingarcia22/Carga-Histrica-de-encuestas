@@ -256,6 +256,14 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - **No runtime parser todavía**: Solo se define la arquitectura.
 - **Claude fuera de scope**: Claude no participa en esta etapa.
 
+### Local Parser Scaffolding
+- Ubicación: `src/features/historical-import/local-parser/`
+- Dependencia xlsx instalada.
+- Parser runtime no implementado todavía.
+- Dynamic header detection documentado como capability.
+- Sin integración UI.
+- Sin Claude.
+
 ### Parser Dependency Decision
 - **Documento fuente**: `docs/PARSER_DEPENDENCY_DECISION.md`
 - **Recomendación de dependencia futura**: Se recomienda `xlsx` para el prototipo.
