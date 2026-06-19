@@ -19,7 +19,7 @@ export function SyntheticMountedFilesPanel({ files, boundaryNote, nextActions, o
           <p>{boundaryNote}</p>
         </div>
       )}
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {files.map((file) => (
           <Card key={file.id} className="bg-card border-border shadow-sm">
