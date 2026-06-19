@@ -35,7 +35,7 @@ export function ConversationalImportWorkspace() {
         </div>
 
         {/* Right Column: Structure Panel */}
-        <div className="w-[400px] flex-none bg-muted/10 hidden lg:block">
+        <div className="w-96 flex-none bg-muted/10 hidden lg:block">
           <DetectedStructurePanel />
         </div>
       </div>

@@ -26,7 +26,7 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
               {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
             </div>
 
-            <div className={`flex flex-col gap-2 max-w-[80%] ${
+            <div className={`flex flex-col gap-2 max-w-2xl ${
               msg.role === "user" ? "items-end" : "items-start"
             }`}>
               {msg.type === "text" && (
@@ -81,7 +81,7 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
                 </div>
               )}
 
-              <span className="text-[10px] text-muted-foreground mt-1">
+              <span className="text-xs text-muted-foreground mt-1">
                 {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>
             </div>

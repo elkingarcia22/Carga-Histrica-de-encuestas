@@ -184,3 +184,12 @@
 - [x] Accessibility QA (Roles, labels, states).
 - [x] Technical QA (Build, scoped lint, test, coverage: PASS).
 - [x] Clean diff hygiene.
+
+## Fase 4K-CHAT5: Conversational Import Visual Utility Hotfix
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Remover Tailwind arbitrary values de ChatTimeline, ApprovalProgressTracker, ConversationalImportWorkspace.
+- [x] Reemplazar por tokens semánticos (max-w-2xl, text-xs, h-px, w-96).
+- [x] Verificar ausencia de nuevas clases literales de color o HEX.
+- [x] Validar boundaries (No real upload, no type="file", no API, no storage).
+- [x] Technical QA (Build, scoped lint, test, coverage: PASS).
+- [x] Clean diff hygiene.

@@ -19,7 +19,7 @@ export function ApprovalProgressTracker() {
             {block.name}
           </span>
           {index < mockApprovalBlocks.length - 1 && (
-            <div className="w-4 h-[1px] bg-border ml-2" />
+            <div className="w-4 h-px bg-border ml-2" />
           )}
         </div>
       ))}
