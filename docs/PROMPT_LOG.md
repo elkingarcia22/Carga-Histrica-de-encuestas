@@ -1,5 +1,49 @@
 # Prompt Log
 
+## Fase 4K-CHAT4 · Conversational Import QA
+
+Phase: 4K-CHAT4 · Conversational Import QA
+
+QA summary:
+- Functional QA: PASSED (All visual components and states verified as per contract).
+- Mock contract QA: PASSED (Mock data is strictly separated from visual components).
+- Upload boundary QA: PASSED (No `<input type="file">`, no `FileReader`, no real upload created).
+- Data boundary QA: PASSED (No real client data, no productive file processing).
+- API/storage/AI QA: PASSED (No `fetch`, no `axios`, no `localStorage`, no `IndexedDB`, no real AI insights).
+- Visual token QA: PASSED WITH FINDINGS (UBITS classes preserved, no hex/slate/red, but arbitrary tailwind classes found).
+- Accessibility QA: PASSED (Keyboard navigation, roles, labels, states are clear).
+- Technical QA: PASSED (Build passed, scoped lint passed, tests passed, coverage passed, 0 local lint errors, diff hygiene clean).
+
+Findings:
+- Arbitrary tailwind values found (`max-w-[80%]`, `text-[10px]`, `h-[1px]`, `w-[400px]`) in `ChatTimeline.tsx`, `ApprovalProgressTracker.tsx`, `ConversationalImportWorkspace.tsx`. This violates the strict "no tailwind arbitrary values" visual token constraint, but is not blocking for this phase as code fixes are prohibited.
+
+Blocking findings:
+- NONE
+
+Next authorized phase:
+- CHAT5_CONVERSATIONAL_IMPORT_HOTFIX_OR_CLOSURE_READY
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_CHAT4_COMPLETE_WITH_FINDINGS
+CONVERSATIONAL_IMPORT_QA_PASSED_WITH_NON_BLOCKING_FINDINGS
+CONVERSATIONAL_IMPORT_FUNCTIONAL_QA_PASSED
+CONVERSATIONAL_IMPORT_MOCK_CONTRACT_QA_PASSED
+CONVERSATIONAL_IMPORT_UPLOAD_BOUNDARY_QA_PASSED
+CONVERSATIONAL_IMPORT_DATA_BOUNDARY_QA_PASSED
+CONVERSATIONAL_IMPORT_AI_API_STORAGE_QA_PASSED
+NO_REAL_UPLOAD_VERIFIED
+NO_FILE_INPUT_VERIFIED
+NO_PRODUCTIVE_FILE_PROCESSING_VERIFIED
+NO_REAL_CLIENT_DATA_VERIFIED
+NO_INSIGHTS_AI_VERIFIED
+NO_API_CONNECTIONS_VERIFIED
+NO_STORAGE_VERIFIED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+CHAT5_CONVERSATIONAL_IMPORT_HOTFIX_OR_CLOSURE_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-CHAT1 · Conversational Import Architecture Lock
 
 Phase: 4K-CHAT1 · Conversational Import Architecture Lock

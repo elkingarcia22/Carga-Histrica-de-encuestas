@@ -173,3 +173,14 @@
 - [x] Establecer UI Consumption Boundary, Pipeline Handoff Boundary, AI Boundary, y Data Boundary.
 - [x] Modificar `PROMPT_LOG.md`, `ARCHITECTURE.md`, y `QA_CHECKLIST.md` con marcadores correctos.
 - [x] No source changes, no tests changes, clean diff hygiene.
+
+## Fase 4K-CHAT4: Conversational Import QA
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Functional QA (Visual components, state modeling).
+- [x] Mock Contract QA (No real data in UI, isolated).
+- [x] Upload & Data Boundary QA (No type="file", no real upload, no productive processing).
+- [x] API, Storage, AI Boundary QA.
+- [x] Visual Token QA (UBITS semantics preserved, Tailwind arbitrary values found but non-blocking).
+- [x] Accessibility QA (Roles, labels, states).
+- [x] Technical QA (Build, scoped lint, test, coverage: PASS).
+- [x] Clean diff hygiene.
