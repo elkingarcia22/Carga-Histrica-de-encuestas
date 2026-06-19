@@ -1,4 +1,4 @@
-import type { ChatMessage, ApprovalBlock, SessionState } from "./conversationalImportTypes";
+import type { ChatMessage, ApprovalBlock, SessionState, MockMapping, MockIssue } from "./conversationalImportTypes";
 
 export const mockMessages: ChatMessage[] = [
   {
@@ -138,6 +138,16 @@ export const mockUnmappedQuestions = [
   "¿Sientes que tu trabajo es valorado?",
   "¿Tienes los recursos necesarios para trabajar?",
   "¿Recomendarías trabajar aquí?"
+];
+
+export const mockMappings: MockMapping[] = [
+  { question: "¿Cómo calificas tu ambiente de trabajo?", dimension: "Cultura" },
+  { question: "¿Tienes oportunidades de crecimiento?", dimension: "Desarrollo" },
+];
+
+export const mockIssues: MockIssue[] = [
+  { type: "warning", message: "3 preguntas sin dimensión clara detectadas." },
+  { type: "error", message: "Falta aprobación de dimensiones antes de continuar." }
 ];
 
 export const mockSessionState: SessionState = "REVIEWING_DIMENSIONS";

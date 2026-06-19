@@ -57,7 +57,7 @@ export function ConversationalImportWorkspace() {
                 Revisión de Estructura
               </button>
             </div>
-            
+
             {activeTab === "chat" && (
               <div className="flex-1 flex flex-col min-h-0 m-0">
                 <ChatTimeline messages={mockMessages} />
@@ -65,7 +65,7 @@ export function ConversationalImportWorkspace() {
                 <MessageComposer />
               </div>
             )}
-            
+
             {activeTab === "review" && (
               <div className="flex-1 min-h-0 m-0 overflow-hidden flex flex-col">
                 <InlineReviewPanel />

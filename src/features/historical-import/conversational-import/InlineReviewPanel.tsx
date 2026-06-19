@@ -4,23 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, CheckCircle2, ChevronRight, Edit2, AlertTriangle, FileCheck } from "lucide-react";
-import { 
-  mockDemographics, 
-  mockDimensions, 
-  mockUnmappedQuestions, 
-  mockApprovalBlocks 
+import {
+  mockDemographics,
+  mockDimensions,
+  mockUnmappedQuestions,
+  mockApprovalBlocks,
+  mockMappings,
+  mockIssues
 } from "./conversationalImportMock";
-
-// Extended mocks for the review
-const mockMappings = [
-  { question: "¿Cómo calificas tu ambiente de trabajo?", dimension: "Cultura" },
-  { question: "¿Tienes oportunidades de crecimiento?", dimension: "Desarrollo" },
-];
-
-const mockIssues = [
-  { type: "warning", message: "3 preguntas sin dimensión clara detectadas." },
-  { type: "error", message: "Falta aprobación de dimensiones antes de continuar." }
-];
 
 export function InlineReviewPanel() {
   return (
@@ -40,7 +31,7 @@ export function InlineReviewPanel() {
               <span className="bg-primary/10 text-primary p-1 rounded">1</span>
               Demográficos
             </h3>
-            <Badge variant="outline" className="text-green-600 bg-green-50">Aprobado</Badge>
+            <Badge variant="positive">Aprobado</Badge>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {mockDemographics.map((demo) => (
@@ -63,7 +54,7 @@ export function InlineReviewPanel() {
               <span className="bg-primary/10 text-primary p-1 rounded">2</span>
               Dimensiones
             </h3>
-            <Badge variant="outline" className="text-yellow-600 bg-yellow-50">Pendiente</Badge>
+            <Badge variant="warning">Pendiente</Badge>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {mockDimensions.map((dim) => (
@@ -96,7 +87,7 @@ export function InlineReviewPanel() {
                 </div>
               ))}
               {mockUnmappedQuestions.map((q, i) => (
-                <div key={`unmapped-${i}`} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors bg-red-50/50">
+                <div key={`unmapped-${i}`} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
                   <p className="text-sm font-medium">{q}</p>
                   <div className="flex items-center gap-2">
                     <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -113,7 +104,7 @@ export function InlineReviewPanel() {
           <h3 className="text-lg font-semibold">Alertas de Validación</h3>
           <div className="space-y-2">
             {mockIssues.map((issue, i) => (
-              <Alert key={i} variant={issue.type === 'error' ? 'destructive' : 'default'} className={issue.type === 'warning' ? 'border-yellow-200 bg-yellow-50 text-yellow-800' : ''}>
+              <Alert key={i} variant={issue.type === 'error' ? 'destructive' : 'warning'}>
                 {issue.type === 'error' ? <AlertCircle className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
                 <AlertTitle>{issue.type === 'error' ? 'Error' : 'Advertencia'}</AlertTitle>
                 <AlertDescription>{issue.message}</AlertDescription>
@@ -127,12 +118,12 @@ export function InlineReviewPanel() {
           <h3 className="text-lg font-semibold">Estado de Aprobación</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {mockApprovalBlocks.map((block) => (
-              <Card key={block.id} className={block.status === 'approved' ? 'border-green-200 bg-green-50/30' : ''}>
+              <Card key={block.id} className={block.status === 'approved' ? 'border-primary/50 bg-primary/5' : ''}>
                 <CardHeader className="p-4 pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-sm font-medium">{block.name}</CardTitle>
                     {block.status === 'approved' ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      <CheckCircle2 className="h-4 w-4 text-primary" />
                     ) : (
                       <AlertCircle className="h-4 w-4 text-muted-foreground" />
                     )}

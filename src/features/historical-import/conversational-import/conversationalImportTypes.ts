@@ -9,6 +9,16 @@ export interface ChatMessage {
   timestamp: string;
 }
 
+export interface MockMapping {
+  question: string;
+  dimension: string;
+}
+
+export interface MockIssue {
+  type: "warning" | "error";
+  message: string;
+}
+
 export type SessionState =
   | "EMPTY_SESSION"
   | "AWAITING_FILES"
