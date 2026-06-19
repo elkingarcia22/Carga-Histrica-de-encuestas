@@ -298,8 +298,11 @@ export const simulatedDemographicsApprovedMessages = (): ChatMessage[] => [
   {
     id: "msg_assistant_demographics_approved",
     role: "assistant",
-    type: "text",
+    type: "guided_review_step",
     content: "Demográficos aprobados. En el siguiente paso revisaremos las dimensiones detectadas.",
+    nextActions: [
+      { id: "action_start_dimensions", label: "Continuar con dimensiones", actionType: "start_dimensions_review" }
+    ],
     timestamp: new Date(Date.now() - 4000).toISOString(),
   }
 ];
@@ -318,6 +321,62 @@ export const simulatedDemographicsChangesMessages = (): ChatMessage[] => [
     type: "text",
     content: "Entendido. Dejamos los demográficos en revisión para ajustar nombres o inclusiones antes de continuar.",
     timestamp: new Date(Date.now() - 4000).toISOString(),
+  }
+];
+
+export const simulatedDimensionsReviewStartMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_start_dimensions",
+    role: "user",
+    type: "text",
+    content: "Continuar con dimensiones",
+    timestamp: new Date(Date.now() - 3000).toISOString(),
+  },
+  {
+    id: "msg_assistant_dimensions_review",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Ahora revisemos las dimensiones detectadas.\n\nEncontré estas dimensiones:\n1. Liderazgo\n2. Comunicación\n3. Bienestar\n4. Desarrollo\n\n¿Apruebas estas dimensiones?",
+    nextActions: [
+      { id: "action_approve_dimensions", label: "Aprobar dimensiones", actionType: "approve_dimensions" },
+      { id: "action_correct_dimensions", label: "Corregir dimensiones", actionType: "correct_dimensions" },
+      { id: "action_detail_dimensions", label: "Ver detalle", actionType: "detail_dimensions" }
+    ],
+    timestamp: new Date(Date.now() - 2000).toISOString(),
+  }
+];
+
+export const simulatedDimensionsApprovedMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_approve_dimensions",
+    role: "user",
+    type: "text",
+    content: "Aprobar dimensiones",
+    timestamp: new Date(Date.now() - 1500).toISOString(),
+  },
+  {
+    id: "msg_assistant_dimensions_approved",
+    role: "assistant",
+    type: "text",
+    content: "Dimensiones aprobadas. En el siguiente paso revisaremos las preguntas detectadas.",
+    timestamp: new Date(Date.now() - 1000).toISOString(),
+  }
+];
+
+export const simulatedDimensionsChangesMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_correct_dimensions",
+    role: "user",
+    type: "text",
+    content: "Corregir dimensiones",
+    timestamp: new Date(Date.now() - 1500).toISOString(),
+  },
+  {
+    id: "msg_assistant_dimensions_changes",
+    role: "assistant",
+    type: "text",
+    content: "Entendido. Dejamos las dimensiones en revisión para ajustar nombres, inclusiones o agrupaciones antes de continuar.",
+    timestamp: new Date(Date.now() - 1000).toISOString(),
   }
 ];
 

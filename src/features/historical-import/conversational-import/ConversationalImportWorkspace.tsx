@@ -18,7 +18,10 @@ import {
   simulatedFilesChangesMessages,
   simulatedDemographicsReviewStartMessages,
   simulatedDemographicsApprovedMessages,
-  simulatedDemographicsChangesMessages
+  simulatedDemographicsChangesMessages,
+  simulatedDimensionsReviewStartMessages,
+  simulatedDimensionsApprovedMessages,
+  simulatedDimensionsChangesMessages
 } from "./conversationalImportMock";
 
 export function ConversationalImportWorkspace() {
@@ -106,6 +109,23 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "text",
           content: "Detalle de demográficos: Los campos Gerencia y Área parecen jerárquicos. Antigüedad y Cargo son categóricos simples.",
+          timestamp: new Date().toISOString(),
+        }
+      ]);
+    } else if (actionType === "start_dimensions_review") {
+      setMessages((prev) => [...prev, ...simulatedDimensionsReviewStartMessages()]);
+    } else if (actionType === "approve_dimensions") {
+      setMessages((prev) => [...prev, ...simulatedDimensionsApprovedMessages()]);
+    } else if (actionType === "correct_dimensions") {
+      setMessages((prev) => [...prev, ...simulatedDimensionsChangesMessages()]);
+    } else if (actionType === "detail_dimensions") {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_detail_dim_${Date.now()}`,
+          role: "assistant",
+          type: "text",
+          content: "Detalle de dimensiones: Se encontraron 4 dimensiones principales que agrupan las preguntas evaluadas.",
           timestamp: new Date().toISOString(),
         }
       ]);

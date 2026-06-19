@@ -17,7 +17,7 @@ export interface SyntheticMountedSurveyFile {
 export interface SyntheticMountNextAction {
   id: string;
   label: string;
-  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics";
+  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics" | "start_dimensions_review" | "approve_dimensions" | "correct_dimensions" | "detail_dimensions";
 }
 
 export interface ChatMessage {
