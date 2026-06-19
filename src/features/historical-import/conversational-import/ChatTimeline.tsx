@@ -4,12 +4,14 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bot, User } from "lucide-react";
 import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
+import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
 
 interface ChatTimelineProps {
+  onReviewStructure?: () => void;
   messages: ChatMessage[];
 }
 
-export function ChatTimeline({ messages }: ChatTimelineProps) {
+export function ChatTimeline({ messages, onReviewStructure }: ChatTimelineProps) {
   return (
     <ScrollArea className="flex-1 p-4">
       <div className="flex flex-col gap-4">
@@ -70,6 +72,21 @@ export function ChatTimeline({ messages }: ChatTimelineProps) {
                     {msg.content}
                   </CardContent>
                 </Card>
+              )}
+
+
+              {msg.type === "synthetic_file_mount_summary" && (
+                <div className="w-full">
+                  <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-3">
+                    {msg.content}
+                  </div>
+                  <SyntheticMountedFilesPanel
+                    files={msg.files || []}
+                    boundaryNote={msg.boundaryNote}
+                    nextActions={msg.nextActions}
+                    onReviewStructure={onReviewStructure}
+                  />
+                </div>
               )}
 
               {msg.type === "contract_summary" && (

@@ -151,7 +151,7 @@ export function ConversationalImportWorkspace() {
             /* Estado Activo */
             viewMode === "chat" ? (
               <div className="flex-1 flex flex-col min-h-0">
-                <ChatTimeline messages={messages} />
+                <ChatTimeline messages={messages} onReviewStructure={handleReviewStructure} />
                 <MessageComposer />
               </div>
             ) : (

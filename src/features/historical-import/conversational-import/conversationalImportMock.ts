@@ -1,4 +1,4 @@
-import type { ChatMessage, ApprovalBlock, SessionState, MockMapping, MockIssue } from "./conversationalImportTypes";
+import type { ChatMessage, ApprovalBlock, SessionState, MockMapping, MockIssue, SyntheticMountedSurveyFile } from "./conversationalImportTypes";
 
 export const mockMessages: ChatMessage[] = [
   {
@@ -114,6 +114,34 @@ export const mockApprovalBlocks: ApprovalBlock[] = [
   },
 ];
 
+
+export const mockSyntheticFiles: SyntheticMountedSurveyFile[] = [
+  {
+    id: "file_2024",
+    displayName: "encuesta-clima-2024-sintetica.xlsx",
+    periodLabel: "2024",
+    surveyType: "clima",
+    fileKind: "xlsx_mock",
+    source: "synthetic",
+    status: "staged",
+    rowsLabel: "1.2k rows",
+    sheetsLabel: "1 sheet",
+    safetyLabel: "Sandbox",
+  },
+  {
+    id: "file_2025",
+    displayName: "encuesta-clima-2025-sintetica.xlsx",
+    periodLabel: "2025",
+    surveyType: "clima",
+    fileKind: "xlsx_mock",
+    source: "synthetic",
+    status: "staged",
+    rowsLabel: "1.5k rows",
+    sheetsLabel: "1 sheet",
+    safetyLabel: "Sandbox",
+  }
+];
+
 export const mockDemographics = [
   "Gerencia",
   "País",
@@ -188,22 +216,20 @@ export const simulatedMountMessages = (): ChatMessage[] => [
     id: "msg_user_mount",
     role: "user",
     type: "text",
-    content: "Montar archivos sintéticos de encuesta",
+    content: "Montar archivos sintéticos",
     timestamp: new Date(Date.now() - 45000).toISOString(),
   },
   {
     id: "msg_assistant_staged",
     role: "assistant",
-    type: "file_staging",
-    content: "Listo. Preparé archivos sintéticos de encuesta para revisión.",
+    type: "synthetic_file_mount_summary",
+    content: "Listo. Preparé dos archivos sintéticos de encuesta para revisar su estructura antes de generar el comparativo.",
+    boundaryNote: "Sandbox sintético: no se cargaron archivos reales ni se procesaron XLSX reales.",
+    files: mockSyntheticFiles,
+    nextActions: [
+      { id: "action_review", label: "Revisar estructura detectada", actionType: "review_structure" }
+    ],
     timestamp: new Date(Date.now() - 30000).toISOString(),
-  },
-  {
-    id: "msg_assistant_summary",
-    role: "assistant",
-    type: "structure_summary",
-    content: "He analizado la estructura sintética: detecté 6 demográficos, 8 dimensiones y 42 preguntas. Las advertencias de consistencia están listas para tu aprobación.",
-    timestamp: new Date(Date.now() - 15000).toISOString(),
   }
 ];
 

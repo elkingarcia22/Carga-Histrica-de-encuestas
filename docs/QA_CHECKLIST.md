@@ -286,3 +286,21 @@
 - [x] NO_STORAGE
 - [x] NO_PARSER_RUNTIME_IN_UI
 - [x] CHAT_VIS3B_SYNTHETIC_FILE_MOUNT_BUILD_READY
+
+## Phase 4K-CHAT-VIS3B: Synthetic File Mount Flow Build
+- [x] Synthetic mount quick action wired
+- [x] User action rendered in chat
+- [x] Assistant synthetic mount response rendered
+- [x] Synthetic mounted file cards rendered
+- [x] Boundary note rendered
+- [x] Next action "Revisar estructura detectada" rendered
+- [x] No real upload created
+- [x] No file input created
+- [x] No productive file processing
+- [x] No real client data
+- [x] No API connections
+- [x] No storage
+- [x] No parser runtime in UI
+- [x] Build passed
+- [x] Scoped lint passed
+- [x] Tests passed
