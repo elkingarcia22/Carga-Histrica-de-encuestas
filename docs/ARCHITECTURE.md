@@ -206,3 +206,8 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 4. REVIEW_QUESTIONS_STEP
 5. REVIEW_MAPPINGS_STEP
 6. REVIEW_APPROVED_CONTRACT_STEP
+
+
+## Realistic Survey Import Architecture
+- [Realistic Survey Import Architecture](./REALISTIC_SURVEY_IMPORT_ARCHITECTURE.md)
+- [Survey File Analysis Contract](./SURVEY_FILE_ANALYSIS_CONTRACT.md)
