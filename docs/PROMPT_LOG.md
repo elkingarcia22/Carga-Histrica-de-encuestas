@@ -1,5 +1,69 @@
 # Prompt Log
 
+## Fase 4K-CHAT-VIS3A · Synthetic File Mount Flow Architecture
+
+Phase: 4K-CHAT-VIS3A · Synthetic File Mount Flow Architecture
+
+Decision:
+- SYNTHETIC_FILE_MOUNT_FLOW_ARCHITECTURE_LOCKED = YES
+- ENTRY_POINT = QUICK_ACTION_MONTAR_ARCHIVOS_SINTETICOS
+- UPLOAD_MODE = SYNTHETIC_ONLY
+- REAL_UPLOAD_ENABLED = NO
+- FILE_PROCESSING_ENABLED = NO
+- PARSER_RUNTIME_ENABLED_IN_UI = NO
+- NEXT_ACTION = REVIEW_DETECTED_STRUCTURE
+
+Files created/modified:
+- docs/SYNTHETIC_FILE_MOUNT_FLOW_ARCHITECTURE.md
+- docs/PROMPT_LOG.md
+- docs/ARCHITECTURE.md
+- docs/QA_CHECKLIST.md
+
+Architecture summary:
+Defined architecture for the synthetic file mount flow from the initial chat shell. This includes the entry point (quick action), conversation flow, mock session states, synthetic mounted file contract, assistant message contract, and strict boundaries.
+
+State model:
+- INITIAL_CHAT_SHELL
+- MOUNTING_SYNTHETIC_FILES
+- SYNTHETIC_FILES_STAGED
+- READY_TO_REVIEW_STRUCTURE
+- SYNTHETIC_MOUNT_ERROR
+
+Synthetic file contract:
+Defined `SyntheticMountedSurveyFile` with id, displayName, periodLabel, surveyType, fileKind, source, status, rowsLabel, sheetsLabel, and safetyLabel.
+
+Assistant message contract:
+Defined `SyntheticMountAssistantMessage` with files array, boundaryNote, and nextActions.
+
+Boundary rules:
+Strict sandbox enforcement. No real file upload, no processing, no real data, no APIs, no AI.
+
+Next authorized phase:
+- CHAT_VIS3B_SYNTHETIC_FILE_MOUNT_BUILD_READY
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_4K_CHAT_VIS3A_COMPLETE
+SYNTHETIC_FILE_MOUNT_FLOW_ARCHITECTURE_LOCKED
+SYNTHETIC_FILE_MOUNT_ENTRY_POINT_DEFINED
+SYNTHETIC_MOUNT_CONVERSATION_FLOW_DEFINED
+SYNTHETIC_MOUNT_SESSION_STATES_DEFINED
+SYNTHETIC_MOUNTED_FILE_CONTRACT_DEFINED
+SYNTHETIC_MOUNT_ASSISTANT_MESSAGE_CONTRACT_DEFINED
+SYNTHETIC_FILE_CARDS_PRESENTATION_RULES_DEFINED
+REVIEW_DETECTED_STRUCTURE_NEXT_ACTION_DEFINED
+INLINE_REVIEW_REMAINS_HIDDEN_UNTIL_REQUESTED
+NO_REAL_UPLOAD_CREATED
+NO_FILE_INPUT_CREATED
+NO_PRODUCTIVE_FILE_PROCESSING
+NO_REAL_CLIENT_DATA
+NO_INSIGHTS_AI_YET
+NO_API_CONNECTIONS
+NO_STORAGE
+NO_PARSER_RUNTIME_IN_UI
+CHAT_VIS3B_SYNTHETIC_FILE_MOUNT_BUILD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 4K-CHAT-VIS2 · Initial Chat Shell Visual QA and Closure
 
 Phase: 4K-CHAT-VIS2 · Initial Chat Shell Visual QA and Closure

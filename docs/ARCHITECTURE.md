@@ -188,3 +188,4 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - [Conversational Import Closure](./CONVERSATIONAL_IMPORT_CLOSURE.md) - Cierre formal de la experiencia conversacional como primera pantalla.
 - [Conversational Import Next Capability](./CONVERSATIONAL_IMPORT_NEXT_CAPABILITY.md) - Definición de la siguiente capacidad del workspace conversacional.
 - [Inline Structure Review Architecture](./INLINE_STRUCTURE_REVIEW_ARCHITECTURE.md) - Definición de arquitectura para la revisión de estructura inline.
+- [Synthetic File Mount Flow Architecture](./SYNTHETIC_FILE_MOUNT_FLOW_ARCHITECTURE.md) - Definición del flujo de montaje sintético de archivos en el chat.
