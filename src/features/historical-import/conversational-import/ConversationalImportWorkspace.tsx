@@ -27,7 +27,12 @@ import {
   simulatedQuestionsNewReviewMessages,
   simulatedQuestionsHistoricalReviewMessages,
   simulatedQuestionsApprovedMessages,
-  simulatedQuestionsChangesMessages
+  simulatedQuestionsChangesMessages,
+  simulatedMappingsReviewStartMessages,
+  simulatedMappingsPendingReviewMessages,
+  simulatedMappingsAutomaticApprovedMessages,
+  simulatedMappingsApprovedMessages,
+  simulatedMappingsChangesMessages
 } from "./conversationalImportMock";
 
 export function ConversationalImportWorkspace() {
@@ -147,6 +152,27 @@ export function ConversationalImportWorkspace() {
       setMessages((prev) => [...prev, ...simulatedQuestionsApprovedMessages()]);
     } else if (actionType === "correct_questions") {
       setMessages((prev) => [...prev, ...simulatedQuestionsChangesMessages()]);
+    } else if (actionType === "start_mappings_review") {
+      setMessages((prev) => [...prev, ...simulatedMappingsReviewStartMessages()]);
+    } else if (actionType === "review_pending_mappings") {
+      setMessages((prev) => [...prev, ...simulatedMappingsPendingReviewMessages()]);
+    } else if (actionType === "approve_automatic_mappings") {
+      setMessages((prev) => [...prev, ...simulatedMappingsAutomaticApprovedMessages()]);
+    } else if (actionType === "approve_mappings") {
+      setMessages((prev) => [...prev, ...simulatedMappingsApprovedMessages()]);
+    } else if (actionType === "correct_mappings") {
+      setMessages((prev) => [...prev, ...simulatedMappingsChangesMessages()]);
+    } else if (actionType === "detail_mappings") {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_detail_map_${Date.now()}`,
+          role: "assistant",
+          type: "text",
+          content: "Detalle de mapeos: 21 automáticos y 3 pendientes de revisión.",
+          timestamp: new Date().toISOString(),
+        }
+      ]);
     } else if (actionType === "review_structure") {
       handleReviewStructure();
     }

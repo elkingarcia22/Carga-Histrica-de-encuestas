@@ -17,7 +17,7 @@ export interface SyntheticMountedSurveyFile {
 export interface SyntheticMountNextAction {
   id: string;
   label: string;
-  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics" | "start_dimensions_review" | "approve_dimensions" | "correct_dimensions" | "detail_dimensions" | "start_questions_review" | "review_comparable_questions" | "review_new_questions" | "review_historical_questions" | "approve_questions" | "correct_questions";
+  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics" | "start_dimensions_review" | "approve_dimensions" | "correct_dimensions" | "detail_dimensions" | "start_questions_review" | "review_comparable_questions" | "review_new_questions" | "review_historical_questions" | "approve_questions" | "correct_questions" | "start_mappings_review" | "review_pending_mappings" | "approve_automatic_mappings" | "detail_mappings" | "approve_mappings" | "correct_mappings";
 }
 
 export interface ChatMessage {

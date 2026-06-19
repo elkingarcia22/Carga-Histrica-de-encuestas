@@ -446,6 +446,100 @@ export const simulatedQuestionsNewReviewMessages = (): ChatMessage[] => [
   }
 ];
 
+export const simulatedMappingsReviewStartMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_start_mappings",
+    role: "user",
+    type: "text",
+    content: "Continuar con mapeos",
+    timestamp: new Date(Date.now() - 150).toISOString(),
+  },
+  {
+    id: "msg_assistant_mappings_review",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Ahora revisemos cómo quedaron asociadas las preguntas a sus dimensiones.\n\nDetecté mapeos automáticos y algunos que necesitan confirmación.\n\n¿Quieres revisar los mapeos pendientes?",
+    nextActions: [
+      { id: "action_review_pending_mappings", label: "Revisar pendientes", actionType: "review_pending_mappings" },
+      { id: "action_approve_automatic_mappings", label: "Aprobar mapeos automáticos", actionType: "approve_automatic_mappings" },
+      { id: "action_detail_mappings", label: "Ver detalle", actionType: "detail_mappings" }
+    ],
+    timestamp: new Date(Date.now() - 100).toISOString(),
+  }
+];
+
+export const simulatedMappingsPendingReviewMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_review_pending_mappings",
+    role: "user",
+    type: "text",
+    content: "Ver pendientes",
+    timestamp: new Date(Date.now() - 90).toISOString(),
+  },
+  {
+    id: "msg_assistant_mappings_pending",
+    role: "assistant",
+    type: "guided_review_step",
+    content: "Pendientes: 3 preguntas necesitan confirmación.\n\nRevisemos estos mapeos.",
+    nextActions: [
+      { id: "action_approve_mappings", label: "Aprobar mapeos", actionType: "approve_mappings" },
+      { id: "action_correct_mappings", label: "Corregir mapeos", actionType: "correct_mappings" }
+    ],
+    timestamp: new Date(Date.now() - 80).toISOString(),
+  }
+];
+
+export const simulatedMappingsAutomaticApprovedMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_approve_automatic_mappings",
+    role: "user",
+    type: "text",
+    content: "Aprobar mapeos automáticos",
+    timestamp: new Date(Date.now() - 80).toISOString(),
+  },
+  {
+    id: "msg_assistant_mappings_automatic_approved",
+    role: "assistant",
+    type: "text",
+    content: "Automáticos: 21 preguntas asociadas con alta confianza.\n\nHe marcado estos mapeos como aprobados. Puedes seguir con los pendientes o aprobar el bloque completo.",
+    timestamp: new Date(Date.now() - 70).toISOString(),
+  }
+];
+
+export const simulatedMappingsApprovedMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_approve_mappings",
+    role: "user",
+    type: "text",
+    content: "Aprobar mapeos",
+    timestamp: new Date(Date.now() - 50).toISOString(),
+  },
+  {
+    id: "msg_assistant_mappings_approved",
+    role: "assistant",
+    type: "text",
+    content: "Mapeos aprobados. En el siguiente paso revisaremos el contrato sintético antes de preparar el comparativo.",
+    timestamp: new Date(Date.now() - 20).toISOString(),
+  }
+];
+
+export const simulatedMappingsChangesMessages = (): ChatMessage[] => [
+  {
+    id: "msg_user_correct_mappings",
+    role: "user",
+    type: "text",
+    content: "Corregir mapeos",
+    timestamp: new Date(Date.now() - 50).toISOString(),
+  },
+  {
+    id: "msg_assistant_mappings_changes",
+    role: "assistant",
+    type: "text",
+    content: "Entendido. Dejamos los mapeos en revisión para ajustar asociaciones entre preguntas y dimensiones antes de continuar.",
+    timestamp: new Date(Date.now() - 20).toISOString(),
+  }
+];
+
 export const simulatedQuestionsHistoricalReviewMessages = (): ChatMessage[] => [
   {
     id: "msg_user_review_historical",
@@ -477,8 +571,11 @@ export const simulatedQuestionsApprovedMessages = (): ChatMessage[] => [
   {
     id: "msg_assistant_questions_approved",
     role: "assistant",
-    type: "text",
+    type: "guided_review_step",
     content: "Preguntas aprobadas. En el siguiente paso revisaremos los mapeos pregunta-dimensión.",
+    nextActions: [
+      { id: "action_start_mappings", label: "Continuar con mapeos", actionType: "start_mappings_review" }
+    ],
     timestamp: new Date(Date.now() - 200).toISOString(),
   }
 ];
