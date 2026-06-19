@@ -185,3 +185,4 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - [CONVERSATIONAL_IMPORT_ARCHITECTURE.md](./CONVERSATIONAL_IMPORT_ARCHITECTURE.md)
 
 - [Conversational Import Mock Contract](./CONVERSATIONAL_IMPORT_MOCK_CONTRACT.md) - Definición del contrato sintético para el Workspace Conversacional.
+- [Conversational Import Closure](./CONVERSATIONAL_IMPORT_CLOSURE.md) - Cierre formal de la experiencia conversacional como primera pantalla.

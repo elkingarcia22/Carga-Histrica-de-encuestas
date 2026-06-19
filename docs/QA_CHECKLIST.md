@@ -185,6 +185,16 @@
 - [x] Technical QA (Build, scoped lint, test, coverage: PASS).
 - [x] Clean diff hygiene.
 
+## Fase 4K-CHAT6: Conversational Import Formal Closure
+- [x] Ejecutar preflight y verificar main branch limpio.
+- [x] Crear documento `CONVERSATIONAL_IMPORT_CLOSURE.md`.
+- [x] Registrar la decisión de cierre de la pantalla y boundaries.
+- [x] Confirmar ausencia de código real o conexiones en la versión actual.
+- [x] Validar que las resoluciones de CHAT4 y CHAT5 se mantengan (Visual Tokens y Arbitrary values).
+- [x] Modificar `PROMPT_LOG.md` con los marcadores de cierre correspondientes.
+- [x] Modificar `ARCHITECTURE.md` para enlazar el closure.
+- [x] No source changes, no tests changes, clean diff hygiene.
+
 ## Fase 4K-CHAT5: Conversational Import Visual Utility Hotfix
 - [x] Ejecutar preflight y verificar main branch limpio.
 - [x] Remover Tailwind arbitrary values de ChatTimeline, ApprovalProgressTracker, ConversationalImportWorkspace.
