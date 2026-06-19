@@ -218,3 +218,12 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - **No ejecuta parser**: Este módulo no procesa archivos.
 - **No conecta IA**: No tiene conexión con servicios de IA externos.
 - **Uso futuro**: Será la base tipada sobre la cual se implementará el deterministic parser y la capa de validación conversacional posterior.
+
+### Mock UBITS Catalogs Module
+- **Ubicación**: `src/features/historical-import/mock-ubits-catalogs/`
+- **Propósito**: Define los catálogos mock de UBITS para simular matching y homologación en la arquitectura realista.
+- **Catálogos incluidos**: Dimensiones, preguntas, demográficos, valores demográficos, usuarios, tipos de encuesta y aliases.
+- **No ejecuta matching**: Este módulo solo expone datos estáticos y tipos.
+- **No procesa archivos**: Sin capacidades de parser.
+- **No conecta IA**: Completamente aislado del razonamiento semántico.
+- **Uso futuro**: Será consultado por las fases de simulación de AI o matching determinista para encontrar correspondencias.
