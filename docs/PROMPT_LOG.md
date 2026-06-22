@@ -1,5 +1,30 @@
 # Prompt Log
 
+## Fase 8D-H0 · Composer Attachment Entry Architecture Lock
+
+Phase: Fase 8D-H0 · Composer Attachment Entry Architecture Lock
+
+Summary:
+- Product UX correction documented.
+- Upload entrypoint locked to composer plus/attachment control.
+- Chat body responsibility separated from composer responsibility.
+- Safety gate preserved.
+- No implementation created in this phase.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_8D_H0_COMPOSER_ATTACHMENT_ENTRY_ARCHITECTURE_COMPLETE
+COMPOSER_ATTACHMENT_ENTRY_ARCHITECTURE_LOCKED
+UPLOAD_ENTRYPOINT_COMPOSER_PLUS
+UPLOAD_PANEL_INSIDE_CHAT_BODY_DISABLED_FOR_FUTURE_BUILD
+CHAT_BODY_RESERVED_FOR_MESSAGES_RESULTS_AND_DECISIONS
+COMPOSER_SUPPORTS_TEXT_AND_ATTACHMENTS
+SAFETY_GATE_REMAINS_BEFORE_PARSING
+NO_RUNTIME_IMPLEMENTATION_YET
+NO_UI_CHANGES_IN_THIS_PHASE
+PHASE_8D_H1_COMPOSER_ATTACHMENT_ENTRY_BUILD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 8D · Conversational Decision Review Build
 
 Phase: Fase 8D · Conversational Decision Review Build

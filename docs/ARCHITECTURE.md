@@ -333,3 +333,10 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Only one decision is reviewed at a time to prevent cognitive overload.
 - UI state tracks `currentDecisionIndex` locally.
 - No Claude, no storage, no backend, no matching engine.
+
+### Composer Attachment Entry Architecture
+- Upload entrypoint moves to bottom composer.
+- Chat body remains for conversation, summaries, warnings and decisions.
+- Safety gate remains before parsing.
+- Parser/assembler remain unchanged.
+- First implementation will happen in 8D-H1.
