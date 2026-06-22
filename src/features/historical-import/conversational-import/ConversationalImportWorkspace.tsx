@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "./conversationalImportTypes";
 import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
 import { mapDecisionToExplanation } from "./decisionExplanationMapper";
+import { runHistoricalLoadDraftIntegration, mapHistoricalLoadDraftToSummary } from "./historicalLoadDraftIntegrationMapper";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -352,17 +353,27 @@ export function ConversationalImportWorkspace() {
             nextActions: nextMapped.actions,
             timestamp: new Date().toISOString(),
           });
+          return newMessages;
         } else {
           newMessages.push({
-            id: `msg_assistant_all_done_${crypto.randomUUID()}`,
+            id: `msg_assistant_drafting_${ts}`,
             role: "assistant",
-            type: "text",
-            content: "Ya revisamos las decisiones iniciales de estructura. La carga histórica está lista para procesarse una vez apruebes el contrato final.",
-            timestamp: new Date().toISOString(),
+            type: "analysis_progress",
+            content: "Estoy preparando el borrador de carga histórica…\nEstoy consolidando homologaciones, decisiones y riesgos en un resumen de revisión…",
+            timestamp: isoString,
           });
-        }
 
-        return newMessages;
+          setTimeout(() => {
+            setMessages((current) => {
+              const withoutProgress = current.filter(m => m.id !== `msg_assistant_drafting_${ts}`);
+              const draft = runHistoricalLoadDraftIntegration(draftContract, stagedFiles, newResolvedIds);
+              const draftMessages = mapHistoricalLoadDraftToSummary(draft, `msg_assistant_draft_${ts}`, isoString);
+              return [...withoutProgress, ...draftMessages];
+            });
+          }, 600);
+
+          return newMessages;
+        }
       });
       return;
     }
@@ -557,16 +568,26 @@ export function ConversationalImportWorkspace() {
           }
         ]);
       } else {
+        const genTs = crypto.randomUUID();
+        const genIso = new Date().toISOString();
         setMessages((prev) => [
           ...prev,
           {
-            id: `msg_assistant_info_${crypto.randomUUID()}`,
+            id: `msg_assistant_drafting_${genTs}`,
             role: "assistant",
-            type: "text",
-            content: "Todavía hay decisiones pendientes antes de procesar.",
-            timestamp: new Date().toISOString(),
+            type: "analysis_progress",
+            content: "Estoy preparando el borrador de carga histórica…\nEstoy consolidando homologaciones, decisiones y riesgos en un resumen de revisión…",
+            timestamp: genIso,
           }
         ]);
+        setTimeout(() => {
+          setMessages((current) => {
+            const withoutProgress = current.filter(m => m.id !== `msg_assistant_drafting_${genTs}`);
+            const draft = runHistoricalLoadDraftIntegration(finalContract, files, []);
+            const draftMessages = mapHistoricalLoadDraftToSummary(draft, `msg_assistant_draft_${genTs}`, genIso);
+            return [...withoutProgress, ...draftMessages];
+          });
+        }, 600);
       }
 
     } catch {

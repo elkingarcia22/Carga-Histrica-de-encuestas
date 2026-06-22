@@ -467,3 +467,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Draft output will feed a conversational summary, not a dashboard.
 - Draft review remains local-only, privacy-preserving and human-reviewed.
 - No UI/runtime integration, storage, backend or Claude connection is introduced in this phase.
+
+### Historical Load Draft Integration Build
+- Historical Load Draft builder is integrated into the conversational flow after matching review and decision resolution.
+- Draft output is mapped to a conversational summary.
+- One-decision-at-a-time remains active for unresolved decisions.
+- No automatic approval, storage, backend, Claude or comparison dashboard is introduced.
