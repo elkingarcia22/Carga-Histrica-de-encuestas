@@ -359,3 +359,13 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Ambigüedades requieren usuario.
 - IA/Claude no es source of truth.
 - No implementación en 9A.
+
+### Matching Engine Type Scaffolding
+- Ubicación: `src/features/historical-import/matching-engine/`.
+- Scaffolding de tipos y capabilities.
+- No matching runtime todavía.
+- No UI.
+- No Claude.
+- No storage.
+- No datos globales.
+- Ambigüedades requieren usuario.
