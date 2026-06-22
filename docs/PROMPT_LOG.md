@@ -11,7 +11,7 @@ Summary:
 - No builder/runtime/UI/chat integration created.
 - Product context preserved as Carga Histórica de Encuestas.
 
-Commit SHA: PENDING_COMMIT
+Commit SHA: 8e75e33
 
 PHASE_10B_HISTORICAL_LOAD_DRAFT_TYPE_SCAFFOLDING_COMPLETE
 HISTORICAL_LOAD_DRAFT_MODULE_CREATED
