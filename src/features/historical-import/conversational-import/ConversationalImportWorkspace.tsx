@@ -100,13 +100,94 @@ export function ConversationalImportWorkspace() {
         timestamp: isoString,
       },
       {
-        id: `msg_assistant_upload_panel_${crypto.randomUUID()}`,
+        id: `msg_assistant_upload_prompt_${crypto.randomUUID()}`,
         role: "assistant",
-        type: "sandbox_upload_panel",
-        content: "Selecciona los archivos que quieres cargar en el sandbox.",
+        type: "text",
+        content: "Por favor utiliza el botón de adjuntar (clip) en el cuadro de texto inferior para subir tu archivo (.xlsx, .xls o .csv).",
         timestamp: isoString,
       }
     ]);
+  };
+
+  const handleComposerSend = (text: string, files: File[]) => {
+    const ts = crypto.randomUUID();
+    const isoString = new Date().toISOString();
+
+    if (!chatStarted) {
+      setChatStarted(true);
+      setViewMode("chat");
+    }
+
+    const userMessageContent = files.length > 0
+      ? text.trim() ? `${text}\n\n[Archivo(s) adjunto(s): ${files.map(f => f.name).join(", ")}]` : `[Archivo(s) adjunto(s): ${files.map(f => f.name).join(", ")}]`
+      : text;
+
+    setMessages(prev => {
+      const baseMessages = prev.length === 0 || !chatStarted ? [initialMessages[0]] : prev;
+      return [
+        ...baseMessages,
+        {
+          id: `msg_user_${ts}`,
+          role: "user",
+          type: "text",
+          content: userMessageContent,
+          timestamp: isoString,
+        }
+      ];
+    });
+
+    if (files.length > 0) {
+      setStagedFiles(files);
+
+      const sandboxMetadataFiles = files.map(f => ({
+        name: f.name,
+        size: f.size,
+        type: f.type || f.name.split('.').pop() || "unknown",
+        lastModified: f.lastModified,
+        rawFile: f
+      }));
+
+      setMessages(prev => {
+        const fileCardsMessage: import("./conversationalImportTypes").ChatMessage = {
+          id: `msg_assistant_files_selected_${crypto.randomUUID()}`,
+          role: "assistant",
+          type: "sandbox_files_selected",
+          content: "Recibí los archivos en modo sandbox.\nTodavía no los estoy procesando.\nPrimero validaré si pertenecen a una sola encuesta y si hay señales de datos personales.\nSi detecto más de una encuesta, te pediré elegir cuál procesar primero.",
+          sandboxFiles: sandboxMetadataFiles,
+          timestamp: new Date().toISOString(),
+        };
+
+        const safetyGateMessage: import("./conversationalImportTypes").ChatMessage = {
+          id: `msg_assistant_safety_gate_${crypto.randomUUID()}`,
+          role: "assistant",
+          type: "analysis_summary_blocks",
+          content: files.length > 1 ? "⚠️ Detecté varios archivos.\nEn la siguiente fase validaré si pertenecen a una misma encuesta o a encuestas diferentes.\nSi son encuestas diferentes, solo podrás procesar una a la vez.\n\nSiguiente paso: validación preliminar" : "Siguiente paso: validación preliminar\nAnálisis local in-memory: Sin subida a servidores, sin Claude, sin almacenamiento. Posibilidad de detectar PII. Debes confirmar para continuar.",
+          visualBlocks: [
+            { icon: "file", title: "Revisar formatos", description: "Verificar compatibilidad" },
+            { icon: "users", title: "Identificar PII", description: "La detección se realizará cuando el parser local lea encabezados en una fase posterior." },
+            { icon: "arrow_right", title: "Confirmar", description: "Confirmar si quieres continuar con análisis local" }
+          ],
+          nextActions: [
+            { id: "continue_local_analysis", label: "Continuar análisis local", actionType: "start_local_analysis" },
+            { id: "cancel_analysis", label: "Cancelar", actionType: "cancel_analysis" }
+          ],
+          timestamp: new Date().toISOString(),
+        };
+
+        return [...prev, fileCardsMessage, safetyGateMessage];
+      });
+    } else if (text.trim()) {
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `msg_assistant_generic_${crypto.randomUUID()}`,
+          role: "assistant",
+          type: "text",
+          content: "Por favor adjunta el archivo de la encuesta si deseas procesarla, o descríbela para que te guíe.",
+          timestamp: new Date().toISOString(),
+        }
+      ]);
+    }
   };
 
   const handleSandboxFilesSelected = (files: import("./SandboxUploadPanel").SandboxFileMetadata[]) => {
@@ -504,9 +585,8 @@ export function ConversationalImportWorkspace() {
                 Monta archivos sintéticos para revisar su estructura antes de generar el comparativo.
               </p>
 
-              {/* Composer Grande */}
               <div className="w-full mb-8 max-w-2xl mx-auto px-4">
-                <MessageComposer />
+                <MessageComposer onSend={handleComposerSend} />
               </div>
 
               {/* Quick Actions pills/botones sobrios en fila */}
@@ -538,7 +618,7 @@ export function ConversationalImportWorkspace() {
                   onSandboxFilesSelected={handleSandboxFilesSelected}
                 />
                 <div className="p-4 mx-auto w-full max-w-4xl shrink-0">
-                  <MessageComposer />
+                  <MessageComposer onSend={handleComposerSend} />
                 </div>
               </div>
             ) : (

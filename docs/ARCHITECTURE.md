@@ -340,3 +340,12 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Safety gate remains before parsing.
 - Parser/assembler remain unchanged.
 - First implementation will happen in 8D-H1.
+
+### Fase 8D-H1 · Composer Attachment Entry Build
+- Upload entrypoint moved to bottom composer.
+- Composer supports text and file attachments.
+- Selected files appear as compact attachment chips/cards.
+- Chat body no longer acts as primary upload panel.
+- Safety gate remains before parsing.
+- Parser/assembler unchanged.
+- Visible UI checkpoint reached.
