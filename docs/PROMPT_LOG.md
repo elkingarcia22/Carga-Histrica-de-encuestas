@@ -1,5 +1,25 @@
 # Prompt Log
 
+## Fase 8D-H4B-H1 · Auto Analysis UX Whitespace Hotfix
+
+Phase: Fase 8D-H4B-H1 · Auto Analysis UX Whitespace Hotfix
+
+Summary:
+- Removed trailing whitespace from src/features/historical-import/conversational-import/surveyGroupingMapper.ts.
+- No logic changes.
+- No UX changes.
+- Verified git show --check HEAD passes clean.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_8D_H4B_H1_WHITESPACE_HOTFIX_COMPLETE
+SURVEY_GROUPING_MAPPER_TRAILING_WHITESPACE_REMOVED
+NO_LOGIC_CHANGES
+NO_UX_CHANGES
+GIT_SHOW_CHECK_PASSED
+PHASE_8D_H4B_READY_FOR_FORMAL_CLOSURE
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 8D-H4A · Auto Analysis, Survey Grouping & Decision UX Architecture Lock
 
 Phase: Fase 8D-H4A · Auto Analysis, Survey Grouping & Decision UX Architecture Lock
