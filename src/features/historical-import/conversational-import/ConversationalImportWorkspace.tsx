@@ -568,8 +568,8 @@ export function ConversationalImportWorkspace() {
           }
         ]);
       } else {
-        const genTs = crypto.randomUUID();
-        const genIso = new Date().toISOString();
+        const genTs = "draft_generation_after_matching";
+        const genIso = "2024-01-01T12:00:00.000Z";
         setMessages((prev) => [
           ...prev,
           {
