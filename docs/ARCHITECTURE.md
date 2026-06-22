@@ -449,3 +449,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Draft summarizes historical load readiness, not survey comparison.
 - Draft stores mappings, survey-only entities, PII policy, unresolved decisions and audit trail.
 - Draft does not create global data, persist records, call APIs, connect Claude or enable dashboards.
+
+### Historical Load Draft Type Scaffolding
+- Type scaffolding created for the Historical Load Draft preparation contract.
+- No builder, runtime, UI integration, storage, backend or Claude connection was introduced.
+- Draft remains a local preparation contract for Carga Histórica de Encuestas.
+- Comparison dashboard remains out of scope.
