@@ -8,6 +8,7 @@ export interface SandboxFileMetadata {
   size: number;
   type: string;
   lastModified: number;
+  rawFile?: File;
 }
 
 interface SandboxUploadPanelProps {
@@ -50,6 +51,7 @@ export function SandboxUploadPanel({ onFilesSelected }: SandboxUploadPanelProps)
       size: file.size,
       type: file.type || file.name.split('.').pop() || "unknown",
       lastModified: file.lastModified,
+      rawFile: file,
     }));
     onFilesSelected(filesArray);
   };

@@ -2,7 +2,7 @@ import type { ChatMessage } from "./conversationalImportTypes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, User, Loader2, FileText, Users, Database, ArrowRight } from "lucide-react";
+import { Bot, User, Loader2, FileText, Users, Database, ArrowRight, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
@@ -158,6 +158,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
                         const Icon = block.icon === "file" ? FileText :
                                      block.icon === "users" ? Users :
                                      block.icon === "database" ? Database :
+                                     block.icon === "alert" || block.icon === "warning" ? AlertCircle :
                                      block.icon === "arrow_right" ? ArrowRight : FileText;
                         return (
                           <Card key={idx} className="bg-card border-border shadow-sm">
@@ -173,6 +174,25 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
                           </Card>
                         );
                       })}
+                    </div>
+                  )}
+                  {msg.nextActions && msg.nextActions.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {msg.nextActions.map((action) => (
+                        <Button
+                          key={action.id}
+                          variant={action.actionType === "start_local_analysis" ? "default" : "outline"}
+                          size="sm"
+                          className="text-xs"
+                          onClick={() => {
+                            if (onAction) {
+                              onAction(action.actionType);
+                            }
+                          }}
+                        >
+                          {action.label}
+                        </Button>
+                      ))}
                     </div>
                   )}
                 </div>

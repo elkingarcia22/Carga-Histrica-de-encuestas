@@ -1058,3 +1058,11 @@
 - [x] No storage created.
 - [x] No real client data.
 - [x] No productive processing.
+## Fase 8B · Parser + Contract Chat Integration Build
+- [x] Parser + contract assembler integrated into chat flow.
+- [x] Safety gate added before local parsing.
+- [x] Structural analysis messages added.
+- [x] Draft contract summary mapped to conversational UI.
+- [x] First required user decision rendered.
+- [x] UI visible checkpoint reached.
+- [x] Claude/storage/matching remain disconnected.

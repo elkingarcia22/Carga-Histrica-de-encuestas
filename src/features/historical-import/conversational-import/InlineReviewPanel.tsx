@@ -153,7 +153,7 @@ export function InlineReviewPanel() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <pre className="text-xs bg-black/80 text-white p-4 rounded-md overflow-x-auto">
+              <pre className="text-xs bg-black/80 text-foreground p-4 rounded-md overflow-x-auto">
                 {JSON.stringify({
                   version: "1.0",
                   metadata: { files: 2, timestamp: new Date().toISOString() },

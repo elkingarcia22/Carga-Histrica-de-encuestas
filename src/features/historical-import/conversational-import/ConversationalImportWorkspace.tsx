@@ -1,4 +1,8 @@
 import { useState } from "react";
+import { parseWorkbookPreview } from "../local-parser/localParser";
+import { assembleDraftSurveyFileAnalysisContract } from "../contract-assembler";
+import { mockUbitsCatalogs } from "../mock-ubits-catalogs/mockUbitsCatalogs";
+import { mapContractToSummaryBlock } from "./parserContractChatMapper";
 import { MessageComposer } from "./MessageComposer";
 import { ChatHistorySidebar } from "./ChatHistorySidebar";
 import { ChatTimeline } from "./ChatTimeline";
@@ -42,6 +46,7 @@ export function ConversationalImportWorkspace() {
   const [chatStarted, setChatStarted] = useState(false);
   const [viewMode, setViewMode] = useState<"chat" | "review">("chat");
   const [activeSessionId, setActiveSessionId] = useState("sess_1");
+  const [stagedFiles, setStagedFiles] = useState<File[]>([]);
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
@@ -102,6 +107,12 @@ export function ConversationalImportWorkspace() {
   const handleSandboxFilesSelected = (files: import("./SandboxUploadPanel").SandboxFileMetadata[]) => {
     const ts = crypto.randomUUID();
     const isoString = new Date().toISOString();
+
+    const rawFiles = files.map(f => f.rawFile).filter(Boolean) as File[];
+    if (rawFiles.length > 0) {
+      setStagedFiles(rawFiles);
+    }
+
     setMessages((prev) => {
       // Remove the upload panel
       const withoutPanel = prev.filter(m => m.type !== "sandbox_upload_panel");
@@ -119,11 +130,15 @@ export function ConversationalImportWorkspace() {
         id: `msg_assistant_safety_gate_${crypto.randomUUID()}`,
         role: "assistant",
         type: "analysis_summary_blocks",
-        content: files.length > 1 ? "⚠️ Detecté varios archivos.\nEn la siguiente fase validaré si pertenecen a una misma encuesta o a encuestas diferentes.\nSi son encuestas diferentes, solo podrás procesar una a la vez.\n\nSiguiente paso: validación preliminar" : "Siguiente paso: validación preliminar",
+        content: files.length > 1 ? "⚠️ Detecté varios archivos.\nEn la siguiente fase validaré si pertenecen a una misma encuesta o a encuestas diferentes.\nSi son encuestas diferentes, solo podrás procesar una a la vez.\n\nSiguiente paso: validación preliminar" : "Siguiente paso: validación preliminar\nAnálisis local in-memory: Sin subida a servidores, sin Claude, sin almacenamiento. Posibilidad de detectar PII. Debes confirmar para continuar.",
         visualBlocks: [
           { icon: "file", title: "Revisar formatos", description: "Verificar compatibilidad" },
           { icon: "users", title: "Identificar PII", description: "La detección se realizará cuando el parser local lea encabezados en una fase posterior." },
-          { icon: "arrow_right", title: "Confirmar", description: "Confirmar si quieres continuar (fuera de scope actual)" }
+          { icon: "arrow_right", title: "Confirmar", description: "Confirmar si quieres continuar con análisis local" }
+        ],
+        nextActions: [
+          { id: "continue_local_analysis", label: "Continuar análisis local", actionType: "start_local_analysis" },
+          { id: "cancel_analysis", label: "Cancelar", actionType: "cancel_analysis" }
         ],
         timestamp: isoString,
       };
@@ -150,6 +165,14 @@ export function ConversationalImportWorkspace() {
   };
 
   const handleAction = (actionType: string) => {
+    if (actionType === "start_local_analysis") {
+      void handleLocalAnalysisStart();
+      return;
+    }
+    if (actionType === "cancel_analysis") {
+      setMessages((prev) => [...prev, { id: `msg_cancel_${Date.now()}`, role: "assistant", type: "text", content: "Análisis cancelado.", timestamp: new Date().toISOString() }]);
+      return;
+    }
     if (actionType === "start_guided_review") {
       setMessages((prev) => [...prev, ...simulatedGuidedReviewStartMessages()]);
     } else if (actionType === "approve_files") {
@@ -245,6 +268,112 @@ export function ConversationalImportWorkspace() {
     }
   };
 
+  const handleLocalAnalysisStart = async () => {
+    if (stagedFiles.length === 0) {
+      setMessages((prev) => [...prev, { id: `msg_err_${Date.now()}`, role: "assistant", type: "warning", content: "No hay archivo cargado en memoria local.", timestamp: new Date().toISOString() }]);
+      return;
+    }
+
+    const file = stagedFiles[0];
+    const ts = crypto.randomUUID();
+    const isoString = new Date().toISOString();
+
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `msg_assistant_parsing_${ts}`,
+        role: "assistant",
+        type: "analysis_progress",
+        content: "Estoy analizando la estructura del archivo…",
+        timestamp: isoString,
+      }
+    ]);
+
+    try {
+      const preview = await parseWorkbookPreview(file);
+
+      if (preview.errors && preview.errors.length > 0) {
+        setMessages((prev) => [
+          ...prev.filter(m => m.type !== "analysis_progress"),
+          {
+            id: `msg_assistant_parse_error_${crypto.randomUUID()}`,
+            role: "assistant",
+            type: "warning",
+            content: `No pude analizar la estructura del archivo.\nRazón: ${preview.errors[0]?.message || "Error desconocido"}`,
+            timestamp: new Date().toISOString(),
+          }
+        ]);
+        return;
+      }
+
+      const contract = assembleDraftSurveyFileAnalysisContract({
+        parsedPreview: preview,
+        mockCatalogs: mockUbitsCatalogs,
+        mode: "INTERACTIVE",
+        options: {}
+      });
+
+      const summaryBlock = mapContractToSummaryBlock(contract);
+
+      setMessages((prev) => [
+        ...prev.filter(m => m.type !== "analysis_progress"),
+        {
+          id: `msg_assistant_summary_${crypto.randomUUID()}`,
+          role: "assistant",
+          type: "analysis_summary_blocks",
+          content: summaryBlock.content,
+          visualBlocks: summaryBlock.visualBlocks,
+          timestamp: new Date().toISOString(),
+        }
+      ]);
+
+      if (contract.decisions && contract.decisions.length > 0) {
+        // One decision at a time
+        const decision = contract.decisions[0];
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `msg_assistant_decision_${crypto.randomUUID()}`,
+            role: "assistant",
+            type: "guided_review_step",
+            content: `**Decisión requerida:**\n${decision.promptDescription}`,
+            nextActions: [
+              {
+                id: "resolve",
+                label: "Resolver",
+                actionType: "decision_action_" + decision.id,
+              }
+            ],
+            timestamp: new Date().toISOString(),
+          }
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `msg_assistant_info_${crypto.randomUUID()}`,
+            role: "assistant",
+            type: "text",
+            content: "Todavía hay decisiones pendientes antes de preparar el comparativo.",
+            timestamp: new Date().toISOString(),
+          }
+        ]);
+      }
+
+    } catch {
+      setMessages((prev) => [
+        ...prev.filter(m => m.type !== "analysis_progress"),
+        {
+          id: `msg_assistant_parse_fatal_${crypto.randomUUID()}`,
+          role: "assistant",
+          type: "warning",
+          content: "No pude analizar la estructura del archivo.\nRazón: parser_failed",
+          timestamp: new Date().toISOString(),
+        }
+      ]);
+    }
+  };
+
   return (
     <div className="flex h-screen w-screen bg-muted/30 p-6 gap-6 font-sans overflow-hidden">
       {/* Left Sidebar */}
@@ -272,7 +401,7 @@ export function ConversationalImportWorkspace() {
                 className="rounded-lg text-xs"
                 onClick={() => setViewMode("chat")}
               >
-                Chat
+                Cha
               </Button>
               <Button
                 variant={viewMode === "review" ? "secondary" : "ghost"}

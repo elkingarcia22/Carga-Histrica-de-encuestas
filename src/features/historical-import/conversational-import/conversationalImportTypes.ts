@@ -1,5 +1,5 @@
 export type MessageRole = "system" | "assistant" | "user";
-export type MessageType = "text" | "file_staging" | "structure_summary" | "warning" | "approval_request" | "correction" | "contract_summary" | "synthetic_file_mount_summary" | "guided_review_step" | "analysis_progress" | "demographics_guided_review" | "analysis_summary_blocks" | "sandbox_upload_panel" | "sandbox_files_selected";
+export type MessageType = "text" | "file_staging" | "structure_summary" | "warning" | "approval_request" | "correction" | "contract_summary" | "synthetic_file_mount_summary" | "guided_review_step" | "analysis_progress" | "demographics_guided_review" | "analysis_summary_blocks" | "sandbox_upload_panel" | "sandbox_files_selected" | "decision_request" | "parser_structural_summary";
 
 export interface SyntheticMountedSurveyFile {
   id: string;
@@ -17,7 +17,7 @@ export interface SyntheticMountedSurveyFile {
 export interface SyntheticMountNextAction {
   id: string;
   label: string;
-  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics" | "start_dimensions_review" | "approve_dimensions" | "correct_dimensions" | "detail_dimensions" | "start_questions_review" | "review_comparable_questions" | "review_new_questions" | "review_historical_questions" | "approve_questions" | "correct_questions" | "start_mappings_review" | "review_pending_mappings" | "approve_automatic_mappings" | "detail_mappings" | "approve_mappings" | "correct_mappings" | "start_contract_review" | "approve_contract" | "review_contract_summary" | "return_to_mappings";
+  actionType: "review_structure" | "change_files" | "view_format" | "start_guided_review" | "approve_files" | "detail_files" | "approve_demographics" | "correct_demographics" | "detail_demographics" | "start_dimensions_review" | "approve_dimensions" | "correct_dimensions" | "detail_dimensions" | "start_questions_review" | "review_comparable_questions" | "review_new_questions" | "review_historical_questions" | "approve_questions" | "correct_questions" | "start_mappings_review" | "review_pending_mappings" | "approve_automatic_mappings" | "detail_mappings" | "approve_mappings" | "correct_mappings" | "start_contract_review" | "approve_contract" | "review_contract_summary" | "return_to_mappings" | "start_local_analysis" | "cancel_analysis" | string;
 }
 
 export interface ChatMessage {
@@ -31,6 +31,7 @@ export interface ChatMessage {
   boundaryNote?: string;
   nextActions?: SyntheticMountNextAction[];
   visualBlocks?: { icon?: string; title: string; description: string; status?: string }[];
+  decision?: { id: string; question: string; options: { id: string; label: string; value: string }[] };
 }
 
 export interface MockMapping {
@@ -47,6 +48,13 @@ export type SessionState =
   | "EMPTY_SESSION"
   | "AWAITING_FILES"
   | "FILES_STAGED"
+  | "SAFETY_GATE_PENDING"
+  | "PARSING_IN_PROGRESS"
+  | "PARSER_PREVIEW_READY"
+  | "CONTRACT_ASSEMBLY_IN_PROGRESS"
+  | "DRAFT_CONTRACT_READY"
+  | "DECISION_REVIEW_IN_PROGRESS"
+  | "BLOCKED_BY_ERROR"
   | "ANALYZING_MOCK"
   | "STRUCTURE_PROPOSED"
   | "REVIEWING_DEMOGRAPHICS"

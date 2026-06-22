@@ -317,3 +317,12 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Sin UI.
 - Sin Claude.
 - Sin matching engine real.
+
+### Parser + Contract Chat Integration Build
+- Existing chat upload flow now orchestrates parser and assembler.
+- Safety gate required before file parsing.
+- Parser and assembler remain UI-agnostic.
+- Chat presents compact structural summary.
+- One decision at a time.
+- First visible UI checkpoint.
+- No Claude, storage, backend or matching.
