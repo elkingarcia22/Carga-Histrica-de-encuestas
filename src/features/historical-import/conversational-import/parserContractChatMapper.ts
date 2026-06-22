@@ -1,6 +1,7 @@
 import type { ParsedWorkbookPreview } from "../local-parser/types";
 import type { RequiredUserDecision, AnalysisWarning } from "../survey-file-analysis/types";
 import type { ContractAssemblyResult } from "../contract-assembler/types";
+import { mapWarningToExplanation } from "./warningExplanationMapper";
 
 export function mapParserPreviewToMessage(preview: ParsedWorkbookPreview): string {
   if (preview.errors && preview.errors.length > 0) {
@@ -53,11 +54,14 @@ export function mapContractToSummaryBlock(contractResult: ContractAssemblyResult
     return pA - pB;
   });
 
-  const visualBlocks = sortedWarnings.slice(0, 3).map((issue: AnalysisWarning) => ({
-    icon: issue.severity === "critical" ? "alert" : "warning",
-    title: issue.id,
-    description: issue.message
-  }));
+  const visualBlocks = sortedWarnings.slice(0, 3).map((issue: AnalysisWarning) => {
+    const explanation = mapWarningToExplanation(issue.id);
+    return {
+      icon: explanation.severity === "critical" || explanation.severity === "high" ? "alert" : "warning",
+      title: explanation.detectedIssue,
+      description: explanation.whyItMatters
+    };
+  });
 
   return {
     content,

@@ -13,10 +13,9 @@ import { DetectedStructurePanel } from "./DetectedStructurePanel";
 import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "./conversationalImportTypes";
 import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
-import { mapDecisionToChatActions } from "./decisionReviewMapper";
+import { mapDecisionToExplanation } from "./decisionExplanationMapper";
 import {
   initialMessages,
-  simulatedCompareMessages,
   simulatedFormatMessages,
   quickActionItems,
   simulatedGuidedReviewStartMessages,
@@ -174,7 +173,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_group_decision_${crypto.randomUUID()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: "¿Cuál encuesta quieres procesar primero?",
+            content: "Encontré más de una encuesta en los archivos cargados.\n\n**Qué detecté:**\nDetecté grupos que parecen corresponder a encuestas distintas, por ejemplo " + groups.map(g => g.name).join(", ") + ".\n\n**Impacto en la carga histórica:**\nLa carga histórica se procesa una encuesta a la vez. Si mezclamos ciclos o estructuras distintas, las preguntas, demográficos y participantes pueden quedar mal clasificados.\n\n**Recomendación:**\nTe recomiendo procesar primero el grupo con mayor consistencia estructural.\n\n**¿Cuál encuesta quieres procesar primero?**",
             nextActions: [
               ...groups.map(g => ({
                 id: `process_${g.id}`,
@@ -247,7 +246,7 @@ export function ConversationalImportWorkspace() {
           id: `msg_assistant_group_decision_${crypto.randomUUID()}`,
           role: "assistant",
           type: "guided_review_step",
-          content: "¿Cuál encuesta quieres procesar primero?",
+          content: "Encontré más de una encuesta en los archivos cargados.\n\n**Qué detecté:**\nDetecté grupos que parecen corresponder a encuestas distintas, por ejemplo " + groups.map(g => g.name).join(", ") + ".\n\n**Impacto en la carga histórica:**\nLa carga histórica se procesa una encuesta a la vez. Si mezclamos ciclos o estructuras distintas, las preguntas, demográficos y participantes pueden quedar mal clasificados.\n\n**Recomendación:**\nTe recomiendo procesar primero el grupo con mayor consistencia estructural.\n\n**¿Cuál encuesta quieres procesar primero?**",
           nextActions: [
             ...groups.map(g => ({
               id: `process_${g.id}`,
@@ -268,12 +267,6 @@ export function ConversationalImportWorkspace() {
     if (groups.length <= 1 && rawFiles.length > 0) {
       setTimeout(() => handleLocalAnalysisStart(rawFiles), 500);
     }
-  };
-
-  const handleCompareClimate = () => {
-    setMessages(simulatedCompareMessages());
-    setChatStarted(true);
-    setViewMode("chat");
   };
 
   const handleReviewStructure = () => {
@@ -298,18 +291,13 @@ export function ConversationalImportWorkspace() {
     }
 
     if (actionType.startsWith("decision_action_")) {
-      // Format is decision_action_{id}_{action}
-      // Assuming {id} has no underscores, or we can just reconstruct it. Actually, decision id might be anything.
-      // Better way: in mapDecisionToChatActions, we used baseActionId = `decision_action_${decision.id}`
-      // So actionType is `${baseActionId}_${actionSuffix}`
-      // Let's find the current decision.
       if (!draftContract || !draftContract.requiredUserDecisions) return;
 
       const currentDecision = draftContract.requiredUserDecisions[currentDecisionIndex];
       if (!currentDecision) return;
 
-      const mapped = mapDecisionToChatActions(currentDecision);
-      const clickedAction = [mapped.primaryAction, ...mapped.secondaryActions].find(a => a.actionType === actionType);
+      const mapped = mapDecisionToExplanation(currentDecision);
+      const clickedAction = mapped.actions.find(a => a.actionType === actionType);
 
       const userMessageText = clickedAction ? clickedAction.label : "Decisión tomada";
 
@@ -332,25 +320,35 @@ export function ConversationalImportWorkspace() {
           timestamp: isoString,
         });
 
-        newMessages.push({
-          id: `msg_assistant_confirm_${ts}`,
-          role: "assistant",
-          type: "text",
-          content: "Listo, dejé registrada esta decisión para esta importación.\nSigamos con la siguiente decisión.",
-          timestamp: new Date().toISOString(),
-        });
+        if (clickedAction && clickedAction.consequence) {
+          newMessages.push({
+            id: `msg_assistant_confirm_${ts}`,
+            role: "assistant",
+            type: "text",
+            content: `Entendido. ${clickedAction.consequence}`,
+            timestamp: new Date().toISOString(),
+          });
+        } else {
+          newMessages.push({
+            id: `msg_assistant_confirm_${ts}`,
+            role: "assistant",
+            type: "text",
+            content: "Listo, dejé registrada esta decisión para esta importación.",
+            timestamp: new Date().toISOString(),
+          });
+        }
 
         if (nextIndex < draftContract.requiredUserDecisions.length) {
           const nextDecision = draftContract.requiredUserDecisions[nextIndex];
-          const nextMapped = mapDecisionToChatActions(nextDecision);
+          const nextMapped = mapDecisionToExplanation(nextDecision);
           const totalRemaining = draftContract.requiredUserDecisions.length - nextIndex;
 
           newMessages.push({
             id: `msg_assistant_next_decision_${crypto.randomUUID()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: `Quedan ${totalRemaining} decisiones pendientes. Revisemos una por una.\n\n**${nextMapped.title}**\n${nextMapped.description}${nextMapped.helperText ? `\n\n*${nextMapped.helperText}*` : ""}`,
-            nextActions: [nextMapped.primaryAction, ...nextMapped.secondaryActions],
+            content: `Quedan ${totalRemaining} decisiones pendientes.\n\n**${nextMapped.title}**\n\n**Qué detecté:**\n${nextMapped.detectedIssue}\n\n**Por qué importa:**\n${nextMapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${nextMapped.historicalLoadImpact}\n${nextMapped.recommendation ? `\n**Recomendación:**\n${nextMapped.recommendation}\n` : ""}\n**${nextMapped.primaryQuestion}**`,
+            nextActions: nextMapped.actions,
             timestamp: new Date().toISOString(),
           });
         } else {
@@ -358,7 +356,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_all_done_${crypto.randomUUID()}`,
             role: "assistant",
             type: "text",
-            content: "Ya revisamos las decisiones iniciales de estructura. Todavía falta una QA antes de preparar el comparativo.",
+            content: "Ya revisamos las decisiones iniciales de estructura. La carga histórica está lista para procesarse una vez apruebes el contrato final.",
             timestamp: new Date().toISOString(),
           });
         }
@@ -530,7 +528,7 @@ export function ConversationalImportWorkspace() {
       if (contract.decisions && contract.decisions.length > 0) {
         // One decision at a time
         const decision = contract.decisions[0];
-        const mapped = mapDecisionToChatActions(decision);
+        const mapped = mapDecisionToExplanation(decision);
 
         setMessages((prev) => [
           ...prev,
@@ -538,8 +536,8 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_decision_${crypto.randomUUID()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: `Quedan ${contract.decisions!.length} decisiones pendientes. Revisemos una por una.\n\n**${mapped.title}**\n${mapped.description}${mapped.helperText ? `\n\n*${mapped.helperText}*` : ""}`,
-            nextActions: [mapped.primaryAction, ...mapped.secondaryActions],
+            content: `Quedan ${contract.decisions!.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
+            nextActions: mapped.actions,
             timestamp: new Date().toISOString(),
           }
         ]);
@@ -550,7 +548,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_info_${crypto.randomUUID()}`,
             role: "assistant",
             type: "text",
-            content: "Todavía hay decisiones pendientes antes de preparar el comparativo.",
+            content: "Todavía hay decisiones pendientes antes de procesar.",
             timestamp: new Date().toISOString(),
           }
         ]);
@@ -597,7 +595,7 @@ export function ConversationalImportWorkspace() {
                 className="rounded-lg text-xs"
                 onClick={() => setViewMode("chat")}
               >
-                Cha
+                Chat
               </Button>
               <Button
                 variant={viewMode === "review" ? "secondary" : "ghost"}
@@ -617,10 +615,10 @@ export function ConversationalImportWorkspace() {
             /* Estado Inicial Centrado */
             <div className="flex-1 flex flex-col items-center justify-center p-6 max-w-2xl mx-auto w-full">
               <h2 className="text-3xl font-bold tracking-tight text-center mb-2 text-foreground">
-                Hola, ¿qué encuesta quieres <span className="text-ai-gradient font-bold">comparar</span>?
+                Hola, ¿qué encuesta quieres <span className="text-ai-gradient font-bold">procesar</span>?
               </h2>
               <p className="text-sm text-muted-foreground text-center mb-8">
-                Monta archivos sintéticos para revisar su estructura antes de generar el comparativo.
+                Sube tu archivo para iniciar el proceso de carga histórica.
               </p>
 
               <div className="w-full mb-8 max-w-2xl mx-auto px-4">
@@ -630,12 +628,12 @@ export function ConversationalImportWorkspace() {
               {/* Quick Actions pills/botones sobrios en fila */}
               <div className="flex flex-wrap items-center justify-center gap-3">
                 {quickActionItems.map((item) => (
+                  item.id === "comparar" ? null :
                   <Button
                     key={item.id}
                     variant="outline"
                     onClick={() => {
                       if (item.id === "cargar") handleSandboxUploadStart();
-                      else if (item.id === "comparar") handleCompareClimate();
                       else if (item.id === "revisar") handleReviewStructure();
                       else if (item.id === "formato") handleExpectedFormat();
                     }}

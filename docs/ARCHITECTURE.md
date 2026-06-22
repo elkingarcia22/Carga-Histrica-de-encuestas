@@ -412,3 +412,11 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Each decision explains what was detected, why it matters, historical load impact, recommendation and contextual actions.
 - Each action explains its consequence.
 - Comparison dashboard remains out of scope.
+
+### Decision Explanation UX Build
+- User-facing decisions now hide technical codes.
+- Decisions explain detected issue, why it matters, historical load impact, recommendation and contextual actions.
+- Warnings explain user impact instead of showing raw warning codes.
+- Action consequences are visible.
+- Product context remains Carga Histórica de Encuestas.
+- Comparison dashboard remains out of scope.

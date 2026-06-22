@@ -1,9 +1,8 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
-import { mapDecisionToChatActions } from "./decisionReviewMapper";
+import { mapDecisionToExplanation } from "./decisionExplanationMapper";
 
 export interface InlineReviewPanelProps {
   contract?: SurveyFileAnalysisContract | null;
@@ -16,7 +15,7 @@ export function InlineReviewPanel({ contract, currentDecisionIndex = 0, onAction
     ? contract.requiredUserDecisions[currentDecisionIndex]
     : null;
 
-  const mappedDecision = currentDecision ? mapDecisionToChatActions(currentDecision) : null;
+  const mappedDecision = currentDecision ? mapDecisionToExplanation(currentDecision) : null;
 
   return (
     <ScrollArea className="h-full bg-background">
@@ -51,29 +50,27 @@ export function InlineReviewPanel({ contract, currentDecisionIndex = 0, onAction
               <CardHeader>
                 <CardTitle className="text-md flex items-center justify-between">
                   <span>{mappedDecision.title}</span>
-                  {mappedDecision.riskLevel === "high" && <Badge variant="destructive">Alto Riesgo</Badge>}
                 </CardTitle>
-                <CardDescription className="whitespace-pre-wrap">
-                  {mappedDecision.description}
-                  {mappedDecision.helperText && (
-                    <span className="block mt-2 italic">{mappedDecision.helperText}</span>
+                <CardDescription className="whitespace-pre-wrap mt-2 flex flex-col gap-2">
+                  <p><strong>Qué detecté:</strong> {mappedDecision.detectedIssue}</p>
+                  <p><strong>Por qué importa:</strong> {mappedDecision.whyItMatters}</p>
+                  <p><strong>Impacto:</strong> {mappedDecision.historicalLoadImpact}</p>
+                  {mappedDecision.recommendation && (
+                    <p><strong>Recomendación:</strong> {mappedDecision.recommendation}</p>
                   )}
+                  <p className="mt-2 font-medium text-foreground">{mappedDecision.primaryQuestion}</p>
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2">
-                <Button
-                  onClick={() => onAction?.(mappedDecision.primaryAction.actionType)}
-                  variant="default"
-                >
-                  {mappedDecision.primaryAction.label}
-                </Button>
-                {mappedDecision.secondaryActions.map((action) => (
+                {mappedDecision.actions.map((action) => (
                   <Button
                     key={action.id}
                     onClick={() => onAction?.(action.actionType)}
-                    variant="outline"
+                    variant={action.intent === "primary" ? "default" : action.intent === "danger" ? "destructive" : "outline"}
+                    className="flex flex-col items-start h-auto py-2"
                   >
-                    {action.label}
+                    <span>{action.label}</span>
+                    {action.consequence && <span className="text-[10px] font-normal opacity-80 mt-0.5">{action.consequence}</span>}
                   </Button>
                 ))}
               </CardContent>
