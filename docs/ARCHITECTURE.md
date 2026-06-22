@@ -349,3 +349,13 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Safety gate remains before parsing.
 - Parser/assembler unchanged.
 - Visible UI checkpoint reached.
+
+### Matching Engine Architecture
+- Documento fuente: `docs/MATCHING_ENGINE_ARCHITECTURE.md`.
+- Matching Engine será determinístico.
+- No parsea archivos.
+- No renderiza UI.
+- No crea datos globales.
+- Ambigüedades requieren usuario.
+- IA/Claude no es source of truth.
+- No implementación en 9A.
