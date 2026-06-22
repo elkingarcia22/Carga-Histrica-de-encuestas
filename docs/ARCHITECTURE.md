@@ -350,6 +350,14 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Parser/assembler unchanged.
 - Visible UI checkpoint reached.
 
+### Chat Scroll & Attachment Layout Hotfix Architecture
+- Chat messages area owns scroll.
+- Composer remains fixed/sticky at bottom.
+- Upload file grid removed from chat body.
+- Composer owns attachment chips.
+- Chat body shows compact file summary only.
+- No parser/assembler changes.
+
 ### Matching Engine Architecture
 - Documento fuente: `docs/MATCHING_ENGINE_ARCHITECTURE.md`.
 - Matching Engine será determinístico.

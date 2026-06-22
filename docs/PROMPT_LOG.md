@@ -1,5 +1,30 @@
 # Prompt Log
 
+## Fase 8D-H3A · Chat Scroll & Attachment Layout Architecture Lock
+
+Phase: Fase 8D-H3A · Chat Scroll & Attachment Layout Architecture Lock
+
+Summary:
+- Visual blocker documented.
+- Chat scroll architecture locked.
+- Composer fixed/sticky behavior locked.
+- File grid inside chat body disabled for future hotfix.
+- Compact file summary pattern documented.
+- No implementation created in this phase.
+
+PHASE_8D_H3A_CHAT_SCROLL_ATTACHMENT_LAYOUT_ARCHITECTURE_COMPLETE
+CHAT_SCROLL_ATTACHMENT_LAYOUT_ARCHITECTURE_LOCKED
+CHAT_MESSAGES_CONTAINER_SCROLLS
+COMPOSER_REMAINS_FIXED_OR_STICKY_BOTTOM
+CHAT_CONTENT_HAS_SAFE_BOTTOM_PADDING
+UPLOAD_FILE_GRID_INSIDE_CHAT_BODY_DISABLED
+CHAT_BODY_FILE_SUMMARY_COMPACT
+ATTACHMENT_CHIPS_LIVE_IN_COMPOSER
+NO_RUNTIME_IMPLEMENTATION_YET
+NO_UI_CHANGES_IN_THIS_PHASE
+PHASE_8D_H3B_CHAT_SCROLL_ATTACHMENT_LAYOUT_HOTFIX_BUILD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 8E · Conversational Decision Review QA
 
 Phase: Fase 8E · Conversational Decision Review QA
@@ -8413,7 +8438,7 @@ Summary:
 - Matching runtime remains out of scope.
 - UI/Claude/storage remain disconnected.
 
-Commit SHA: PENDING_COMMIT
+Commit SHA: a3fa141488ce40b50249bde7fdc0ab638302b2c6
 
 PHASE_9B_MATCHING_ENGINE_TYPE_SCAFFOLDING_COMPLETE
 MATCHING_ENGINE_MODULE_CREATED
