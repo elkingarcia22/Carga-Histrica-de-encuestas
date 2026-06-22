@@ -23,7 +23,6 @@ export function buildHistoricalLoadDraft(
 
   const surveyGroupId = (sourceSurveyGroup as { id?: string })?.id || 'unknown-group';
   const cycleId = (historicalCycle as { id?: string })?.id || 'unknown-cycle';
-  
   const draftId = `historical-load-draft:${surveyGroupId}:${cycleId}`;
 
   const blockingRisksCount = warnings.filter(
@@ -95,11 +94,11 @@ export function buildHistoricalLoadDraft(
     sourceFiles,
     surveyIdentity,
     historicalCycle,
-    demographicsMapping: { status: 'mocked' },
-    demographicValuesMapping: { status: 'mocked' },
-    questionsMapping: { status: 'mocked' },
-    dimensionsMapping: { status: 'mocked' },
-    responseScalesMapping: { status: 'mocked' },
+    demographicsMapping: { status: 'needs_review' },
+    demographicValuesMapping: { status: 'needs_review' },
+    questionsMapping: { status: 'needs_review' },
+    dimensionsMapping: { status: 'needs_review' },
+    responseScalesMapping: { status: 'needs_review' },
     participantPolicy,
     surveyOnlyEntities: {
       demographicValues: [],
