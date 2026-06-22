@@ -3,6 +3,7 @@ import { parseWorkbookPreview } from "../local-parser/localParser";
 import { assembleDraftSurveyFileAnalysisContract } from "../contract-assembler";
 import { mockUbitsCatalogs } from "../mock-ubits-catalogs/mockUbitsCatalogs";
 import { mapContractToSummaryBlock } from "./parserContractChatMapper";
+import { detectSurveyGroups } from "./surveyGroupingMapper";
 import { MessageComposer } from "./MessageComposer";
 import { ChatHistorySidebar } from "./ChatHistorySidebar";
 import { ChatTimeline } from "./ChatTimeline";
@@ -138,6 +139,7 @@ export function ConversationalImportWorkspace() {
 
     if (files.length > 0) {
       setStagedFiles(files);
+      const groups = detectSurveyGroups(files);
 
       const sandboxMetadataFiles = files.map(f => ({
         name: f.name,
@@ -152,30 +154,47 @@ export function ConversationalImportWorkspace() {
           id: `msg_assistant_files_selected_${crypto.randomUUID()}`,
           role: "assistant",
           type: "sandbox_files_selected",
-          content: "Recibí los archivos en modo sandbox.\nTodavía no los estoy procesando.\nPrimero validaré si pertenecen a una sola encuesta y si hay señales de datos personales.\nSi detecto más de una encuesta, te pediré elegir cuál procesar primero.",
+          content: "Recibí los archivos en modo sandbox.",
           sandboxFiles: sandboxMetadataFiles,
           timestamp: new Date().toISOString(),
         };
 
-        const safetyGateMessage: import("./conversationalImportTypes").ChatMessage = {
-          id: `msg_assistant_safety_gate_${crypto.randomUUID()}`,
+        const noticeMsg: import("./conversationalImportTypes").ChatMessage = {
+          id: `msg_assistant_notice_${crypto.randomUUID()}`,
           role: "assistant",
-          type: "analysis_summary_blocks",
-          content: files.length > 1 ? "⚠️ Detecté varios archivos.\nEn la siguiente fase validaré si pertenecen a una misma encuesta o a encuestas diferentes.\nSi son encuestas diferentes, solo podrás procesar una a la vez.\n\nSiguiente paso: validación preliminar" : "Siguiente paso: validación preliminar\nAnálisis local in-memory: Sin subida a servidores, sin Claude, sin almacenamiento. Posibilidad de detectar PII. Debes confirmar para continuar.",
-          visualBlocks: [
-            { icon: "file", title: "Revisar formatos", description: "Verificar compatibilidad" },
-            { icon: "users", title: "Identificar PII", description: "La detección se realizará cuando el parser local lea encabezados en una fase posterior." },
-            { icon: "arrow_right", title: "Confirmar", description: "Confirmar si quieres continuar con análisis local" }
-          ],
-          nextActions: [
-            { id: "continue_local_analysis", label: "Continuar análisis local", actionType: "start_local_analysis" },
-            { id: "cancel_analysis", label: "Cancelar", actionType: "cancel_analysis" }
-          ],
+          type: "text",
+          content: "Analizaré estos archivos localmente en tu navegador. No se subirán a servidores ni se enviarán a Claude.",
           timestamp: new Date().toISOString(),
         };
 
-        return [...prev, fileCardsMessage, safetyGateMessage];
+        const baseMessages = [...prev, fileCardsMessage, noticeMsg];
+
+        if (groups.length > 1) {
+          const decisionMsg: import("./conversationalImportTypes").ChatMessage = {
+            id: `msg_assistant_group_decision_${crypto.randomUUID()}`,
+            role: "assistant",
+            type: "guided_review_step",
+            content: "¿Cuál encuesta quieres procesar primero?",
+            nextActions: [
+              ...groups.map(g => ({
+                id: `process_${g.id}`,
+                label: `Procesar ${g.name}`,
+                actionType: `start_local_analysis`
+              })),
+              { id: "view_groups", label: "Ver detalle de grupos", actionType: "detail_groups" },
+              { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
+            ],
+            timestamp: new Date().toISOString(),
+          };
+          return [...baseMessages, decisionMsg];
+        }
+
+        return baseMessages;
       });
+
+      if (groups.length <= 1) {
+        setTimeout(() => handleLocalAnalysisStart(files), 500);
+      }
     } else if (text.trim()) {
       setMessages(prev => [
         ...prev,
@@ -198,6 +217,7 @@ export function ConversationalImportWorkspace() {
     if (rawFiles.length > 0) {
       setStagedFiles(rawFiles);
     }
+    const groups = detectSurveyGroups(rawFiles);
 
     setMessages((prev) => {
       // Remove the upload panel
@@ -207,30 +227,47 @@ export function ConversationalImportWorkspace() {
         id: `msg_assistant_files_selected_${ts}`,
         role: "assistant",
         type: "sandbox_files_selected",
-        content: "Recibí los archivos en modo sandbox.\nTodavía no los estoy procesando.\nPrimero validaré si pertenecen a una sola encuesta y si hay señales de datos personales.\nSi detecto más de una encuesta, te pediré elegir cuál procesar primero.",
+        content: "Recibí los archivos en modo sandbox.",
         sandboxFiles: files,
         timestamp: isoString,
       };
 
-      const safetyGateMessage: import("./conversationalImportTypes").ChatMessage = {
-        id: `msg_assistant_safety_gate_${crypto.randomUUID()}`,
+      const noticeMsg: import("./conversationalImportTypes").ChatMessage = {
+        id: `msg_assistant_notice_${crypto.randomUUID()}`,
         role: "assistant",
-        type: "analysis_summary_blocks",
-        content: files.length > 1 ? "⚠️ Detecté varios archivos.\nEn la siguiente fase validaré si pertenecen a una misma encuesta o a encuestas diferentes.\nSi son encuestas diferentes, solo podrás procesar una a la vez.\n\nSiguiente paso: validación preliminar" : "Siguiente paso: validación preliminar\nAnálisis local in-memory: Sin subida a servidores, sin Claude, sin almacenamiento. Posibilidad de detectar PII. Debes confirmar para continuar.",
-        visualBlocks: [
-          { icon: "file", title: "Revisar formatos", description: "Verificar compatibilidad" },
-          { icon: "users", title: "Identificar PII", description: "La detección se realizará cuando el parser local lea encabezados en una fase posterior." },
-          { icon: "arrow_right", title: "Confirmar", description: "Confirmar si quieres continuar con análisis local" }
-        ],
-        nextActions: [
-          { id: "continue_local_analysis", label: "Continuar análisis local", actionType: "start_local_analysis" },
-          { id: "cancel_analysis", label: "Cancelar", actionType: "cancel_analysis" }
-        ],
-        timestamp: isoString,
+        type: "text",
+        content: "Analizaré estos archivos localmente en tu navegador. No se subirán a servidores ni se enviarán a Claude.",
+        timestamp: new Date().toISOString(),
       };
 
-      return [...withoutPanel, fileCardsMessage, safetyGateMessage];
+      const baseMessages = [...withoutPanel, fileCardsMessage, noticeMsg];
+
+      if (groups.length > 1) {
+        const decisionMsg: import("./conversationalImportTypes").ChatMessage = {
+          id: `msg_assistant_group_decision_${crypto.randomUUID()}`,
+          role: "assistant",
+          type: "guided_review_step",
+          content: "¿Cuál encuesta quieres procesar primero?",
+          nextActions: [
+            ...groups.map(g => ({
+              id: `process_${g.id}`,
+              label: `Procesar ${g.name}`,
+              actionType: `start_local_analysis`
+            })),
+            { id: "view_groups", label: "Ver detalle de grupos", actionType: "detail_groups" },
+            { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
+          ],
+          timestamp: new Date().toISOString(),
+        };
+        return [...baseMessages, decisionMsg];
+      }
+
+      return baseMessages;
     });
+
+    if (groups.length <= 1 && rawFiles.length > 0) {
+      setTimeout(() => handleLocalAnalysisStart(rawFiles), 500);
+    }
   };
 
   const handleCompareClimate = () => {
@@ -426,13 +463,14 @@ export function ConversationalImportWorkspace() {
     }
   };
 
-  const handleLocalAnalysisStart = async () => {
-    if (stagedFiles.length === 0) {
+  const handleLocalAnalysisStart = async (filesToAnalyze?: File[]) => {
+    const files = filesToAnalyze || stagedFiles;
+    if (files.length === 0) {
       setMessages((prev) => [...prev, { id: `msg_err_${Date.now()}`, role: "assistant", type: "warning", content: "No hay archivo cargado en memoria local.", timestamp: new Date().toISOString() }]);
       return;
     }
 
-    const file = stagedFiles[0];
+    const file = files[0];
     const ts = crypto.randomUUID();
     const isoString = new Date().toISOString();
 

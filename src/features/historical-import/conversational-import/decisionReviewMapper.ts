@@ -23,13 +23,13 @@ export function mapDecisionToChatActions(decision: RequiredUserDecision): Mapped
         riskLevel: "high",
         primaryAction: {
           id: `${baseActionId}_exclude`,
-          label: "Omitir columna",
+          label: "Excluir columnas PII",
           actionType: `${baseActionId}_exclude`,
         },
         secondaryActions: [
           {
             id: `${baseActionId}_accept`,
-            label: "Aceptar riesgo",
+            label: "Continuar con alerta",
             actionType: `${baseActionId}_accept`,
           },
         ],
@@ -54,7 +54,7 @@ export function mapDecisionToChatActions(decision: RequiredUserDecision): Mapped
           },
           {
             id: `${baseActionId}_ignore`,
-            label: "No crear",
+            label: "Solicitar ajuste",
             actionType: `${baseActionId}_ignore`,
           },
         ],
@@ -86,13 +86,13 @@ export function mapDecisionToChatActions(decision: RequiredUserDecision): Mapped
         description: decision.promptDescription,
         primaryAction: {
           id: `${baseActionId}_confirm`,
-          label: "Confirmar nueva pregunta",
+          label: "Confirmar pregunta nueva",
           actionType: `${baseActionId}_confirm_new`,
         },
         secondaryActions: [
           {
             id: `${baseActionId}_non_comparable`,
-            label: "Marcar como no comparable",
+            label: "Marcar no comparable",
             actionType: `${baseActionId}_non_comparable`,
           },
         ],
@@ -105,13 +105,13 @@ export function mapDecisionToChatActions(decision: RequiredUserDecision): Mapped
         description: decision.promptDescription,
         primaryAction: {
           id: `${baseActionId}_resolve`,
-          label: "Resolver ahora",
+          label: "Resolver según columna",
           actionType: `${baseActionId}_resolve`,
         },
         secondaryActions: [
           {
             id: `${baseActionId}_skip`,
-            label: "Revisar siguiente",
+            label: "Ignorar ambigüedad",
             actionType: `${baseActionId}_skip`,
           },
         ],

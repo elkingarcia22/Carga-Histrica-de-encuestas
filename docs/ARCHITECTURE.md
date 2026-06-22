@@ -395,3 +395,13 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Report is revealed progressively.
 - Files are grouped by survey/cycle when possible.
 - Decision actions are contextual, not generic.
+
+### Auto Analysis, Survey Grouping & Decision UX Build
+
+- Local analysis starts automatically after attachment submission.
+- Blocking local analysis confirmation removed.
+- Non-blocking local analysis notice added.
+- Thinking/progress states added.
+- Multi-survey grouping added.
+- Survey group selection decision uses contextual actions.
+- Generic decision actions removed.
