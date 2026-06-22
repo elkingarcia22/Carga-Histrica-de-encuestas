@@ -65,19 +65,19 @@ export interface HistoricalLoadDraft {
 }
 
 export interface HistoricalLoadDraftCapabilities {
-  isTypeScaffoldingOnly: true;
-  builderImplemented: false;
-  uiIntegrated: false;
-  storageEnabled: false;
-  backendEnabled: false;
-  claudeEnabled: false;
-  createsGlobalData: false;
-  comparisonOutputEnabled: false;
+  isTypeScaffoldingOnly: boolean;
+  builderImplemented: boolean;
+  uiIntegrated: boolean;
+  storageEnabled: boolean;
+  backendEnabled: boolean;
+  claudeEnabled: boolean;
+  createsGlobalData: boolean;
+  comparisonOutputEnabled: boolean;
 }
 
 export const HISTORICAL_LOAD_DRAFT_CAPABILITIES: HistoricalLoadDraftCapabilities = {
-  isTypeScaffoldingOnly: true,
-  builderImplemented: false,
+  isTypeScaffoldingOnly: false,
+  builderImplemented: true,
   uiIntegrated: false,
   storageEnabled: false,
   backendEnabled: false,
@@ -85,3 +85,17 @@ export const HISTORICAL_LOAD_DRAFT_CAPABILITIES: HistoricalLoadDraftCapabilities
   createsGlobalData: false,
   comparisonOutputEnabled: false,
 };
+
+export interface BuildHistoricalLoadDraftInput {
+  sourceSurveyGroup: unknown;
+  sourceFiles: unknown[];
+  surveyIdentity: unknown;
+  historicalCycle: unknown;
+  assembledContractSummary: unknown;
+  matchingCandidates: unknown[];
+  resolvedDecisions: unknown[];
+  unresolvedDecisions: unknown[];
+  warnings: unknown[];
+  auditEvents: HistoricalLoadAuditTrailEvent[];
+  participantPolicy: HistoricalLoadPiiPolicy;
+}

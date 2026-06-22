@@ -455,3 +455,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - No builder, runtime, UI integration, storage, backend or Claude connection was introduced.
 - Draft remains a local preparation contract for Carga Histórica de Encuestas.
 - Comparison dashboard remains out of scope.
+
+### Historical Load Draft Builder
+- Deterministic builder implemented for Historical Load Draft.
+- Builder creates local preparation contract from assembled contract, matching decisions and readiness signals.
+- Builder does not integrate with UI/chat.
+- Builder does not persist data, create global records, call APIs, connect Claude or enable comparison dashboards.
