@@ -405,3 +405,10 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Multi-survey grouping added.
 - Survey group selection decision uses contextual actions.
 - Generic decision actions removed.
+
+### Decision Explanation UX Architecture
+- Product context is Carga Histórica de Encuestas.
+- Technical decision/warning codes must not be shown as user-facing copy.
+- Each decision explains what was detected, why it matters, historical load impact, recommendation and contextual actions.
+- Each action explains its consequence.
+- Comparison dashboard remains out of scope.
