@@ -461,3 +461,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Builder creates local preparation contract from assembled contract, matching decisions and readiness signals.
 - Builder does not integrate with UI/chat.
 - Builder does not persist data, create global records, call APIs, connect Claude or enable comparison dashboards.
+
+### Historical Load Draft Integration Architecture
+- Historical Load Draft will be built after matching review and required decision resolution.
+- Draft output will feed a conversational summary, not a dashboard.
+- Draft review remains local-only, privacy-preserving and human-reviewed.
+- No UI/runtime integration, storage, backend or Claude connection is introduced in this phase.

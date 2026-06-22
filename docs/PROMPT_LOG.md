@@ -1,5 +1,42 @@
 # Prompt Log
 
+## Fase 10D · Historical Load Draft Integration Architecture
+
+Phase: Fase 10D · Historical Load Draft Integration Architecture
+
+Summary:
+- Historical Load Draft integration architecture locked.
+- Integration point defined after matching review and decision resolution.
+- Input and output mapping to conversational summary defined.
+- Human review, data minimization and privacy policies defined.
+- Product context preserved as Carga Histórica de Encuestas.
+- Comparison dashboard remains out of scope.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_10D_HISTORICAL_LOAD_DRAFT_INTEGRATION_ARCHITECTURE_COMPLETE
+HISTORICAL_LOAD_DRAFT_INTEGRATION_ARCHITECTURE_LOCKED
+PRODUCT_CONTEXT_CARGA_HISTORICA_DE_ENCUESTAS
+DRAFT_BUILT_AFTER_REQUIRED_DECISIONS
+DRAFT_BUILDER_RUNS_AFTER_MATCHING_REVIEW
+DRAFT_OUTPUT_FEEDS_CONVERSATIONAL_SUMMARY
+DRAFT_REVIEW_REMAINS_LOCAL_ONLY
+ONE_DECISION_AT_A_TIME_REMAINS
+HUMAN_REVIEW_POLICY_DEFINED
+DATA_MINIMIZATION_POLICY_DEFINED
+NO_GLOBAL_DATA_CREATION
+NO_AUTOMATIC_APPROVAL
+NO_UI_INTEGRATION_IN_THIS_PHASE
+NO_RUNTIME_INTEGRATION_IN_THIS_PHASE
+NO_STORAGE_CREATED
+NO_BACKEND_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_10E_HISTORICAL_LOAD_DRAFT_INTEGRATION_BUILD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 10C-R · Historical Load Draft Builder Revalidation
 
 Phase: Fase 10C-R · Historical Load Draft Builder Revalidation
