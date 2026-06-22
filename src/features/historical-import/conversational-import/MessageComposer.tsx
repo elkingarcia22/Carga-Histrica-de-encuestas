@@ -53,19 +53,19 @@ export function MessageComposer({ onSend, disabled }: MessageComposerProps) {
       />
 
       {stagedFiles.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-8 mt-2">
+        <div className="flex flex-wrap gap-2 mb-8 mt-2 overflow-hidden">
           {stagedFiles.map((f, i) => (
-            <div key={i} className="flex items-center gap-2 bg-muted border border-border rounded-md px-3 py-1.5 text-sm">
-              <FileIcon className="w-4 h-4 text-muted-foreground" />
-              <div className="flex flex-col">
-                <span className="font-medium text-xs text-foreground truncate max-w-[150px]">{f.name}</span>
-                <span className="text-[10px] text-muted-foreground">
+            <div key={i} className="flex items-center gap-2 bg-muted border border-border rounded-md px-3 py-1.5 text-sm max-w-full min-w-0">
+              <FileIcon className="w-4 h-4 shrink-0 text-muted-foreground" />
+              <div className="flex flex-col min-w-0">
+                <span className="font-medium text-xs text-foreground truncate">{f.name}</span>
+                <span className="text-[10px] text-muted-foreground truncate">
                   {(f.size / 1024).toFixed(1)} KB • {f.name.split('.').pop()}
                 </span>
               </div>
               <button
                 onClick={() => removeFile(i)}
-                className="ml-1 text-muted-foreground hover:text-foreground transition-colors"
+                className="ml-1 shrink-0 text-muted-foreground hover:text-foreground transition-colors"
                 title="Cancelar adjunto"
               >
                 <X className="w-4 h-4" />

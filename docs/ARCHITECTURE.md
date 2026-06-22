@@ -377,3 +377,13 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - No storage.
 - No datos globales.
 - Ambigüedades requieren usuario.
+
+### Chat Scroll & Attachment Layout Hotfix Build
+
+- Chat messages container now owns scroll.
+- Composer remains fixed/sticky at bottom.
+- Safe bottom spacing prevents content overlap.
+- File grid removed from chat body.
+- Chat body shows compact file summary after send.
+- Attachment chips remain in composer.
+- Parser/assembler/matching unchanged.
