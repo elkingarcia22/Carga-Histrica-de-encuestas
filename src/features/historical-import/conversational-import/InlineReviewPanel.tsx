@@ -2,18 +2,22 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, CheckCircle2, ChevronRight, Edit2, AlertTriangle, FileCheck } from "lucide-react";
-import {
-  mockDemographics,
-  mockDimensions,
-  mockUnmappedQuestions,
-  mockApprovalBlocks,
-  mockMappings,
-  mockIssues
-} from "./conversationalImportMock";
+import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
+import { mapDecisionToChatActions } from "./decisionReviewMapper";
 
-export function InlineReviewPanel() {
+export interface InlineReviewPanelProps {
+  contract?: SurveyFileAnalysisContract | null;
+  currentDecisionIndex?: number;
+  onAction?: (actionType: string) => void;
+}
+
+export function InlineReviewPanel({ contract, currentDecisionIndex = 0, onAction }: InlineReviewPanelProps) {
+  const currentDecision = contract?.requiredUserDecisions && contract.requiredUserDecisions.length > currentDecisionIndex
+    ? contract.requiredUserDecisions[currentDecisionIndex]
+    : null;
+
+  const mappedDecision = currentDecision ? mapDecisionToChatActions(currentDecision) : null;
+
   return (
     <ScrollArea className="h-full bg-background">
       <div className="p-6 max-w-4xl mx-auto space-y-8">
@@ -24,150 +28,68 @@ export function InlineReviewPanel() {
           </p>
         </div>
 
-        {/* Demographics Review */}
+        {/* Compact Structural Summary */}
         <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <span className="bg-primary/10 text-primary p-1 rounded">1</span>
-              Demográficos
-            </h3>
-            <Badge variant="positive">Aprobado</Badge>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {mockDemographics.map((demo) => (
-              <Card key={demo} className="relative group overflow-hidden border-muted-foreground/20">
-                <CardContent className="p-4 flex items-center justify-between">
-                  <span className="font-medium">{demo}</span>
-                  <Button variant="ghost" size="icon" className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Edit2 className="h-3 w-3" />
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Dimensions Review */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <span className="bg-primary/10 text-primary p-1 rounded">2</span>
-              Dimensiones
-            </h3>
-            <Badge variant="warning">Pendiente</Badge>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {mockDimensions.map((dim) => (
-              <Card key={dim} className="relative group border-muted-foreground/20">
-                <CardContent className="p-3 text-center">
-                  <span className="font-medium text-sm">{dim}</span>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Questions & Mappings Review */}
-        <section className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <span className="bg-primary/10 text-primary p-1 rounded">3</span>
-              Preguntas y Mapeos
-            </h3>
-          </div>
           <Card>
-            <CardContent className="p-0 divide-y">
-              {mockMappings.map((map, i) => (
-                <div key={i} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
-                  <p className="text-sm font-medium">{map.question}</p>
-                  <div className="flex items-center gap-2">
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    <Badge variant="secondary">{map.dimension}</Badge>
-                  </div>
-                </div>
-              ))}
-              {mockUnmappedQuestions.map((q, i) => (
-                <div key={`unmapped-${i}`} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
-                  <p className="text-sm font-medium">{q}</p>
-                  <div className="flex items-center gap-2">
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    <Badge variant="destructive">Sin asignar</Badge>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Issues & Warnings Review */}
-        <section className="space-y-4">
-          <h3 className="text-lg font-semibold">Alertas de Validación</h3>
-          <div className="space-y-2">
-            {mockIssues.map((issue, i) => (
-              <Alert key={i} variant={issue.type === 'error' ? 'destructive' : 'warning'}>
-                {issue.type === 'error' ? <AlertCircle className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
-                <AlertTitle>{issue.type === 'error' ? 'Error' : 'Advertencia'}</AlertTitle>
-                <AlertDescription>{issue.message}</AlertDescription>
-              </Alert>
-            ))}
-          </div>
-        </section>
-
-        {/* Approval Blocks */}
-        <section className="space-y-4">
-          <h3 className="text-lg font-semibold">Estado de Aprobación</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {mockApprovalBlocks.map((block) => (
-              <Card key={block.id} className={block.status === 'approved' ? 'border-primary/50 bg-primary/5' : ''}>
-                <CardHeader className="p-4 pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">{block.name}</CardTitle>
-                    {block.status === 'approved' ? (
-                      <CheckCircle2 className="h-4 w-4 text-primary" />
-                    ) : (
-                      <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4 pt-0">
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>{block.approvedItems} / {block.totalItems} elementos</span>
-                    <span className="capitalize">{block.status === 'approved' ? 'Aprobado' : 'Pendiente'}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Approved Contract Preview */}
-        <section className="space-y-4 pt-4 border-t border-dashed">
-          <Card className="bg-primary/5 border-primary/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileCheck className="h-5 w-5 text-primary" />
-                Vista Previa del Contrato
-              </CardTitle>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">Resumen Estructural Compacto</CardTitle>
               <CardDescription>
-                Este es el formato final que será enviado al sistema para generar el comparativo.
+                {contract
+                  ? `Análisis generado con ${contract.demographics.length} demográficos, ${contract.dimensions.length} dimensiones y ${contract.questions.length} preguntas.`
+                  : "No hay un contrato generado aún."
+                }
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <pre className="text-xs bg-black/80 text-foreground p-4 rounded-md overflow-x-auto">
-                {JSON.stringify({
-                  version: "1.0",
-                  metadata: { files: 2, timestamp: new Date().toISOString() },
-                  structure: {
-                    demographics: mockDemographics,
-                    dimensions: mockDimensions,
-                    totalQuestions: 42,
-                    mappings: mockMappings.length
-                  }
-                }, null, 2)}
-              </pre>
-            </CardContent>
           </Card>
         </section>
+
+        {/* Current Decision */}
+        {mappedDecision && (
+          <section className="space-y-4">
+            <h3 className="text-lg font-semibold">Decisión Actual ({currentDecisionIndex + 1} de {contract?.requiredUserDecisions?.length || 0})</h3>
+            <Card className="border-primary/50 bg-primary/5">
+              <CardHeader>
+                <CardTitle className="text-md flex items-center justify-between">
+                  <span>{mappedDecision.title}</span>
+                  {mappedDecision.riskLevel === "high" && <Badge variant="destructive">Alto Riesgo</Badge>}
+                </CardTitle>
+                <CardDescription className="whitespace-pre-wrap">
+                  {mappedDecision.description}
+                  {mappedDecision.helperText && (
+                    <span className="block mt-2 italic">{mappedDecision.helperText}</span>
+                  )}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                <Button
+                  onClick={() => onAction?.(mappedDecision.primaryAction.actionType)}
+                  variant="default"
+                >
+                  {mappedDecision.primaryAction.label}
+                </Button>
+                {mappedDecision.secondaryActions.map((action) => (
+                  <Button
+                    key={action.id}
+                    onClick={() => onAction?.(action.actionType)}
+                    variant="outline"
+                  >
+                    {action.label}
+                  </Button>
+                ))}
+              </CardContent>
+            </Card>
+          </section>
+        )}
+
+        {!mappedDecision && contract && contract.requiredUserDecisions && contract.requiredUserDecisions.length > 0 && (
+          <section className="space-y-4">
+            <Card className="border-primary/50 bg-primary/5">
+              <CardContent className="p-6 text-center text-muted-foreground">
+                <p>Todas las decisiones de estructura han sido revisadas.</p>
+              </CardContent>
+            </Card>
+          </section>
+        )}
       </div>
     </ScrollArea>
   );

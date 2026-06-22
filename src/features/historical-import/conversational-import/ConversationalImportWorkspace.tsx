@@ -11,6 +11,8 @@ import { InlineReviewPanel } from "./InlineReviewPanel";
 import { DetectedStructurePanel } from "./DetectedStructurePanel";
 import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "./conversationalImportTypes";
+import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
+import { mapDecisionToChatActions } from "./decisionReviewMapper";
 import {
   initialMessages,
   simulatedCompareMessages,
@@ -47,6 +49,9 @@ export function ConversationalImportWorkspace() {
   const [viewMode, setViewMode] = useState<"chat" | "review">("chat");
   const [activeSessionId, setActiveSessionId] = useState("sess_1");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
+  const [draftContract, setDraftContract] = useState<SurveyFileAnalysisContract | null>(null);
+  const [currentDecisionIndex, setCurrentDecisionIndex] = useState(0);
+  const [resolvedDecisionIds, setResolvedDecisionIds] = useState<string[]>([]);
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
@@ -173,6 +178,78 @@ export function ConversationalImportWorkspace() {
       setMessages((prev) => [...prev, { id: `msg_cancel_${Date.now()}`, role: "assistant", type: "text", content: "Análisis cancelado.", timestamp: new Date().toISOString() }]);
       return;
     }
+
+    if (actionType.startsWith("decision_action_")) {
+      // Format is decision_action_{id}_{action}
+      // Assuming {id} has no underscores, or we can just reconstruct it. Actually, decision id might be anything.
+      // Better way: in mapDecisionToChatActions, we used baseActionId = `decision_action_${decision.id}`
+      // So actionType is `${baseActionId}_${actionSuffix}`
+      // Let's find the current decision.
+      if (!draftContract || !draftContract.requiredUserDecisions) return;
+
+      const currentDecision = draftContract.requiredUserDecisions[currentDecisionIndex];
+      if (!currentDecision) return;
+
+      const mapped = mapDecisionToChatActions(currentDecision);
+      const clickedAction = [mapped.primaryAction, ...mapped.secondaryActions].find(a => a.actionType === actionType);
+
+      const userMessageText = clickedAction ? clickedAction.label : "Decisión tomada";
+
+      // Mark as resolved
+      const newResolvedIds = [...resolvedDecisionIds, currentDecision.id];
+      setResolvedDecisionIds(newResolvedIds);
+      const nextIndex = currentDecisionIndex + 1;
+      setCurrentDecisionIndex(nextIndex);
+
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        const ts = crypto.randomUUID();
+        const isoString = new Date().toISOString();
+
+        newMessages.push({
+          id: `msg_user_decision_${ts}`,
+          role: "user",
+          type: "text",
+          content: userMessageText,
+          timestamp: isoString,
+        });
+
+        newMessages.push({
+          id: `msg_assistant_confirm_${ts}`,
+          role: "assistant",
+          type: "text",
+          content: "Listo, dejé registrada esta decisión para esta importación.\nSigamos con la siguiente decisión.",
+          timestamp: new Date().toISOString(),
+        });
+
+        if (nextIndex < draftContract.requiredUserDecisions.length) {
+          const nextDecision = draftContract.requiredUserDecisions[nextIndex];
+          const nextMapped = mapDecisionToChatActions(nextDecision);
+          const totalRemaining = draftContract.requiredUserDecisions.length - nextIndex;
+
+          newMessages.push({
+            id: `msg_assistant_next_decision_${crypto.randomUUID()}`,
+            role: "assistant",
+            type: "guided_review_step",
+            content: `Quedan ${totalRemaining} decisiones pendientes. Revisemos una por una.\n\n**${nextMapped.title}**\n${nextMapped.description}${nextMapped.helperText ? `\n\n*${nextMapped.helperText}*` : ""}`,
+            nextActions: [nextMapped.primaryAction, ...nextMapped.secondaryActions],
+            timestamp: new Date().toISOString(),
+          });
+        } else {
+          newMessages.push({
+            id: `msg_assistant_all_done_${crypto.randomUUID()}`,
+            role: "assistant",
+            type: "text",
+            content: "Ya revisamos las decisiones iniciales de estructura. Todavía falta una QA antes de preparar el comparativo.",
+            timestamp: new Date().toISOString(),
+          });
+        }
+
+        return newMessages;
+      });
+      return;
+    }
+
     if (actionType === "start_guided_review") {
       setMessages((prev) => [...prev, ...simulatedGuidedReviewStartMessages()]);
     } else if (actionType === "approve_files") {
@@ -315,6 +392,10 @@ export function ConversationalImportWorkspace() {
 
       const summaryBlock = mapContractToSummaryBlock(contract);
 
+      setDraftContract(contract.draftContract || null);
+      setCurrentDecisionIndex(0);
+      setResolvedDecisionIds([]);
+
       setMessages((prev) => [
         ...prev.filter(m => m.type !== "analysis_progress"),
         {
@@ -330,20 +411,16 @@ export function ConversationalImportWorkspace() {
       if (contract.decisions && contract.decisions.length > 0) {
         // One decision at a time
         const decision = contract.decisions[0];
+        const mapped = mapDecisionToChatActions(decision);
+
         setMessages((prev) => [
           ...prev,
           {
             id: `msg_assistant_decision_${crypto.randomUUID()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: `**Decisión requerida:**\n${decision.promptDescription}`,
-            nextActions: [
-              {
-                id: "resolve",
-                label: "Resolver",
-                actionType: "decision_action_" + decision.id,
-              }
-            ],
+            content: `Quedan ${contract.decisions!.length} decisiones pendientes. Revisemos una por una.\n\n**${mapped.title}**\n${mapped.description}${mapped.helperText ? `\n\n*${mapped.helperText}*` : ""}`,
+            nextActions: [mapped.primaryAction, ...mapped.secondaryActions],
             timestamp: new Date().toISOString(),
           }
         ]);
@@ -469,7 +546,11 @@ export function ConversationalImportWorkspace() {
               <div className="flex-1 flex min-h-0 overflow-hidden">
                 <div className="flex-1 flex flex-col overflow-y-auto">
                   <ApprovalProgressTracker />
-                  <InlineReviewPanel />
+                  <InlineReviewPanel
+                    contract={draftContract}
+                    currentDecisionIndex={currentDecisionIndex}
+                    onAction={handleAction}
+                  />
                 </div>
                 <div className="w-80 flex-none bg-muted/10 border-l border-border hidden lg:block overflow-y-auto">
                   <DetectedStructurePanel />

@@ -326,3 +326,10 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - One decision at a time.
 - First visible UI checkpoint.
 - No Claude, storage, backend or matching.
+
+### Conversational Decision Review Build
+- The chat workspace uses the `Contract Assembler v1` output and renders required decisions interactively.
+- The `InlineReviewPanel` provides a compact summary of the structure and displays the current decision.
+- Only one decision is reviewed at a time to prevent cognitive overload.
+- UI state tracks `currentDecisionIndex` locally.
+- No Claude, no storage, no backend, no matching engine.

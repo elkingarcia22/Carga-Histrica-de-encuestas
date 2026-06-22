@@ -1,5 +1,34 @@
 # Prompt Log
 
+## Fase 8D · Conversational Decision Review Build
+
+Phase: Fase 8D · Conversational Decision Review Build
+
+Summary:
+- Integrated Conversational Decision Review Flow.
+- Mapped `RequiredUserDecision` to Chat Actions.
+- Rendered dynamic decision interactive blocks one-by-one.
+- Updated `InlineReviewPanel` to display a compact structural summary and the current decision.
+- Kept `ConversationalImportWorkspace` decoupled from parsing details.
+- Preserved safety gates and data minimization rules.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_8D_CONVERSATIONAL_DECISION_REVIEW_BUILD_COMPLETE
+CONVERSATIONAL_DECISION_REVIEW_BUILT
+INLINE_REVIEW_PANEL_SCOPED
+DECISIONS_MAPPED_TO_CHAT_ACTIONS
+ONE_DECISION_AT_A_TIME_RULE_ENFORCED
+NO_CLAUDE_CONNECTION_CREATED
+NO_STORAGE_CREATED
+NO_BACKEND_CREATED
+NO_MATCHING_ENGINE_CREATED
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_8E_CONVERSATIONAL_DECISION_REVIEW_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 8A · Parser + Contract to Chat Integration Architecture
 
 Phase: Fase 8A · Parser + Contract to Chat Integration Architecture
