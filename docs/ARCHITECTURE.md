@@ -443,3 +443,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - No global data is created.
 - No storage, backend or Claude integration is introduced.
 - Product context remains Carga Histórica de Encuestas.
+
+### Historical Load Draft Architecture
+- Historical Load Draft will be created after contract assembly, matching and human decision resolution.
+- Draft summarizes historical load readiness, not survey comparison.
+- Draft stores mappings, survey-only entities, PII policy, unresolved decisions and audit trail.
+- Draft does not create global data, persist records, call APIs, connect Claude or enable dashboards.
