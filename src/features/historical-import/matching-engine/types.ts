@@ -112,7 +112,7 @@ export type NormalizedMatchText = {
 };
 
 export type MatchingPlan = {
-  status: string;
+  status: 'not_started' | 'ready';
   matchesGenerated: boolean;
   requiredNextPhase: string;
 };

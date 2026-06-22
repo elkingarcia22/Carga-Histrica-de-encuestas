@@ -420,3 +420,11 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Action consequences are visible.
 - Product context remains Carga Histórica de Encuestas.
 - Comparison dashboard remains out of scope.
+
+### Matching Engine v1 Implementation
+- Deterministic matching runtime implemented for Carga Histórica de Encuestas.
+- Engine supports demographics, demographic values, questions, dimensions, response scales and participant signals.
+- Ambiguous matches require user decisions.
+- Engine does not create global data.
+- Engine does not connect to UI/chat, Claude, storage or backend.
+- Comparison dashboard remains out of scope.
