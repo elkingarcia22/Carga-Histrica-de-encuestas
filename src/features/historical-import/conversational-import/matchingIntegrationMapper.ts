@@ -8,7 +8,7 @@ export function runMatchingEngineIntegration(contract: SurveyFileAnalysisContrac
   matchingResult: MatchingResult;
 } {
   // 1. Prepare input
-  // Since we only have contract in the signature for now, we pass a dummy assemblyResult 
+  // Since we only have contract in the signature for now, we pass a dummy assemblyResult
   // because the engine requires it, or we construct it.
   const input = createDefaultMatchingInput(contract, {
     status: 'completed',
@@ -37,7 +37,7 @@ export function runMatchingEngineIntegration(contract: SurveyFileAnalysisContrac
 
 function mapMatchingDecisionToContractDecision(md: MatchingRequiredUserDecision): RequiredUserDecision {
   let type: RequiredUserDecision['type'] = 'resolve_ambiguity';
-  
+
   if (md.domain === 'demographic' || md.domain === 'demographic_value') {
     type = 'approve_demographics';
   } else if (md.domain === 'participant') {
