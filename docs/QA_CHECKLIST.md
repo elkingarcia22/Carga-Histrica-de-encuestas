@@ -1066,3 +1066,13 @@
 - [x] First required user decision rendered.
 - [x] UI visible checkpoint reached.
 - [x] Claude/storage/matching remain disconnected.
+
+## Fase 8C: Parser Contract Chat Integration QA
+- [x] Parser + contract chat integration QA completed.
+- [x] Visible UI checkpoint verified.
+- [x] Safety gate verified.
+- [x] Parser and assembler invocation verified.
+- [x] Structural summary rendering verified.
+- [x] First required decision rendering verified.
+- [x] One-decision-at-a-time rule verified.
+- [x] Data minimization and security boundaries verified.
