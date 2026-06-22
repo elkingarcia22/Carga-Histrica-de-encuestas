@@ -3,6 +3,7 @@ import { parseWorkbookPreview } from "../local-parser/localParser";
 import { assembleDraftSurveyFileAnalysisContract } from "../contract-assembler";
 import { mockUbitsCatalogs } from "../mock-ubits-catalogs/mockUbitsCatalogs";
 import { mapContractToSummaryBlock } from "./parserContractChatMapper";
+import { runMatchingEngineIntegration } from "./matchingIntegrationMapper";
 import { detectSurveyGroups } from "./surveyGroupingMapper";
 import { MessageComposer } from "./MessageComposer";
 import { ChatHistorySidebar } from "./ChatHistorySidebar";
@@ -507,9 +508,23 @@ export function ConversationalImportWorkspace() {
         options: {}
       });
 
-      const summaryBlock = mapContractToSummaryBlock(contract);
+      setMessages((prev) => [
+        ...prev.filter(m => m.type !== "analysis_progress"),
+        {
+          id: `msg_assistant_matching_${crypto.randomUUID()}`,
+          role: "assistant",
+          type: "analysis_progress",
+          content: "Estoy revisando si los demográficos, preguntas y escalas ya existen en la plataforma…\nEstoy preparando posibles homologaciones para esta carga histórica…",
+          timestamp: new Date().toISOString(),
+        }
+      ]);
 
-      setDraftContract(contract.draftContract || null);
+      const matchingEngineOutput = runMatchingEngineIntegration(contract.draftContract!);
+      const finalContract = matchingEngineOutput.draftContract;
+
+      const summaryBlock = mapContractToSummaryBlock({ ...contract, draftContract: finalContract });
+
+      setDraftContract(finalContract);
       setCurrentDecisionIndex(0);
       setResolvedDecisionIds([]);
 
@@ -525,9 +540,9 @@ export function ConversationalImportWorkspace() {
         }
       ]);
 
-      if (contract.decisions && contract.decisions.length > 0) {
+      if (finalContract.requiredUserDecisions && finalContract.requiredUserDecisions.length > 0) {
         // One decision at a time
-        const decision = contract.decisions[0];
+        const decision = finalContract.requiredUserDecisions[0];
         const mapped = mapDecisionToExplanation(decision);
 
         setMessages((prev) => [
@@ -536,7 +551,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_decision_${crypto.randomUUID()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: `Quedan ${contract.decisions!.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
+            content: `Quedan ${finalContract.requiredUserDecisions!.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
             nextActions: mapped.actions,
             timestamp: new Date().toISOString(),
           }

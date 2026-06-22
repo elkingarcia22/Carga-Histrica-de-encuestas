@@ -435,3 +435,11 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Engine does not create global data.
 - Engine does not connect to UI/chat, Claude, storage or backend.
 - Comparison dashboard remains out of scope.
+
+### Matching Engine Integration Build
+- Matching Engine now runs after contract assembly and survey group selection.
+- Matching output feeds explained decisions in the conversational flow.
+- Ambiguity remains user-reviewed.
+- No global data is created.
+- No storage, backend or Claude integration is introduced.
+- Product context remains Carga Histórica de Encuestas.
