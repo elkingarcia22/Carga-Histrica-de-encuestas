@@ -1,5 +1,35 @@
 # Prompt Log
 
+## Fase 8A · Parser + Contract to Chat Integration Architecture
+
+Phase: Fase 8A · Parser + Contract to Chat Integration Architecture
+
+Summary:
+- Parser + contract to chat integration architecture defined.
+- Runtime sequence documented.
+- Chat message mapping documented.
+- Safety gate documented.
+- One-decision-at-a-time rule locked.
+- First visible UI checkpoint assigned to Phase 8B.
+- No implementation created in this phase.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_8A_PARSER_CONTRACT_TO_CHAT_INTEGRATION_ARCHITECTURE_COMPLETE
+PARSER_CONTRACT_CHAT_INTEGRATION_ARCHITECTURE_LOCKED
+CHAT_ORCHESTRATES_PARSER_AND_ASSEMBLER
+PARSER_REMAINS_UI_AGNOSTIC
+ASSEMBLER_REMAINS_UI_AGNOSTIC
+ONE_DECISION_AT_A_TIME_RULE_LOCKED
+SAFETY_GATE_REQUIRED_BEFORE_PARSING
+NO_RAW_DATA_TO_CLAUDE
+NO_RUNTIME_IMPLEMENTATION_YET
+NO_UI_CHANGES_IN_THIS_PHASE
+VISIBLE_UI_CHECKPOINT_NO
+VISIBLE_UI_CHECKPOINT_NEXT_PHASE_8B
+PHASE_8B_PARSER_CONTRACT_CHAT_INTEGRATION_BUILD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 7D · Contract Assembler v1 QA
 
 Phase: Fase 7D · Contract Assembler v1 QA

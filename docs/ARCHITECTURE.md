@@ -221,6 +221,15 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - **Seguridad**: Pre-analysis safety gate implementado para prevenir filtraciones de datos e IA prematura.
 - **Restricción actual**: No parser/upload runtime todavía; solo arquitectura y validaciones en memoria definidas.
 
+### Parser + Contract to Chat Integration Architecture
+- Documento fuente: `docs/PARSER_CONTRACT_TO_CHAT_INTEGRATION_ARCHITECTURE.md`
+- Chat será orquestador.
+- Parser y assembler siguen aislados.
+- Safety gate antes de parsing.
+- One decision at a time.
+- No UI implementation in 8A.
+- First visible checkpoint expected in 8B.
+
 ### Survey File Analysis Contract Module
 - **Ubicación**: `src/features/historical-import/survey-file-analysis/`
 - **Propósito**: Define el contrato estricto de tipos de dominio para el análisis de archivos de encuesta.
