@@ -18,8 +18,8 @@ interface ChatTimelineProps {
 
 export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: ChatTimelineProps) {
   return (
-    <ScrollArea className="flex-1 p-4">
-      <div className="flex flex-col gap-4 pb-4">
+    <ScrollArea className="flex-1 min-h-0">
+      <div className="flex flex-col gap-4 p-4 max-w-4xl mx-auto w-full">
         {messages.map((msg) => (
           <div
             key={msg.id}

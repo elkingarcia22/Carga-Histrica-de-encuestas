@@ -611,7 +611,7 @@ export function ConversationalImportWorkspace() {
           ) : (
             /* Estado Activo */
             viewMode === "chat" ? (
-              <div className="flex-1 flex flex-col min-h-0 relative">
+              <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
                 <ChatTimeline
                   messages={messages}
                   onAction={handleAction}
