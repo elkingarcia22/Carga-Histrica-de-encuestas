@@ -1,5 +1,29 @@
 # Prompt Log
 
+## Fase 9C-H1 · Matching Engine Whitespace Hotfix
+
+Phase: Fase 9C-H1 · Matching Engine Whitespace Hotfix
+
+Summary:
+- Removed trailing whitespace in matchingEngine.ts and scoring.ts.
+- No logic changes.
+- No UI/chat/scoring/normalization changes.
+- Verified git show --check HEAD passes clean.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_9C_H1_MATCHING_ENGINE_WHITESPACE_HOTFIX_COMPLETE
+MATCHING_ENGINE_TRAILING_WHITESPACE_REMOVED
+NO_LOGIC_CHANGES
+NO_TYPE_CHANGES
+NO_SCORING_CHANGES
+NO_UX_CHANGES
+NO_UI_IMPORTS_ADDED
+NO_CHAT_INTEGRATION_CREATED
+GIT_SHOW_CHECK_PASSED
+PHASE_9C_QA_READY_TO_RESUME
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 9B-R · Matching Engine Type Scaffolding Reconciliation
 
 Phase: Fase 9B-R · Matching Engine Type Scaffolding Reconciliation

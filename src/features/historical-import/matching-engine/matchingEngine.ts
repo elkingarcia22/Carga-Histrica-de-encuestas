@@ -1,7 +1,7 @@
-import type { 
-  MatchingCapability, 
-  MatchingInput, 
-  MatchingPlan, 
+import type {
+  MatchingCapability,
+  MatchingInput,
+  MatchingPlan,
   MatchingResult,
   MatchingAuditEvent
 } from './types';
@@ -50,7 +50,7 @@ function generateId(): string {
 
 export function runMatchingEngine(input: MatchingInput): MatchingResult {
   const auditTrail: MatchingAuditEvent[] = [];
-  
+
   const addAudit = (domain: string, action: string, details: string) => {
     auditTrail.push({
       id: generateId(),
@@ -82,8 +82,8 @@ export function runMatchingEngine(input: MatchingInput): MatchingResult {
 
   input.contract.demographics.forEach((demo: DetectedDemographic) => {
     const normSource = normalizeText(demo.originalName);
-    calculateScore(normSource, normSource); 
-    
+    calculateScore(normSource, normSource);
+
     result.requiredDecisions.push({
       id: generateId(),
       domain: 'demographic',

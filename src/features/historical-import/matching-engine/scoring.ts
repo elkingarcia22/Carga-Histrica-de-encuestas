@@ -24,7 +24,7 @@ export function calculateScore(source: NormalizedMatchText, target: NormalizedMa
   // Token overlap
   const sourceTokens = source.normalized.split(' ');
   const targetTokens = target.normalized.split(' ');
-  
+
   const overlap = sourceTokens.filter(t => targetTokens.includes(t)).length;
   const maxTokens = Math.max(sourceTokens.length, targetTokens.length);
   const overlapRatio = maxTokens > 0 ? overlap / maxTokens : 0;
