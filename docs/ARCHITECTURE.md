@@ -299,3 +299,12 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Sin UI.
 - Sin Claude.
 - Sin matching.
+
+### Contract Assembler v1
+- Ubicación: `src/features/historical-import/contract-assembler/`.
+- Input: ParsedWorkbookPreview + MockUbitsCatalogs.
+- Output: draft SurveyFileAnalysisContract.
+- Ambigüedades quedan como user decisions.
+- Sin UI.
+- Sin Claude.
+- Sin matching engine real.

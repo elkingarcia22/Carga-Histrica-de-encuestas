@@ -995,3 +995,24 @@
 - [x] BUILD_NOT_RUN_DOCS_ONLY
 - [x] SCOPED_LINT_NOT_RUN_DOCS_ONLY
 - [x] TESTS_NOT_RUN_DOCS_ONLY
+
+## Fase 7C · Contract Assembler v1 Implementation
+- [x] Contract assembler v1 implemented.
+- [x] ParsedWorkbookPreview to draft SurveyFileAnalysisContract transformation created.
+- [x] Column classification implemented.
+- [x] Demographic candidate assembly implemented.
+- [x] Question candidate assembly implemented.
+- [x] Response scale candidate assembly implemented.
+- [x] Participant detection assembly implemented.
+- [x] PII detection assembly implemented.
+- [x] Typed warnings implemented.
+- [x] Required user decisions implemented.
+- [x] Audit trail implemented.
+- [x] No readyForComparison output.
+- [x] No UI imports added.
+- [x] No chat integration created.
+- [x] No Claude connection created.
+- [x] No matching engine created.
+- [x] No storage created.
+- [x] No real client data.
+- [x] No productive processing.

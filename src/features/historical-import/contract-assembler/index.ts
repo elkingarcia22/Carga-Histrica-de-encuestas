@@ -4,4 +4,5 @@ export {
   createDefaultContractAssemblyInput,
   validateContractAssemblyInput,
   createContractAssemblyPlan,
+  assembleDraftSurveyFileAnalysisContract,
 } from './contractAssembler';

@@ -1,5 +1,6 @@
 import type { ParsedWorkbookPreview } from '../local-parser/types';
-import type { SurveyAnonymityStatus, MatchMethodDetails, PiiRiskLevel } from '../survey-file-analysis/types';
+import type { SurveyAnonymityStatus, MatchMethodDetails, PiiRiskLevel, SurveyFileAnalysisContract, AnalysisWarning, RequiredUserDecision, AnalysisAuditEntry } from '../survey-file-analysis/types';
+import type { MockUbitsCatalogs } from '../mock-ubits-catalogs/types';
 
 export type ContractAssemblyStage = 'INITIALIZATION' | 'CLASSIFICATION' | 'MATCHING' | 'USER_REVIEW' | 'FINALIZATION';
 export type ContractAssemblyStatus = 'not_started' | 'in_progress' | 'awaiting_decision' | 'completed' | 'failed';
@@ -18,6 +19,7 @@ export interface ContractAssemblyCapability {
 
 export interface ContractAssemblyInput {
   parsedPreview: ParsedWorkbookPreview;
+  mockCatalogs: MockUbitsCatalogs;
   mode: ContractAssemblyMode;
   options: Record<string, unknown>;
 }
@@ -26,6 +28,10 @@ export interface ContractAssemblyResult {
   status: ContractAssemblyStatus;
   draftContractCreated: boolean;
   requiredNextPhase: string;
+  draftContract?: SurveyFileAnalysisContract;
+  warnings?: AnalysisWarning[];
+  decisions?: RequiredUserDecision[];
+  auditTrail?: AnalysisAuditEntry[];
 }
 
 export interface ContractAssemblyWarning {
