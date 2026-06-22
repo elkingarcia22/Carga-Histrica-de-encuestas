@@ -1,5 +1,38 @@
 # Prompt Log
 
+## Fase 8D-H4A · Auto Analysis, Survey Grouping & Decision UX Architecture Lock
+
+Phase: Fase 8D-H4A · Auto Analysis, Survey Grouping & Decision UX Architecture Lock
+
+Summary:
+- UX blocker documented.
+- Blocking local analysis confirmation removed for future build.
+- Automatic local analysis after attachment submission locked.
+- Thinking/progress state required.
+- Progressive report reveal required.
+- Multi-survey grouping required.
+- Generic decision actions disabled.
+- Contextual decision actions required.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_8D_H4A_AUTO_ANALYSIS_SURVEY_GROUPING_DECISION_UX_ARCHITECTURE_COMPLETE
+AUTO_ANALYSIS_SURVEY_GROUPING_DECISION_UX_ARCHITECTURE_LOCKED
+LOCAL_ANALYSIS_AUTO_STARTS_AFTER_ATTACHMENT
+BLOCKING_CONFIRM_LOCAL_ANALYSIS_DISABLED
+NON_BLOCKING_LOCAL_ANALYSIS_NOTICE_REQUIRED
+ANALYSIS_THINKING_STATE_REQUIRED
+REPORT_REVEALED_PROGRESSIVELY_REQUIRED
+MULTI_SURVEY_GROUPING_REQUIRED
+SURVEY_GROUP_SELECTION_AS_CONTEXTUAL_DECISION
+GENERIC_DECISION_ACTIONS_DISABLED
+DECISION_ACTIONS_MUST_BE_CONTEXTUAL
+ONE_DECISION_AT_A_TIME_REMAINS
+NO_RUNTIME_IMPLEMENTATION_YET
+NO_UI_CHANGES_IN_THIS_PHASE
+PHASE_8D_H4B_AUTO_ANALYSIS_SURVEY_GROUPING_DECISION_UX_BUILD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 8D-H3A · Chat Scroll & Attachment Layout Architecture Lock
 
 Phase: Fase 8D-H3A · Chat Scroll & Attachment Layout Architecture Lock

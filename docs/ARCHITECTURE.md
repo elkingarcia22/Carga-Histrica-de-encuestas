@@ -387,3 +387,11 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Chat body shows compact file summary after send.
 - Attachment chips remain in composer.
 - Parser/assembler/matching unchanged.
+
+### Auto Analysis, Survey Grouping & Decision UX Architecture
+- Local analysis starts automatically after attachment submission.
+- Blocking “Continuar análisis local” is removed.
+- Chat shows thinking/progress states.
+- Report is revealed progressively.
+- Files are grouped by survey/cycle when possible.
+- Decision actions are contextual, not generic.
