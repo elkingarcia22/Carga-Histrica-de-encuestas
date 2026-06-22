@@ -368,6 +368,13 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - IA/Claude no es source of truth.
 - No implementación en 9A.
 
+### Matching Engine Integration Architecture
+- Matching Engine will run after parser preview and contract assembly.
+- Integration prepares historical load decisions, not comparison dashboards.
+- Matching output feeds explained user decisions.
+- Ambiguity remains human-reviewed.
+- No global data creation, storage, backend, Claude or dashboard integration.
+
 ### Matching Engine Type Scaffolding
 - Ubicación: `src/features/historical-import/matching-engine/`.
 - Scaffolding de tipos y capabilities.
