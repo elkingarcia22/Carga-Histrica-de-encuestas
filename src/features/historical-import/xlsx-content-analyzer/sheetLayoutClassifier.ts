@@ -9,14 +9,14 @@ export function classifySheetLayout(sheet: SafeSheetInspectionInput, fileName: s
   const hasItemType = textSignals.some(s => s.includes('tipo de item') || s.includes('tipo')) || allLabels.some(l => l.includes('tipo de item'));
   const hasItem = textSignals.some(s => s.includes('item') || s.includes('pregunta')) || allLabels.some(l => l.includes('item'));
   const hasPerceptions = textSignals.some(s => s.includes('percepción') || s.includes('percepcion') || s.includes('negativa') || s.includes('positiva')) || allLabels.some(l => l.includes('percepción') || l.includes('negativa') || l.includes('positiva'));
-  
+
   if (hasItemType && hasItem && hasPerceptions) {
     return 'aggregated_items_by_rows';
   }
 
   const isAnswersSheet = name.includes('answers') || name.includes('respuestas');
   const hasCollab = textSignals.some(s => s.includes('colaborador') || s.includes('participante')) || allLabels.some(l => l.includes('colaborador') || l.includes('participante'));
-  
+
   if (isAnswersSheet && hasCollab) {
     return 'raw_responses_by_columns';
   }
