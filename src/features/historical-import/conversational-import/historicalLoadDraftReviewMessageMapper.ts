@@ -43,7 +43,7 @@ export function mapHistoricalLoadDraftToReviewMessages(
       icon: 'alert'
     });
   }
-  
+
   if (review.approvalReadiness.unresolvedDecisionsCount > 0) {
     visualBlocks.push({
       title: 'Decisiones Pendientes',
@@ -89,8 +89,8 @@ export function mapHistoricalLoadDraftToReviewMessages(
     label: actionLabels[action] || action
   }));
 
-  const blockedText = review.blockedActions.length > 0 
-    ? `\n\n**Acciones bloqueadas por seguridad:**\n${review.blockedActions.map(a => `- ${a}`).join('\n')}\n*Nota: No se importará nada en esta fase ni se aprueba automáticamente. "Aprobado" solo significa listo para una fase futura.*` 
+  const blockedText = review.blockedActions.length > 0
+    ? `\n\n**Acciones bloqueadas por seguridad:**\n${review.blockedActions.map(a => `- ${a}`).join('\n')}\n*Nota: No se importará nada en esta fase ni se aprueba automáticamente. "Aprobado" solo significa listo para una fase futura.*`
     : '';
 
   messages.push({
