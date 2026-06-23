@@ -473,3 +473,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Draft output is mapped to a conversational summary.
 - One-decision-at-a-time remains active for unresolved decisions.
 - No automatic approval, storage, backend, Claude or comparison dashboard is introduced.
+
+### Historical Load Draft Review Architecture
+- Review architecture defines the human confirmation step after Historical Load Draft summary.
+- Review does not import data, persist records, create global catalogs or approve automatically.
+- Approval means only ready for a future import phase.
+- Privacy, one-decision-at-a-time and data minimization remain mandatory.
