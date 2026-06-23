@@ -44,7 +44,7 @@ function determineSheetRole(sheet: SafeSheetInspectionInput): { role: XlsxSheetR
 
 function determineHeader(sheet: SafeSheetInspectionInput): XlsxHeaderDetection {
   const labels = sheet.sampleColumnLabels || [];
-  
+
   if (labels.length > 0) {
     return {
       headerRowIndex: 0,
@@ -68,7 +68,7 @@ export function mapWorkbookInspectionInputToAnalysis(input: SafeWorkbookInspecti
   const sheets: XlsxSheetInspection[] = input.sheets.map(sheet => {
     const { role, confidence, reason } = determineSheetRole(sheet);
     const header = determineHeader(sheet);
-    
+
     return {
       sheetName: sheet.sheetName,
       rowCount: sheet.rowCount,
@@ -87,7 +87,7 @@ export function mapWorkbookInspectionInputToAnalysis(input: SafeWorkbookInspecti
   if (sheets.length > 0 && sheets.some(s => s.confidence === 'high' || s.confidence === 'medium')) {
     overallConfidence = 'medium';
   }
-  
+
   const needsHumanReview = sheets.some(s => s.confidence === 'low' || s.confidence === 'blocked') || sheets.length === 0;
 
   const analysis: XlsxContentAnalysisResult = {
