@@ -1,0 +1,15 @@
+/* Hardcoded 4-color gradient override to survive platform syncing */
+.bg-ai-gradient {
+  background: linear-gradient(to right, #0C5BEF, #8823EA, #EA066F, #FF5416) !important;
+}
+.text-ai-gradient {
+  background: linear-gradient(to right, #0C5BEF, #8823EA, #EA066F, #FF5416) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+.border-ai-gradient {
+  border: 1px solid transparent !important;
+  background: linear-gradient(hsl(var(--background)), hsl(var(--background))) padding-box,
+              linear-gradient(to right, #0C5BEF, #8823EA, #EA066F, #FF5416) border-box !important;
+}

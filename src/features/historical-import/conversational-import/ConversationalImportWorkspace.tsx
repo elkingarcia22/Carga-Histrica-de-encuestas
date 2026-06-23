@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
+import "./ai-theme.css";
 import { parseWorkbookPreview } from "../local-parser/localParser";
 import { assembleDraftSurveyFileAnalysisContract } from "../contract-assembler";
 import { mockUbitsCatalogs } from "../mock-ubits-catalogs/mockUbitsCatalogs";
 import { mapContractToSummaryBlock } from "./parserContractChatMapper";
+import { mapContentAnalysisToChatSummary } from "./contentAnalysisChatMapper";
+import { mapWorkbookInspectionInputToAnalysis } from "../xlsx-content-analyzer";
 import { runMatchingEngineIntegration } from "./matchingIntegrationMapper";
 import { detectSurveyGroupsWithSegments } from "./surveyGroupingPolicy";
 import { getConfidenceExplanation } from "./analysisConfidenceMapper";
@@ -642,6 +645,34 @@ export function ConversationalImportWorkspace() {
         mode: "INTERACTIVE",
         options: {}
       });
+
+      const safeInput = {
+        fileName: file.name,
+        sheets: preview.sheets.map(s => ({
+          sheetName: s.sheetName,
+          rowCount: s.rowCount,
+          columnCount: s.columnCount,
+          nonEmptyCellCount: s.rowCount * s.columnCount,
+          sampleColumnLabels: s.headerDetection?.headerValues || [],
+          sampleCellPatterns: [],
+          detectedTextSignals: [],
+          detectedNumericSignals: []
+        }))
+      };
+
+      const analysisResult = mapWorkbookInspectionInputToAnalysis(safeInput);
+      const chatSummary = mapContentAnalysisToChatSummary(analysisResult, files.map(f => f.name));
+
+      setMessages((prev) => [
+        ...prev.filter(m => m.type !== "analysis_progress"),
+        {
+          id: `msg_assistant_content_analysis_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: chatSummary,
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }
+      ]);
 
       const confidenceMsg = getConfidenceExplanation(contract.draftContract!, selectedGroup, stagedFiles);
 

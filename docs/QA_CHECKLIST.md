@@ -2695,3 +2695,10 @@
 - [x] VISIBLE_UI_CHECKPOINT_NO
 - [x] PHASE_11D_H10_CONTENT_ANALYSIS_UX_INTEGRATION_READY
 - [x] R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H10 · Content Analysis UX Integration
+- [x] Integrate safe content analysis outputs to the conversational historical import workflow
+- [x] Verify no real files are parsed
+- [x] Verify no API calls or persistent storage
+- [x] Verify pure deterministic mappers are used for UX mapping
+- [x] PHASE_11D_H10_CONTENT_ANALYSIS_UX_INTEGRATION_READY

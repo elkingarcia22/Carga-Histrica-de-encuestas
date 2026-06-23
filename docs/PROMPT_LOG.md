@@ -10438,3 +10438,18 @@ R1H5_DEFINED_BUT_NOT_TRIGGERED
 - [x] VISIBLE_UI_CHECKPOINT_NO
 - [x] PHASE_11D_H10_CONTENT_ANALYSIS_UX_INTEGRATION_READY
 - [x] R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H10 · Content Analysis UX Integration
+**Objetivo:** Integrar el análisis seguro de contenido XLSX en el flujo de importación conversacional, mapeando de forma puramente funcional la inspección estructural en mensajes visuales, preservando los límites arquitectónicos de no persistencia ni exposición de datos en bruto.
+
+**Evidencia de Cumplimiento:**
+- `contentAnalysisChatMapper.ts` creado y puramente determinista.
+- `ConversationalImportWorkspace.tsx` modificado para emitir el análisis estructurado.
+- Se mantuvo la desconexión total de backend, bases de datos y APIs externas.
+- Los tests de linter (`eslint`) y build finalizan sin errores.
+- Se actualizó `ARCHITECTURE.md` y `QA_CHECKLIST.md`.
+
+**Comandos ejecutados y validados:**
+- `npm run build`
+- `npx eslint src/features/historical-import/conversational-import`
+- `git diff --check`

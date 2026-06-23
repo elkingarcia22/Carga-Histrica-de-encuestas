@@ -532,6 +532,11 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Classifies columns into question, demographic, participant identifier, metric, segment, metadata or unknown roles.
 - Does not read files, parse XLSX binaries, render UI, call APIs, persist data or expose raw rows.
 
+### Content Analysis UX Integration
+- Connects safe XLSX content analysis outputs to the conversational historical import workflow.
+- Shows whether internal workbook metadata is available, column classifications if present, and human-review decisions.
+- Does not read files, parse binaries, call APIs, persist data, expose raw rows or create comparison outputs.
+
 ### Real XLSX Content Analysis Type Scaffolding
 - Ubicación: `src/features/historical-import/xlsx-content-analyzer/`.
 - Scaffolding de contratos puros para workbook inspection, sheet classification, headers, columns, question/demographic candidates y human decisions.
