@@ -479,3 +479,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Review does not import data, persist records, create global catalogs or approve automatically.
 - Approval means only ready for a future import phase.
 - Privacy, one-decision-at-a-time and data minimization remain mandatory.
+
+### Historical Load Draft Review Type Scaffolding
+- Type scaffolding created for the Historical Load Draft Review model.
+- Review model represents human review state, allowed actions, blocked actions, approval readiness and privacy flags.
+- No mapper, runtime, UI integration, storage, backend, Claude connection, final import or automatic approval introduced.
+- Comparison dashboard remains out of scope.
