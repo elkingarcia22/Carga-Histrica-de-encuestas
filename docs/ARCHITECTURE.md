@@ -485,3 +485,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Review model represents human review state, allowed actions, blocked actions, approval readiness and privacy flags.
 - No mapper, runtime, UI integration, storage, backend, Claude connection, final import or automatic approval introduced.
 - Comparison dashboard remains out of scope.
+
+### Historical Load Draft Review Mapper
+- Mapper created to transform HistoricalLoadDraft into HistoricalLoadDraftReviewModel.
+- Mapper derives review state, executive summary, sections, actions, approval readiness, privacy flags and audit summary.
+- No UI/chat/runtime integration, storage, backend, Claude, final import or automatic approval introduced.
+- Comparison dashboard remains out of scope.

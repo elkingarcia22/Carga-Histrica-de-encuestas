@@ -78,17 +78,17 @@ export interface ReviewPrivacyFlags {
  * HISTORICAL_LOAD_DRAFT_REVIEW_CAPABILITIES_SCAFFOLDED = YES
  */
 export interface HistoricalLoadDraftReviewCapabilities {
-  isTypeScaffoldingOnly: true;
-  mapperImplemented: false;
-  uiIntegrated: false;
-  runtimeIntegrated: false;
-  storageEnabled: false;
-  backendEnabled: false;
-  claudeEnabled: false;
-  createsGlobalData: false;
-  finalImportEnabled: false;
-  comparisonOutputEnabled: false;
-  automaticApprovalEnabled: false;
+  isTypeScaffoldingOnly: boolean;
+  mapperImplemented: boolean;
+  uiIntegrated: boolean;
+  runtimeIntegrated: boolean;
+  storageEnabled: boolean;
+  backendEnabled: boolean;
+  claudeEnabled: boolean;
+  createsGlobalData: boolean;
+  finalImportEnabled: boolean;
+  comparisonOutputEnabled: boolean;
+  automaticApprovalEnabled: boolean;
 }
 
 /**
