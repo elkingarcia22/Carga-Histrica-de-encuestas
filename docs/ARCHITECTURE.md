@@ -532,3 +532,8 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Scaffolding de contratos puros para workbook inspection, sheet classification, headers, columns, question/demographic candidates y human decisions.
 - Sin runtime, sin parseo, sin UI, sin dependencias externas.
 - Privacidad por diseño: sin campos para raw rows, full workbooks o data dumps en los tipos.
+
+### Workbook Inspection Mapper
+- Adds a pure deterministic mapper for safe workbook metadata inspection.
+- Does not read files, parse XLSX binaries, render UI, call APIs, persist data or expose raw rows.
+- Produces typed workbook/sheet inspection output for later column classification phases.

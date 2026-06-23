@@ -1,3 +1,48 @@
+## Fase 11D-H8 · Workbook Inspection Mapper
+
+Phase: Fase 11D-H8 · Workbook Inspection Mapper
+
+Summary:
+- Mapper puro `mapWorkbookInspectionInputToAnalysis` creado en `src/features/historical-import/xlsx-content-analyzer/workbookInspectionMapper.ts`.
+- Contrato de entrada seguro definido (`SafeWorkbookInspectionInput`, `SafeSheetInspectionInput`).
+- Heurísticas básicas de sheet role, mapeo de metadata, y header detection implementados de forma determinística.
+- El boundary de privacidad está forzado explícitamente y capabilities declaradas correctamente.
+- No se realiza lectura de archivos, parseo binario XLSX, uso de API del navegador ni dumps de raw JSON.
+- Sin cambios en assembler, matching engine, parser local ni rutinas conversacionales.
+- Sin API, storage, backend o Claude connection creados.
+- Todo cumple con la ausencia de variables de tipo `any` y strings hardcodeados.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H8_WORKBOOK_INSPECTION_MAPPER_COMPLETE
+WORKBOOK_INSPECTION_MAPPER_CREATED
+SAFE_WORKBOOK_INPUT_CONTRACT_DEFINED
+WORKBOOK_METADATA_MAPPING_DEFINED
+SHEET_ROLE_HEURISTICS_DEFINED
+HEADER_DETECTION_MAPPING_DEFINED
+PRIVACY_BOUNDARY_ENFORCED
+CAPABILITIES_MAPPING_DEFINED
+NO_FILE_READING_IMPLEMENTED
+NO_XLSX_BINARY_PARSING_IMPLEMENTED
+NO_RAW_ROWS_IN_MAPPER
+NO_FULL_XLSX_DUMP
+NO_RAW_JSON_RENDERED
+NO_RUNTIME_BROWSER_API_USAGE
+NO_UI_INTEGRATION
+NO_CONVERSATIONAL_RUNTIME_CHANGES
+NO_PARSER_CHANGES
+NO_ASSEMBLER_CHANGES
+NO_MATCHING_ENGINE_CHANGES
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H9_COLUMN_CLASSIFICATION_RUNTIME_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H7 · XLSX Content Analyzer Type Scaffolding
 
 Phase: Fase 11D-H7 · XLSX Content Analyzer Type Scaffolding

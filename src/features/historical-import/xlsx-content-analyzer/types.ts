@@ -33,12 +33,15 @@ export interface XlsxSheetInspection {
   suggestedRole: XlsxSheetRole;
   confidence: XlsxContentAnalysisConfidence;
   classificationReason: string;
+  headerDetection?: XlsxHeaderDetection;
 }
 
 export interface XlsxHeaderDetection {
   headerRowIndex: number;
   confidence: XlsxContentAnalysisConfidence;
   sampleColumnLabels: string[];
+  classificationReason: string;
+  detectedSignals: string[];
 }
 
 export interface XlsxColumnProfile {
@@ -116,9 +119,44 @@ export interface XlsxContentAnalysisResult {
 export interface XlsxContentAnalysisPrivacyBoundary {
   privacyAssured: boolean;
   classificationReason: string;
+  rawRowsIncluded: boolean;
+  fullWorkbookIncluded: boolean;
+  rawJsonIncluded: boolean;
+  containsOnlyMetadata: boolean;
+  localOnly: boolean;
 }
 
 export interface XlsxContentAnalysisCapabilities {
   canAnalyze: boolean;
   classificationReason: string;
+  canInspectWorkbookMetadata: boolean;
+  canClassifySheets: boolean;
+  canProfileColumns: boolean;
+  canDetectQuestions: boolean;
+  canDetectDemographics: boolean;
+  canDetectResponseScales: boolean;
+  requiresColumnClassificationPhase: boolean;
+  requiresHumanReview: boolean;
+}
+
+export interface SafeSheetInspectionInput {
+  sheetName: string;
+  rowCount: number;
+  columnCount: number;
+  nonEmptyCellCount: number;
+  sampleColumnLabels: string[];
+  sampleCellPatterns: string[];
+  detectedTextSignals: string[];
+  detectedNumericSignals: string[];
+}
+
+export interface SafeWorkbookInspectionInput {
+  fileName: string;
+  sheets: SafeSheetInspectionInput[];
+}
+
+export interface WorkbookInspectionMappingResult {
+  analysis: XlsxContentAnalysisResult;
+  privacyBoundary: XlsxContentAnalysisPrivacyBoundary;
+  capabilities: XlsxContentAnalysisCapabilities;
 }
