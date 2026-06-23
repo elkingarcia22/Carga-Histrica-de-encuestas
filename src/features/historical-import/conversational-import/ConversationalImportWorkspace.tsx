@@ -736,9 +736,17 @@ export function ConversationalImportWorkspace() {
         }
       ]);
 
-      if (finalContract.requiredUserDecisions && finalContract.requiredUserDecisions.length > 0) {
+      // Filter out redundant group/ambiguity decisions if group was already selected
+      const actionableDecisions = (finalContract.requiredUserDecisions || []).filter(d => {
+        if (selectedGroup && (d.type === 'resolve_ambiguity' || d.promptDescription?.includes('group'))) {
+          return false;
+        }
+        return true;
+      });
+
+      if (actionableDecisions.length > 0) {
         // One decision at a time
-        const decision = finalContract.requiredUserDecisions[0];
+        const decision = actionableDecisions[0];
         const mapped = mapDecisionToExplanation(decision);
 
         setMessages((prev) => [
@@ -747,7 +755,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_decision_${generateId()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: `Quedan ${finalContract.requiredUserDecisions!.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
+            content: `Quedan ${actionableDecisions.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
             nextActions: mapped.actions,
             timestamp: "2025-01-01T12:00:00.000Z",
           }
