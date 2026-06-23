@@ -526,3 +526,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - El UX debe mostrar descubrimientos (hojas, preguntas probables, etc.) en bullets.
 - No se implementa backend, API, storage ni parseo real en esta fase arquitectónica.
 - No renderiza datos crudos ni PII en la UI.
+
+### Real XLSX Content Analysis Type Scaffolding
+- Ubicación: `src/features/historical-import/xlsx-content-analyzer/`.
+- Scaffolding de contratos puros para workbook inspection, sheet classification, headers, columns, question/demographic candidates y human decisions.
+- Sin runtime, sin parseo, sin UI, sin dependencias externas.
+- Privacidad por diseño: sin campos para raw rows, full workbooks o data dumps en los tipos.

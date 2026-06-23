@@ -1,3 +1,47 @@
+## Fase 11D-H7 · XLSX Content Analyzer Type Scaffolding
+
+Phase: Fase 11D-H7 · XLSX Content Analyzer Type Scaffolding
+
+Summary:
+- Scaffolding de tipos para el analizador de contenido XLSX completado en `src/features/historical-import/xlsx-content-analyzer/types.ts`.
+- Tipos definidos para workbook/sheet inspection, classification, headers, columns, candidates, human decisions y capabilities.
+- Tipos puros sin runtime, dependencias, UI, parser, Claude, APIs, storage o dashboard comparison.
+- Privacidad asegurada: sin campos para `rawRows`, `allRows`, `fullRows`, json strings, workbook dumps, emails o documents.
+- Restricciones validadas: sin uso de `any`, variables no tipadas, dinámicas (`Date`, `Math.random`, `crypto.randomUUID`) o dependencias externas.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H7_XLSX_CONTENT_ANALYZER_TYPE_SCAFFOLDING_COMPLETE
+XLSX_CONTENT_ANALYZER_TYPES_CREATED
+WORKBOOK_INSPECTION_TYPES_DEFINED
+SHEET_CLASSIFICATION_TYPES_DEFINED
+HEADER_DETECTION_TYPES_DEFINED
+COLUMN_PROFILING_TYPES_DEFINED
+QUESTION_CANDIDATE_TYPES_DEFINED
+DEMOGRAPHIC_CANDIDATE_TYPES_DEFINED
+RESPONSE_SCALE_CANDIDATE_TYPES_DEFINED
+SEGMENT_FILE_ROLE_TYPES_DEFINED
+HUMAN_DECISION_CANDIDATE_TYPES_DEFINED
+UX_OUTPUT_CONTRACT_TYPES_DEFINED
+PRIVACY_BOUNDARY_TYPES_DEFINED
+CAPABILITIES_TYPES_DEFINED
+NO_RAW_ROWS_IN_TYPES
+NO_FULL_XLSX_DUMP_TYPES
+NO_RAW_JSON_TYPES
+NO_RUNTIME_IMPLEMENTATION
+NO_UI_INTEGRATION
+NO_PARSER_CHANGES
+NO_ASSEMBLER_CHANGES
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H8_WORKBOOK_INSPECTION_MAPPER_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H5-H1 · Post-selection UX Stabilization Hotfix
 
 Phase: Fase 11D-H5-H1 · Post-selection UX Stabilization Hotfix
