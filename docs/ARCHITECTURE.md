@@ -498,3 +498,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - UI displays review state, executive summary, information sections, approval readiness, privacy flags, actions and audit summary.
 - No new route or screen created.
 - No final import, automatic approval, storage, backend, Claude or comparison dashboard introduced.
+
+### Historical Load Review UX Hotfix Architecture
+
+- Defines UX corrections for upload entry, survey grouping, bullet-first chat presentation, auto-scroll, decision specificity and analysis accuracy.
+- Keeps the experience within the existing conversational workspace.
+- No new route, screen, backend, storage, Claude, final import or comparison dashboard introduced.
