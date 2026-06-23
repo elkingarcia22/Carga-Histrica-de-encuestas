@@ -155,6 +155,21 @@ export interface SafeWorkbookInspectionInput {
   sheets: SafeSheetInspectionInput[];
 }
 
+export interface SafeColumnProfileInput {
+  columnLabel: string;
+  sampleCellPatterns: string[];
+  detectedTextSignals: string[];
+  detectedNumericSignals: string[];
+  sheetRole: XlsxSheetRole;
+}
+
+export interface ColumnClassificationResult {
+  role: XlsxColumnRole;
+  confidence: XlsxContentAnalysisConfidence;
+  classificationReason: string;
+  detectedSignals: string[];
+}
+
 export interface WorkbookInspectionMappingResult {
   analysis: XlsxContentAnalysisResult;
   privacyBoundary: XlsxContentAnalysisPrivacyBoundary;
