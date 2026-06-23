@@ -650,59 +650,6 @@ export function ConversationalImportWorkspace() {
       };
 
       const analysisResult = mapWorkbookInspectionInputToAnalysis(safeInput);
-      const chatSummary = mapContentAnalysisToChatSummary(analysisResult, files.map(f => f.name));
-
-      setMessages((prev) => [
-        ...prev.filter(m => m.type !== "analysis_progress"),
-        {
-          id: `msg_assistant_content_analysis_${generateId()}`,
-          role: "assistant",
-          type: "text",
-          content: chatSummary,
-          timestamp: "2025-01-01T12:00:00.000Z",
-        }
-      ]);
-
-      const confidenceMsg = getConfidenceExplanation(contract.draftContract!, selectedGroup, stagedFiles);
-
-      if (confidenceMsg) {
-        if (typeof confidenceMsg === "string") {
-          setMessages((prev) => [
-            ...prev.filter(m => m.type !== "analysis_progress"),
-            {
-              id: `msg_assistant_confidence_${generateId()}`,
-              role: "assistant",
-              type: "warning",
-              content: confidenceMsg,
-              timestamp: "2025-01-01T12:00:00.000Z",
-            }
-          ]);
-        } else if (confidenceMsg.type === "actionable_decision") {
-          setMessages((prev) => [
-            ...prev.filter(m => m.type !== "analysis_progress"),
-            {
-              id: `msg_assistant_confidence_${generateId()}`,
-              role: "assistant",
-              type: "guided_review_step",
-              content: `**${confidenceMsg.title}**\n\n${confidenceMsg.content}`,
-              nextActions: confidenceMsg.nextActions,
-              timestamp: "2025-01-01T12:00:00.000Z",
-            }
-          ]);
-        }
-        return;
-      }
-
-      setMessages((prev) => [
-        ...prev.filter(m => m.type !== "analysis_progress"),
-        {
-          id: `msg_assistant_matching_${generateId()}`,
-          role: "assistant",
-          type: "analysis_progress",
-          content: "Estoy revisando si los demográficos, preguntas y escalas ya existen en la plataforma…\nEstoy preparando posibles homologaciones para esta carga histórica…",
-          timestamp: "2025-01-01T12:00:00.000Z",
-        }
-      ]);
 
       const matchingEngineOutput = runMatchingEngineIntegration(contract.draftContract!);
       const finalContract = matchingEngineOutput.draftContract;
@@ -719,6 +666,65 @@ export function ConversationalImportWorkspace() {
         return true;
       });
 
+      const confidenceMsg = getConfidenceExplanation(contract.draftContract!, selectedGroup, stagedFiles);
+      const hasBlockingDecisions = actionableDecisions.length > 0 || confidenceMsg !== null;
+
+      const chatSummary = mapContentAnalysisToChatSummary(analysisResult, files.map(f => f.name), hasBlockingDecisions);
+
+      let finalProgressState = "Análisis listo para revisión del usuario.";
+      if (hasBlockingDecisions) {
+        finalProgressState = "Análisis parcial: faltan validaciones de homologación.";
+      }
+      if (!analysisResult.capabilities.canAnalyze) {
+        finalProgressState = "Análisis bloqueado: falta metadata segura.";
+      }
+
+      setMessages((prev) => [
+        ...prev.filter(m => m.type !== "analysis_progress"),
+        {
+          id: `msg_assistant_progress_final_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: finalProgressState,
+          timestamp: "2025-01-01T12:00:00.000Z",
+        },
+        {
+          id: `msg_assistant_content_analysis_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: chatSummary,
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }
+      ]);
+
+      if (confidenceMsg) {
+        if (typeof confidenceMsg === "string") {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `msg_assistant_confidence_${generateId()}`,
+              role: "assistant",
+              type: "warning",
+              content: confidenceMsg,
+              timestamp: "2025-01-01T12:00:00.000Z",
+            }
+          ]);
+        } else if (confidenceMsg.type === "actionable_decision") {
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: `msg_assistant_confidence_${generateId()}`,
+              role: "assistant",
+              type: "guided_review_step",
+              content: `**${confidenceMsg.title}**\n\n${confidenceMsg.content}`,
+              nextActions: confidenceMsg.nextActions,
+              timestamp: "2025-01-01T12:00:00.000Z",
+            }
+          ]);
+        }
+        return;
+      }
+
       if (actionableDecisions.length > 0) {
         // One decision at a time
         const decision = actionableDecisions[0];
@@ -733,19 +739,6 @@ export function ConversationalImportWorkspace() {
             content: `Quedan ${actionableDecisions.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
             nextActions: mapped.actions,
             timestamp: "2025-01-01T12:00:00.000Z",
-          }
-        ]);
-      } else {
-        const genTs = "draft_generation_after_matching";
-        const genIso = "2024-01-01T12:00:00.000Z";
-        setMessages((prev) => [
-          ...prev,
-          {
-            id: `msg_assistant_ready_${genTs}`,
-            role: "assistant",
-            type: "text",
-            content: "No hay decisiones bloqueantes. El borrador está listo para revisión final cuando lo solicites.",
-            timestamp: genIso,
           }
         ]);
       }

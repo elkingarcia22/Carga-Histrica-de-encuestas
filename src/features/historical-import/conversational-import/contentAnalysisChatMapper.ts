@@ -3,12 +3,13 @@ import { classifyXlsxColumns } from '../xlsx-content-analyzer/columnClassificati
 
 export function mapContentAnalysisToChatSummary(
   mappingResult: WorkbookInspectionMappingResult,
-  fileNames: string[]
+  fileNames: string[],
+  hasBlockingDecisions: boolean = true
 ): string {
   const { analysis, privacyBoundary, capabilities } = mappingResult;
   const filesString = fileNames.length > 0 ? `${fileNames.length} archivos del grupo Clima 2025` : 'Ninguno';
 
-  const hasSheets = analysis.sheets.length > 0;
+  const hasSheets = analysis.sheets && analysis.sheets.length > 0;
 
   // Fallback honesto: Si no tenemos metadata interna de hojas
   if (!hasSheets || (privacyBoundary.containsOnlyMetadata && !capabilities.canProfileColumns && !hasSheets)) {
@@ -18,11 +19,11 @@ export function mapContentAnalysisToChatSummary(
 - Evidencia disponible: Solo nombres de archivos
 - Hojas detectadas: No se leyeron hojas internas
 - Columnas clasificadas: No
-- Posibles preguntas o ítems: No evaluadas
-- Posibles demográficos: No evaluados
-- Posibles métricas o agregados: No evaluados
+- Preguntas/ítems: No evaluadas
+- Dimensiones: No evaluadas
+- Métricas: No evaluadas
 - Identificación de participantes: No determinada
-- Decisiones pendientes: Preparar inspección local
+- Qué falta confirmar: Preparar inspección local
 
 Aún no tengo evidencia interna suficiente del XLSX.
 Por ahora solo puedo explicar agrupación por archivo/ciclo y preparar la inspección.
@@ -37,7 +38,7 @@ Necesito una fase adicional de extracción local de metadata real del workbook a
     if (s.layout === 'question_catalog') layoutString = 'catálogo de preguntas';
     if (s.layout === 'metadata') layoutString = 'hoja de metadata/instrucciones';
 
-    return `${s.sheetName}: ${s.rowCount} filas, ${s.columnCount} columnas, ${layoutString}.`;
+    return `${String(s.sheetName)}: ${Number(s.rowCount)} filas, ${Number(s.columnCount)} columnas, ${layoutString}.`;
   }).join('\n  - ');
 
   let layoutDetectado = 'Desconocido';
@@ -66,7 +67,7 @@ Necesito una fase adicional de extracción local de metadata real del workbook a
       const allLabels = analysis.sheets.flatMap(s => {
         const labels = s.headerDetection?.sampleColumnLabels || [];
         return labels.map(label => ({
-          columnLabel: label,
+          columnLabel: String(label),
           sampleCellPatterns: [],
           detectedTextSignals: s.headerDetection?.detectedSignals || [],
           detectedNumericSignals: [],
@@ -89,6 +90,10 @@ Necesito una fase adicional de extracción local de metadata real del workbook a
     }
   }
 
+  const extraText = hasBlockingDecisions
+    ? ''
+    : '\n\nNo detecté bloqueos críticos; quedan validaciones de homologación antes de preparar el borrador.';
+
   return `Análisis de estructura detectado
 
 - Archivos considerados: ${filesString}.
@@ -100,5 +105,5 @@ Necesito una fase adicional de extracción local de metadata real del workbook a
 - Dimensiones: ${posiblesDimensiones}
 - Métricas: ${posiblesMetricas}
 - Identificación de participantes: ${identificacionParticipantes}
-- Qué falta confirmar: validar reglas de homologación de ítems y segmentos antes de preparar la carga.`;
+- Qué falta confirmar: validar reglas de homologación de ítems y segmentos antes de preparar la carga.${extraText}`;
 }
