@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { parseWorkbookPreview } from "../local-parser/localParser";
 import { assembleDraftSurveyFileAnalysisContract } from "../contract-assembler";
 import { mockUbitsCatalogs } from "../mock-ubits-catalogs/mockUbitsCatalogs";
 import { mapContractToSummaryBlock } from "./parserContractChatMapper";
 import { runMatchingEngineIntegration } from "./matchingIntegrationMapper";
-import { detectSurveyGroups } from "./surveyGroupingMapper";
+import { detectSurveyGroupsWithSegments } from "./surveyGroupingPolicy";
+import { getConfidenceExplanation } from "./analysisConfidenceMapper";
 import { MessageComposer } from "./MessageComposer";
 import { ChatHistorySidebar } from "./ChatHistorySidebar";
 import { ChatTimeline } from "./ChatTimeline";
@@ -58,6 +59,19 @@ export function ConversationalImportWorkspace() {
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
+  // Auto-scroll logic
+  useEffect(() => {
+    if (chatStarted && viewMode === "chat") {
+      const timeout = setTimeout(() => {
+        const lastMsg = document.querySelectorAll('[id^="msg_"]');
+        if (lastMsg.length > 0) {
+          lastMsg[lastMsg.length - 1].scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, [messages, chatStarted, viewMode]);
+
   const handleNewChat = () => {
     setChatStarted(false);
     setViewMode("chat");
@@ -106,10 +120,22 @@ export function ConversationalImportWorkspace() {
         id: `msg_assistant_upload_prompt_${crypto.randomUUID()}`,
         role: "assistant",
         type: "text",
-        content: "Por favor utiliza el botón de adjuntar (clip) en el cuadro de texto inferior para subir tu archivo (.xlsx, .xls o .csv).",
+        content: "Adjunta aquí los archivos de resultados históricos para analizarlos.",
         timestamp: isoString,
       }
     ]);
+
+    setTimeout(() => {
+      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+      if (fileInput) {
+        try {
+          fileInput.click();
+        } catch {
+          const btn = fileInput.parentElement?.querySelector('button') as HTMLButtonElement;
+          if (btn) btn.focus();
+        }
+      }
+    }, 100);
   };
 
   const handleComposerSend = (text: string, files: File[]) => {
@@ -141,7 +167,7 @@ export function ConversationalImportWorkspace() {
 
     if (files.length > 0) {
       setStagedFiles(files);
-      const groups = detectSurveyGroups(files);
+      const groups = detectSurveyGroupsWithSegments(files);
 
       const sandboxMetadataFiles = files.map(f => ({
         name: f.name,
@@ -219,7 +245,7 @@ export function ConversationalImportWorkspace() {
     if (rawFiles.length > 0) {
       setStagedFiles(rawFiles);
     }
-    const groups = detectSurveyGroups(rawFiles);
+    const groups = detectSurveyGroupsWithSegments(rawFiles);
 
     setMessages((prev) => {
       // Remove the upload panel
@@ -520,6 +546,22 @@ export function ConversationalImportWorkspace() {
         mode: "INTERACTIVE",
         options: {}
       });
+
+      const confidenceMsg = getConfidenceExplanation(contract.draftContract!);
+
+      if (confidenceMsg) {
+         setMessages((prev) => [
+          ...prev.filter(m => m.type !== "analysis_progress"),
+          {
+            id: `msg_assistant_confidence_${crypto.randomUUID()}`,
+            role: "assistant",
+            type: "warning",
+            content: confidenceMsg,
+            timestamp: new Date().toISOString(),
+          }
+        ]);
+        return;
+      }
 
       setMessages((prev) => [
         ...prev.filter(m => m.type !== "analysis_progress"),

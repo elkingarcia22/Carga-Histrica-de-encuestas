@@ -504,3 +504,14 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Defines UX corrections for upload entry, survey grouping, bullet-first chat presentation, auto-scroll, decision specificity and analysis accuracy.
 - Keeps the experience within the existing conversational workspace.
 - No new route, screen, backend, storage, Claude, final import or comparison dashboard introduced.
+
+### Historical Load Review UX Hotfix Build
+
+- "Cargar encuesta" opens the chat and auto-opens the attachment picker.
+- Chat presentation prioritizes bullet points with icons; cards are reserved for summaries.
+- Uploaded files are grouped into segments inside the survey.
+- Chat auto-scrolls to the bottom upon new messages.
+- Specific, contextual copy is applied to decisions and warnings.
+- Mapped zero demographics/questions and low-confidence analysis cases are handled properly.
+- All visible copy is 100% Spanish.
+- No new screen, route, backend, storage, Claude, final import or comparison dashboard introduced.
