@@ -1,3 +1,36 @@
+## Fase 11D-H12 · Homologation Precheck Architecture
+
+Phase: Fase 11D-H12 · Homologation Precheck Architecture
+
+Summary:
+- Defined the architecture for Homologation Precheck (11D-H12).
+- Locked down inputs, entities, confidence model, states, human decision contracts, and conversation output contract.
+- Out of scope features like real import, UI integration, dashboard, API, storage, and Claude were explicitly defined as disabled.
+- VISIBLE_UI_CHECKPOINT_NO enforced.
+
+Markers:
+- PHASE_11D_H12_HOMOLOGATION_PRECHECK_ARCHITECTURE_COMPLETE
+- HOMOLOGATION_PRECHECK_ARCHITECTURE_LOCKED
+- HOMOLOGATION_PRECHECK_INPUTS_DEFINED
+- HOMOLOGATION_ENTITIES_DEFINED
+- HOMOLOGATION_STATES_DEFINED
+- HOMOLOGATION_CONFIDENCE_MODEL_DEFINED
+- HUMAN_DECISION_CONTRACT_DEFINED
+- BULLETS_ONLY_OUTPUT_CONTRACT_DEFINED
+- NO_RUNTIME_IMPLEMENTATION
+- NO_UI_INTEGRATION
+- NO_PARSER_CHANGES
+- NO_ANALYZER_CHANGES
+- NO_BACKEND_CREATED
+- NO_STORAGE_CREATED
+- NO_CLAUDE_CONNECTION_CREATED
+- NO_API_CONNECTIONS
+- READY_FOR_COMPARISON_OUTPUT_DISABLED
+- COMPARISON_DASHBOARD_OUT_OF_SCOPE
+- VISIBLE_UI_CHECKPOINT_NO
+- PHASE_11D_H13_HOMOLOGATION_PRECHECK_TYPES_MAPPER_READY
+- R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H11-H3 · Analysis Message Sequencing & Progress State Hotfix
 
 Phase: Fase 11D-H11-H3 · Analysis Message Sequencing & Progress State Hotfix
