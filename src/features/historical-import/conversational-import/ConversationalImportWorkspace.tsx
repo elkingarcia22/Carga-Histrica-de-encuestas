@@ -16,6 +16,7 @@ import type { ChatMessage } from "./conversationalImportTypes";
 import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
 import { mapDecisionToExplanation } from "./decisionExplanationMapper";
 import { runHistoricalLoadDraftIntegration, mapHistoricalLoadDraftToSummary } from "./historicalLoadDraftIntegrationMapper";
+import { mapHistoricalLoadDraftToReviewMessages } from "./historicalLoadDraftReviewMessageMapper";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -368,7 +369,8 @@ export function ConversationalImportWorkspace() {
               const withoutProgress = current.filter(m => m.id !== `msg_assistant_drafting_${ts}`);
               const draft = runHistoricalLoadDraftIntegration(draftContract, stagedFiles, newResolvedIds);
               const draftMessages = mapHistoricalLoadDraftToSummary(draft, `msg_assistant_draft_${ts}`, isoString);
-              return [...withoutProgress, ...draftMessages];
+              const reviewMessages = mapHistoricalLoadDraftToReviewMessages(draft, `msg_assistant_review_${ts}`, isoString);
+              return [...withoutProgress, ...draftMessages, ...reviewMessages];
             });
           }, 600);
 
@@ -585,7 +587,8 @@ export function ConversationalImportWorkspace() {
             const withoutProgress = current.filter(m => m.id !== `msg_assistant_drafting_${genTs}`);
             const draft = runHistoricalLoadDraftIntegration(finalContract, files, []);
             const draftMessages = mapHistoricalLoadDraftToSummary(draft, `msg_assistant_draft_${genTs}`, genIso);
-            return [...withoutProgress, ...draftMessages];
+            const reviewMessages = mapHistoricalLoadDraftToReviewMessages(draft, `msg_assistant_review_${genTs}`, genIso);
+            return [...withoutProgress, ...draftMessages, ...reviewMessages];
           });
         }, 600);
       }

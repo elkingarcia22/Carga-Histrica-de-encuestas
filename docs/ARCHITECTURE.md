@@ -491,3 +491,10 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Mapper derives review state, executive summary, sections, actions, approval readiness, privacy flags and audit summary.
 - No UI/chat/runtime integration, storage, backend, Claude, final import or automatic approval introduced.
 - Comparison dashboard remains out of scope.
+
+### Historical Load Draft Review UI
+
+- Conversational review UI integrated after Historical Load Draft preparation.
+- UI displays review state, executive summary, information sections, approval readiness, privacy flags, actions and audit summary.
+- No new route or screen created.
+- No final import, automatic approval, storage, backend, Claude or comparison dashboard introduced.

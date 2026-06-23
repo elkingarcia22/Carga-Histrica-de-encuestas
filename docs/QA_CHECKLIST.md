@@ -2217,3 +2217,15 @@
 - [x] NO_REVIEW_TYPE_CHANGES
 - [x] NO_RUNTIME_IMPLEMENTATION
 - [x] GIT_SHOW_CHECK_PASSED
+
+## Fase 11D - Historical Load Draft Review UI Build
+- [ ] Construir y pasar (`npm run build`).
+- [ ] `npx eslint src/features/historical-import/conversational-import` y `historical-load-draft-review` en cero errores.
+- [ ] Tests pasando (`npm run test:run`).
+- [ ] Cobertura validada (`npm run test:coverage`).
+- [ ] No usar `any`, `any[]`, `as any`.
+- [ ] No usar `Math.random`, `crypto.randomUUID`, `new Date` ni `Date.now` en las nuevas integraciones (mantener determinismo).
+- [ ] La UI renderiza el estado, summary y secciones del borrador sin exponer raw JSON.
+- [ ] No se implementan acciones de persistencia (storage/backend).
+- [ ] No se implementan nuevas pantallas o rutas (solo chat en `ConversationalImportWorkspace`).
+- [ ] Documentación (`ARCHITECTURE.md`, `PROMPT_LOG.md`) actualizada.
