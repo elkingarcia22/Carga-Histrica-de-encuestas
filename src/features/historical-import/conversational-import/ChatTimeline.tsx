@@ -2,13 +2,34 @@ import type { ChatMessage } from "./conversationalImportTypes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, Loader2, FileText, Users, Database, ArrowRight, AlertCircle } from "lucide-react";
+import { User, FileText, Users, Database, ArrowRight, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
 import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
-
 import { SandboxUploadPanel } from "./SandboxUploadPanel";
+import { useState, useEffect } from "react";
+import { AILoader } from "@/components/ai-interaction/AILoader";
+
+function TypewriterText({ text, animate = true, speed = 15 }: { text: string; animate?: boolean; speed?: number }) {
+  const [displayedText, setDisplayedText] = useState(animate ? "" : text);
+
+  useEffect(() => {
+    if (!animate) return;
+
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayedText(text.substring(0, i + 1));
+      i++;
+      if (i >= text.length) {
+        clearInterval(interval);
+      }
+    }, speed);
+    return () => clearInterval(interval);
+  }, [text, animate, speed]);
+
+  return <>{animate ? displayedText : text}</>;
+}
 
 interface ChatTimelineProps {
   onAction?: (actionType: string) => void;
@@ -17,6 +38,8 @@ interface ChatTimelineProps {
 }
 
 export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: ChatTimelineProps) {
+  const [initialMessages] = useState(() => new Set(messages.map(m => m.id)));
+
   return (
     <ScrollArea className="flex-1 min-h-0">
       <div className="flex flex-col gap-4 p-4 max-w-4xl mx-auto w-full">
@@ -43,7 +66,13 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
                     ? "bg-primary text-primary-foreground"
                     : "bg-ai-bg border border-ai-border text-foreground"
                 }`}>
-                  {msg.content}
+                  {msg.role === "user" ? (
+                    msg.content
+                  ) : (
+                   <div className="text-sm font-medium whitespace-pre-wrap leading-relaxed text-foreground/90">
+                    <TypewriterText text={msg.content} animate={!initialMessages.has(msg.id)} />
+                  </div>
+                  )}
                 </div>
               )}
 
@@ -142,9 +171,8 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
               )}
 
               {msg.type === "analysis_progress" && (
-                <div className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm bg-ai-bg border border-ai-border animate-pulse">
-                  <Loader2 className="h-4 w-4 animate-spin text-ai-border" />
-                  <span className="text-foreground">{msg.content}</span>
+                <div className="w-full">
+                  <AILoader variant="inline" label={msg.content} className="my-2 ml-1" />
                 </div>
               )}
 
@@ -273,7 +301,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
               )}
 
               <span className="text-xs text-muted-foreground mt-1">
-                {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {msg.timestamp.includes('T') ? msg.timestamp.split('T')[1].substring(0, 5) : '12:00'}
               </span>
             </div>
           </div>

@@ -21,7 +21,6 @@ import { mapHistoricalLoadDraftToReviewMessages } from "./historicalLoadDraftRev
 import {
   initialMessages,
   simulatedFormatMessages,
-  simulatedCompareMessages,
   quickActionItems,
   simulatedGuidedReviewStartMessages,
   simulatedFilesApprovedMessages,
@@ -50,9 +49,10 @@ import {
 } from "./conversationalImportMock";
 
 let sharedAudioCtx: AudioContext | null = null;
+let globalIdCounter = 0;
 const generateId = () => {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
-  return `fallback_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 9)}`;
+  globalIdCounter++;
+  return `sim_msg_${globalIdCounter}`;
 };
 const initAudioSync = () => {
   try {
@@ -118,16 +118,23 @@ export function ConversationalImportWorkspace() {
           id: typingId,
           role: "assistant",
           type: "analysis_progress",
-          content: "Escribiendo...",
-          timestamp: new Date().toISOString()
+          content: "Pensando...",
+          timestamp: "2025-01-01T12:00:00.000Z"
         }]);
 
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise(resolve => setTimeout(resolve, 1500));
 
         setMessages(prev => {
           const filtered = prev.filter(m => m.id !== typingId);
           return [...filtered, msg];
         });
+
+        if (msg.content) {
+          const typingDuration = msg.content.length * 15;
+          await new Promise(resolve => setTimeout(resolve, typingDuration + 300));
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 800));
+        }
       }
     }
     playNotificationSound();
@@ -163,7 +170,7 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "text",
           content: "Abriendo historial de chat... Este sandbox simula un registro histórico.",
-          timestamp: new Date().toISOString(),
+          timestamp: "2025-01-01T12:00:00.000Z",
         }
       ]);
       setChatStarted(true);
@@ -178,7 +185,7 @@ export function ConversationalImportWorkspace() {
 
   const handleSandboxUploadStart = () => {
     const ts = generateId();
-    const isoString = new Date().toISOString();
+    const isoString = "2025-01-01T12:00:00.000Z";
     setChatStarted(true);
     setViewMode("chat");
     setMessages([
@@ -214,7 +221,7 @@ export function ConversationalImportWorkspace() {
 
   const handleComposerSend = (text: string, files: File[]) => {
     const ts = generateId();
-    const isoString = new Date().toISOString();
+    const isoString = "2025-01-01T12:00:00.000Z";
 
     if (!chatStarted) {
       setChatStarted(true);
@@ -251,101 +258,27 @@ export function ConversationalImportWorkspace() {
         rawFile: f
       }));
 
-      setMessages(prev => {
-        const fileCardsMessage: import("./conversationalImportTypes").ChatMessage = {
-          id: `msg_assistant_files_selected_${generateId()}`,
-          role: "assistant",
-          type: "sandbox_files_selected",
-          content: "Recibí los archivos en modo sandbox.",
-          sandboxFiles: sandboxMetadataFiles,
-          timestamp: new Date().toISOString(),
-        };
+      const newMsgs: import("./conversationalImportTypes").ChatMessage[] = [];
 
-        const noticeMsg: import("./conversationalImportTypes").ChatMessage = {
-          id: `msg_assistant_notice_${generateId()}`,
-          role: "assistant",
-          type: "text",
-          content: "Analizaré estos archivos localmente en tu navegador. No se subirán a servidores ni se enviarán a Claude.",
-          timestamp: new Date().toISOString(),
-        };
-
-        const baseMessages = [...prev, fileCardsMessage, noticeMsg];
-
-        if (groups.length > 1) {
-          const decisionMsg: import("./conversationalImportTypes").ChatMessage = {
-            id: `msg_assistant_group_decision_${generateId()}`,
-            role: "assistant",
-            type: "guided_review_step",
-            content: "Encontré más de una encuesta en los archivos cargados.\n\n**Qué detecté:**\nDetecté grupos que parecen corresponder a encuestas distintas, por ejemplo " + groups.map(g => g.name).join(", ") + ".\n\n**Impacto en la carga histórica:**\nLa carga histórica se procesa una encuesta a la vez. Si mezclamos ciclos o estructuras distintas, las preguntas, demográficos y participantes pueden quedar mal clasificados.\n\n**Recomendación:**\nTe recomiendo procesar primero el grupo con mayor consistencia estructural.\n\n**¿Cuál encuesta quieres procesar primero?**",
-            nextActions: [
-              ...groups.map(g => ({
-                id: `process_${g.id}`,
-                label: `Procesar ${g.name}`,
-                actionType: `start_local_analysis_${g.id}`
-              })),
-              { id: "view_groups", label: "Ver detalle de grupos", actionType: "detail_groups" },
-              { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
-            ],
-            timestamp: new Date().toISOString(),
-          };
-          return [...baseMessages, decisionMsg];
-        }
-
-        return baseMessages;
-      });
-
-      if (groups.length <= 1) {
-        setTimeout(() => handleLocalAnalysisStart(files), 500);
-      }
-    } else if (text.trim()) {
-      setMessages(prev => [
-        ...prev,
-        {
-          id: `msg_assistant_generic_${generateId()}`,
-          role: "assistant",
-          type: "text",
-          content: "Por favor adjunta el archivo de la encuesta si deseas procesarla, o descríbela para que te guíe.",
-          timestamp: new Date().toISOString(),
-        }
-      ]);
-    }
-  };
-
-  const handleSandboxFilesSelected = (files: import("./SandboxUploadPanel").SandboxFileMetadata[]) => {
-    const ts = generateId();
-    const isoString = new Date().toISOString();
-
-    const rawFiles = files.map(f => f.rawFile).filter(Boolean) as File[];
-    if (rawFiles.length > 0) {
-      setStagedFiles(rawFiles);
-    }
-    const groups = detectSurveyGroupsWithSegments(rawFiles);
-
-    setMessages((prev) => {
-      // Remove the upload panel
-      const withoutPanel = prev.filter(m => m.type !== "sandbox_upload_panel");
-
-      const fileCardsMessage: import("./conversationalImportTypes").ChatMessage = {
-        id: `msg_assistant_files_selected_${ts}`,
+      newMsgs.push({
+        id: `msg_assistant_files_selected_${generateId()}`,
         role: "assistant",
         type: "sandbox_files_selected",
         content: "Recibí los archivos en modo sandbox.",
-        sandboxFiles: files,
-        timestamp: isoString,
-      };
+        sandboxFiles: sandboxMetadataFiles,
+        timestamp: "2025-01-01T12:00:00.000Z",
+      });
 
-      const noticeMsg: import("./conversationalImportTypes").ChatMessage = {
+      newMsgs.push({
         id: `msg_assistant_notice_${generateId()}`,
         role: "assistant",
         type: "text",
         content: "Analizaré estos archivos localmente en tu navegador. No se subirán a servidores ni se enviarán a Claude.",
-        timestamp: new Date().toISOString(),
-      };
-
-      const baseMessages = [...withoutPanel, fileCardsMessage, noticeMsg];
+        timestamp: "2025-01-01T12:00:00.000Z",
+      });
 
       if (groups.length > 1) {
-        const decisionMsg: import("./conversationalImportTypes").ChatMessage = {
+        newMsgs.push({
           id: `msg_assistant_group_decision_${generateId()}`,
           role: "assistant",
           type: "guided_review_step",
@@ -359,17 +292,81 @@ export function ConversationalImportWorkspace() {
             { id: "view_groups", label: "Ver detalle de grupos", actionType: "detail_groups" },
             { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
           ],
-          timestamp: new Date().toISOString(),
-        };
-        return [...baseMessages, decisionMsg];
+          timestamp: "2025-01-01T12:00:00.000Z",
+        });
       }
 
-      return baseMessages;
+      void simulateChatFlow(newMsgs).then(() => {
+        if (groups.length <= 1) {
+          setTimeout(() => handleLocalAnalysisStart(files), 500);
+        }
+      });
+    } else if (text.trim()) {
+      void simulateChatFlow([{
+        id: `msg_assistant_generic_${generateId()}`,
+        role: "assistant",
+        type: "text",
+        content: "Por favor adjunta el archivo de la encuesta si deseas procesarla, o descríbela para que te guíe.",
+        timestamp: "2025-01-01T12:00:00.000Z",
+      }]);
+    }
+  };
+
+  const handleSandboxFilesSelected = (files: import("./SandboxUploadPanel").SandboxFileMetadata[]) => {
+    const ts = generateId();
+    const isoString = "2025-01-01T12:00:00.000Z";
+
+    const rawFiles = files.map(f => f.rawFile).filter(Boolean) as File[];
+    if (rawFiles.length > 0) {
+      setStagedFiles(rawFiles);
+    }
+    const groups = detectSurveyGroupsWithSegments(rawFiles);
+
+    setMessages((prev) => prev.filter(m => m.type !== "sandbox_upload_panel"));
+
+    const newMsgs: import("./conversationalImportTypes").ChatMessage[] = [];
+
+    newMsgs.push({
+      id: `msg_assistant_files_selected_${ts}`,
+      role: "assistant",
+      type: "sandbox_files_selected",
+      content: "Recibí los archivos en modo sandbox.",
+      sandboxFiles: files,
+      timestamp: isoString,
     });
 
-    if (groups.length <= 1 && rawFiles.length > 0) {
-      setTimeout(() => handleLocalAnalysisStart(rawFiles), 500);
+    newMsgs.push({
+      id: `msg_assistant_notice_${generateId()}`,
+      role: "assistant",
+      type: "text",
+      content: "Analizaré estos archivos localmente en tu navegador. No se subirán a servidores ni se enviarán a Claude.",
+      timestamp: "2025-01-01T12:00:00.000Z",
+    });
+
+    if (groups.length > 1) {
+      newMsgs.push({
+        id: `msg_assistant_group_decision_${generateId()}`,
+        role: "assistant",
+        type: "guided_review_step",
+        content: "Encontré más de una encuesta en los archivos cargados.\n\n**Qué detecté:**\nDetecté grupos que parecen corresponder a encuestas distintas, por ejemplo " + groups.map(g => g.name).join(", ") + ".\n\n**Impacto en la carga histórica:**\nLa carga histórica se procesa una encuesta a la vez. Si mezclamos ciclos o estructuras distintas, las preguntas, demográficos y participantes pueden quedar mal clasificados.\n\n**Recomendación:**\nTe recomiendo procesar primero el grupo con mayor consistencia estructural.\n\n**¿Cuál encuesta quieres procesar primero?**",
+        nextActions: [
+          ...groups.map(g => ({
+            id: `process_${g.id}`,
+            label: `Procesar ${g.name}`,
+            actionType: `start_local_analysis_${g.id}`
+          })),
+          { id: "view_groups", label: "Ver detalle de grupos", actionType: "detail_groups" },
+          { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
+        ],
+        timestamp: "2025-01-01T12:00:00.000Z",
+      });
     }
+
+    void simulateChatFlow(newMsgs).then(() => {
+      if (groups.length <= 1 && rawFiles.length > 0) {
+        setTimeout(() => handleLocalAnalysisStart(rawFiles), 500);
+      }
+    });
   };
 
   const handleReviewStructure = () => {
@@ -400,7 +397,7 @@ export function ConversationalImportWorkspace() {
       return;
     }
     if (actionType === "cancel_analysis") {
-      setMessages((prev) => [...prev, { id: `msg_cancel_${generateId()}`, role: "assistant", type: "text", content: "Análisis cancelado.", timestamp: new Date().toISOString() }]);
+      setMessages((prev) => [...prev, { id: `msg_cancel_${generateId()}`, role: "assistant", type: "text", content: "Análisis cancelado.", timestamp: "2025-01-01T12:00:00.000Z" }]);
       return;
     }
 
@@ -419,14 +416,14 @@ export function ConversationalImportWorkspace() {
             role: "user",
             type: "text",
             content: label,
-            timestamp: new Date().toISOString(),
+            timestamp: "2025-01-01T12:00:00.000Z",
           },
           {
             id: `msg_assistant_ack_${generateId()}`,
             role: "assistant",
             type: "text",
             content: "Entendido. (Mock: Aplicando configuración al grupo...)",
-            timestamp: new Date().toISOString(),
+            timestamp: "2025-01-01T12:00:00.000Z",
           }
         ]);
         return;
@@ -451,7 +448,7 @@ export function ConversationalImportWorkspace() {
       setMessages((prev) => {
         const newMessages = [...prev];
         const ts = generateId();
-        const isoString = new Date().toISOString();
+        const isoString = "2025-01-01T12:00:00.000Z";
 
         newMessages.push({
           id: `msg_user_decision_${ts}`,
@@ -467,7 +464,7 @@ export function ConversationalImportWorkspace() {
             role: "assistant",
             type: "text",
             content: `Entendido. ${clickedAction.consequence}`,
-            timestamp: new Date().toISOString(),
+            timestamp: "2025-01-01T12:00:00.000Z",
           });
         } else {
           newMessages.push({
@@ -475,7 +472,7 @@ export function ConversationalImportWorkspace() {
             role: "assistant",
             type: "text",
             content: "Listo, dejé registrada esta decisión para esta importación.",
-            timestamp: new Date().toISOString(),
+            timestamp: "2025-01-01T12:00:00.000Z",
           });
         }
 
@@ -490,7 +487,7 @@ export function ConversationalImportWorkspace() {
             type: "guided_review_step",
             content: `Quedan ${totalRemaining} decisiones pendientes.\n\n**${nextMapped.title}**\n\n**Qué detecté:**\n${nextMapped.detectedIssue}\n\n**Por qué importa:**\n${nextMapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${nextMapped.historicalLoadImpact}\n${nextMapped.recommendation ? `\n**Recomendación:**\n${nextMapped.recommendation}\n` : ""}\n**${nextMapped.primaryQuestion}**`,
             nextActions: nextMapped.actions,
-            timestamp: new Date().toISOString(),
+            timestamp: "2025-01-01T12:00:00.000Z",
           });
           return newMessages;
         } else {
@@ -528,7 +525,7 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "text",
           content: "Detalle de archivos: Se detectaron 2 archivos XLSX con estructura estándar. Total filas: ~2.7k.",
-          timestamp: new Date().toISOString(),
+          timestamp: "2025-01-01T12:00:00.000Z",
       }]);
     } else if (actionType === "approve_demographics") {
       void simulateChatFlow(simulatedDemographicsApprovedMessages());
@@ -540,7 +537,7 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "text",
           content: "Detalle de demográficos: Los campos Gerencia y Área parecen jerárquicos. Antigüedad y Cargo son categóricos simples.",
-          timestamp: new Date().toISOString(),
+          timestamp: "2025-01-01T12:00:00.000Z",
       }]);
     } else if (actionType === "start_dimensions_review") {
       void simulateChatFlow(simulatedDimensionsReviewStartMessages());
@@ -554,7 +551,7 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "text",
           content: "Detalle de dimensiones: Se encontraron 4 dimensiones principales que agrupan las preguntas evaluadas.",
-          timestamp: new Date().toISOString(),
+          timestamp: "2025-01-01T12:00:00.000Z",
       }]);
     } else if (actionType === "start_questions_review") {
       void simulateChatFlow(simulatedQuestionsReviewStartMessages());
@@ -584,7 +581,7 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "text",
           content: "Detalle de mapeos: 21 automáticos y 3 pendientes de revisión.",
-          timestamp: new Date().toISOString(),
+          timestamp: "2025-01-01T12:00:00.000Z",
       }]);
     } else if (actionType === "start_contract_review") {
       void simulateChatFlow(simulatedContractReviewStartMessages());
@@ -603,13 +600,13 @@ export function ConversationalImportWorkspace() {
     initAudioSync();
     const files = filesToProcess.length > 0 ? filesToProcess : stagedFiles;
     if (files.length === 0) {
-      setMessages((prev) => [...prev, { id: `msg_err_${generateId()}`, role: "assistant", type: "warning", content: "No hay archivo cargado en memoria local.", timestamp: new Date().toISOString() }]);
+      setMessages((prev) => [...prev, { id: `msg_err_${generateId()}`, role: "assistant", type: "warning", content: "No hay archivo cargado en memoria local.", timestamp: "2025-01-01T12:00:00.000Z" }]);
       return;
     }
 
     const file = files[0];
     const ts = generateId();
-    const isoString = new Date().toISOString();
+    const isoString = "2025-01-01T12:00:00.000Z";
 
     setMessages((prev) => [
       ...prev,
@@ -633,7 +630,7 @@ export function ConversationalImportWorkspace() {
             role: "assistant",
             type: "warning",
             content: `No pude analizar la estructura del archivo.\nRazón: ${preview.errors[0]?.message || "Error desconocido"}`,
-            timestamp: new Date().toISOString(),
+            timestamp: "2025-01-01T12:00:00.000Z",
           }
         ]);
         return;
@@ -657,7 +654,7 @@ export function ConversationalImportWorkspace() {
               role: "assistant",
               type: "warning",
               content: confidenceMsg,
-              timestamp: new Date().toISOString(),
+              timestamp: "2025-01-01T12:00:00.000Z",
             }
           ]);
         } else if (confidenceMsg.type === "actionable_decision") {
@@ -669,7 +666,7 @@ export function ConversationalImportWorkspace() {
               type: "guided_review_step",
               content: `**${confidenceMsg.title}**\n\n${confidenceMsg.content}`,
               nextActions: confidenceMsg.nextActions,
-              timestamp: new Date().toISOString(),
+              timestamp: "2025-01-01T12:00:00.000Z",
             }
           ]);
         }
@@ -683,7 +680,7 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "analysis_progress",
           content: "Estoy revisando si los demográficos, preguntas y escalas ya existen en la plataforma…\nEstoy preparando posibles homologaciones para esta carga histórica…",
-          timestamp: new Date().toISOString(),
+          timestamp: "2025-01-01T12:00:00.000Z",
         }
       ]);
 
@@ -704,7 +701,7 @@ export function ConversationalImportWorkspace() {
           type: "analysis_summary_blocks",
           content: summaryBlock.content,
           visualBlocks: summaryBlock.visualBlocks,
-          timestamp: new Date().toISOString(),
+          timestamp: "2025-01-01T12:00:00.000Z",
         }
       ]);
 
@@ -721,7 +718,7 @@ export function ConversationalImportWorkspace() {
             type: "guided_review_step",
             content: `Quedan ${finalContract.requiredUserDecisions!.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
             nextActions: mapped.actions,
-            timestamp: new Date().toISOString(),
+            timestamp: "2025-01-01T12:00:00.000Z",
           }
         ]);
       } else {
@@ -754,7 +751,7 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "warning",
           content: "No pude analizar la estructura del archivo.\nRazón: parser_failed",
-          timestamp: new Date().toISOString(),
+          timestamp: "2025-01-01T12:00:00.000Z",
         }
       ]);
     }
