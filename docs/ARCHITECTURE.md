@@ -547,3 +547,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Adds a pure deterministic mapper for safe workbook metadata inspection.
 - Does not read files, parse XLSX binaries, render UI, call APIs, persist data or expose raw rows.
 - Produces typed workbook/sheet inspection output for later column classification phases.
+
+### Content Analysis Metadata Wiring Hotfix (Phase 11D-H10-H2)
+- Wires safe internal workbook metadata directly to the UI chat mapper.
+- Prevents the filename-only fallback when internal sheets, row counts, and column labels are detected by the local parser.
+- Enables the column classification runtime when `sampleColumnLabels` are detected in the metadata.
+- Retains safe privacy boundaries (no raw rows, no PII, no data persistence).

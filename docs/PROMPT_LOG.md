@@ -1,3 +1,50 @@
+## Fase 11D-H10-H2 · Content Analysis Metadata Wiring Hotfix
+
+Phase: Fase 11D-H10-H2 · Content Analysis Metadata Wiring Hotfix
+
+Summary:
+- Scope Confirmation: Corrected wiring to use real internal metadata when available.
+- Visual QA Failure Addressed: Fixed the fallback issue where the chat only showed filenames despite having internal metadata.
+- Metadata Path Diagnostic: Verified `parseWorkbookPreview(file)` is executed and safe metadata is accessible.
+- Wiring Fix Summary: Updated `contentAnalysisChatMapper` to render detailed workbook metadata.
+- Safe Workbook Metadata Chat Rendering: Shows real sheet names, row/column counts, and header detection status.
+- Safe Column Classification Rendering: Only runs `classifyXlsxColumns` if real labels are present.
+- Filename-only Fallback Preservation: Fallback maintained honestly if no sheets are available.
+- Truthfulness / No Fake Analysis Verification: Information strictly derives from parsing safe workbook metadata.
+- Privacy Boundary: No raw rows, full XLSX dumps, or PII exposed.
+- No AI Theme CSS Changes.
+- No API / Backend / Storage / Claude introduced.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H10_H2_CONTENT_ANALYSIS_METADATA_WIRING_HOTFIX_COMPLETE
+CONTENT_ANALYSIS_METADATA_WIRING_FIXED
+PARSE_WORKBOOK_PREVIEW_METADATA_PATH_VERIFIED
+SAFE_WORKBOOK_METADATA_REACHES_CHAT
+SAFE_SHEET_METADATA_REACHES_CHAT
+SAFE_COLUMN_METADATA_REACHES_CLASSIFIER_WHEN_AVAILABLE
+FILENAME_ONLY_FALLBACK_PRESERVED
+NO_FAKE_SHEET_NAMES
+NO_FAKE_COLUMN_LABELS
+NO_FAKE_QUESTION_DETECTION
+NO_FAKE_DEMOGRAPHIC_DETECTION
+NO_RAW_ROWS_RENDERED
+NO_FULL_XLSX_DUMP
+NO_RAW_JSON_RENDERED
+NO_OBJECT_OBJECT_RENDERED
+NO_ENGLISH_COPY
+NO_AI_THEME_CSS_CHANGES
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_YES
+READY_FOR_INTERFACE_TESTING
+PHASE_11D_H11_CONTENT_ANALYSIS_UX_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H8 · Workbook Inspection Mapper
 
 Phase: Fase 11D-H8 · Workbook Inspection Mapper

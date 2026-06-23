@@ -118,9 +118,9 @@ export function mapWorkbookInspectionInputToAnalysis(input: SafeWorkbookInspecti
       classificationReason: 'Mapper puro ejecutado sobre metadata.',
       canInspectWorkbookMetadata: true,
       canClassifySheets: true,
-      canProfileColumns: false,
-      canDetectQuestions: false,
-      canDetectDemographics: false,
+      canProfileColumns: sheets.some(s => s.headerDetection && s.headerDetection.sampleColumnLabels.length > 0),
+      canDetectQuestions: sheets.some(s => s.headerDetection && s.headerDetection.sampleColumnLabels.length > 0),
+      canDetectDemographics: sheets.some(s => s.headerDetection && s.headerDetection.sampleColumnLabels.length > 0),
       canDetectResponseScales: false,
       requiresColumnClassificationPhase: true,
       requiresHumanReview: needsHumanReview
