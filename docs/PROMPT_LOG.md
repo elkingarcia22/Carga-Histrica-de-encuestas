@@ -8,7 +8,7 @@ Summary:
 - Product context preserved as Carga Histórica de Encuestas.
 - No runtime/UI changes in this phase.
 
-Commit SHA: PENDING_COMMIT
+Commit SHA: 77bfc120ca57bead08394a7ecce9ebfa9c3f9c25
 
 PHASE_11D_H2_REVIEW_UX_FILE_GROUPING_ARCHITECTURE_COMPLETE
 REVIEW_UX_HOTFIX_ARCHITECTURE_LOCKED
