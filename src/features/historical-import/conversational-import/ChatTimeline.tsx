@@ -2,7 +2,7 @@ import type { ChatMessage } from "./conversationalImportTypes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, User, Loader2, FileText, Users, Database, ArrowRight, AlertCircle } from "lucide-react";
+import { User, Loader2, FileText, Users, Database, ArrowRight, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
@@ -23,14 +23,15 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
         {messages.map((msg) => (
           <div
             key={msg.id}
+            id={msg.id}
             className={`flex gap-3 ${
               msg.role === "user" ? "flex-row-reverse" : "flex-row"
             }`}
           >
             <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-              msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+              msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-ai-gradient shadow-sm"
             }`}>
-              {msg.role === "user" ? <User size={16} /> : <Bot size={16} />}
+              {msg.role === "user" && <User size={16} />}
             </div>
 
             <div className={`flex flex-col gap-2 max-w-2xl ${
@@ -40,7 +41,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
                 <div className={`rounded-lg px-3 py-2 text-sm ${
                   msg.role === "user"
                     ? "bg-primary text-primary-foreground"
-                    : "bg-muted"
+                    : "bg-ai-bg border border-ai-border text-foreground"
                 }`}>
                   {msg.content}
                 </div>
@@ -48,7 +49,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "file_staging" && (
                 <div className="w-full">
-                  <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-2">
+                  <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-2">
                     {msg.content}
                   </div>
                   <SyntheticAttachmentStaging />
@@ -82,7 +83,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "synthetic_file_mount_summary" && (
                 <div className="w-full">
-                  <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-3">
+                  <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-3">
                     {msg.content}
                   </div>
                   <SyntheticMountedFilesPanel
@@ -96,7 +97,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "guided_review_step" && (
                 <div className="w-full">
-                  <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-3 whitespace-pre-wrap">
+                  <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-3 whitespace-pre-wrap">
                     {msg.content}
                   </div>
                   {msg.nextActions && msg.nextActions.length > 0 && (
@@ -133,7 +134,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "contract_summary" && (
                 <div className="w-full">
-                   <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-2">
+                   <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-2">
                     {msg.content}
                   </div>
                   <ApprovedContractSummary />
@@ -141,15 +142,15 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
               )}
 
               {msg.type === "analysis_progress" && (
-                <div className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm bg-muted border border-border animate-pulse">
-                  <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-                  <span className="text-muted-foreground">{msg.content}</span>
+                <div className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm bg-ai-bg border border-ai-border animate-pulse">
+                  <Loader2 className="h-4 w-4 animate-spin text-ai-border" />
+                  <span className="text-foreground">{msg.content}</span>
                 </div>
               )}
 
               {msg.type === "analysis_summary_blocks" && (
                 <div className="w-full flex flex-col gap-3">
-                  <div className="rounded-lg px-4 py-3 text-sm bg-muted whitespace-pre-wrap">
+                  <div className="rounded-lg px-4 py-3 text-sm bg-ai-bg border border-ai-border whitespace-pre-wrap">
                     {msg.content}
                   </div>
                   {msg.visualBlocks && msg.visualBlocks.length > 0 && (
@@ -200,7 +201,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "demographics_guided_review" && (
                 <div className="w-full flex flex-col gap-3">
-                  <div className="rounded-lg px-4 py-3 text-sm bg-muted whitespace-pre-wrap">
+                  <div className="rounded-lg px-4 py-3 text-sm bg-ai-bg border border-ai-border whitespace-pre-wrap">
                     {msg.content}
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -247,7 +248,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "sandbox_upload_panel" && (
                 <div className="w-full">
-                  <div className="rounded-lg px-3 py-2 text-sm bg-muted mb-2">
+                  <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-2">
                     {msg.content}
                   </div>
                   <SandboxUploadPanel onFilesSelected={(files) => onSandboxFilesSelected?.(files)} />
@@ -256,7 +257,7 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "sandbox_files_selected" && (
                 <div className="w-full flex flex-col gap-3">
-                  <div className="rounded-lg px-4 py-3 text-sm bg-muted whitespace-pre-wrap">
+                  <div className="rounded-lg px-4 py-3 text-sm bg-ai-bg border border-ai-border whitespace-pre-wrap">
                     {msg.content}
                   </div>
                   {msg.sandboxFiles && msg.sandboxFiles.length > 0 && (
