@@ -29,10 +29,10 @@ export function mapHistoricalLoadDraftToReview(
   draft: HistoricalLoadDraft,
   options?: ReviewMapperOptions
 ): HistoricalLoadDraftReviewMappedResult {
-  
+
   // REVIEW_STATE_DERIVED = YES
   let reviewState: HistoricalLoadDraftReviewState = 'not_ready';
-  
+
   if (draft.readinessSummary.unresolvedDecisionsCount > 0) {
     reviewState = 'needs_decisions';
   } else if (draft.readinessSummary.blockingRisksCount > 0) {
@@ -98,7 +98,7 @@ export function mapHistoricalLoadDraftToReview(
   const unresolvedDecisionsCount = draft.readinessSummary.unresolvedDecisionsCount;
   const blockingRisksCount = draft.readinessSummary.blockingRisksCount;
 
-  const canApproveForLaterImportPhase = 
+  const canApproveForLaterImportPhase =
     unresolvedDecisionsCount === 0 &&
     blockingRisksCount === 0 &&
     piiPolicyReviewed &&
