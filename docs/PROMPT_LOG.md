@@ -1,3 +1,65 @@
+## Fase 11D-H4 · Review UX / File Grouping QA
+
+Phase: Fase 11D-H4 · Review UX / File Grouping QA
+
+Summary:
+- Scope Confirmation: Hotfix 11D-H3 UX/Product Accuracy validated.
+- Product Context: Preserved as "Carga Histórica de Encuestas".
+- Upload Entry: Opens chat and auto-focuses file picker.
+- Survey Grouping: Groups gerencia/area files as segments of dominant cycle (e.g. Clima 2025). Expected groups visible.
+- Bullet-first Presentation: Chat messages use bulleted presentation.
+- Auto-scroll: Chat auto-scrolls to the newest message.
+- Decision Specificity & Explanation: Specific decisions, suggestions, and alternatives are visible.
+- Spanish Copy: Verified.
+- Data Minimization & Boundaries: No backend, storage, external API, or Claude connections. No new routes/screens. No object serialization visible.
+- Search Results: Terms evaluated and baseline confirmed for "This review", "Scale compatibility", "Survey-only entities", "claudeEnabled". No terms were improperly introduced by 11D-H3.
+- Build, Lint, and Tests: Passed successfully. 
+- Git Hygiene: Clean worktree.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H4_REVIEW_UX_FILE_GROUPING_QA_COMPLETE
+REVIEW_UX_FILE_GROUPING_QA_PASSED
+UPLOAD_ENTRY_OPENS_CHAT_VERIFIED
+UPLOAD_ATTACH_PICKER_AUTO_OPENED_OR_FOCUSED_VERIFIED
+SURVEY_GROUPING_BY_CYCLE_AND_STRUCTURE_VERIFIED
+GERENCIA_FILES_GROUPED_AS_SEGMENTS_VERIFIED
+EXPECTED_GROUPS_CLIMA_2025_AND_CLIMA_2024_VISIBLE
+BULLET_FIRST_CHAT_PRESENTATION_VERIFIED
+CARDS_RESERVED_FOR_SUMMARY_ONLY_VERIFIED
+CHAT_AUTO_SCROLL_VERIFIED
+SPECIFIC_DECISION_COPY_VERIFIED
+DECISION_SUGGESTION_VISIBLE_VERIFIED
+DECISION_ALTERNATIVES_VISIBLE_VERIFIED
+DECISION_CUSTOM_OVERRIDE_AVAILABLE_VERIFIED
+ZERO_DEMOGRAPHICS_EXPLAINED_VERIFIED
+ZERO_QUESTIONS_EXPLAINED_VERIFIED
+ANALYSIS_CONFIDENCE_COPY_VISIBLE_VERIFIED
+NO_OBJECT_OBJECT_VISIBLE_VERIFIED
+SPANISH_ONLY_VISIBLE_COPY_VERIFIED
+NO_NEW_SCREEN_CREATED_VERIFIED
+NO_NEW_ROUTE_CREATED_VERIFIED
+NO_STORAGE_CREATED_VERIFIED
+NO_BACKEND_CREATED_VERIFIED
+NO_CLAUDE_CONNECTION_CREATED_VERIFIED
+NO_FINAL_IMPORT_IN_THIS_SCOPE_VERIFIED
+NO_AUTOMATIC_APPROVAL_VERIFIED
+READY_FOR_COMPARISON_OUTPUT_DISABLED_VERIFIED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE_VERIFIED
+NO_RAW_JSON_RENDERED_VERIFIED
+NO_ANY_USAGE_CONFIRMED
+NO_AS_ANY_USAGE_CONFIRMED
+NO_HEX_HARDCODED
+NO_TEXT_WHITE
+BUILD_PASSED
+SCOPED_LINT_GATE_PASSED
+TESTS_PASSED
+COVERAGE_COMMAND_PASSED
+GIT_SHOW_CHECK_PASSED
+VISIBLE_UI_CHECKPOINT_YES
+PHASE_11E_REVIEW_QA_RECHECK_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H3 · Historical Load Draft Review UX / File Grouping Build
 
 Phase: Fase 11D-H3 · Historical Load Draft Review UX / File Grouping Build
