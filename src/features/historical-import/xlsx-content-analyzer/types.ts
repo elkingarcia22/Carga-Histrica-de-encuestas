@@ -1,5 +1,13 @@
 export type XlsxContentAnalysisConfidence = 'high' | 'medium' | 'low' | 'blocked';
 
+export type XlsxSheetLayout =
+  | 'aggregated_items_by_rows'
+  | 'raw_responses_by_columns'
+  | 'segment_summary'
+  | 'question_catalog'
+  | 'metadata'
+  | 'unknown';
+
 export type XlsxSheetRole =
   | 'raw_responses'
   | 'aggregated_results'
@@ -31,6 +39,7 @@ export interface XlsxSheetInspection {
   rowCount: number;
   columnCount: number;
   suggestedRole: XlsxSheetRole;
+  layout: XlsxSheetLayout;
   confidence: XlsxContentAnalysisConfidence;
   classificationReason: string;
   headerDetection?: XlsxHeaderDetection;

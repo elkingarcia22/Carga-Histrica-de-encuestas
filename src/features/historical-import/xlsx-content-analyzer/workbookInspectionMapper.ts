@@ -10,6 +10,7 @@ import type {
   XlsxUxOutputSection,
   XlsxHeaderDetection
 } from './types';
+import { classifySheetLayout } from './sheetLayoutClassifier';
 
 function determineSheetRole(sheet: SafeSheetInspectionInput): { role: XlsxSheetRole; confidence: XlsxContentAnalysisConfidence; reason: string } {
   const name = sheet.sheetName.toLowerCase();
@@ -68,12 +69,14 @@ export function mapWorkbookInspectionInputToAnalysis(input: SafeWorkbookInspecti
   const sheets: XlsxSheetInspection[] = input.sheets.map(sheet => {
     const { role, confidence, reason } = determineSheetRole(sheet);
     const header = determineHeader(sheet);
+    const layout = classifySheetLayout(sheet, input.fileName);
 
     return {
       sheetName: sheet.sheetName,
       rowCount: sheet.rowCount,
       columnCount: sheet.columnCount,
       suggestedRole: role,
+      layout: layout,
       confidence: confidence,
       classificationReason: reason,
       headerDetection: header

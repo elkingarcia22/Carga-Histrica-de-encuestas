@@ -30,49 +30,62 @@ Necesito una fase adicional de extracción local de metadata real del workbook a
   }
 
   const sheetDetails = analysis.sheets.map(s => {
-    const labels = s.headerDetection?.sampleColumnLabels || [];
-    const labelsSummary = labels.length > 0 ? 'encabezados disponibles' : 'sin encabezados';
-    return `${s.sheetName}: ${s.rowCount} filas, ${s.columnCount} columnas, ${labelsSummary}.`;
+    let layoutString = 'layout desconocido';
+    if (s.layout === 'aggregated_items_by_rows') layoutString = 'reporte agregado con ítems en filas';
+    if (s.layout === 'raw_responses_by_columns') layoutString = 'respuestas crudas por columnas';
+    if (s.layout === 'segment_summary') layoutString = 'resumen por segmento';
+    if (s.layout === 'question_catalog') layoutString = 'catálogo de preguntas';
+    if (s.layout === 'metadata') layoutString = 'hoja de metadata/instrucciones';
+
+    return `${s.sheetName}: ${s.rowCount} filas, ${s.columnCount} columnas, ${layoutString}.`;
   }).join('\n  - ');
 
-  let classifiedColsSummary = 'No (Sin labels)';
-  let possibleQuestions = 'Pendiente de inspección profunda';
-  let possibleDemographics = 'Pendiente de inspección profunda';
-  let possibleMetrics = 'Pendiente de inspección profunda';
-  let participantIdentification = 'No se detectaron identificadores directos en los encabezados disponibles.';
+  let layoutDetectado = 'Desconocido';
+  let posiblesPreguntas = 'Pendiente de lectura segura';
+  let posiblesDimensiones = 'Pendiente de lectura segura';
+  let posiblesMetricas = 'Pendiente de lectura segura';
+  let identificacionParticipantes = 'No se detectaron identificadores directos en los encabezados disponibles.';
 
-  if (capabilities.canProfileColumns) {
-    const allLabels = analysis.sheets.flatMap(s => {
-      const labels = s.headerDetection?.sampleColumnLabels || [];
-      return labels.map(label => ({
-        columnLabel: label,
-        sampleCellPatterns: [],
-        detectedTextSignals: s.headerDetection?.detectedSignals || [],
-        detectedNumericSignals: [],
-        sheetRole: s.suggestedRole
-      }));
-    });
+  const isAggregatedByRows = analysis.sheets.some(s => s.layout === 'aggregated_items_by_rows');
+  const isSegmentSummary = analysis.sheets.some(s => s.layout === 'segment_summary');
+  const isRawResponses = analysis.sheets.some(s => s.layout === 'raw_responses_by_columns');
 
-    if (allLabels.length > 0) {
-      const classified = classifyXlsxColumns(allLabels);
-      const questionCount = classified.filter(c => c.role === 'question_candidate').length;
-      const demoCount = classified.filter(c => c.role === 'demographic_candidate' || c.role === 'segment_label').length;
-      const metricCount = classified.filter(c => c.role === 'metric_or_aggregate').length;
+  if (isAggregatedByRows) {
+    layoutDetectado = 'reporte agregado por segmentos';
+    posiblesPreguntas = 'detectables por filas usando “Tipo de item” e “Item”; conteo pendiente si no hay lectura segura de filas de ítems.';
+    posiblesDimensiones = 'detectables por filas tipo “Dimension”.';
+    posiblesMetricas = 'columnas de percepción negativa, neutra, positiva y total de respuestas.';
+  } else if (isSegmentSummary) {
+    layoutDetectado = 'resumen de respuestas por segmento';
+    posiblesPreguntas = 'dependiente del catálogo central.';
+    posiblesDimensiones = 'dependiente del catálogo central.';
+    posiblesMetricas = 'tasas de finalización y monitores de participación.';
+  } else if (isRawResponses) {
+    layoutDetectado = 'respuestas individuales crudas por columnas';
+    if (capabilities.canProfileColumns) {
+      const allLabels = analysis.sheets.flatMap(s => {
+        const labels = s.headerDetection?.sampleColumnLabels || [];
+        return labels.map(label => ({
+          columnLabel: label,
+          sampleCellPatterns: [],
+          detectedTextSignals: s.headerDetection?.detectedSignals || [],
+          detectedNumericSignals: [],
+          sheetRole: s.suggestedRole
+        }));
+      });
 
-      const piiCandidates = classified.filter(c => c.role === 'participant_identifier_candidate');
-      if (piiCandidates.length > 0) {
-        const hasDirectPII = piiCandidates.some(c => c.detectedSignals.some(s => ['nombre', 'correo', 'email', 'teléfono', 'telefono', 'celular'].includes(s)));
-        if (hasDirectPII) {
-          participantIdentification = 'Identificada';
-        } else {
-          participantIdentification = 'Seudonimizada con ID';
+      if (allLabels.length > 0) {
+        const classified = classifyXlsxColumns(allLabels);
+        const piiCandidates = classified.filter(c => c.role === 'participant_identifier_candidate');
+        if (piiCandidates.length > 0) {
+          const hasDirectPII = piiCandidates.some(c => c.detectedSignals.some(sig => ['nombre', 'correo', 'email', 'teléfono', 'telefono', 'celular'].includes(sig)));
+          if (hasDirectPII) {
+            identificacionParticipantes = 'Identificada';
+          } else {
+            identificacionParticipantes = 'Seudonimizada con ID';
+          }
         }
       }
-
-      classifiedColsSummary = `Sí, ${classified.length} encabezados evaluados.`;
-      possibleQuestions = questionCount > 0 ? `Parcial, ${questionCount} detectados / requiere revisión.` : 'No detectadas.';
-      possibleDemographics = demoCount > 0 ? `${demoCount} detectados.` : 'No detectados.';
-      possibleMetrics = metricCount > 0 ? `${metricCount} detectados.` : 'No detectados.';
     }
   }
 
@@ -82,10 +95,10 @@ Necesito una fase adicional de extracción local de metadata real del workbook a
 - Evidencia disponible: Metadata interna segura del workbook.
 - Hojas detectadas:
   - ${sheetDetails}
-- Columnas clasificadas: ${classifiedColsSummary}
-- Posibles preguntas o ítems: ${possibleQuestions}
-- Posibles demográficos: ${possibleDemographics}
-- Posibles métricas o agregados: ${possibleMetrics}
-- Identificación de participantes: ${participantIdentification}
-- Confirmaciones pendientes: revisar clasificación de preguntas, demográficos y métricas antes de preparar la carga.`;
+- Layout detectado: ${layoutDetectado}.
+- Preguntas/ítems: ${posiblesPreguntas}
+- Dimensiones: ${posiblesDimensiones}
+- Métricas: ${posiblesMetricas}
+- Identificación de participantes: ${identificacionParticipantes}
+- Qué falta confirmar: validar reglas de homologación de ítems y segmentos antes de preparar la carga.`;
 }

@@ -3,7 +3,6 @@ import "./ai-theme.css";
 import { parseWorkbookPreview } from "../local-parser/localParser";
 import { assembleDraftSurveyFileAnalysisContract } from "../contract-assembler";
 import { mockUbitsCatalogs } from "../mock-ubits-catalogs/mockUbitsCatalogs";
-import { mapContractToSummaryBlock } from "./parserContractChatMapper";
 import { mapContentAnalysisToChatSummary } from "./contentAnalysisChatMapper";
 import { mapWorkbookInspectionInputToAnalysis } from "../xlsx-content-analyzer";
 import { runMatchingEngineIntegration } from "./matchingIntegrationMapper";
@@ -19,8 +18,6 @@ import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "./conversationalImportTypes";
 import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
 import { mapDecisionToExplanation } from "./decisionExplanationMapper";
-import { runHistoricalLoadDraftIntegration, mapHistoricalLoadDraftToSummary } from "./historicalLoadDraftIntegrationMapper";
-import { mapHistoricalLoadDraftToReviewMessages } from "./historicalLoadDraftReviewMessageMapper";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -497,18 +494,10 @@ export function ConversationalImportWorkspace() {
           newMessages.push({
             id: `msg_assistant_drafting_${ts}`,
             role: "assistant",
-            type: "analysis_progress",
-            content: "Estoy preparando el borrador de carga histórica…\nEstoy consolidando homologaciones, decisiones y riesgos en un resumen de revisión…",
+            type: "text",
+            content: "Todas las decisiones iniciales han sido resueltas. El borrador está listo para revisión final cuando lo solicites.",
             timestamp: isoString,
           });
-
-          setTimeout(() => {
-              setMessages((current) => current.filter(m => m.id !== `msg_assistant_drafting_${ts}`));
-              const draft = runHistoricalLoadDraftIntegration(draftContract, stagedFiles, newResolvedIds);
-              const draftMessages = mapHistoricalLoadDraftToSummary(draft, `msg_assistant_draft_${ts}`, isoString);
-              const reviewMessages = mapHistoricalLoadDraftToReviewMessages(draft, `msg_assistant_review_${ts}`, isoString);
-              void simulateChatFlow([...draftMessages, ...reviewMessages]);
-          }, 600);
 
           return newMessages;
         }
@@ -718,23 +707,9 @@ export function ConversationalImportWorkspace() {
       const matchingEngineOutput = runMatchingEngineIntegration(contract.draftContract!);
       const finalContract = matchingEngineOutput.draftContract;
 
-      const summaryBlock = mapContractToSummaryBlock({ ...contract, draftContract: finalContract });
-
       setDraftContract(finalContract);
       setCurrentDecisionIndex(0);
       setResolvedDecisionIds([]);
-
-      setMessages((prev) => [
-        ...prev.filter(m => m.type !== "analysis_progress"),
-        {
-          id: `msg_assistant_summary_${generateId()}`,
-          role: "assistant",
-          type: "analysis_summary_blocks",
-          content: summaryBlock.content,
-          visualBlocks: summaryBlock.visualBlocks,
-          timestamp: "2025-01-01T12:00:00.000Z",
-        }
-      ]);
 
       // Filter out redundant group/ambiguity decisions if group was already selected
       const actionableDecisions = (finalContract.requiredUserDecisions || []).filter(d => {
@@ -766,20 +741,13 @@ export function ConversationalImportWorkspace() {
         setMessages((prev) => [
           ...prev,
           {
-            id: `msg_assistant_drafting_${genTs}`,
+            id: `msg_assistant_ready_${genTs}`,
             role: "assistant",
-            type: "analysis_progress",
-            content: "Estoy preparando el borrador de carga histórica…\nEstoy consolidando homologaciones, decisiones y riesgos en un resumen de revisión…",
+            type: "text",
+            content: "No hay decisiones bloqueantes. El borrador está listo para revisión final cuando lo solicites.",
             timestamp: genIso,
           }
         ]);
-        setTimeout(() => {
-          setMessages((current) => current.filter(m => m.id !== `msg_assistant_drafting_${genTs}`));
-          const draft = runHistoricalLoadDraftIntegration(finalContract, files, []);
-          const draftMessages = mapHistoricalLoadDraftToSummary(draft, `msg_assistant_draft_${genTs}`, genIso);
-          const reviewMessages = mapHistoricalLoadDraftToReviewMessages(draft, `msg_assistant_review_${genTs}`, genIso);
-          void simulateChatFlow([...draftMessages, ...reviewMessages]);
-        }, 600);
       }
 
     } catch {
