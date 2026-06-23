@@ -515,3 +515,14 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Mapped zero demographics/questions and low-confidence analysis cases are handled properly.
 - All visible copy is 100% Spanish.
 - No new screen, route, backend, storage, Claude, final import or comparison dashboard introduced.
+
+### Real XLSX Content Analysis Architecture
+- Documento fuente: `docs/HISTORICAL_XLSX_CONTENT_ANALYSIS_ARCHITECTURE.md`.
+- Define el pipeline de inspección de contenido XLSX en cliente (navegador).
+- Incluye heurísticas para clasificar hojas, columnas, preguntas y demográficos.
+- Identifica archivos que representan resúmenes de segmentos.
+- Emite un modelo de confianza (`high`, `medium`, `low`, `blocked`).
+- Genera decisiones humanas accionables cuando la confianza es baja.
+- El UX debe mostrar descubrimientos (hojas, preguntas probables, etc.) en bullets.
+- No se implementa backend, API, storage ni parseo real en esta fase arquitectónica.
+- No renderiza datos crudos ni PII en la UI.
