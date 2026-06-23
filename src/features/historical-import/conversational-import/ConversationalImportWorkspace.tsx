@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "./conversationalImportTypes";
 import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
 import { mapDecisionToExplanation } from "./decisionExplanationMapper";
+import { useMessageSequenceGate } from "./messageSequenceGate";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -106,6 +107,8 @@ export function ConversationalImportWorkspace() {
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
+  const { wait, waitTypewriter, isMounted } = useMessageSequenceGate();
+
   const simulateChatFlow = async (newMessages: ChatMessage[]) => {
     initAudioSync();
 
@@ -122,7 +125,8 @@ export function ConversationalImportWorkspace() {
           timestamp: "2025-01-01T12:00:00.000Z"
         }]);
 
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        const proceedThinking = await wait(1500);
+        if (!proceedThinking) return;
 
         setMessages(prev => {
           const filtered = prev.filter(m => m.id !== typingId);
@@ -130,14 +134,17 @@ export function ConversationalImportWorkspace() {
         });
 
         if (msg.content) {
-          const typingDuration = msg.content.length * 15;
-          await new Promise(resolve => setTimeout(resolve, typingDuration + 300));
+          const proceedTyping = await waitTypewriter(msg.content.length, 300);
+          if (!proceedTyping) return;
         } else {
-          await new Promise(resolve => setTimeout(resolve, 800));
+          const proceedWait = await wait(800);
+          if (!proceedWait) return;
         }
       }
     }
-    playNotificationSound();
+    if (isMounted.current) {
+      playNotificationSound();
+    }
   };
 
   // Auto-scroll logic
@@ -691,8 +698,9 @@ export function ConversationalImportWorkspace() {
         }
       ]);
 
-      // 2. Pequeña pausa visual constante
-      await new Promise(resolve => setTimeout(resolve, 600));
+      // 2. Esperar al fin visual del typewriter real, más una pausa visual constante.
+      const proceed = await waitTypewriter(chatSummary.length, 600);
+      if (!proceed) return;
 
       // 3. Mostrar el estado final y cualquier decisión pendiente en secuencia
       setMessages((prev) => {
