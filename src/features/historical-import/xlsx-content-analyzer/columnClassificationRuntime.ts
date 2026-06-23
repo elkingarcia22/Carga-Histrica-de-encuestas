@@ -11,7 +11,7 @@ export function classifyXlsxColumns(
 
 function classifySingleColumn(profile: SafeColumnProfileInput): ColumnClassificationResult {
   const { columnLabel, detectedTextSignals, sheetRole } = profile;
-  
+
   if (!columnLabel || columnLabel.trim() === '') {
     return {
       role: 'unknown',
@@ -115,7 +115,7 @@ function classifySingleColumn(profile: SafeColumnProfileInput): ColumnClassifica
     'comunicación', 'reconocimiento', 'aprendizaje', 'desempeño'
   ];
   const questionMatches = questionKeywords.filter(k => contextText.includes(k));
-  
+
   const isLongText = columnLabel.split(' ').length >= 5;
   const hasQuestionMarks = columnLabel.includes('¿') || columnLabel.includes('?');
   const hasQuestionPrefix = /^(p\d+|q\d+)/i.test(columnLabel);
