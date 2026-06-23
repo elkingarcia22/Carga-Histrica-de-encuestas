@@ -679,15 +679,9 @@ export function ConversationalImportWorkspace() {
         finalProgressState = "Análisis bloqueado: falta metadata segura.";
       }
 
+      // 1. Mostrar primero el bloque de análisis (chatSummary)
       setMessages((prev) => [
         ...prev.filter(m => m.type !== "analysis_progress"),
-        {
-          id: `msg_assistant_progress_final_${generateId()}`,
-          role: "assistant",
-          type: "text",
-          content: finalProgressState,
-          timestamp: "2025-01-01T12:00:00.000Z",
-        },
         {
           id: `msg_assistant_content_analysis_${generateId()}`,
           role: "assistant",
@@ -697,51 +691,56 @@ export function ConversationalImportWorkspace() {
         }
       ]);
 
-      if (confidenceMsg) {
-        if (typeof confidenceMsg === "string") {
-          setMessages((prev) => [
-            ...prev,
-            {
+      // 2. Pequeña pausa visual constante
+      await new Promise(resolve => setTimeout(resolve, 600));
+
+      // 3. Mostrar el estado final y cualquier decisión pendiente en secuencia
+      setMessages((prev) => {
+        const newMessages: ChatMessage[] = [
+          ...prev,
+          {
+            id: `msg_assistant_progress_final_${generateId()}`,
+            role: "assistant",
+            type: "text",
+            content: finalProgressState,
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }
+        ];
+
+        if (confidenceMsg) {
+          if (typeof confidenceMsg === "string") {
+            newMessages.push({
               id: `msg_assistant_confidence_${generateId()}`,
               role: "assistant",
               type: "warning",
               content: confidenceMsg,
               timestamp: "2025-01-01T12:00:00.000Z",
-            }
-          ]);
-        } else if (confidenceMsg.type === "actionable_decision") {
-          setMessages((prev) => [
-            ...prev,
-            {
+            });
+          } else if (confidenceMsg.type === "actionable_decision") {
+            newMessages.push({
               id: `msg_assistant_confidence_${generateId()}`,
               role: "assistant",
               type: "guided_review_step",
               content: `**${confidenceMsg.title}**\n\n${confidenceMsg.content}`,
               nextActions: confidenceMsg.nextActions,
               timestamp: "2025-01-01T12:00:00.000Z",
-            }
-          ]);
-        }
-        return;
-      }
-
-      if (actionableDecisions.length > 0) {
-        // One decision at a time
-        const decision = actionableDecisions[0];
-        const mapped = mapDecisionToExplanation(decision);
-
-        setMessages((prev) => [
-          ...prev,
-          {
+            });
+          }
+        } else if (actionableDecisions.length > 0) {
+          const decision = actionableDecisions[0];
+          const mapped = mapDecisionToExplanation(decision);
+          newMessages.push({
             id: `msg_assistant_decision_${generateId()}`,
             role: "assistant",
             type: "guided_review_step",
             content: `Quedan ${actionableDecisions.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
             nextActions: mapped.actions,
             timestamp: "2025-01-01T12:00:00.000Z",
-          }
-        ]);
-      }
+          });
+        }
+
+        return newMessages;
+      });
 
     } catch {
       setMessages((prev) => [
