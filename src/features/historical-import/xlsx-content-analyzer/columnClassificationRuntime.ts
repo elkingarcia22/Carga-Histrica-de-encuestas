@@ -43,24 +43,7 @@ function classifySingleColumn(profile: SafeColumnProfileInput): ColumnClassifica
     };
   }
 
-  // 2. Metrics / Aggregates
-  const metricKeywords = [
-    'favorabilidad', 'participación', 'participacion', 'promedio', 'media',
-    'score', 'puntaje', 'porcentaje', '%', 'n', 'total', 'respuestas',
-    'respondidas', 'brecha', 'delta'
-  ];
-  const metricMatches = metricKeywords.filter(k => contextText.includes(k));
-  if (metricMatches.length > 0) {
-    detectedSignals.push(...metricMatches);
-    return {
-      role: 'metric_or_aggregate',
-      confidence: metricMatches.length > 1 ? 'high' : 'medium',
-      classificationReason: 'Presenta palabras clave asociadas a métricas o resultados agregados.',
-      detectedSignals
-    };
-  }
-
-  // 3. Metadata
+  // 2. Metadata
   const metadataKeywords = [
     'fecha', 'año', 'anio', 'periodo', 'ciclo', 'encuesta', 'archivo', 'fuente', 'sheet', 'hoja'
   ];
@@ -75,7 +58,64 @@ function classifySingleColumn(profile: SafeColumnProfileInput): ColumnClassifica
     };
   }
 
-  // 4. Demographics and Segments
+  // 3. Questions
+  const questionKeywords = [
+    'clima', 'liderazgo', 'bienestar', 'compromiso', 'satisfacción', 'satisfaccion',
+    'comunicación', 'comunicacion', 'reconocimiento', 'aprendizaje', 'desempeño',
+    'percepción', 'percepcion', 'engagement', 'enps', 'e-nps'
+  ];
+  const questionMatches = questionKeywords.filter(k => contextText.includes(k));
+
+  const isLongText = columnLabel.split(' ').length >= 5;
+  const hasQuestionMarks = columnLabel.includes('¿') || columnLabel.includes('?');
+  const hasQuestionPrefix = /^(p\d+|q\d+)/i.test(columnLabel);
+  const isQuestionSheet = sheetRole === 'raw_responses' || sheetRole === 'question_catalog';
+  const hasLikertSignals = contextText.includes('likert') || contextText.includes('escala') || contextText.includes('acuerdo');
+
+  let questionSignalCount = 0;
+  if (isLongText) { questionSignalCount++; detectedSignals.push('frase_larga'); }
+  if (hasQuestionMarks) { questionSignalCount++; detectedSignals.push('signos_pregunta'); }
+  if (hasQuestionPrefix) { questionSignalCount++; detectedSignals.push('prefijo_pregunta'); }
+  if (isQuestionSheet) { questionSignalCount++; detectedSignals.push('hoja_respuestas'); }
+  if (hasLikertSignals) { questionSignalCount++; detectedSignals.push('escala_likert'); }
+  if (questionMatches.length > 0) {
+    questionSignalCount += questionMatches.length;
+    detectedSignals.push(...questionMatches);
+  }
+
+  if (questionSignalCount > 0) {
+    return {
+      role: 'question_candidate',
+      confidence: questionSignalCount >= 2 ? 'high' : 'medium',
+      classificationReason: 'Señales lingüísticas o contextuales indican que es una pregunta de encuesta.',
+      detectedSignals
+    };
+  }
+
+  // 4. Metrics / Aggregates (Evaluate after questions to prevent false positives)
+  // Ensure we don't accidentally match long phrases that happen to have 'tipo' or 'score' if they didn't trigger question but still shouldn't be metrics.
+  const isShortMetricLabel = columnLabel.split(' ').length <= 3;
+  const metricKeywords = [
+    'favorabilidad', 'participación', 'participacion', 'promedio', 'media',
+    'score', 'puntaje', 'porcentaje', '%', 'n', 'total', 'respuestas',
+    'respondidas', 'brecha', 'delta'
+  ];
+
+  // Only classify as metric if it doesn't look like a long phrase
+  if (isShortMetricLabel) {
+    const metricMatches = metricKeywords.filter(k => contextText.includes(k));
+    if (metricMatches.length > 0) {
+      detectedSignals.push(...metricMatches);
+      return {
+        role: 'metric_or_aggregate',
+        confidence: metricMatches.length > 1 ? 'high' : 'medium',
+        classificationReason: 'Presenta palabras clave cortas asociadas a métricas o resultados agregados.',
+        detectedSignals
+      };
+    }
+  }
+
+  // 5. Demographics and Segments
   const demographicKeywords = [
     'área', 'area', 'gerencia', 'dirección', 'direccion', 'unidad', 'sede',
     'país', 'pais', 'ciudad', 'cargo', 'rol', 'nivel', 'género', 'genero',
@@ -105,39 +145,6 @@ function classifySingleColumn(profile: SafeColumnProfileInput): ColumnClassifica
       role: 'demographic_candidate',
       confidence: demographicMatches.length > 1 ? 'high' : 'medium',
       classificationReason: 'El título de la columna coincide con atributos sociodemográficos comunes.',
-      detectedSignals
-    };
-  }
-
-  // 5. Questions
-  const questionKeywords = [
-    'clima', 'liderazgo', 'bienestar', 'compromiso', 'satisfacción',
-    'comunicación', 'reconocimiento', 'aprendizaje', 'desempeño'
-  ];
-  const questionMatches = questionKeywords.filter(k => contextText.includes(k));
-
-  const isLongText = columnLabel.split(' ').length >= 5;
-  const hasQuestionMarks = columnLabel.includes('¿') || columnLabel.includes('?');
-  const hasQuestionPrefix = /^(p\d+|q\d+)/i.test(columnLabel);
-  const isQuestionSheet = sheetRole === 'raw_responses' || sheetRole === 'question_catalog';
-  const hasLikertSignals = contextText.includes('likert') || contextText.includes('escala') || contextText.includes('acuerdo');
-
-  let questionSignalCount = 0;
-  if (isLongText) { questionSignalCount++; detectedSignals.push('frase_larga'); }
-  if (hasQuestionMarks) { questionSignalCount++; detectedSignals.push('signos_pregunta'); }
-  if (hasQuestionPrefix) { questionSignalCount++; detectedSignals.push('prefijo_pregunta'); }
-  if (isQuestionSheet) { questionSignalCount++; detectedSignals.push('hoja_respuestas'); }
-  if (hasLikertSignals) { questionSignalCount++; detectedSignals.push('escala_likert'); }
-  if (questionMatches.length > 0) {
-    questionSignalCount += questionMatches.length;
-    detectedSignals.push(...questionMatches);
-  }
-
-  if (questionSignalCount > 0) {
-    return {
-      role: 'question_candidate',
-      confidence: questionSignalCount >= 2 ? 'high' : 'medium',
-      classificationReason: 'Señales lingüísticas o contextuales indican que es una pregunta de encuesta.',
       detectedSignals
     };
   }

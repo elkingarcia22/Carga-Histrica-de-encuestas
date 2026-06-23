@@ -6,7 +6,7 @@ export function mapContentAnalysisToChatSummary(
   fileNames: string[]
 ): string {
   const { analysis, privacyBoundary, capabilities } = mappingResult;
-  const filesString = fileNames.length > 0 ? fileNames.join(', ') : 'Ninguno';
+  const filesString = fileNames.length > 0 ? `${fileNames.length} archivos del grupo Clima 2025` : 'Ninguno';
 
   const hasSheets = analysis.sheets.length > 0;
 
@@ -18,10 +18,10 @@ export function mapContentAnalysisToChatSummary(
 - Evidencia disponible: Solo nombres de archivos
 - Hojas detectadas: No se leyeron hojas internas
 - Columnas clasificadas: No
-- Posibles preguntas: No evaluadas
+- Posibles preguntas o ítems: No evaluadas
 - Posibles demográficos: No evaluados
 - Posibles métricas o agregados: No evaluados
-- Riesgos de privacidad: Seguro (no se leyeron filas)
+- Identificación de participantes: No determinada
 - Decisiones pendientes: Preparar inspección local
 
 Aún no tengo evidencia interna suficiente del XLSX.
@@ -31,14 +31,15 @@ Necesito una fase adicional de extracción local de metadata real del workbook a
 
   const sheetDetails = analysis.sheets.map(s => {
     const labels = s.headerDetection?.sampleColumnLabels || [];
-    const labelsSummary = labels.length > 0 ? `[${labels.slice(0, 3).join(', ')}${labels.length > 3 ? '...' : ''}]` : 'Sin encabezados';
-    return `${s.sheetName} (${s.rowCount} filas, ${s.columnCount} cols, ${labelsSummary})`;
-  }).join('\\n  - ');
+    const labelsSummary = labels.length > 0 ? 'encabezados disponibles' : 'sin encabezados';
+    return `${s.sheetName}: ${s.rowCount} filas, ${s.columnCount} columnas, ${labelsSummary}.`;
+  }).join('\n  - ');
 
   let classifiedColsSummary = 'No (Sin labels)';
   let possibleQuestions = 'Pendiente de inspección profunda';
   let possibleDemographics = 'Pendiente de inspección profunda';
   let possibleMetrics = 'Pendiente de inspección profunda';
+  let participantIdentification = 'No se detectaron identificadores directos en los encabezados disponibles.';
 
   if (capabilities.canProfileColumns) {
     const allLabels = analysis.sheets.flatMap(s => {
@@ -58,23 +59,33 @@ Necesito una fase adicional de extracción local de metadata real del workbook a
       const demoCount = classified.filter(c => c.role === 'demographic_candidate' || c.role === 'segment_label').length;
       const metricCount = classified.filter(c => c.role === 'metric_or_aggregate').length;
 
-      classifiedColsSummary = `Sí (${classified.length} procesadas)`;
-      possibleQuestions = questionCount > 0 ? `Sí (${questionCount} detectadas)` : 'No detectadas';
-      possibleDemographics = demoCount > 0 ? `Sí (${demoCount} detectados)` : 'No detectados';
-      possibleMetrics = metricCount > 0 ? `Sí (${metricCount} detectados)` : 'No detectadas';
+      const piiCandidates = classified.filter(c => c.role === 'participant_identifier_candidate');
+      if (piiCandidates.length > 0) {
+        const hasDirectPII = piiCandidates.some(c => c.detectedSignals.some(s => ['nombre', 'correo', 'email', 'teléfono', 'telefono', 'celular'].includes(s)));
+        if (hasDirectPII) {
+          participantIdentification = 'Identificada';
+        } else {
+          participantIdentification = 'Seudonimizada con ID';
+        }
+      }
+
+      classifiedColsSummary = `Sí, ${classified.length} encabezados evaluados.`;
+      possibleQuestions = questionCount > 0 ? `Parcial, ${questionCount} detectados / requiere revisión.` : 'No detectadas.';
+      possibleDemographics = demoCount > 0 ? `${demoCount} detectados.` : 'No detectados.';
+      possibleMetrics = metricCount > 0 ? `${metricCount} detectados.` : 'No detectados.';
     }
   }
 
   return `Análisis de estructura detectado
 
-- Archivos considerados: ${filesString}
-- Evidencia disponible: Metadata interna segura del workbook
+- Archivos considerados: ${filesString}.
+- Evidencia disponible: Metadata interna segura del workbook.
 - Hojas detectadas:
   - ${sheetDetails}
 - Columnas clasificadas: ${classifiedColsSummary}
-- Posibles preguntas: ${possibleQuestions}
+- Posibles preguntas o ítems: ${possibleQuestions}
 - Posibles demográficos: ${possibleDemographics}
 - Posibles métricas o agregados: ${possibleMetrics}
-- Riesgos de privacidad: Seguro (procesamiento local sin PII)
-- Decisiones pendientes: ${analysis.decisions.length} decisiones`;
+- Identificación de participantes: ${participantIdentification}
+- Confirmaciones pendientes: revisar clasificación de preguntas, demográficos y métricas antes de preparar la carga.`;
 }

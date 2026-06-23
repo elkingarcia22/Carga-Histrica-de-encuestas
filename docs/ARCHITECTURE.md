@@ -553,3 +553,7 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - Prevents the filename-only fallback when internal sheets, row counts, and column labels are detected by the local parser.
 - Enables the column classification runtime when `sampleColumnLabels` are detected in the metadata.
 - Retains safe privacy boundaries (no raw rows, no PII, no data persistence).
+
+## Phase 11D-H11-H1 · Content Analysis UX QA Hotfix
+Refined content analysis presentation and bias heuristics, strictly enforcing local-only behavior and preventing raw data exposure.
+Markers: PHASE_11D_H11_H1_CONTENT_ANALYSIS_UX_QA_HOTFIX_COMPLETE

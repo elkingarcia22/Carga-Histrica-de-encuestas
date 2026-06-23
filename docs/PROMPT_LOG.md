@@ -10500,3 +10500,46 @@ R1H5_DEFINED_BUT_NOT_TRIGGERED
 - `npm run build`
 - `npx eslint src/features/historical-import/conversational-import`
 - `git diff --check`
+
+## Phase 11D-H11-H1 · Content Analysis UX QA Hotfix
+
+Summary:
+- Refined UX and QA output of the conversational import content analysis.
+- Fixed column classification bias reducing false positives on metrics and prioritizing questions.
+- Replaced privacy risk copy with Participant Identification copy logic.
+- Suppressed redundant group decision block if the group is already selected.
+- Cleaned sheet summary without dumping long arrays of raw headers.
+- Preserved fallback logic if no internal metadata is available.
+- Verified no fake data or analysis is output.
+
+Markers:
+PHASE_11D_H11_H1_CONTENT_ANALYSIS_UX_QA_HOTFIX_COMPLETE
+COLUMN_CLASSIFICATION_BIAS_REDUCED
+QUESTION_ITEM_DETECTION_IMPROVED
+METRIC_OVERCLASSIFICATION_FIXED
+PARTICIPANT_IDENTIFICATION_COPY_FIXED
+PRIVACY_COPY_REPLACED_WITH_PARTICIPANT_IDENTIFICATION
+REDUNDANT_DECISION_BLOCK_REMOVED_OR_MERGED
+SHEET_SUMMARY_NO_LONG_HEADERS
+SHEET_SUMMARY_TRUNCATED_SAFE_LABELS
+FILENAME_ONLY_FALLBACK_PRESERVED
+NO_FAKE_SHEET_NAMES
+NO_FAKE_COLUMN_LABELS
+NO_FAKE_QUESTION_DETECTION
+NO_FAKE_DEMOGRAPHIC_DETECTION
+NO_RAW_ROWS_RENDERED
+NO_FULL_XLSX_DUMP
+NO_RAW_JSON_RENDERED
+NO_OBJECT_OBJECT_RENDERED
+NO_ENGLISH_COPY
+NO_AI_THEME_CSS_CHANGES
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_YES
+READY_FOR_INTERFACE_TESTING
+PHASE_11D_H11_CONTENT_ANALYSIS_UX_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
