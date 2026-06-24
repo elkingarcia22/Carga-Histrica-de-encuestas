@@ -230,6 +230,10 @@ The historical import prototype will support future non-destructive review adjus
 - **Validation**: Inline validation using the `overlay-editing` module logic.
 - **Persistence**: Non-persistent. Applied instantly to the read-only fixture representation in the chat timeline without mutating the `qsClimaDemoFixture`.
 
+### Draft Preparation
+
+The historical import prototype will convert resolved review structures into a local Historical Load Draft before any future import execution. The draft is a safe intermediate artifact, not a persisted import, not a backend operation, and not a comparison dashboard.
+
 ## Realistic Survey Import Architecture
 - [Realistic Survey Import Architecture](./REALISTIC_SURVEY_IMPORT_ARCHITECTURE.md)
 - [Survey File Analysis Contract](./SURVEY_FILE_ANALYSIS_CONTRACT.md)
