@@ -291,12 +291,12 @@ export function ConversationalImportWorkspace() {
       });
 
       if (isQsClimaDemoFixture(files)) {
-        const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState);
+        setConversationalEditState("awaiting_survey_scope_selection");
         newMsgs.push({
-          id: `msg_assistant_qs_clima_review_${generateId()}`,
+          id: `msg_assistant_scope_selection_${generateId()}`,
           role: "assistant",
           type: "guided_review_step",
-          content: reviewMsg,
+          content: "Detecté más de una encuesta o ciclo en los archivos cargados.\n\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025\n\n¿Qué quieres procesar primero? Responde 1, 2 o 3.",
           timestamp: "2025-01-01T12:00:00.000Z",
         });
 
@@ -363,6 +363,34 @@ export function ConversationalImportWorkspace() {
         setTimeout(() => {
           setViewMode("draft_preview");
         }, 300);
+        return;
+      }
+
+      if (conversationalEditState === "awaiting_survey_scope_selection") {
+        let selectedScope: "2025" | "2024" | "multicycle" | null = null;
+        if (intent === "select_scope_1") selectedScope = "2025";
+        else if (intent === "select_scope_2") selectedScope = "2024";
+        else if (intent === "select_scope_3") selectedScope = "multicycle";
+
+        if (selectedScope) {
+          setConversationalEditState("idle");
+          const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState, selectedScope);
+          void simulateChatFlow([{
+            id: `msg_assistant_scope_selected_${generateId()}`,
+            role: "assistant",
+            type: "guided_review_step",
+            content: reviewMsg,
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }]);
+        } else {
+          void simulateChatFlow([{
+            id: `msg_assistant_scope_invalid_${generateId()}`,
+            role: "assistant",
+            type: "text",
+            content: "Para continuar, responde 1, 2 o 3:\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025",
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }]);
+        }
         return;
       }
 
@@ -447,12 +475,12 @@ export function ConversationalImportWorkspace() {
     });
 
     if (rawFiles.length > 0 && isQsClimaDemoFixture(rawFiles)) {
-      const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState);
+      setConversationalEditState("awaiting_survey_scope_selection");
       newMsgs.push({
-        id: `msg_assistant_qs_clima_review_${generateId()}`,
+        id: `msg_assistant_scope_selection_${generateId()}`,
         role: "assistant",
         type: "guided_review_step",
-        content: reviewMsg,
+        content: "Detecté más de una encuesta o ciclo en los archivos cargados.\n\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025\n\n¿Qué quieres procesar primero? Responde 1, 2 o 3.",
         timestamp: "2025-01-01T12:00:00.000Z",
       });
 

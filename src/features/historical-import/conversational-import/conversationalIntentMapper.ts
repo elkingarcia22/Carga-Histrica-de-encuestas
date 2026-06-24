@@ -8,6 +8,9 @@ export type ConversationalIntent =
   | "ambiguous_confirmation"
   | "cancel_adjustment"
   | "cancel_import"
+  | "select_scope_1"
+  | "select_scope_2"
+  | "select_scope_3"
   | "unknown";
 
 function normalizeText(text: string): string {
@@ -51,6 +54,16 @@ const INTENT_DICTIONARY: Record<ConversationalIntent, string[]> = {
   ],
   cancel_import: [
     "cancelar importacion", "cancelar carga", "cancelar proceso", "empezar de nuevo", "reiniciar"
+  ],
+  select_scope_1: [
+    "1", "2025", "clima 2025", "qs clima 2025"
+  ],
+  select_scope_2: [
+    "2", "2024", "clima 2024", "qs clima 2024"
+  ],
+  select_scope_3: [
+    "3", "todo", "ambas", "ambos", "multiciclo", "multiciclo qs clima",
+    "carga historica", "procesar todo", "todo junto"
   ],
   unknown: []
 };

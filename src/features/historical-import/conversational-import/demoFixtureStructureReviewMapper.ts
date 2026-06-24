@@ -6,7 +6,8 @@ import type { DemoFixtureDataset } from "../demo-fixture/types";
  */
 export function mapDemoFixtureToStructureReviewMessage(
   fixture: DemoFixtureDataset,
-  overlayState: Record<string, string> = {}
+  overlayState: Record<string, string> = {},
+  scope: "2025" | "2024" | "multicycle" = "multicycle"
 ): string {
   const { sourceLayer, surveyCycles, privacyBoundary } = fixture;
 
@@ -48,8 +49,16 @@ export function mapDemoFixtureToStructureReviewMessage(
   const pendingDecisions = sourceLayer.decisions.filter(d => d.reviewState === 'pending');
 
   let msg = `🧩 **Revisión de estructura detectada**\n\n`;
-  msg += `Detecté automáticamente los archivos QS Clima 2024/2025 cargados.\n`;
-  msg += `Encontré una estructura demo lista para revisar antes de preparar el borrador de carga histórica.\n\n`;
+  if (scope === "2025") {
+    msg += `Detecté automáticamente los archivos QS Clima 2024/2025 cargados.\n`;
+    msg += `Encontré una estructura demo lista para revisar. El demo muestra el set QS Clima con foco en 2025.\n\n`;
+  } else if (scope === "2024") {
+    msg += `Detecté automáticamente los archivos QS Clima 2024/2025 cargados.\n`;
+    msg += `Encontré una estructura demo lista para revisar con foco en 2024 y privacidad media por ID seudonimizado.\n\n`;
+  } else {
+    msg += `Detecté automáticamente los archivos QS Clima 2024/2025 cargados.\n`;
+    msg += `Encontré una estructura demo lista para revisar antes de preparar el borrador de carga histórica multicíclo completa.\n\n`;
+  }
 
   msg += `📊 **Resumen**\n`;
   msg += `- Ciclos detectados: ${cyclesCount} (QS Clima 2024 y QS Clima 2025)\n`;
