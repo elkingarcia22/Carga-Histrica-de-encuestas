@@ -634,3 +634,9 @@ Phase 11D-H11-H2 done
 - Defined architecture for homologation precheck.
 - See `docs/HOMOLOGATION_PRECHECK_ARCHITECTURE.md`.
 - PHASE_11D_H12_HOMOLOGATION_PRECHECK_ARCHITECTURE_COMPLETE
+
+### Homologation Precheck Types and Mapper
+
+- Adds pure types and deterministic mapper for preparing homologation precheck from safe workbook metadata.
+- Does not render UI, read files, call APIs, persist data, mutate catalogs or approve imports.
+- Produces typed entities, suggestions, human decisions and a compact summary for the future conversational output.

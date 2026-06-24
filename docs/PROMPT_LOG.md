@@ -1,3 +1,46 @@
+## Fase 11D-H13 · Homologation Precheck Types and Mapper
+
+Phase: Fase 11D-H13 · Homologation Precheck Types and Mapper
+
+Summary:
+- Created deterministic types and mapper for Homologation Precheck (`src/features/historical-import/homologation-precheck/types.ts` and `homologationPrecheckMapper.ts`).
+- Defined the input contract avoiding any raw row exposure.
+- Enforced safe label normalization without adding external dependencies.
+- Added heuristics for aggregated items by rows, raw responses by columns, and segment summary.
+- The mapper produces typed entities, states, confidence logic, decisions, and a summary.
+- No UI logic, backend, APIs, storage, or Claude integration were added.
+- All code respects privacy boundaries and data minimization rules.
+
+Markers:
+- PHASE_11D_H13_HOMOLOGATION_PRECHECK_TYPES_MAPPER_COMPLETE
+- HOMOLOGATION_PRECHECK_TYPES_CREATED
+- HOMOLOGATION_PRECHECK_MAPPER_CREATED
+- HOMOLOGATION_PRECHECK_INPUT_CONTRACT_DEFINED
+- HOMOLOGATION_ENTITIES_TYPED
+- HOMOLOGATION_STATES_TYPED
+- HOMOLOGATION_CONFIDENCE_MODEL_TYPED
+- HOMOLOGATION_DECISION_CONTRACT_TYPED
+- HOMOLOGATION_SUMMARY_TYPED
+- DETERMINISTIC_ID_POLICY_DEFINED
+- SAFE_LABEL_NORMALIZATION_DEFINED
+- AGGREGATED_ITEMS_BY_ROWS_HOMOLOGATION_SUPPORTED
+- RAW_RESPONSES_BY_COLUMNS_HOMOLOGATION_SUPPORTED
+- SEGMENT_SUMMARY_HOMOLOGATION_SUPPORTED
+- NO_RUNTIME_UI_INTEGRATION
+- NO_CONVERSATIONAL_FLOW_CHANGES
+- NO_PARSER_CHANGES
+- NO_ANALYZER_LOGIC_CHANGES
+- NO_CATALOG_MUTATION
+- NO_BACKEND_CREATED
+- NO_STORAGE_CREATED
+- NO_CLAUDE_CONNECTION_CREATED
+- NO_API_CONNECTIONS
+- READY_FOR_COMPARISON_OUTPUT_DISABLED
+- COMPARISON_DASHBOARD_OUT_OF_SCOPE
+- VISIBLE_UI_CHECKPOINT_NO
+- PHASE_11D_H14_HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_READY
+- R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H12 · Homologation Precheck Architecture
 
 Phase: Fase 11D-H12 · Homologation Precheck Architecture
