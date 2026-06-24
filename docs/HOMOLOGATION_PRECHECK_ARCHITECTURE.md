@@ -96,7 +96,7 @@ Cada contrato de decisión debe incluir la siguiente estructura de datos:
 
 ## 7. Output conversacional futuro
 
-En la fase H13, el output de pre-homologación deberá mostrarse exclusivamente en bullets, siguiendo el patrón conversacional actual sin tarjetas (`cards`) ni grillas (`grids`). 
+En la fase H13, el output de pre-homologación deberá mostrarse exclusivamente en bullets, siguiendo el patrón conversacional actual sin tarjetas (`cards`) ni grillas (`grids`).
 
 Ejemplo de cómo debe verse en H13:
 
