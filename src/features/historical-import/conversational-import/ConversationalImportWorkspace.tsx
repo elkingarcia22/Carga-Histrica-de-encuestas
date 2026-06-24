@@ -21,6 +21,8 @@ import { mapDecisionToExplanation } from "./decisionExplanationMapper";
 import { useMessageSequenceGate } from "./messageSequenceGate";
 import { mapHomologationPrecheck } from "../homologation-precheck";
 import { formatHomologationPrecheckMessage } from "./homologationPrecheckChatMapper";
+import { mapStructureInventory } from "../structure-inventory";
+import { mapStructureInventoryToChat } from "./structureInventoryChatMapper";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -750,6 +752,33 @@ export function ConversationalImportWorkspace() {
 
       const proceedPrecheck = await waitTypewriter(precheckMessage.length, 600);
       if (!proceedPrecheck) return;
+
+      const safePrecheckResult = {
+        isHomologationPossible: precheckResult.capabilities.canHomologate,
+        reason: precheckResult.capabilities.classificationReason
+      };
+
+      const inventoryInput = {
+        ...precheckInput,
+        homologationPrecheckResult: safePrecheckResult
+      };
+
+      const inventoryResult = mapStructureInventory(inventoryInput);
+      const inventoryMessage = mapStructureInventoryToChat(inventoryResult);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_assistant_inventory_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: inventoryMessage,
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }
+      ]);
+
+      const proceedInventory = await waitTypewriter(inventoryMessage.length, 600);
+      if (!proceedInventory) return;
 
       // 4. Decisiones pendientes en secuencia
       setMessages((prev) => {
