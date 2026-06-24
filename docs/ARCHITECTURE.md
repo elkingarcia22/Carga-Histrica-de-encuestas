@@ -215,6 +215,12 @@ The historical import prototype will use a curated demo fixture for QS Clima 202
 ### Controlled Overlay Editing Architecture
 The historical import prototype will support future non-destructive review adjustments through a Review Overlay Layer. Source fixture data and original detected structures remain immutable. Future UI may resolve labels, mappings, demographic states and review decisions from source + overlay, but must not mutate the source layer or claim production persistence.
 
+#### Overlay Editing Types (Phase 11D-H30)
+- **Module**: `src/features/historical-import/overlay-editing/`
+- **Purpose**: Defines pure base types and contracts for overlay actions (e.g., rename_dimension_label, move_question_to_dimension).
+- **Validation**: Pure functional helpers check for action shapes and perform basic PII string detection.
+- **Rules**: No runtime UI integration, no connection to actual data flow yet. Defines `OverlayState` and `ResolvedStructureView` conceptually.
+
 ## Realistic Survey Import Architecture
 - [Realistic Survey Import Architecture](./REALISTIC_SURVEY_IMPORT_ARCHITECTURE.md)
 - [Survey File Analysis Contract](./SURVEY_FILE_ANALYSIS_CONTRACT.md)
