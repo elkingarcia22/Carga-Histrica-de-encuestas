@@ -239,6 +239,44 @@ The historical import prototype will convert resolved review structures into a l
 - **Privacy**: Preserves explicit boundaries (no raw rows, no PII).
 - **Architecture Validation**: No data creation, no mappers, no UI, no backend connection implemented yet.
 
+#### Draft Readiness Mapper (Phase 11D-H37)
+- **Module**: `src/features/historical-import/draft-preparation/draftReadinessMapper.ts`
+- **Purpose**: Pure mapper to evaluate if the reviewed structure is ready for a local Historical Load Draft preparation.
+- **Output**: `HistoricalLoadDraftReadiness`
+- **Rules**: Pure, deterministic, no side effects, no API connections, no data persistence.
+- **Privacy**: Explicit blockers for API, storage, and Claude connections (`privacy_boundary_blocked`).
+- **Phase Completion Markers**:
+  - PHASE_11D_H37_DRAFT_READINESS_MAPPER_COMPLETE
+  - DRAFT_READINESS_MAPPER_CREATED
+  - DRAFT_READINESS_INPUT_DEFINED
+  - DRAFT_READINESS_OUTPUT_DEFINED
+  - DRAFT_READINESS_BLOCKERS_IMPLEMENTED
+  - DRAFT_READINESS_WARNINGS_IMPLEMENTED
+  - DRAFT_READINESS_STATUS_DERIVATION_IMPLEMENTED
+  - DRAFT_READINESS_PRIVACY_RULES_IMPLEMENTED
+  - DRAFT_READINESS_OVERLAY_RULES_IMPLEMENTED
+  - DRAFT_READINESS_SUMMARY_IMPLEMENTED
+  - DRAFT_PREPARATION_INDEX_EXPORTS_UPDATED
+  - NO_DRAFT_DATA_CREATED
+  - NO_DRAFT_FINAL_OBJECT_CREATED
+  - NO_DRAFT_PREVIEW_UI_CREATED
+  - NO_PREPARE_DRAFT_BUTTON_CREATED
+  - NO_RUNTIME_UI_INTEGRATION
+  - NO_FIXTURE_DATA_CHANGES
+  - NO_OVERLAY_TYPES_CHANGES
+  - NO_DRAFT_TYPES_CHANGES
+  - NO_CONVERSATIONAL_FLOW_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_BACKEND_CREATED
+  - NO_STORAGE_CREATED
+  - NO_CLAUDE_CONNECTION_CREATED
+  - NO_API_CONNECTIONS
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - COMPARISON_DASHBOARD_OUT_OF_SCOPE
+  - VISIBLE_UI_CHECKPOINT_NO
+  - PHASE_11D_H38_DRAFT_PREVIEW_UI_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Realistic Survey Import Architecture
 - [Realistic Survey Import Architecture](./REALISTIC_SURVEY_IMPORT_ARCHITECTURE.md)
 - [Survey File Analysis Contract](./SURVEY_FILE_ANALYSIS_CONTRACT.md)
