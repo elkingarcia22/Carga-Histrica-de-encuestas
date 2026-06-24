@@ -9,16 +9,16 @@ interface DraftReadinessPreviewProps {
 }
 
 export function DraftReadinessPreview({ input, readiness, onCancel }: DraftReadinessPreviewProps) {
-  const statusColor = readiness.status === 'ready' 
-    ? 'text-green-600 dark:text-green-400' 
-    : readiness.status === 'not_ready' 
-      ? 'text-yellow-600 dark:text-yellow-400' 
+  const statusColor = readiness.status === 'ready'
+    ? 'text-green-600 dark:text-green-400'
+    : readiness.status === 'not_ready'
+      ? 'text-yellow-600 dark:text-yellow-400'
       : 'text-red-600 dark:text-red-400';
 
-  const statusLabel = readiness.status === 'ready' 
-    ? 'Listo para preparar' 
-    : readiness.status === 'not_ready' 
-      ? 'Requiere revisión' 
+  const statusLabel = readiness.status === 'ready'
+    ? 'Listo para preparar'
+    : readiness.status === 'not_ready'
+      ? 'Requiere revisión'
       : 'Bloqueado';
 
   const localAdjustmentsCount = input.overlayActions?.length || 0;
@@ -36,7 +36,7 @@ export function DraftReadinessPreview({ input, readiness, onCancel }: DraftReadi
 
       <div className="flex-1 overflow-y-auto p-6">
         <div className="max-w-3xl mx-auto space-y-6">
-          
+
           <div className="p-4 bg-muted/30 rounded-xl border border-border">
             <h3 className="text-sm font-medium text-foreground mb-2">Estado de Readiness</h3>
             <p className={`text-sm font-semibold ${statusColor}`}>
@@ -75,7 +75,7 @@ export function DraftReadinessPreview({ input, readiness, onCancel }: DraftReadi
                       <li key={`b_${i}`} className="text-red-600 dark:text-red-400 font-medium">• Bloqueo: {b}</li>
                     ))
                   )}
-                  
+
                   {readiness.warnings.length === 0 ? (
                     <li>Advertencias pendientes: 0</li>
                   ) : (
