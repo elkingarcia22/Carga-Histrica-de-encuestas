@@ -745,3 +745,10 @@ The conversational block injected by the homologation precheck has been refined 
 - See document for allowed structural rows, trace models, entity boundaries, and strict privacy boundaries.
 - No UI runtime, no parser changes, no backend/storage/Claude introduced in this phase.
 - PHASE_11D_H23_SECURE_ROW_INVENTORY_ARCHITECTURE_COMPLETE
+
+### Demo Fixture Data Contract (Phase 11D-H24)
+- Defines the data contract for the QS Clima 2024/2025 Demo Fixture.
+- Separates Source Fixture Layer from Review Overlay Layer.
+- Typing explicitly blocks real responses, PII, and API connections.
+- Enables safe simulated rendering of the Structure Review Workspace.
+- VISIBLE_UI_CHECKPOINT_NO enforced.
