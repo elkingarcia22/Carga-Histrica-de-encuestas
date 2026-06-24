@@ -30,6 +30,7 @@ import { mapDemoFixtureToReadinessInput } from "./draftPreviewMapper";
 import { evaluateDraftReadiness } from "../draft-preparation/draftReadinessMapper";
 import { DraftReadinessPreview } from "./DraftReadinessPreview";
 import { handleConversationalEdit, type ConversationalEditState, type ConversationalEditContext } from "./conversationalEditingFlow";
+import { detectIntent } from "./conversationalIntentMapper";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -330,9 +331,9 @@ export function ConversationalImportWorkspace() {
         }
       });
     } else if (text.trim()) {
-      const normalizedText = text.trim().toLowerCase();
+      const intent = detectIntent(text);
 
-      if (normalizedText === "cancelar importación" || normalizedText === "cancelar carga" || normalizedText === "cancelar proceso") {
+      if (intent === "cancel_import") {
         setChatStarted(false);
         setStagedFiles([]);
         setGlobalOverlayState({});
@@ -351,7 +352,7 @@ export function ConversationalImportWorkspace() {
         return;
       }
 
-      if (["preview", "ver preview", "ver preview del borrador", "borrador"].includes(normalizedText)) {
+      if (intent === "open_draft_preview") {
         void simulateChatFlow([{
           id: `msg_user_preview_${generateId()}`,
           role: "user",
@@ -365,7 +366,21 @@ export function ConversationalImportWorkspace() {
         return;
       }
 
-      if (conversationalEditState !== "idle" || /preguntas|dimensiones|demográficos|demograficos|métricas|metricas|segmentos|decisiones/i.test(normalizedText)) {
+      if (intent === "approve_structure") {
+        setConversationalEditState("idle");
+        setConversationalEditContext({});
+        void simulateChatFlow([{
+          id: `msg_assistant_approve_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: "Estructura aprobada para preparar el preview del borrador.\nNo se ejecutó importación ni se guardaron datos.\nPuedes escribir “preview” para revisar el borrador local antes de cualquier acción futura.",
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }]);
+        return;
+      }
+
+      const normalizedText = text.trim().toLowerCase();
+      if (conversationalEditState !== "idle" || /preguntas|dimensiones|demográficos|demograficos|métricas|metricas|segmentos|decisiones|menu|menú|volver/i.test(normalizedText) || intent === "show_review_menu") {
         const response = handleConversationalEdit(text, conversationalEditState, conversationalEditContext, globalOverlayState);
         setConversationalEditState(response.newState);
         setConversationalEditContext(response.newContext);

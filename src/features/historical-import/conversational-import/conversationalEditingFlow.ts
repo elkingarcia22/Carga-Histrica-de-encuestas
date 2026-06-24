@@ -1,5 +1,6 @@
 import { qsClimaDemoFixture } from "../demo-fixture/qsClimaFixture";
 import { getDimensionsList, getQuestionsListForDimension, validateNewLabel } from "./conversationalEditingMapper";
+import { detectIntent } from "./conversationalIntentMapper";
 
 export type ConversationalEditState =
   | "idle"
@@ -27,21 +28,41 @@ export interface ChatResponse {
   cancelFlow?: boolean;
 }
 
+const GUIDE_SUFFIX = `\n\nPuedes responder:\n- dimensiones\n- preguntas\n- demográficos\n- métricas\n- segmentos\n- decisiones pendientes\n- preview\n- aprobar estructura\n- cancelar importación`;
+
 export function handleConversationalEdit(
   input: string,
   state: ConversationalEditState,
   context: ConversationalEditContext,
   overlayState: Record<string, string>
 ): ChatResponse {
+  const intent = detectIntent(input);
   const normalizedInput = input.trim().toLowerCase();
 
-  // Global cancel
-  if (normalizedInput === "cancelar" && state !== "idle" && state !== "asking_confirmation") {
+  // Global cancel for adjustments
+  if (intent === "cancel_adjustment" && state !== "idle" && state !== "asking_confirmation") {
     return {
-      message: "Edición cancelada. ¿Qué más deseas hacer? Puedes revisar la estructura, ver el preview del borrador o ajustar por chat de nuevo.",
+      message: `Edición cancelada. ¿Qué más deseas hacer?${GUIDE_SUFFIX}`,
       newState: "idle",
       newContext: {},
       cancelFlow: true
+    };
+  }
+
+  // Handle skip/ninguna for ongoing flows
+  if (intent === "skip_current_section" && state !== "idle" && state !== "asking_edit_area" && state !== "asking_confirmation") {
+    return {
+      message: `Perfecto. No haré cambios en esta sección.\n¿Quieres revisar otra sección o aprobar la estructura como está?${GUIDE_SUFFIX}`,
+      newState: "idle",
+      newContext: {}
+    };
+  }
+
+  if (intent === "show_review_menu") {
+    return {
+      message: `¿Qué quieres revisar o ajustar primero?${GUIDE_SUFFIX}`,
+      newState: "asking_edit_area",
+      newContext: {}
     };
   }
 
@@ -64,13 +85,13 @@ export function handleConversationalEdit(
       }
       if (["demográficos", "demograficos", "métricas", "metricas", "segmentos", "decisiones", "decisiones pendientes"].some(w => normalizedInput.includes(w))) {
         return {
-          message: "En esta fase solo puedo ajustar por chat etiquetas visibles de dimensiones y preguntas. Estos elementos quedan disponibles para revisión, pero no son editables todavía.",
+          message: `En esta fase puedo mostrar esta información, pero la edición habilitada por chat es solo para etiquetas visibles de dimensiones y preguntas.\n¿Quieres revisar otra sección o aprobar la estructura como está?${GUIDE_SUFFIX}`,
           newState: "asking_edit_area",
           newContext: {}
         };
       }
       return {
-        message: "¿Qué quieres revisar o ajustar primero?\n\nPuedes responder:\n- dimensiones\n- preguntas\n- demográficos\n- métricas\n- segmentos\n- decisiones pendientes\n- preview\n- cancelar importación",
+        message: `¿Qué quieres revisar o ajustar primero?${GUIDE_SUFFIX}`,
         newState: "asking_edit_area",
         newContext: {}
       };
@@ -144,7 +165,7 @@ export function handleConversationalEdit(
       const error = validateNewLabel(input);
       if (error) {
         return {
-          message: "Ese texto no es válido para una etiqueta visible. Intenta con un nombre descriptivo sin datos personales ni valores de respuesta.",
+          message: error,
           newState: state,
           newContext: context
         };
@@ -157,32 +178,37 @@ export function handleConversationalEdit(
     }
 
     case "asking_confirmation": {
-      if (normalizedInput === "aprobar") {
+      if (intent === "strict_confirmation_approve") {
         const id = context.targetType === "dimension" ? context.targetDimensionId! : context.targetQuestionId!;
         return {
-          message: "Ajuste local aplicado. ¿Quieres ajustar otra cosa, revisar dimensiones o ver preview del borrador? (Escribe dimensiones, preguntas, etc.)",
+          message: `Ajuste local aplicado. ¿Qué más deseas hacer?${GUIDE_SUFFIX}`,
           newState: "idle",
           newContext: {},
           applyOverlay: { id, label: context.proposedLabel! }
         };
-      } else if (normalizedInput === "cancelar") {
+      } else if (intent === "strict_confirmation_cancel" || intent === "cancel_adjustment") {
         return {
-          message: "Ajuste cancelado. ¿Qué más deseas hacer? (Escribe dimensiones, preguntas, etc.)",
+          message: `Ajuste cancelado. ¿Qué más deseas hacer?${GUIDE_SUFFIX}`,
           newState: "idle",
           newContext: {}
         };
-      } else {
+      } else if (intent === "ambiguous_confirmation" || input.trim()) {
         return {
           message: "Para confirmar este ajuste, responde exactamente “aprobar” o “cancelar”.",
           newState: state,
           newContext: context
         };
       }
+      return {
+        message: "Para confirmar este ajuste, responde exactamente “aprobar” o “cancelar”.",
+        newState: state,
+        newContext: context
+      };
     }
 
     default:
       return {
-        message: "¿En qué te puedo ayudar? Puedes revisar dimensiones o preguntas.",
+        message: `¿En qué te puedo ayudar?${GUIDE_SUFFIX}`,
         newState: "idle",
         newContext: {}
       };
