@@ -1,3 +1,53 @@
+## Fase 11D-H36 · Draft Preparation Types
+
+Phase: Fase 11D-H36 · Draft Preparation Types
+
+Summary:
+- Created the typescript definitions for the Historical Load Draft in `src/features/historical-import/draft-preparation/types.ts`.
+- Exported all types from `src/features/historical-import/draft-preparation/index.ts`.
+- Defined all the requested types and rules including status model, readiness blockers, preparation mode, and source kind.
+- Enforced privacy boundary with specific typing flags.
+- Confirmed that `approved_for_future_import` and `canProceedToFutureImport` do not execute import but just eligibility.
+- Verified architecture boundaries: no draft data created, no mapper created, no UI integration, no backend/storage/Claude.
+- Updated `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`, and `docs/QA_CHECKLIST.md` with markers.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H36_DRAFT_PREPARATION_TYPES_COMPLETE
+DRAFT_PREPARATION_TYPES_CREATED
+HISTORICAL_LOAD_DRAFT_TYPE_DEFINED
+DRAFT_SURVEY_TYPE_DEFINED
+DRAFT_CYCLE_TYPE_DEFINED
+DRAFT_SOURCE_FILE_TYPE_DEFINED
+DRAFT_DIMENSION_TYPE_DEFINED
+DRAFT_QUESTION_TYPE_DEFINED
+DRAFT_QUESTION_MAPPING_TYPE_DEFINED
+DRAFT_METRIC_TYPE_DEFINED
+DRAFT_DEMOGRAPHIC_TYPE_DEFINED
+DRAFT_SEGMENT_TYPE_DEFINED
+DRAFT_REVIEW_DECISION_TYPE_DEFINED
+DRAFT_PRIVACY_BOUNDARY_TYPE_DEFINED
+DRAFT_READINESS_TYPE_DEFINED
+DRAFT_STATUS_MODEL_TYPED
+DRAFT_READINESS_BLOCKERS_TYPED
+DRAFT_INDEX_EXPORTS_CREATED
+NO_DRAFT_DATA_CREATED
+NO_DRAFT_MAPPER_CREATED
+NO_RUNTIME_UI_INTEGRATION
+NO_PREPARE_DRAFT_BUTTON_CREATED
+NO_IMPORT_EXECUTION
+NO_FIXTURE_DATA_CHANGES
+NO_OVERLAY_TYPES_CHANGES
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H37_DRAFT_READINESS_MAPPER_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H35 · Draft Preparation Architecture
 
 Phase: Fase 11D-H35 · Draft Preparation Architecture
