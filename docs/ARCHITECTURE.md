@@ -676,3 +676,11 @@ The conversational block injected by the homologation precheck has been refined 
 - Output formatting resides within `homologationPrecheckChatMapper.ts`.
 - Extracts safe counts directly from `result.entities` and `result.decisions` arrays.
 - Implements fallback strings for missing demographics to avoid runtime errors or hallucinated numbers.
+
+## Phase 11D-H17 · Structure Review Workspace Architecture
+
+- Defined the architecture for the Structure Review Workspace.
+- See `docs/STRUCTURE_REVIEW_WORKSPACE_ARCHITECTURE.md`.
+- Established Source Structure Layer (immutable) and Review Overlay Layer (editable).
+- No UI runtime, no parser changes, no backend/storage/Claude introduced in this phase.
+- PHASE_11D_H17_STRUCTURE_REVIEW_WORKSPACE_ARCHITECTURE_COMPLETE
