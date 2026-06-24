@@ -1,3 +1,43 @@
+## Fase 11D-H31 · Read-only to Edit Mode Decision Gate
+
+Phase: Fase 11D-H31 · Read-only to Edit Mode Decision Gate
+
+Summary:
+- Defined the scope for the transition from read-only to controlled edit mode.
+- Approved first edit capability: rename visible labels only (dimensions and questions).
+- Blocked out-of-scope capabilities like moving questions, drag & drop, and persistence.
+- Defined future UX, validation rules, and overlay state requirements.
+- Authorized the next phase to build the UI for renaming (11D-H32) without persistence.
+- Added `docs/READ_ONLY_TO_EDIT_MODE_DECISION_GATE.md`.
+- No UI, no runtime, no src changes.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H31_READ_ONLY_TO_EDIT_MODE_DECISION_GATE_COMPLETE
+READ_ONLY_TO_EDIT_MODE_DECISION_GATE_LOCKED
+FIRST_EDIT_CAPABILITY_RENAME_VISIBLE_LABELS_ONLY
+RENAME_DIMENSION_LABEL_APPROVED
+RENAME_QUESTION_LABEL_APPROVED
+MOVE_QUESTION_TO_DIMENSION_BLOCKED
+DRAG_AND_DROP_BLOCKED
+PERSISTENCE_BLOCKED
+PREPARE_DRAFT_BLOCKED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+OVERLAY_LOCAL_ONLY
+SOURCE_FIXTURE_LAYER_IMMUTABLE
+NO_SOURCE_MUTATION
+NO_RUNTIME_UI_INTEGRATION
+NO_EDITOR_CREATED
+NO_SRC_CHANGES
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H32_CONTROLLED_RENAME_UI_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H30 · Overlay Editing Types
 
 Phase: Fase 11D-H30 · Overlay Editing Types

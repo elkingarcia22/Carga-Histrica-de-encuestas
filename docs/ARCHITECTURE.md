@@ -214,6 +214,7 @@ The historical import prototype will use a curated demo fixture for QS Clima 202
 
 ### Controlled Overlay Editing Architecture
 The historical import prototype will support future non-destructive review adjustments through a Review Overlay Layer. Source fixture data and original detected structures remain immutable. Future UI may resolve labels, mappings, demographic states and review decisions from source + overlay, but must not mutate the source layer or claim production persistence.
+- [Read-only to Edit Mode Decision Gate](./READ_ONLY_TO_EDIT_MODE_DECISION_GATE.md)
 
 #### Overlay Editing Types (Phase 11D-H30)
 - **Module**: `src/features/historical-import/overlay-editing/`
