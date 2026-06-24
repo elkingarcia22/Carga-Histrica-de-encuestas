@@ -19,6 +19,8 @@ import type { ChatMessage } from "./conversationalImportTypes";
 import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
 import { mapDecisionToExplanation } from "./decisionExplanationMapper";
 import { useMessageSequenceGate } from "./messageSequenceGate";
+import { mapHomologationPrecheck } from "../homologation-precheck";
+import { formatHomologationPrecheckMessage } from "./homologationPrecheckChatMapper";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -702,18 +704,56 @@ export function ConversationalImportWorkspace() {
       const proceed = await waitTypewriter(chatSummary.length, 600);
       if (!proceed) return;
 
-      // 3. Mostrar el estado final y cualquier decisión pendiente en secuencia
+      // 3. Mostrar el estado final
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_assistant_progress_final_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: finalProgressState,
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }
+      ]);
+
+      const proceedFinal = await waitTypewriter(finalProgressState.length, 600);
+      if (!proceedFinal) return;
+
+      const firstSheet = analysisResult.analysis.sheets[0];
+      const precheckInput = {
+        fileName: file.name,
+        sheetName: String(firstSheet?.sheetName || 'unknown'),
+        sheetLayout: firstSheet?.layout || 'unknown',
+        rowCount: Number(firstSheet?.rowCount || 0),
+        columnCount: Number(firstSheet?.columnCount || 0),
+        sampleColumnLabels: (firstSheet?.headerDetection?.sampleColumnLabels || []).map(String),
+        detectedSignals: firstSheet?.headerDetection?.detectedSignals || [],
+        classificationReason: analysisResult.capabilities.classificationReason || 'N/A',
+        confidence: analysisResult.capabilities.canProfileColumns ? 'high' : 'low',
+        participantIdentificationState: 'unknown',
+        sourceFileRole: firstSheet?.suggestedRole || 'unknown',
+      };
+
+      const precheckResult = mapHomologationPrecheck(precheckInput);
+      const precheckMessage = formatHomologationPrecheckMessage(precheckResult);
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `msg_assistant_precheck_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: precheckMessage,
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }
+      ]);
+
+      const proceedPrecheck = await waitTypewriter(precheckMessage.length, 600);
+      if (!proceedPrecheck) return;
+
+      // 4. Decisiones pendientes en secuencia
       setMessages((prev) => {
-        const newMessages: ChatMessage[] = [
-          ...prev,
-          {
-            id: `msg_assistant_progress_final_${generateId()}`,
-            role: "assistant",
-            type: "text",
-            content: finalProgressState,
-            timestamp: "2025-01-01T12:00:00.000Z",
-          }
-        ];
+        const newMessages: ChatMessage[] = [...prev];
 
         if (confidenceMsg) {
           if (typeof confidenceMsg === "string") {

@@ -641,9 +641,10 @@ Phase 11D-H11-H2 done
 - Does not render UI, read files, call APIs, persist data, mutate catalogs or approve imports.
 - Produces typed entities, suggestions, human decisions and a compact summary for the future conversational output.
 
-### Phase 11D-H14 · Homologation Precheck Conversational UI
+### Fase 11D-H14-R1 · Complete Homologation Precheck Conversational UI
 
-- PHASE_11D_H14_HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_COMPLETE
+- PHASE_11D_H14_R1_HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_COMPLETE
+- H14_DOCS_ONLY_GAP_RECONCILED
 - HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_CONNECTED
 - HOMOLOGATION_PRECHECK_MAPPER_CONSUMED
 - SAFE_METADATA_INPUT_USED

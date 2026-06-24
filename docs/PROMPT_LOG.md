@@ -1,6 +1,6 @@
-## Fase 11D-H14 · Homologation Precheck Conversational UI
+## Fase 11D-H14-R1 · Complete Homologation Precheck Conversational UI
 
-Phase: Fase 11D-H14 · Homologation Precheck Conversational UI
+Phase: Fase 11D-H14-R1 · Complete Homologation Precheck Conversational UI
 
 Summary:
 - Scope Confirmation: Homologation Precheck UI integrated.
@@ -15,7 +15,8 @@ Summary:
 
 Commit SHA: PENDING_COMMIT
 
-PHASE_11D_H14_HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_COMPLETE
+PHASE_11D_H14_R1_HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_COMPLETE
+H14_DOCS_ONLY_GAP_RECONCILED
 HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_CONNECTED
 HOMOLOGATION_PRECHECK_MAPPER_CONSUMED
 SAFE_METADATA_INPUT_USED
