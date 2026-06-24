@@ -20,7 +20,7 @@ import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
 import { mapDecisionToExplanation } from "./decisionExplanationMapper";
 import { useMessageSequenceGate } from "./messageSequenceGate";
 import { mapHomologationPrecheck } from "../homologation-precheck";
-import { formatHomologationPrecheckMessage } from "./homologationPrecheckChatMapper";
+
 import { mapStructureInventory } from "../structure-inventory";
 import { mapStructureInventoryToChat } from "./structureInventoryChatMapper";
 import {
@@ -280,13 +280,7 @@ export function ConversationalImportWorkspace() {
         timestamp: "2025-01-01T12:00:00.000Z",
       });
 
-      newMsgs.push({
-        id: `msg_assistant_notice_${generateId()}`,
-        role: "assistant",
-        type: "text",
-        content: "Analizaré estos archivos localmente en tu navegador. No se subirán a servidores ni se enviarán a Claude.",
-        timestamp: "2025-01-01T12:00:00.000Z",
-      });
+
 
       if (groups.length > 1) {
         newMsgs.push({
@@ -346,13 +340,7 @@ export function ConversationalImportWorkspace() {
       timestamp: isoString,
     });
 
-    newMsgs.push({
-      id: `msg_assistant_notice_${generateId()}`,
-      role: "assistant",
-      type: "text",
-      content: "Analizaré estos archivos localmente en tu navegador. No se subirán a servidores ni se enviarán a Claude.",
-      timestamp: "2025-01-01T12:00:00.000Z",
-    });
+
 
     if (groups.length > 1) {
       newMsgs.push({
@@ -678,17 +666,11 @@ export function ConversationalImportWorkspace() {
       });
 
       const confidenceMsg = getConfidenceExplanation(contract.draftContract!, selectedGroup, stagedFiles);
-      const hasBlockingDecisions = actionableDecisions.length > 0 || confidenceMsg !== null;
 
-      const chatSummary = mapContentAnalysisToChatSummary(analysisResult, files.map(f => f.name), hasBlockingDecisions);
 
-      let finalProgressState = "Análisis listo para revisión del usuario.";
-      if (hasBlockingDecisions) {
-        finalProgressState = "Análisis parcial: faltan validaciones de homologación.";
-      }
-      if (!analysisResult.capabilities.canAnalyze) {
-        finalProgressState = "Análisis bloqueado: falta metadata segura.";
-      }
+      const chatSummary = mapContentAnalysisToChatSummary(analysisResult, files.map(f => f.name));
+
+
 
       // 1. Mostrar primero el bloque de análisis (chatSummary)
       setMessages((prev) => [
@@ -706,20 +688,7 @@ export function ConversationalImportWorkspace() {
       const proceed = await waitTypewriter(chatSummary.length, 600);
       if (!proceed) return;
 
-      // 3. Mostrar el estado final
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `msg_assistant_progress_final_${generateId()}`,
-          role: "assistant",
-          type: "text",
-          content: finalProgressState,
-          timestamp: "2025-01-01T12:00:00.000Z",
-        }
-      ]);
 
-      const proceedFinal = await waitTypewriter(finalProgressState.length, 600);
-      if (!proceedFinal) return;
 
       const firstSheet = analysisResult.analysis.sheets[0];
       const precheckInput = {
@@ -737,21 +706,6 @@ export function ConversationalImportWorkspace() {
       };
 
       const precheckResult = mapHomologationPrecheck(precheckInput);
-      const precheckMessage = formatHomologationPrecheckMessage(precheckResult);
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `msg_assistant_precheck_${generateId()}`,
-          role: "assistant",
-          type: "text",
-          content: precheckMessage,
-          timestamp: "2025-01-01T12:00:00.000Z",
-        }
-      ]);
-
-      const proceedPrecheck = await waitTypewriter(precheckMessage.length, 600);
-      if (!proceedPrecheck) return;
 
       const safePrecheckResult = {
         isHomologationPossible: precheckResult.capabilities.canHomologate,
