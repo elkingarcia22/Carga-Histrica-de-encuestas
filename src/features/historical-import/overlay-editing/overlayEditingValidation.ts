@@ -57,9 +57,9 @@ export function isNonEmptyOverlayValue(value: unknown): boolean {
   return true;
 }
 
-function containsPiiLikeValue(text: string): boolean {
-  if (!text) return false;
-  const lowerText = text.toLowerCase();
+export function containsPiiLikeValue(value: unknown): boolean {
+  if (typeof value !== 'string') return false;
+  const lowerText = value.toLowerCase();
   return PII_GUARD_PATTERNS.some(pattern => lowerText.includes(pattern));
 }
 

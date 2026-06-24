@@ -4,7 +4,10 @@ import type { DemoFixtureDataset } from "../demo-fixture/types";
  * Generates a clean markdown string reviewing the demo fixture structure,
  * to be displayed as an assistant message without raw JSON.
  */
-export function mapDemoFixtureToStructureReviewMessage(fixture: DemoFixtureDataset): string {
+export function mapDemoFixtureToStructureReviewMessage(
+  fixture: DemoFixtureDataset,
+  overlayState: Record<string, string> = {}
+): string {
   const { sourceLayer, surveyCycles, privacyBoundary } = fixture;
 
   const filesCount = sourceLayer.files.length;
@@ -26,10 +29,16 @@ export function mapDemoFixtureToStructureReviewMessage(fixture: DemoFixtureDatas
     const qTitles = sourceLayer.questions
       .filter(q => qIds.includes(q.id))
       .slice(0, 4)
-      .map(q => q.displayLabel);
+      .map(q => {
+        const localLabel = overlayState[q.id];
+        return localLabel ? `${localLabel} [Ajuste local]` : q.displayLabel;
+      });
+
+    const dimLocalLabel = overlayState[dim.id];
+    const finalDimName = dimLocalLabel ? `${dimLocalLabel} [Ajuste local]` : dim.displayLabel;
 
     return {
-      dimName: dim.displayLabel,
+      dimName: finalDimName,
       questions: qTitles
     };
   });

@@ -218,9 +218,17 @@ The historical import prototype will support future non-destructive review adjus
 
 #### Overlay Editing Types (Phase 11D-H30)
 - **Module**: `src/features/historical-import/overlay-editing/`
-- **Purpose**: Defines pure base types and contracts for overlay actions (e.g., rename_dimension_label, move_question_to_dimension).
-- **Validation**: Pure functional helpers check for action shapes and perform basic PII string detection.
-- **Rules**: No runtime UI integration, no connection to actual data flow yet. Defines `OverlayState` and `ResolvedStructureView` conceptually.
+- **Core Types**: `OverlayAction`, `OverlayActionType`, `OverlayState`, etc.
+- **Validation**: Pure validation functions inside `overlayEditingValidation.ts` to block PII, empty labels, etc.
+- **Privacy**: Does not store raw data. Focuses strictly on structurally approved fields.
+
+#### Controlled Rename UI (Phase 11D-H32)
+- **Entry point**: "Ajustar etiquetas" from the read-only structure review chat message.
+- **Scope**: Allows renaming of visible dimension and question labels.
+- **State**: In-memory local `globalOverlayState` within `ConversationalImportWorkspace`.
+- **Visibility**: Rendered in `ControlledRenameReview.tsx`, overrides `InlineReviewPanel` in `viewMode = "controlled_rename"`.
+- **Validation**: Inline validation using the `overlay-editing` module logic.
+- **Persistence**: Non-persistent. Applied instantly to the read-only fixture representation in the chat timeline without mutating the `qsClimaDemoFixture`.
 
 ## Realistic Survey Import Architecture
 - [Realistic Survey Import Architecture](./REALISTIC_SURVEY_IMPORT_ARCHITECTURE.md)
