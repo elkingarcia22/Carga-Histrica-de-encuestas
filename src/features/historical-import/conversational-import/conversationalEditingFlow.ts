@@ -36,7 +36,7 @@ export function handleConversationalEdit(
   const normalizedInput = input.trim().toLowerCase();
 
   // Global cancel
-  if (normalizedInput === "cancelar" && state !== "idle") {
+  if (normalizedInput === "cancelar" && state !== "idle" && state !== "asking_confirmation") {
     return {
       message: "Edición cancelada. ¿Qué más deseas hacer? Puedes revisar la estructura, ver el preview del borrador o ajustar por chat de nuevo.",
       newState: "idle",
@@ -62,22 +62,15 @@ export function handleConversationalEdit(
           newContext: { area: "preguntas" }
         };
       }
-      if (["demográficos", "demograficos", "métricas", "metricas", "segmentos"].some(w => normalizedInput.includes(w))) {
+      if (["demográficos", "demograficos", "métricas", "metricas", "segmentos", "decisiones", "decisiones pendientes"].some(w => normalizedInput.includes(w))) {
         return {
-          message: "Por ahora puedo mostrar estos elementos, pero la edición habilitada en esta fase es solo para etiquetas visibles de dimensiones y preguntas.\n\n¿Quieres ajustar dimensiones o preguntas?",
-          newState: "asking_edit_area",
-          newContext: {}
-        };
-      }
-      if (normalizedInput.includes("decisiones") || normalizedInput.includes("decisiones pendientes")) {
-        return {
-          message: "Puedo mostrarlas, pero resolver decisiones estará en una fase posterior.\n\n¿Quieres ajustar dimensiones o preguntas?",
+          message: "En esta fase solo puedo ajustar por chat etiquetas visibles de dimensiones y preguntas. Estos elementos quedan disponibles para revisión, pero no son editables todavía.",
           newState: "asking_edit_area",
           newContext: {}
         };
       }
       return {
-        message: "¿Qué quieres revisar o ajustar primero?\n\nPuedes responder:\n- dimensiones\n- preguntas\n- demográficos\n- métricas\n- segmentos\n- decisiones pendientes",
+        message: "¿Qué quieres revisar o ajustar primero?\n\nPuedes responder:\n- dimensiones\n- preguntas\n- demográficos\n- métricas\n- segmentos\n- decisiones pendientes\n- preview\n- cancelar importación",
         newState: "asking_edit_area",
         newContext: {}
       };
@@ -172,11 +165,17 @@ export function handleConversationalEdit(
           newContext: {},
           applyOverlay: { id, label: context.proposedLabel! }
         };
-      } else {
+      } else if (normalizedInput === "cancelar") {
         return {
           message: "Ajuste cancelado. ¿Qué más deseas hacer? (Escribe dimensiones, preguntas, etc.)",
           newState: "idle",
           newContext: {}
+        };
+      } else {
+        return {
+          message: "Para confirmar este ajuste, responde exactamente “aprobar” o “cancelar”.",
+          newState: state,
+          newContext: context
         };
       }
     }

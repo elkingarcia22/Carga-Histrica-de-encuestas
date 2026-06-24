@@ -109,7 +109,7 @@ const playNotificationSound = () => {
 
 export function ConversationalImportWorkspace() {
   const [chatStarted, setChatStarted] = useState(false);
-  const [viewMode, setViewMode] = useState<"chat" | "review" | "controlled_rename" | "draft_preview">("chat");
+  const [viewMode, setViewMode] = useState<"chat" | "draft_preview">("chat");
   const [activeSessionId, setActiveSessionId] = useState("sess_1");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const [globalOverlayState, setGlobalOverlayState] = useState<Record<string, string>>({});
@@ -296,12 +296,6 @@ export function ConversationalImportWorkspace() {
           role: "assistant",
           type: "guided_review_step",
           content: reviewMsg,
-          nextActions: [
-            { id: "review_structure", label: "Revisar estructura", actionType: "review_structure" },
-            { id: "adjust_by_chat", label: "Ajustar por chat", actionType: "adjust_by_chat" },
-            { id: "preview_draft", label: "Ver preview del borrador", actionType: "preview_draft" },
-            { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
-          ],
           timestamp: "2025-01-01T12:00:00.000Z",
         });
 
@@ -336,7 +330,42 @@ export function ConversationalImportWorkspace() {
         }
       });
     } else if (text.trim()) {
-      if (conversationalEditState !== "idle" || /preguntas|dimensiones|demográficos|métricas|segmentos|decisiones/i.test(text)) {
+      const normalizedText = text.trim().toLowerCase();
+
+      if (normalizedText === "cancelar importación" || normalizedText === "cancelar carga" || normalizedText === "cancelar proceso") {
+        setChatStarted(false);
+        setStagedFiles([]);
+        setGlobalOverlayState({});
+        setConversationalEditState("idle");
+        setConversationalEditContext({});
+        setMessages([
+          initialMessages[0],
+          {
+            id: `msg_assistant_cancel_${generateId()}`,
+            role: "assistant",
+            type: "text",
+            content: "Importación cancelada. Puedes volver a subir los archivos para iniciar una nueva carga histórica.",
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }
+        ]);
+        return;
+      }
+
+      if (["preview", "ver preview", "ver preview del borrador", "borrador"].includes(normalizedText)) {
+        void simulateChatFlow([{
+          id: `msg_user_preview_${generateId()}`,
+          role: "user",
+          type: "text",
+          content: text.trim(),
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }]);
+        setTimeout(() => {
+          setViewMode("draft_preview");
+        }, 300);
+        return;
+      }
+
+      if (conversationalEditState !== "idle" || /preguntas|dimensiones|demográficos|demograficos|métricas|metricas|segmentos|decisiones/i.test(normalizedText)) {
         const response = handleConversationalEdit(text, conversationalEditState, conversationalEditContext, globalOverlayState);
         setConversationalEditState(response.newState);
         setConversationalEditContext(response.newContext);
@@ -409,12 +438,6 @@ export function ConversationalImportWorkspace() {
         role: "assistant",
         type: "guided_review_step",
         content: reviewMsg,
-        nextActions: [
-          { id: "review_structure", label: "Revisar estructura", actionType: "review_structure" },
-          { id: "adjust_by_chat", label: "Ajustar por chat", actionType: "adjust_by_chat" },
-          { id: "preview_draft", label: "Ver preview del borrador", actionType: "preview_draft" },
-          { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
-        ],
         timestamp: "2025-01-01T12:00:00.000Z",
       });
 
@@ -448,11 +471,6 @@ export function ConversationalImportWorkspace() {
         setTimeout(() => handleLocalAnalysisStart(rawFiles), 500);
       }
     });
-  };
-
-  const handleReviewStructure = () => {
-    setChatStarted(true);
-    setViewMode("review");
   };
 
   const handleExpectedFormat = () => {
@@ -665,7 +683,7 @@ export function ConversationalImportWorkspace() {
     } else if (actionType === "return_to_mappings") {
       void simulateChatFlow(simulatedContractReturnToMappingsMessages());
     } else if (actionType === "review_structure") {
-      handleReviewStructure();
+      // Ignored
     } else if (actionType === "adjust_by_chat") {
       setConversationalEditState("asking_edit_area");
       void simulateChatFlow([
@@ -911,22 +929,6 @@ export function ConversationalImportWorkspace() {
           </div>
           {chatStarted && (
             <div className="flex gap-2">
-              <Button
-                variant={viewMode === "chat" ? "secondary" : "ghost"}
-                size="sm"
-                className="rounded-lg text-xs"
-                onClick={() => setViewMode("chat")}
-              >
-                Chat
-              </Button>
-              <Button
-                variant={viewMode === "review" ? "secondary" : "ghost"}
-                size="sm"
-                className="rounded-lg text-xs"
-                onClick={() => setViewMode("review")}
-              >
-                Revisar estructura
-              </Button>
             </div>
           )}
         </div>
@@ -956,7 +958,6 @@ export function ConversationalImportWorkspace() {
                     variant="outline"
                     onClick={() => {
                       if (item.id === "cargar") handleSandboxUploadStart();
-                      else if (item.id === "revisar") handleReviewStructure();
                       else if (item.id === "formato") handleExpectedFormat();
                     }}
                     className="px-4 py-2 h-auto text-sm font-medium border border-border rounded-xl bg-card hover:bg-muted transition-colors text-foreground shadow-sm"

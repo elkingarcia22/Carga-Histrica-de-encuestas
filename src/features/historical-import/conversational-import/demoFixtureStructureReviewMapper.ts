@@ -90,7 +90,16 @@ export function mapDemoFixtureToStructureReviewMessage(
   }
 
   msg += `\n➡️ **Siguiente paso:**\n`;
-  msg += `Puedes revisar la estructura haciendo clic en "Revisar estructura" para ver el detalle visual. También puedes usar "Ver preview del borrador" para verificar si la estructura está lista.`;
+  msg += `¿Qué quieres revisar primero?\n\n`;
+  msg += `Puedes responder con:\n`;
+  msg += `- dimensiones\n`;
+  msg += `- preguntas\n`;
+  msg += `- demográficos\n`;
+  msg += `- métricas\n`;
+  msg += `- segmentos\n`;
+  msg += `- decisiones pendientes\n`;
+  msg += `- preview\n`;
+  msg += `- cancelar importación`;
 
   return msg;
 }
