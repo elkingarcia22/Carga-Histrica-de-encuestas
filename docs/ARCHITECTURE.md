@@ -670,3 +670,9 @@ Phase 11D-H11-H2 done
 - VISIBLE_UI_CHECKPOINT_YES
 - PHASE_11D_H15_HOMOLOGATION_PRECHECK_VISUAL_QA_READY
 - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Phase 11D-H16: Homologation Precheck Spanish Copy and Summary Hotfix
+The conversational block injected by the homologation precheck has been refined to enforce strict localization (Spanish) and a business-readable format.
+- Output formatting resides within `homologationPrecheckChatMapper.ts`.
+- Extracts safe counts directly from `result.entities` and `result.decisions` arrays.
+- Implements fallback strings for missing demographics to avoid runtime errors or hallucinated numbers.
