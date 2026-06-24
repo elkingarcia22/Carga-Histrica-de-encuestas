@@ -23,6 +23,9 @@ import { mapHomologationPrecheck } from "../homologation-precheck";
 
 import { mapStructureInventory } from "../structure-inventory";
 import { mapStructureInventoryToChat } from "./structureInventoryChatMapper";
+import { qsClimaDemoFixture } from "../demo-fixture/qsClimaFixture";
+import { isQsClimaDemoFixture } from "./demoFixtureAutoDetectionMapper";
+import { mapDemoFixtureToStructureReviewMessage } from "./demoFixtureStructureReviewMapper";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -259,7 +262,6 @@ export function ConversationalImportWorkspace() {
 
     if (files.length > 0) {
       setStagedFiles(files);
-      const groups = detectSurveyGroupsWithSegments(files);
 
       const sandboxMetadataFiles = files.map(f => ({
         name: f.name,
@@ -280,7 +282,25 @@ export function ConversationalImportWorkspace() {
         timestamp: "2025-01-01T12:00:00.000Z",
       });
 
+      if (isQsClimaDemoFixture(files)) {
+        const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture);
+        newMsgs.push({
+          id: `msg_assistant_qs_clima_review_${generateId()}`,
+          role: "assistant",
+          type: "guided_review_step",
+          content: reviewMsg,
+          nextActions: [
+            { id: "review_structure", label: "Revisar estructura", actionType: "review_structure" },
+            { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
+          ],
+          timestamp: "2025-01-01T12:00:00.000Z",
+        });
 
+        void simulateChatFlow(newMsgs);
+        return;
+      }
+
+      const groups = detectSurveyGroupsWithSegments(files);
 
       if (groups.length > 1) {
         newMsgs.push({
@@ -325,7 +345,6 @@ export function ConversationalImportWorkspace() {
     if (rawFiles.length > 0) {
       setStagedFiles(rawFiles);
     }
-    const groups = detectSurveyGroupsWithSegments(rawFiles);
 
     setMessages((prev) => prev.filter(m => m.type !== "sandbox_upload_panel"));
 
@@ -340,7 +359,25 @@ export function ConversationalImportWorkspace() {
       timestamp: isoString,
     });
 
+    if (rawFiles.length > 0 && isQsClimaDemoFixture(rawFiles)) {
+      const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture);
+      newMsgs.push({
+        id: `msg_assistant_qs_clima_review_${generateId()}`,
+        role: "assistant",
+        type: "guided_review_step",
+        content: reviewMsg,
+        nextActions: [
+          { id: "review_structure", label: "Revisar estructura", actionType: "review_structure" },
+          { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
+        ],
+        timestamp: "2025-01-01T12:00:00.000Z",
+      });
 
+      void simulateChatFlow(newMsgs);
+      return;
+    }
+
+    const groups = detectSurveyGroupsWithSegments(rawFiles);
 
     if (groups.length > 1) {
       newMsgs.push({
