@@ -752,3 +752,10 @@ The conversational block injected by the homologation precheck has been refined 
 - Typing explicitly blocks real responses, PII, and API connections.
 - Enables safe simulated rendering of the Structure Review Workspace.
 - VISIBLE_UI_CHECKPOINT_NO enforced.
+
+### Demo Fixture QS Clima Data (Phase 11D-H25)
+- Implements the curated demo fixture dataset for QS Clima 2024/2025 based on the H24 contract.
+- Includes total and segment files, dimensions, curated questions, metrics, demographics, and initial review decisions.
+- Completely adheres to privacy boundaries by omitting real responses, PII, and open text.
+- No UI, backend, parser, or API connections implemented.
+- Prepares the dataset for the visual structure review phase (H26).
