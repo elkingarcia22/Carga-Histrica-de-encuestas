@@ -1,3 +1,134 @@
+## Fase 11D-H23-R1 · Demo Fixture Decision Lock
+
+Phase: Fase 11D-H23-R1 · Demo Fixture Decision Lock
+
+Summary:
+- Locked decision to use a curated demo fixture for QS Clima 2024/2025 to validate structure review experience.
+- Explicitly documented that this is NOT a production import capability, NOT a universal parser, and NOT real import.
+- Defined scope, allowed data structure, and strictly forbidden data (no PII, no real responses).
+- Established relationship between source fixture layer and review overlay layer.
+- Added `docs/DEMO_FIXTURE_DECISION.md`.
+- Updated `docs/ARCHITECTURE.md` with Demo Fixture Mode section.
+- Visible UI checkpoint is explicitly NO.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H23_R1_DEMO_FIXTURE_DECISION_LOCK_COMPLETE
+DEMO_FIXTURE_MODE_APPROVED
+DEMO_FIXTURE_SCOPE_QS_CLIMA_2024_2025_ONLY
+REAL_IMPORT_ENGINE_DISABLED
+GENERAL_EXCEL_IMPORT_NOT_CLAIMED
+SOURCE_FIXTURE_LAYER_DEFINED
+REVIEW_OVERLAY_LAYER_PRESERVED
+NO_REAL_RESPONSES_IN_FIXTURE
+NO_PII_IN_FIXTURE
+NO_RAW_ROWS_IN_FIXTURE
+NO_WORKBOOK_DUMP_IN_FIXTURE
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+NO_RUNTIME_IMPLEMENTATION
+NO_UI_INTEGRATION
+NO_SRC_CHANGES
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H24_DEMO_FIXTURE_DATA_CONTRACT_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H23 · Secure Row Inventory Architecture
+
+Phase: Fase 11D-H23 · Secure Row Inventory Architecture
+
+Summary:
+- Defined architecture for Secure Row Inventory to safely read structural rows without exposing PII or participant responses.
+- Locked down privacy boundary, explicitly blocking raw rows, full workbooks, open text, and JSON rendering.
+- Detailed rules for discovering dimensions, questions, demographic candidates, and metrics based on safe labels.
+- Confirmed strict data isolation (no backend, API, Claude, storage).
+- Out of scope features like UI, runtime implementation, dashboards, and actual data mutation remain blocked.
+- Added `docs/SECURE_ROW_INVENTORY_ARCHITECTURE.md`.
+- Visible UI checkpoint is explicitly NO.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H23_SECURE_ROW_INVENTORY_ARCHITECTURE_COMPLETE
+SECURE_ROW_INVENTORY_ARCHITECTURE_LOCKED
+SECURE_ROW_INVENTORY_PURPOSE_DEFINED
+STRUCTURAL_ROWS_ALLOWED_SCOPE_DEFINED
+RAW_RESPONSE_VALUES_FORBIDDEN
+PII_FIELDS_BLOCKING_DEFINED
+SECURE_ROW_INVENTORY_ENTITIES_DEFINED
+SECURE_ROW_TRACEABILITY_DEFINED
+DIMENSION_ROW_DETECTION_RULES_DEFINED
+QUESTION_ROW_DETECTION_RULES_DEFINED
+QUESTION_TO_DIMENSION_ASSIGNMENT_DEFINED
+DEMOGRAPHIC_CANDIDATE_RULES_DEFINED
+METRIC_LABEL_RULES_DEFINED
+SECURE_ROW_INVENTORY_CAPABILITIES_DEFINED
+SECURE_ROW_INVENTORY_PRIVACY_BOUNDARY_DEFINED
+SECURE_ROW_INVENTORY_FALLBACKS_DEFINED
+STRUCTURE_INVENTORY_INTEGRATION_FUTURE_DEFINED
+NO_RUNTIME_IMPLEMENTATION
+NO_UI_INTEGRATION
+NO_SRC_CHANGES
+NO_PARSER_CHANGES
+NO_ANALYZER_CHANGES
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H24_SECURE_ROW_INVENTORY_TYPES_MAPPER_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H22 · Assistant Response Presentation Visual Hotfix
+
+Phase: Fase 11D-H22 · Assistant Response Presentation Visual Hotfix
+
+Summary:
+- Scope Confirmation: Addressed the visual QA failure where assistant's long responses were rendered inside a gray/purple card.
+- Message Renderer Diagnostic: Identified `ChatTimeline.tsx` styling `text` messages unconditionally with bubbles, and `guided_review_step` using bubbles with `whitespace-pre-wrap`.
+- Markdown Formatting: Created `AssistantStructuredMessage.tsx` to safely parse basic `**` markdown without external libraries and drop it from the bubble UI constraint.
+- Icon / Hierarchy: Updated `contentAnalysisChatMapper` and `structureInventoryChatMapper` to use `🎯`, `✅`, `1️⃣`, `2️⃣`, `3️⃣`, `🔎`, and `➡️` instead of generic markdown, improving readability.
+- Bubbles Removed: Updated `ChatTimeline.tsx` to render structured responses natively over the background without a card, gray, or purple wrapper.
+- Flow Preservation: The expected flow remains exactly the same. No technical blocks, no grids, no pre-homologation changes.
+- Safe Metadata: Maintained all bounds, zero usage of backend, storage, APIs, Claude, or new files beyond formatting.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H22_ASSISTANT_RESPONSE_PRESENTATION_VISUAL_HOTFIX_COMPLETE
+H20_VISUAL_QA_PRESENTATION_FAILURE_RECONCILED
+ASSISTANT_LONG_RESPONSE_NO_GRAY_PURPLE_CONTAINER
+ASSISTANT_LONG_RESPONSE_CLEAN_LAYOUT
+ASSISTANT_RESPONSE_MATCHES_REFERENCE_STYLE
+ICONS_OR_EMOJIS_USED_LIGHTLY
+NO_RAW_MARKDOWN_VISIBLE
+NO_INTERNAL_TECHNICAL_BLOCKS_VISIBLE
+NO_PRE_HOMOLOGATION_BLOCK_VISIBLE
+NO_WAIT_FOR_SECURE_ROW_INVENTORY_VISIBLE
+NO_OBJECT_OBJECT_RENDERED
+NO_CARDS_REINTRODUCED
+NO_GRIDS_REINTRODUCED
+NO_EDITOR_CONTROLS
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+NO_STUCK_PROGRESS_MESSAGE
+NO_PARSER_CHANGES
+NO_ANALYZER_LOGIC_CHANGES
+NO_STRUCTURE_INVENTORY_MAPPER_CHANGES
+NO_HOMOLOGATION_MAPPER_CHANGES
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_YES
+PHASE_11D_H20_VISUAL_QA_RETRY_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H18 · Structure Inventory Types and Mapper
 
 Phase: Fase 11D-H18 · Structure Inventory Types and Mapper
