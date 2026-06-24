@@ -824,3 +824,11 @@ The conversational block injected by the homologation precheck has been refined 
 - Completely adheres to privacy boundaries by omitting real responses, PII, and open text.
 - No UI, backend, parser, or API connections implemented.
 - Prepares the dataset for the visual structure review phase (H26).
+
+### Fase 11D-H38 · Draft Preview UI
+- **Objective:** Add a local preview UI to display the draft readiness state before preparing the final historical load draft.
+- **Key Constraints:** No actual import is executed, no APIs called, no persistent state saved. The preview simply consumes the `evaluateDraftReadiness` from `draft-preparation` using the current demo fixture and overlay adjustments.
+- **Components Introduced:**
+  - `DraftReadinessPreview`: Renders readiness state, dimension/question summary, privacy boundaries, and potential blockers/warnings.
+  - `draftPreviewMapper`: Maps the demo fixture and overlay state to the `DraftReadinessInput` shape for evaluation.
+- **Changes in Workspace:** Added secondary action "Ver preview del borrador" which enables `draft_preview` viewMode and renders `DraftReadinessPreview`.

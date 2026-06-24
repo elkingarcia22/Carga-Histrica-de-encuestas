@@ -90,7 +90,7 @@ export function mapDemoFixtureToStructureReviewMessage(
   }
 
   msg += `\n➡️ **Siguiente paso:**\n`;
-  msg += `Puedes revisar la estructura haciendo clic en "Revisar estructura" para ver el detalle visual.`;
+  msg += `Puedes revisar la estructura haciendo clic en "Revisar estructura" para ver el detalle visual. También puedes usar "Ver preview del borrador" para verificar si la estructura está lista.`;
 
   return msg;
 }

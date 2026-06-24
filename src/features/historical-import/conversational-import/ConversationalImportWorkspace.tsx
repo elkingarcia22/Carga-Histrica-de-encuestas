@@ -27,6 +27,9 @@ import { mapStructureInventoryToChat } from "./structureInventoryChatMapper";
 import { qsClimaDemoFixture } from "../demo-fixture/qsClimaFixture";
 import { isQsClimaDemoFixture } from "./demoFixtureAutoDetectionMapper";
 import { mapDemoFixtureToStructureReviewMessage } from "./demoFixtureStructureReviewMapper";
+import { mapDemoFixtureToReadinessInput } from "./draftPreviewMapper";
+import { evaluateDraftReadiness } from "../draft-preparation/draftReadinessMapper";
+import { DraftReadinessPreview } from "./DraftReadinessPreview";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -106,7 +109,7 @@ const playNotificationSound = () => {
 
 export function ConversationalImportWorkspace() {
   const [chatStarted, setChatStarted] = useState(false);
-  const [viewMode, setViewMode] = useState<"chat" | "review" | "controlled_rename">("chat");
+  const [viewMode, setViewMode] = useState<"chat" | "review" | "controlled_rename" | "draft_preview">("chat");
   const [activeSessionId, setActiveSessionId] = useState("sess_1");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const [globalOverlayState, setGlobalOverlayState] = useState<Record<string, string>>({});
@@ -294,6 +297,7 @@ export function ConversationalImportWorkspace() {
           nextActions: [
             { id: "review_structure", label: "Revisar estructura", actionType: "review_structure" },
             { id: "adjust_labels", label: "Ajustar etiquetas", actionType: "adjust_labels" },
+            { id: "preview_draft", label: "Ver preview del borrador", actionType: "preview_draft" },
             { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
           ],
           timestamp: "2025-01-01T12:00:00.000Z",
@@ -372,6 +376,7 @@ export function ConversationalImportWorkspace() {
         nextActions: [
           { id: "review_structure", label: "Revisar estructura", actionType: "review_structure" },
           { id: "adjust_labels", label: "Ajustar etiquetas", actionType: "adjust_labels" },
+          { id: "preview_draft", label: "Ver preview del borrador", actionType: "preview_draft" },
           { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
         ],
         timestamp: "2025-01-01T12:00:00.000Z",
@@ -627,6 +632,8 @@ export function ConversationalImportWorkspace() {
       handleReviewStructure();
     } else if (actionType === "adjust_labels") {
       setViewMode("controlled_rename");
+    } else if (actionType === "preview_draft") {
+      setViewMode("draft_preview");
     }
   };
 
@@ -947,6 +954,18 @@ export function ConversationalImportWorkspace() {
                       onSave={handleSaveRename}
                       onCancel={handleCancelRename}
                     />
+                  ) : viewMode === "draft_preview" ? (
+                    (() => {
+                      const input = mapDemoFixtureToReadinessInput(qsClimaDemoFixture, globalOverlayState);
+                      const readiness = evaluateDraftReadiness(input);
+                      return (
+                        <DraftReadinessPreview
+                          input={input}
+                          readiness={readiness}
+                          onCancel={() => setViewMode("chat")}
+                        />
+                      );
+                    })()
                   ) : (
                     <>
                       <ApprovalProgressTracker />
@@ -958,7 +977,7 @@ export function ConversationalImportWorkspace() {
                     </>
                   )}
                 </div>
-                {viewMode !== "controlled_rename" && (
+                {viewMode !== "controlled_rename" && viewMode !== "draft_preview" && (
                   <div className="w-80 flex-none bg-muted/10 border-l border-border hidden lg:block overflow-y-auto">
                     <DetectedStructurePanel />
                   </div>

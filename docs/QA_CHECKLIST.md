@@ -3503,3 +3503,15 @@ PHASE_11D_H19_STRUCTURE_INVENTORY_VISUAL_LIST_COMPLETE
 - [x] PHASE_11D_H30_OVERLAY_EDITING_TYPES_READY
 - [x] R1H5_DEFINED_BUT_NOT_TRIGGERED
 - PHASE_11D_H37_DRAFT_READINESS_MAPPER_COMPLETE
+
+## Phase 11D-H38: Draft Preview UI
+- [x] Action "Ver preview del borrador" is visible after structure detection.
+- [x] DraftReadinessPreview component shows status (ready/not_ready/blocked).
+- [x] DraftReadinessMapper is correctly connected and generates readiness evaluation.
+- [x] Summary counts (cycles, files, dimensions, questions, etc.) are correctly rendered.
+- [x] Blockers and warnings lists are clean (no raw objects or JSON).
+- [x] Privacy boundaries are explicitly stated in the preview.
+- [x] Local overlay adjustments count is visible.
+- [x] Prepare draft button is clearly disabled with descriptive helper text.
+- [x] No backend, storage, API, or Claude connected.
+- [x] No final draft object created.
