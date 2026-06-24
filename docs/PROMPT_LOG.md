@@ -1,3 +1,47 @@
+## Fase 11D-H14 · Homologation Precheck Conversational UI
+
+Phase: Fase 11D-H14 · Homologation Precheck Conversational UI
+
+Summary:
+- Scope Confirmation: Homologation Precheck UI integrated.
+- Mapper Consumption Summary: Consumed mapHomologationPrecheck from the homologation-precheck module.
+- Safe Metadata Input: Used safe metadata from workbook inspection without raw rows or JSON.
+- Conversational Output Summary: Formatted a bullet-only message presenting items, dimensions, metrics, segments, participant identification, and decisions required.
+- Sequence / Typewriter Gate: Included a delay to show the message only after "Análisis listo para revisión del usuario."
+- Privacy Boundary: Kept explicitly inside the message.
+- Output Format: Strictly bullet points, no object Object, no cards, no grids.
+- No Mapper/Parser/Analyzer Changes.
+- Git Hygiene Maintained.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H14_HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_COMPLETE
+HOMOLOGATION_PRECHECK_CONVERSATIONAL_UI_CONNECTED
+HOMOLOGATION_PRECHECK_MAPPER_CONSUMED
+SAFE_METADATA_INPUT_USED
+PRE_HOMOLOGATION_MESSAGE_VISIBLE
+PRE_HOMOLOGATION_APPEARS_AFTER_READY_MESSAGE
+PRE_HOMOLOGATION_NOT_VISIBLE_WHILE_PREVIOUS_MESSAGE_IS_TYPING
+PRE_HOMOLOGATION_BULLETS_ONLY
+NO_CARDS_REINTRODUCED
+NO_GRIDS_REINTRODUCED
+NO_FINAL_REVIEW_AUTOMATICALLY_RENDERED
+NO_OBJECT_OBJECT_RENDERED
+NO_STUCK_PROGRESS_MESSAGE
+NO_HOMOLOGATION_MAPPER_CHANGES
+NO_PARSER_CHANGES
+NO_ANALYZER_LOGIC_CHANGES
+NO_CATALOG_MUTATION
+NO_BACKEND_CREATED
+NO_STORAGE_CREATED
+NO_CLAUDE_CONNECTION_CREATED
+NO_API_CONNECTIONS
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+COMPARISON_DASHBOARD_OUT_OF_SCOPE
+VISIBLE_UI_CHECKPOINT_YES
+PHASE_11D_H15_HOMOLOGATION_PRECHECK_VISUAL_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H13 · Homologation Precheck Types and Mapper
 
 Phase: Fase 11D-H13 · Homologation Precheck Types and Mapper
