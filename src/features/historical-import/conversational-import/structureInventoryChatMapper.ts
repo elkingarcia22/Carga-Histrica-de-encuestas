@@ -4,10 +4,10 @@ export function mapStructureInventoryToChat(result: StructureInventoryResult): s
   const { summary, dimensions, questions } = result;
 
   if (summary.inventoryDetailAvailable && (dimensions.length > 0 || questions.length > 0)) {
-    let text = `**Qué falta por revisar**
+    let text = `🔎 **Qué falta por revisar**
 - Confirmar la estructura detallada del inventario.
 
-**Inventario detallado disponible**\n`;
+➡️ **Inventario detallado disponible**\n`;
     for (const dim of dimensions) {
       text += `- **${dim.label}**\n`;
       const dimQuestions = questions.filter(q => q.dimensionId === dim.id);
@@ -21,14 +21,14 @@ export function mapStructureInventoryToChat(result: StructureInventoryResult): s
     return text.trim();
   }
 
-  return `**Qué falta por revisar**
+  return `🔎 **Qué falta por revisar**
 - Confirmar cómo se interpretan las dimensiones.
 - Confirmar cómo se interpretan los ítems/preguntas.
 - Confirmar si los archivos de gerencia deben quedar como cortes del mismo ciclo.
 - Confirmar si existen demográficos utilizables para segmentación.
 
-**Siguiente paso**
-- Todavía no tengo suficiente detalle estructural para listar dimensiones y preguntas una por una.
-- Antes de preparar el borrador, necesito una revisión más precisa de la estructura detectada.
-- Cuando el detalle sea suficiente, podré mostrar la lista completa de dimensiones, preguntas y campos de segmentación.`;
+➡️ **Siguiente paso**
+Todavía no tengo suficiente detalle estructural para listar dimensiones y preguntas una por una.
+Antes de preparar el borrador, necesito una revisión más precisa de la estructura detectada.
+Cuando el detalle sea suficiente, podré mostrar la lista completa de dimensiones, preguntas y campos de segmentación.`;
 }

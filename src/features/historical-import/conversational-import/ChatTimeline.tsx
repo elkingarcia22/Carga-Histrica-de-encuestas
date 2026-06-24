@@ -2,34 +2,14 @@ import type { ChatMessage } from "./conversationalImportTypes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, FileText, Users, Database, ArrowRight, AlertCircle } from "lucide-react";
+import { FileText, Users, Database, ArrowRight, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
 import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
 import { SandboxUploadPanel } from "./SandboxUploadPanel";
-import { useState, useEffect } from "react";
 import { AILoader } from "@/components/ai-interaction/AILoader";
-
-function TypewriterText({ text, animate = true, speed = 15 }: { text: string; animate?: boolean; speed?: number }) {
-  const [displayedText, setDisplayedText] = useState(animate ? "" : text);
-
-  useEffect(() => {
-    if (!animate) return;
-
-    let i = 0;
-    const interval = setInterval(() => {
-      setDisplayedText(text.substring(0, i + 1));
-      i++;
-      if (i >= text.length) {
-        clearInterval(interval);
-      }
-    }, speed);
-    return () => clearInterval(interval);
-  }, [text, animate, speed]);
-
-  return <>{animate ? displayedText : text}</>;
-}
+import { AssistantStructuredMessage } from "./AssistantStructuredMessage";
 
 interface ChatTimelineProps {
   onAction?: (actionType: string) => void;
@@ -38,7 +18,6 @@ interface ChatTimelineProps {
 }
 
 export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: ChatTimelineProps) {
-  const [initialMessages] = useState(() => new Set(messages.map(m => m.id)));
 
   return (
     <ScrollArea className="flex-1 min-h-0">
@@ -51,35 +30,34 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
               msg.role === "user" ? "flex-row-reverse" : "flex-row"
             }`}
           >
-            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-              msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-ai-gradient shadow-sm"
-            }`}>
-              {msg.role === "user" && <User size={16} />}
-            </div>
+            {msg.role !== "user" && (
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ai-gradient shadow-sm">
+              </div>
+            )}
 
             <div className={`flex flex-col gap-2 max-w-2xl ${
               msg.role === "user" ? "items-end" : "items-start"
             }`}>
               {msg.type === "text" && (
-                <div className={`rounded-lg px-3 py-2 text-sm ${
+                <div className={`${
                   msg.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-ai-bg border border-ai-border text-foreground"
+                    ? "rounded-2xl px-4 py-2.5 text-sm bg-muted text-foreground"
+                    : "text-sm text-foreground/90 pl-1 mt-1 w-full"
                 }`}>
                   {msg.role === "user" ? (
                     msg.content
                   ) : (
-                   <div className="text-sm font-medium whitespace-pre-wrap leading-relaxed text-foreground/90">
-                    <TypewriterText text={msg.content} animate={!initialMessages.has(msg.id)} />
-                  </div>
+                    <div className="font-normal whitespace-pre-wrap leading-relaxed">
+                      <AssistantStructuredMessage content={msg.content} animate={false} />
+                    </div>
                   )}
                 </div>
               )}
 
               {msg.type === "file_staging" && (
                 <div className="w-full">
-                  <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-2">
-                    {msg.content}
+                  <div className="text-sm text-foreground/90 pl-1 mt-1 mb-2 whitespace-pre-wrap leading-relaxed">
+                    <AssistantStructuredMessage content={msg.content} animate={false} />
                   </div>
                   <SyntheticAttachmentStaging />
                 </div>
@@ -112,8 +90,8 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "synthetic_file_mount_summary" && (
                 <div className="w-full">
-                  <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-3">
-                    {msg.content}
+                  <div className="text-sm text-foreground/90 pl-1 mt-1 mb-3 whitespace-pre-wrap leading-relaxed">
+                    <AssistantStructuredMessage content={msg.content} animate={false} />
                   </div>
                   <SyntheticMountedFilesPanel
                     files={msg.files || []}
@@ -126,8 +104,8 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "guided_review_step" && (
                 <div className="w-full">
-                  <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-3 whitespace-pre-wrap">
-                    {msg.content}
+                  <div className="text-sm font-normal text-foreground/90 pl-1 mt-1 mb-4 whitespace-pre-wrap leading-relaxed">
+                    <AssistantStructuredMessage content={msg.content} animate={false} />
                   </div>
                   {msg.nextActions && msg.nextActions.length > 0 && (
                     <div className="flex flex-wrap gap-2">
@@ -163,8 +141,8 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "contract_summary" && (
                 <div className="w-full">
-                   <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-2">
-                    {msg.content}
+                   <div className="text-sm text-foreground/90 pl-1 mt-1 mb-2 whitespace-pre-wrap leading-relaxed">
+                    <AssistantStructuredMessage content={msg.content} animate={false} />
                   </div>
                   <ApprovedContractSummary />
                 </div>
@@ -178,8 +156,8 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "analysis_summary_blocks" && (
                 <div className="w-full flex flex-col gap-3">
-                  <div className="rounded-lg px-4 py-3 text-sm bg-ai-bg border border-ai-border whitespace-pre-wrap">
-                    {msg.content}
+                  <div className="text-sm text-foreground/90 pl-1 mt-1 whitespace-pre-wrap leading-relaxed">
+                    <AssistantStructuredMessage content={msg.content} animate={false} />
                   </div>
                   {msg.visualBlocks && msg.visualBlocks.length > 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -229,8 +207,8 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "demographics_guided_review" && (
                 <div className="w-full flex flex-col gap-3">
-                  <div className="rounded-lg px-4 py-3 text-sm bg-ai-bg border border-ai-border whitespace-pre-wrap">
-                    {msg.content}
+                  <div className="text-sm text-foreground/90 pl-1 mt-1 whitespace-pre-wrap leading-relaxed">
+                    <AssistantStructuredMessage content={msg.content} animate={false} />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {[
@@ -276,8 +254,8 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "sandbox_upload_panel" && (
                 <div className="w-full">
-                  <div className="rounded-lg px-3 py-2 text-sm bg-ai-bg border border-ai-border mb-2">
-                    {msg.content}
+                  <div className="text-sm text-foreground/90 pl-1 mt-1 mb-2 whitespace-pre-wrap leading-relaxed">
+                    <AssistantStructuredMessage content={msg.content} animate={false} />
                   </div>
                   <SandboxUploadPanel onFilesSelected={(files) => onSandboxFilesSelected?.(files)} />
                 </div>
@@ -285,8 +263,8 @@ export function ChatTimeline({ messages, onAction, onSandboxFilesSelected }: Cha
 
               {msg.type === "sandbox_files_selected" && (
                 <div className="w-full flex flex-col gap-3">
-                  <div className="rounded-lg px-4 py-3 text-sm bg-ai-bg border border-ai-border whitespace-pre-wrap">
-                    {msg.content}
+                  <div className="text-sm text-foreground/90 pl-1 mt-1 whitespace-pre-wrap leading-relaxed">
+                    <AssistantStructuredMessage content={msg.content} animate={false} />
                   </div>
                   {msg.sandboxFiles && msg.sandboxFiles.length > 0 && (
                     <div className="text-xs text-muted-foreground bg-card border border-border rounded-lg px-3 py-2 flex items-center gap-2 max-w-sm">

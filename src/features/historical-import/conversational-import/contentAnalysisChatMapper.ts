@@ -15,24 +15,25 @@ export function mapContentAnalysisToChatSummary(
 
   // Fallback honesto
   if (!hasSheets || (privacyBoundary.containsOnlyMetadata && !capabilities.canProfileColumns && !hasSheets)) {
-    return `**Resumen de la encuesta seleccionada**
-- Se seleccionó el grupo **${groupName}**.
-- Encontré **${totalFiles} archivo(s)** relacionado(s) con este ciclo.
-- El archivo principal sugerido es **${mainFile}**.
-${totalFiles > 1 ? `- Los demás archivos parecen corresponder a **cortes por gerencia o área** del mismo levantamiento.` : ''}
+    return `🎯 **Resumen de la encuesta seleccionada**
 
-**Lo que identifiqué**
-1. **Estructura general**
-   - No se detectaron hojas internas legibles con la evidencia actual.
-   - Aún no tengo evidencia interna suficiente del archivo.
+Se seleccionó el grupo **${groupName}**.
+Encontré **${totalFiles} archivo(s)** relacionado(s) con este ciclo.
+El archivo principal sugerido es **${mainFile}**.
+${totalFiles > 1 ? `Los demás archivos parecen corresponder a cortes por gerencia o área del mismo levantamiento.\n` : ''}
+✅ **Lo que identifiqué**
 
-2. **Contenido potencial**
-   - Preguntas/ítems: No evaluadas.
-   - Dimensiones: No evaluadas.
-   - Métricas: No evaluadas.
+1️⃣ **Estructura general**
+- No se detectaron hojas internas legibles con la evidencia actual.
+- Aún no tengo evidencia interna suficiente del archivo.
 
-3. **Privacidad / identificación de participantes**
-   - Identificación de participantes no determinada.`;
+2️⃣ **Contenido potencial**
+- Preguntas/ítems: No evaluadas.
+- Dimensiones: No evaluadas.
+- Métricas: No evaluadas.
+
+3️⃣ **Privacidad / identificación de participantes**
+- Identificación de participantes no determinada.`;
   }
 
   const sheetNames = analysis.sheets.map(s => s.sheetName).filter(Boolean).join(', ');
@@ -77,24 +78,25 @@ ${totalFiles > 1 ? `- Los demás archivos parecen corresponder a **cortes por ge
       }
   }
 
-  return `**Resumen de la encuesta seleccionada**
-- Se seleccionó el grupo **${groupName}**.
-- Encontré **${totalFiles} archivo(s)** relacionado(s) con este ciclo.
-- El archivo principal sugerido es **${mainFile}**.
-${totalFiles > 1 ? `- Los demás archivos parecen corresponder a **cortes por gerencia o área** del mismo levantamiento.` : ''}
+  return `🎯 **Resumen de la encuesta seleccionada**
 
-**Lo que identifiqué**
-1. **Estructura general**
-   - Se detectaron hojas como ${sheetNames || 'Desconocidas'}.
-   - La estructura parece corresponder a un ${layoutDetectado}.
+Se seleccionó el grupo **${groupName}**.
+Encontré **${totalFiles} archivo(s)** relacionado(s) con este ciclo.
+El archivo principal sugerido es **${mainFile}**.
+${totalFiles > 1 ? `Los demás archivos parecen corresponder a cortes por gerencia o área del mismo levantamiento.\n` : ''}
+✅ **Lo que identifiqué**
 
-2. **Contenido potencial**
-   - ${posiblesPreguntas}
-   - ${posiblesDimensiones}
-   - ${posiblesMetricas}
-   - La identificación de demográficos todavía requiere validación más precisa.
+1️⃣ **Estructura general**
+- Se detectaron hojas como ${sheetNames || 'Desconocidas'}.
+- La estructura parece corresponder a un ${layoutDetectado}.
 
-3. **Privacidad / identificación de participantes**
-   - ${identificacionParticipantes}
-   - Aun así, la clasificación de identificadores debe confirmarse antes de preparar el borrador.`;
+2️⃣ **Contenido potencial**
+- ${posiblesPreguntas}
+- ${posiblesDimensiones}
+- ${posiblesMetricas}
+- La identificación de demográficos todavía requiere validación más precisa.
+
+3️⃣ **Privacidad / identificación de participantes**
+- ${identificacionParticipantes}
+- Aun así, la clasificación de identificadores debe confirmarse antes de preparar el borrador.`;
 }

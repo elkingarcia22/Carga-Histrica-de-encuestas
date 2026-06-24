@@ -287,7 +287,7 @@ export function ConversationalImportWorkspace() {
           id: `msg_assistant_group_decision_${generateId()}`,
           role: "assistant",
           type: "guided_review_step",
-          content: "Encontré más de una encuesta en los archivos cargados.\n\n**Qué detecté:**\nDetecté grupos que parecen corresponder a encuestas distintas, por ejemplo " + groups.map(g => g.name).join(", ") + ".\n\n**Impacto en la carga histórica:**\nLa carga histórica se procesa una encuesta a la vez. Si mezclamos ciclos o estructuras distintas, las preguntas, demográficos y participantes pueden quedar mal clasificados.\n\n**Recomendación:**\nTe recomiendo procesar primero el grupo con mayor consistencia estructural.\n\n**¿Cuál encuesta quieres procesar primero?**",
+          content: "🎯 Encontré más de una encuesta en los archivos cargados.\n\n🔎 **Qué detecté:**\nDetecté grupos que parecen corresponder a encuestas distintas, por ejemplo " + groups.map(g => g.name).join(", ") + ".\n\n⚠️ **Impacto en la carga histórica:**\nLa carga histórica se procesa una encuesta a la vez. Si mezclamos ciclos o estructuras distintas, las preguntas, demográficos y participantes pueden quedar mal clasificados.\n\n✅ **Recomendación:**\nTe recomiendo procesar primero el grupo con mayor consistencia estructural.\n\n➡️ **¿Cuál encuesta quieres procesar primero?**",
           nextActions: [
             ...groups.map(g => ({
               id: `process_${g.id}`,
@@ -347,7 +347,7 @@ export function ConversationalImportWorkspace() {
         id: `msg_assistant_group_decision_${generateId()}`,
         role: "assistant",
         type: "guided_review_step",
-        content: "Encontré más de una encuesta en los archivos cargados.\n\n**Qué detecté:**\nDetecté grupos que parecen corresponder a encuestas distintas, por ejemplo " + groups.map(g => g.name).join(", ") + ".\n\n**Impacto en la carga histórica:**\nLa carga histórica se procesa una encuesta a la vez. Si mezclamos ciclos o estructuras distintas, las preguntas, demográficos y participantes pueden quedar mal clasificados.\n\n**Recomendación:**\nTe recomiendo procesar primero el grupo con mayor consistencia estructural.\n\n**¿Cuál encuesta quieres procesar primero?**",
+        content: "🎯 Encontré más de una encuesta en los archivos cargados.\n\n🔎 **Qué detecté:**\nDetecté grupos que parecen corresponder a encuestas distintas, por ejemplo " + groups.map(g => g.name).join(", ") + ".\n\n⚠️ **Impacto en la carga histórica:**\nLa carga histórica se procesa una encuesta a la vez. Si mezclamos ciclos o estructuras distintas, las preguntas, demográficos y participantes pueden quedar mal clasificados.\n\n✅ **Recomendación:**\nTe recomiendo procesar primero el grupo con mayor consistencia estructural.\n\n➡️ **¿Cuál encuesta quieres procesar primero?**",
         nextActions: [
           ...groups.map(g => ({
             id: `process_${g.id}`,
@@ -484,7 +484,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_next_decision_${generateId()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: `Quedan ${totalRemaining} decisiones pendientes.\n\n**${nextMapped.title}**\n\n**Qué detecté:**\n${nextMapped.detectedIssue}\n\n**Por qué importa:**\n${nextMapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${nextMapped.historicalLoadImpact}\n${nextMapped.recommendation ? `\n**Recomendación:**\n${nextMapped.recommendation}\n` : ""}\n**${nextMapped.primaryQuestion}**`,
+            content: `🎯 Quedan ${totalRemaining} decisiones pendientes.\n\n**${nextMapped.title}**\n\n🔎 **Qué detecté:**\n${nextMapped.detectedIssue}\n\n💡 **Por qué importa:**\n${nextMapped.whyItMatters}\n\n⚠️ **Impacto en la carga histórica:**\n${nextMapped.historicalLoadImpact}\n${nextMapped.recommendation ? `\n✅ **Recomendación:**\n${nextMapped.recommendation}\n` : ""}\n➡️ **${nextMapped.primaryQuestion}**`,
             nextActions: nextMapped.actions,
             timestamp: "2025-01-01T12:00:00.000Z",
           });
@@ -764,7 +764,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_decision_${generateId()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: `Quedan ${actionableDecisions.length} decisiones pendientes.\n\n**${mapped.title}**\n\n**Qué detecté:**\n${mapped.detectedIssue}\n\n**Por qué importa:**\n${mapped.whyItMatters}\n\n**Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n**Recomendación:**\n${mapped.recommendation}\n` : ""}\n**${mapped.primaryQuestion}**`,
+            content: `🎯 Quedan ${actionableDecisions.length} decisiones pendientes.\n\n**${mapped.title}**\n\n🔎 **Qué detecté:**\n${mapped.detectedIssue}\n\n💡 **Por qué importa:**\n${mapped.whyItMatters}\n\n⚠️ **Impacto en la carga histórica:**\n${mapped.historicalLoadImpact}\n${mapped.recommendation ? `\n✅ **Recomendación:**\n${mapped.recommendation}\n` : ""}\n➡️ **${mapped.primaryQuestion}**`,
             nextActions: mapped.actions,
             timestamp: "2025-01-01T12:00:00.000Z",
           });
