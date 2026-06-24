@@ -14,7 +14,6 @@ import { ChatTimeline } from "./ChatTimeline";
 import { ApprovalProgressTracker } from "./ApprovalProgressTracker";
 import { InlineReviewPanel } from "./InlineReviewPanel";
 import { DetectedStructurePanel } from "./DetectedStructurePanel";
-import { ControlledRenameReview } from "./ControlledRenameReview";
 import { Button } from "@/components/ui/button";
 import type { ChatMessage } from "./conversationalImportTypes";
 import type { SurveyFileAnalysisContract } from "../survey-file-analysis/types";
@@ -30,6 +29,7 @@ import { mapDemoFixtureToStructureReviewMessage } from "./demoFixtureStructureRe
 import { mapDemoFixtureToReadinessInput } from "./draftPreviewMapper";
 import { evaluateDraftReadiness } from "../draft-preparation/draftReadinessMapper";
 import { DraftReadinessPreview } from "./DraftReadinessPreview";
+import { handleConversationalEdit, type ConversationalEditState, type ConversationalEditContext } from "./conversationalEditingFlow";
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -116,6 +116,8 @@ export function ConversationalImportWorkspace() {
   const [draftContract, setDraftContract] = useState<SurveyFileAnalysisContract | null>(null);
   const [currentDecisionIndex, setCurrentDecisionIndex] = useState(0);
   const [resolvedDecisionIds, setResolvedDecisionIds] = useState<string[]>([]);
+  const [conversationalEditState, setConversationalEditState] = useState<ConversationalEditState>("idle");
+  const [conversationalEditContext, setConversationalEditContext] = useState<ConversationalEditContext>({});
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
@@ -296,7 +298,7 @@ export function ConversationalImportWorkspace() {
           content: reviewMsg,
           nextActions: [
             { id: "review_structure", label: "Revisar estructura", actionType: "review_structure" },
-            { id: "adjust_labels", label: "Ajustar etiquetas", actionType: "adjust_labels" },
+            { id: "adjust_by_chat", label: "Ajustar por chat", actionType: "adjust_by_chat" },
             { id: "preview_draft", label: "Ver preview del borrador", actionType: "preview_draft" },
             { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
           ],
@@ -334,6 +336,40 @@ export function ConversationalImportWorkspace() {
         }
       });
     } else if (text.trim()) {
+      if (conversationalEditState !== "idle" || /preguntas|dimensiones|demográficos|métricas|segmentos|decisiones/i.test(text)) {
+        const response = handleConversationalEdit(text, conversationalEditState, conversationalEditContext, globalOverlayState);
+        setConversationalEditState(response.newState);
+        setConversationalEditContext(response.newContext);
+
+        if (response.applyOverlay) {
+          const finalOverlay = {
+            ...globalOverlayState,
+            [response.applyOverlay.id]: response.applyOverlay.label
+          };
+          setGlobalOverlayState(finalOverlay);
+
+          // Optionally update previous message showing structure
+          setMessages(prev => prev.map(m => {
+            if (m.type === "guided_review_step" && m.id.startsWith("msg_assistant_qs_clima_review")) {
+              return {
+                ...m,
+                content: mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, finalOverlay)
+              };
+            }
+            return m;
+          }));
+        }
+
+        void simulateChatFlow([{
+          id: `msg_assistant_edit_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: response.message,
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }]);
+        return;
+      }
+
       void simulateChatFlow([{
         id: `msg_assistant_generic_${generateId()}`,
         role: "assistant",
@@ -375,7 +411,7 @@ export function ConversationalImportWorkspace() {
         content: reviewMsg,
         nextActions: [
           { id: "review_structure", label: "Revisar estructura", actionType: "review_structure" },
-          { id: "adjust_labels", label: "Ajustar etiquetas", actionType: "adjust_labels" },
+          { id: "adjust_by_chat", label: "Ajustar por chat", actionType: "adjust_by_chat" },
           { id: "preview_draft", label: "Ver preview del borrador", actionType: "preview_draft" },
           { id: "cancel", label: "Cancelar", actionType: "cancel_analysis" }
         ],
@@ -630,8 +666,24 @@ export function ConversationalImportWorkspace() {
       void simulateChatFlow(simulatedContractReturnToMappingsMessages());
     } else if (actionType === "review_structure") {
       handleReviewStructure();
-    } else if (actionType === "adjust_labels") {
-      setViewMode("controlled_rename");
+    } else if (actionType === "adjust_by_chat") {
+      setConversationalEditState("asking_edit_area");
+      void simulateChatFlow([
+        {
+          id: `msg_user_adjust_${generateId()}`,
+          role: "user",
+          type: "text",
+          content: "Ajustar por chat",
+          timestamp: "2025-01-01T12:00:00.000Z",
+        },
+        {
+          id: `msg_assistant_adjust_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: "¿Qué quieres revisar o ajustar primero?\n\nPuedes responder:\n- dimensiones\n- preguntas\n- demográficos\n- métricas\n- segmentos\n- decisiones pendientes",
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }
+      ]);
     } else if (actionType === "preview_draft") {
       setViewMode("draft_preview");
     }
@@ -837,23 +889,6 @@ export function ConversationalImportWorkspace() {
     }
   };
 
-  const handleSaveRename = (newOverlayState: Record<string, string>) => {
-    setGlobalOverlayState(newOverlayState);
-    setViewMode("chat");
-    setMessages(prev => prev.map(m => {
-      if (m.type === "guided_review_step" && m.id.startsWith("msg_assistant_qs_clima_review")) {
-        return {
-          ...m,
-          content: mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, newOverlayState)
-        };
-      }
-      return m;
-    }));
-  };
-
-  const handleCancelRename = () => {
-    setViewMode("chat");
-  };
 
   return (
     <div className="flex h-screen w-screen bg-muted/30 p-6 gap-6 font-sans overflow-hidden">
@@ -948,13 +983,7 @@ export function ConversationalImportWorkspace() {
               /* Vista secundaria de revisión inline y detected structure panel */
               <div className="flex-1 flex min-h-0 overflow-hidden">
                 <div className="flex-1 flex flex-col overflow-y-auto">
-                  {viewMode === "controlled_rename" ? (
-                    <ControlledRenameReview
-                      initialOverlayState={globalOverlayState}
-                      onSave={handleSaveRename}
-                      onCancel={handleCancelRename}
-                    />
-                  ) : viewMode === "draft_preview" ? (
+                  {viewMode === "draft_preview" ? (
                     (() => {
                       const input = mapDemoFixtureToReadinessInput(qsClimaDemoFixture, globalOverlayState);
                       const readiness = evaluateDraftReadiness(input);
@@ -977,7 +1006,7 @@ export function ConversationalImportWorkspace() {
                     </>
                   )}
                 </div>
-                {viewMode !== "controlled_rename" && viewMode !== "draft_preview" && (
+                {viewMode !== "draft_preview" && (
                   <div className="w-80 flex-none bg-muted/10 border-l border-border hidden lg:block overflow-y-auto">
                     <DetectedStructurePanel />
                   </div>
