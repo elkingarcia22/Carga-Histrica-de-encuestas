@@ -212,6 +212,9 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 
 The historical import prototype will use a curated demo fixture for QS Clima 2024/2025 to validate the structure review experience before implementing a general secure row inventory parser. This fixture is scoped, non-production, local, mock/curated, and must not be represented as real import capability.
 
+### Controlled Overlay Editing Architecture
+The historical import prototype will support future non-destructive review adjustments through a Review Overlay Layer. Source fixture data and original detected structures remain immutable. Future UI may resolve labels, mappings, demographic states and review decisions from source + overlay, but must not mutate the source layer or claim production persistence.
+
 ## Realistic Survey Import Architecture
 - [Realistic Survey Import Architecture](./REALISTIC_SURVEY_IMPORT_ARCHITECTURE.md)
 - [Survey File Analysis Contract](./SURVEY_FILE_ANALYSIS_CONTRACT.md)
