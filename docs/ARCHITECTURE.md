@@ -684,3 +684,12 @@ The conversational block injected by the homologation precheck has been refined 
 - Established Source Structure Layer (immutable) and Review Overlay Layer (editable).
 - No UI runtime, no parser changes, no backend/storage/Claude introduced in this phase.
 - PHASE_11D_H17_STRUCTURE_REVIEW_WORKSPACE_ARCHITECTURE_COMPLETE
+
+### Fase 11D-H18: Structure Inventory Types and Mapper
+- Created a pure module for structure inventory that receives safe metadata and returns a typed inventory.
+- Enforced safe label detection, deterministic IDs, and fallback mechanisms for incomplete row-level metadata.
+
+### Fase 11D-H18: Structure Inventory Types and Mapper
+- Created a pure module for structure inventory that receives safe metadata and returns a typed inventory.
+- Enforced safe label detection, deterministic IDs, and fallback mechanisms for incomplete row-level metadata.
+- PHASE_11D_H18_STRUCTURE_INVENTORY_TYPES_MAPPER_COMPLETE
