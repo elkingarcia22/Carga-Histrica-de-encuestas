@@ -5,7 +5,25 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { AlertCircle, LayoutList } from "lucide-react";
 import { qsClimaDemoFixture } from "../demo-fixture/qsClimaFixture";
-import { containsPiiLikeValue } from "../overlay-editing/overlayEditingValidation";
+
+const PII_GUARD_PATTERNS = [
+  'email',
+  'correo',
+  'cedula',
+  'cédula',
+  'documento',
+  'telefono',
+  'teléfono',
+  'nombre completo',
+  'employee_id',
+  'colaborador_id'
+];
+
+function containsPiiLikeValue(text: string): boolean {
+  if (!text) return false;
+  const lowerText = text.toLowerCase();
+  return PII_GUARD_PATTERNS.some(pattern => lowerText.includes(pattern));
+}
 
 interface ControlledRenameReviewProps {
   initialOverlayState: Record<string, string>;
@@ -18,7 +36,7 @@ export function ControlledRenameReview({ initialOverlayState, onSave, onCancel }
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const sourceLayer = qsClimaDemoFixture.sourceLayer;
-  
+
   // Only editable entities are dimensions and questions
   const dimensions = sourceLayer.dimensions;
   const mappings = sourceLayer.mappings;
@@ -26,7 +44,7 @@ export function ControlledRenameReview({ initialOverlayState, onSave, onCancel }
 
   const handleLabelChange = (id: string, nextLabel: string) => {
     setLocalOverlay(prev => ({ ...prev, [id]: nextLabel }));
-    
+
     // Validate
     if (!nextLabel.trim()) {
       setErrors(prev => ({ ...prev, [id]: "El label no puede estar vacío" }));
@@ -40,7 +58,7 @@ export function ControlledRenameReview({ initialOverlayState, onSave, onCancel }
       setErrors(prev => ({ ...prev, [id]: "El label no puede ser numérico" }));
       return;
     }
-    
+
     setErrors(prev => {
       const newErrors = { ...prev };
       delete newErrors[id];
@@ -75,10 +93,10 @@ export function ControlledRenameReview({ initialOverlayState, onSave, onCancel }
 
       <ScrollArea className="flex-1 p-6">
         <div className="max-w-4xl mx-auto space-y-8 pb-24">
-          
+
           {dimensions.map(dim => {
             const isDimModified = !!localOverlay[dim.id];
-            
+
             // Find questions mapped to this dimension
             const dimMappings = mappings.filter(m => m.detectedDimensionId === dim.id);
             const dimQuestions = dimMappings.map(m => {
@@ -96,7 +114,7 @@ export function ControlledRenameReview({ initialOverlayState, onSave, onCancel }
                     </label>
                     <div className="flex items-start gap-3">
                       <div className="flex-1 flex flex-col gap-1">
-                        <Input 
+                        <Input
                           value={localOverlay[dim.id] !== undefined ? localOverlay[dim.id] : dim.displayLabel}
                           onChange={(e) => handleLabelChange(dim.id, e.target.value)}
                           className={`max-w-md ${errors[dim.id] ? "border-destructive" : ""}`}
@@ -126,7 +144,7 @@ export function ControlledRenameReview({ initialOverlayState, onSave, onCancel }
                         <label className="text-[11px] text-muted-foreground">Pregunta / Ítem</label>
                         <div className="flex items-start gap-3">
                           <div className="flex-1 flex flex-col gap-1">
-                            <Input 
+                            <Input
                               value={localOverlay[q.id] !== undefined ? localOverlay[q.id] : q.displayLabel}
                               onChange={(e) => handleLabelChange(q.id, e.target.value)}
                               className={`max-w-2xl text-sm ${errors[q.id] ? "border-destructive" : ""}`}
