@@ -339,9 +339,15 @@ export function ConversationalImportWorkspace() {
 
       if (conversationalEditState === "awaiting_survey_scope_selection") {
         let selectedScope: "2025" | "2024" | "multicycle" | null = null;
-        if (intent === "select_scope_1") selectedScope = "2025";
-        else if (intent === "select_scope_2") selectedScope = "2024";
-        else if (intent === "select_scope_3") selectedScope = "multicycle";
+        
+        const normalizedInput = text.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ");
+        const scope1Keywords = ["1", "01", "opcion 1", "uno", "primera", "primer opcion", "primera opcion", "2025", "clima 2025", "qs clima 2025"];
+        const scope2Keywords = ["2", "02", "opcion 2", "dos", "segunda", "segunda opcion", "2024", "clima 2024", "qs clima 2024"];
+        const scope3Keywords = ["3", "03", "opcion 3", "tres", "tercera", "todo", "ambas", "ambos", "multiciclo", "procesar todo", "todo junto", "carga historica"];
+
+        if (scope1Keywords.includes(normalizedInput) || intent === "select_scope_1") selectedScope = "2025";
+        else if (scope2Keywords.includes(normalizedInput) || intent === "select_scope_2") selectedScope = "2024";
+        else if (scope3Keywords.includes(normalizedInput) || intent === "select_scope_3") selectedScope = "multicycle";
 
         if (selectedScope) {
           setSelectedSurveyScope(selectedScope);
