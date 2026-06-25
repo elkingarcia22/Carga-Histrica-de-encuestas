@@ -1,4 +1,53 @@
+## Fase 11D-H44-H14 · Controlled Runtime Integration Build
+
+Phase: Fase 11D-H44-H14 · Controlled Runtime Integration Build
+
+Summary:
+- Integrated the `ChatFoundationMessageRenderer` into `ConversationalImportWorkspace.tsx` under a feature gate constant `HISTORICAL_IMPORT_CHAT_FOUNDATION_RUNTIME_ENABLED` set to `true`.
+- Created a pure mapper `historicalImportRuntimeAdapterMapper.ts` in `src/features/historical-import/conversational-import/flow-adapter/` to map workspace `ChatMessage` models to `ChatFoundationMessage` models.
+- Updated `flow-adapter/index.ts` to export the new mapper.
+- Rendered mapped messages using `ChatFoundationMessageRenderer`, keeping the wizard's state machine, submit logic, config steps, and reviews intact.
+- Aligned custom attachment panels (`SyntheticMountedFilesPanel`, `SandboxUploadPanel`, etc.) with `ml-11` below the mapped bubbles.
+- Verified that the assistant's avatar is gradient-only and thinking/warning/error/info styles render correctly.
+- Ensured zero changes to App.tsx, package.json, and Chat Foundation core files.
+- Ran successful build and ESLint checks.
+
+PHASE_11D_H44_H14_CONTROLLED_RUNTIME_INTEGRATION_BUILD_COMPLETE
+CONTROLLED_RUNTIME_INTEGRATION_BUILD_COMPLETE
+CHAT_FOUNDATION_RENDERER_USED_IN_REAL_WORKSPACE
+REAL_WORKSPACE_STATE_LOGIC_PRESERVED
+REAL_WORKSPACE_INPUT_PRESERVED
+REAL_WORKSPACE_INTENT_FLOW_PRESERVED
+SCOPE_SELECTION_STILL_WORKS
+GENERAL_CONFIGURATION_STILL_WORKS
+MATCH_REVIEW_STILL_WORKS
+THINKING_VISIBLE_IN_REAL_WORKSPACE
+AGENT_AVATAR_GRADIENT_ONLY_IN_REAL_WORKSPACE
+SEMANTIC_ICONS_NOT_SATURATED_IN_REAL_WORKSPACE
+NO_FULL_WORKSPACE_REWRITE
+NO_CHAT_FOUNDATION_CORE_CHANGES
+NO_APP_TSX_CHANGES
+NO_PACKAGE_JSON_CHANGES
+NO_ROUTE_PRODUCT_CREATED
+NO_NAVIGATION_PRODUCT_CREATED
+ALL_ACTIONS_BY_CHAT_TEXT_ONLY
+NO_SIDE_PANEL_EDITOR
+NO_EXTERNAL_REVIEW_TAB
+NO_FORM_MODE_EDITOR
+NO_ACTION_BUTTONS_FOR_REVIEW
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+PLAYGROUND_5174_STILL_WORKS
+PLAYGROUND_ADAPTER_FIXTURE_STILL_VISIBLE
+VISIBLE_UI_CHECKPOINT_YES
+PHASE_11D_H44_H15_HISTORICAL_IMPORT_FLOW_VISUAL_REGRESSION_QA_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H44-H13 · Controlled Runtime Integration Architecture
+
 
 Phase: Fase 11D-H44-H13 · Controlled Runtime Integration Architecture
 

@@ -1383,3 +1383,49 @@ Hotfix de avatar e iconos semánticos del Chat Foundation completado.
   - VISIBLE_UI_CHECKPOINT_NO
   - PHASE_11D_H44_H14_CONTROLLED_RUNTIME_INTEGRATION_BUILD_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## PHASE_11D_H44_H14_CONTROLLED_RUNTIME_INTEGRATION_BUILD_COMPLETE
+
+Se completó con éxito la integración en runtime del renderizador de Chat Foundation dentro de la Carga Histórica real sin alterar el comportamiento interactivo.
+
+### Invariantes y Verificaciones
+- **Feature Gate**: Se habilitó la integración controlada en `ConversationalImportWorkspace.tsx` mediante `HISTORICAL_IMPORT_CHAT_FOUNDATION_RUNTIME_ENABLED = true`.
+- **Renderer Swap**: Se reemplazó la visualización de mensajes tradicionales con `<ChatFoundationMessageRenderer />`, manteniendo todos los paneles adjuntos lógicos (`SyntheticMountedFilesPanel`, `SandboxUploadPanel`, etc.) alineados con `ml-11`.
+- **Paridad Visual**: El avatar es puramente un gradiente sin iconos internos decorativos, el loader de pensando es sutil y uniforme, y los iconos semánticos se conservan en estados correspondientes.
+- **Flujos**: La selección de alcances (1, 2, 3), la configuración general (7 pasos), el match review y el sandbox de resultados siguen operando de manera idéntica.
+
+### Marcadores de Cumplimiento
+- PHASE_11D_H44_H14_CONTROLLED_RUNTIME_INTEGRATION_BUILD_COMPLETE
+- CONTROLLED_RUNTIME_INTEGRATION_BUILD_COMPLETE
+- CHAT_FOUNDATION_RENDERER_USED_IN_REAL_WORKSPACE
+- REAL_WORKSPACE_STATE_LOGIC_PRESERVED
+- REAL_WORKSPACE_INPUT_PRESERVED
+- REAL_WORKSPACE_INTENT_FLOW_PRESERVED
+- SCOPE_SELECTION_STILL_WORKS
+- GENERAL_CONFIGURATION_STILL_WORKS
+- MATCH_REVIEW_STILL_WORKS
+- THINKING_VISIBLE_IN_REAL_WORKSPACE
+- AGENT_AVATAR_GRADIENT_ONLY_IN_REAL_WORKSPACE
+- SEMANTIC_ICONS_NOT_SATURATED_IN_REAL_WORKSPACE
+- NO_FULL_WORKSPACE_REWRITE
+- NO_CHAT_FOUNDATION_CORE_CHANGES
+- NO_APP_TSX_CHANGES
+- NO_PACKAGE_JSON_CHANGES
+- NO_ROUTE_PRODUCT_CREATED
+- NO_NAVIGATION_PRODUCT_CREATED
+- ALL_ACTIONS_BY_CHAT_TEXT_ONLY
+- NO_SIDE_PANEL_EDITOR
+- NO_EXTERNAL_REVIEW_TAB
+- NO_FORM_MODE_EDITOR
+- NO_ACTION_BUTTONS_FOR_REVIEW
+- NO_IMPORT_EXECUTION
+- NO_SANDBOX_IMPORT_RUNTIME
+- NO_RESULT_LINK_CREATED
+- NO_DASHBOARD_OR_COMPARISON_CHANGES
+- READY_FOR_COMPARISON_OUTPUT_DISABLED
+- PLAYGROUND_5174_STILL_WORKS
+- PLAYGROUND_ADAPTER_FIXTURE_STILL_VISIBLE
+- VISIBLE_UI_CHECKPOINT_YES
+- PHASE_11D_H44_H15_HISTORICAL_IMPORT_FLOW_VISUAL_REGRESSION_QA_READY
+- R1H5_DEFINED_BUT_NOT_TRIGGERED
+

@@ -47,6 +47,19 @@ import {
 import { getDimensionsList } from "./conversationalEditingMapper";
 import { getMatchReviewSectionMessage } from "./conversationalMatchReviewMapper";
 import type { ConversationalGeneralConfiguration, ConversationalImportWizardStateId, ConversationalSurveyScope } from "./conversationalWizardTypes";
+import { Card, CardContent } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { FileText, Users, Database, ArrowRight, AlertCircle } from "lucide-react";
+import { SyntheticAttachmentStaging } from "./SyntheticAttachmentStaging";
+import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
+import { SandboxUploadPanel } from "./SandboxUploadPanel";
+import { ApprovedContractSummary } from "./ApprovedContractSummary";
+import { ChatFoundationMessageRenderer } from "./chat-foundation";
+import { mapRuntimeMessageToChatFoundation } from "./flow-adapter";
+
+const HISTORICAL_IMPORT_CHAT_FOUNDATION_RUNTIME_ENABLED = true;
+
 import {
   initialMessages,
   simulatedFormatMessages,
@@ -1390,11 +1403,171 @@ export function ConversationalImportWorkspace() {
             /* Estado Activo */
             viewMode === "chat" ? (
               <div className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
-                <ChatTimeline
-                  messages={messages}
-                  onAction={handleAction}
-                  onSandboxFilesSelected={handleSandboxFilesSelected}
-                />
+                {HISTORICAL_IMPORT_CHAT_FOUNDATION_RUNTIME_ENABLED ? (
+                  <ScrollArea className="flex-1 min-h-0">
+                    <div className="flex flex-col gap-4 p-4 max-w-4xl mx-auto w-full">
+                      {messages.map((msg) => {
+                        const mappedMsg = mapRuntimeMessageToChatFoundation(msg);
+                        const isUser = msg.role === "user";
+                        return (
+                          <div key={msg.id} id={msg.id} className="w-full flex flex-col gap-2">
+                            <ChatFoundationMessageRenderer message={mappedMsg} />
+                            {!isUser && (
+                              <div className="ml-11 flex flex-col gap-2 max-w-2xl">
+                                {msg.type === "file_staging" && (
+                                  <SyntheticAttachmentStaging />
+                                )}
+
+                                {msg.type === "synthetic_file_mount_summary" && (
+                                  <SyntheticMountedFilesPanel
+                                    files={msg.files || []}
+                                    boundaryNote={msg.boundaryNote}
+                                    nextActions={msg.nextActions}
+                                    onAction={handleAction}
+                                  />
+                                )}
+
+                                {msg.type === "guided_review_step" && msg.nextActions && msg.nextActions.length > 0 && (
+                                  <div className="flex flex-wrap gap-2">
+                                    {msg.nextActions.map((action) => (
+                                      <Button
+                                        key={action.id}
+                                        variant={
+                                          action.actionType === "approve_files" ||
+                                          action.actionType === "approve_demographics" ||
+                                          action.actionType === "approve_dimensions" ||
+                                          action.actionType === "approve_questions" ||
+                                          action.actionType === "approve_mappings" ||
+                                          action.actionType === "approve_automatic_mappings" ||
+                                          action.actionType === "approve_contract"
+                                            ? "default"
+                                            : "outline"
+                                        }
+                                        size="sm"
+                                        className="text-xs"
+                                        onClick={() => handleAction(action.actionType)}
+                                      >
+                                        {action.label}
+                                      </Button>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {msg.type === "contract_summary" && (
+                                  <ApprovedContractSummary />
+                                )}
+
+                                {msg.type === "sandbox_upload_panel" && (
+                                  <SandboxUploadPanel onFilesSelected={handleSandboxFilesSelected} />
+                                )}
+
+                                {msg.type === "sandbox_files_selected" && msg.sandboxFiles && msg.sandboxFiles.length > 0 && (
+                                  <div className="text-xs text-muted-foreground bg-card border border-border rounded-lg px-3 py-2 flex items-center gap-2 max-w-sm">
+                                    <FileText className="w-4 h-4 shrink-0" />
+                                    <span className="truncate min-w-0">
+                                      {msg.sandboxFiles.slice(0, 3).map(f => f.name).join(", ")}
+                                      {msg.sandboxFiles.length > 3 ? ` +${msg.sandboxFiles.length - 3} archivos más` : ""}
+                                    </span>
+                                  </div>
+                                )}
+
+                                {msg.type === "analysis_summary_blocks" && (
+                                  <>
+                                    {msg.visualBlocks && msg.visualBlocks.length > 0 && (
+                                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                        {msg.visualBlocks.map((block, idx) => {
+                                          const Icon = block.icon === "file" ? FileText :
+                                                       block.icon === "users" ? Users :
+                                                       block.icon === "database" ? Database :
+                                                       block.icon === "alert" || block.icon === "warning" ? AlertCircle :
+                                                       block.icon === "arrow_right" ? ArrowRight : FileText;
+                                          return (
+                                            <Card key={idx} className="bg-card border-border shadow-sm">
+                                              <CardContent className="p-3 flex items-start gap-3">
+                                                <div className="mt-0.5 shrink-0 text-primary bg-primary/10 p-1.5 rounded-md">
+                                                  <Icon className="w-4 h-4" />
+                                                </div>
+                                                <div className="flex flex-col gap-0.5">
+                                                  <span className="font-medium text-sm text-foreground">{block.title}</span>
+                                                  <span className="text-xs text-muted-foreground leading-snug">{block.description}</span>
+                                                </div>
+                                              </CardContent>
+                                            </Card>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                    {msg.nextActions && msg.nextActions.length > 0 && (
+                                      <div className="flex flex-wrap gap-2 mt-2">
+                                        {msg.nextActions.map((action) => (
+                                          <Button
+                                            key={action.id}
+                                            variant={action.actionType === "start_local_analysis" ? "default" : "outline"}
+                                            size="sm"
+                                            className="text-xs"
+                                            onClick={() => handleAction(action.actionType)}
+                                          >
+                                            {action.label}
+                                          </Button>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </>
+                                )}
+
+                                {msg.type === "demographics_guided_review" && (
+                                  <>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                      {[
+                                        { name: "Gerencia", status: "Alineado", action: "Mantener" },
+                                        { name: "Área", status: "Requiere creación", action: "Crear en encuesta" },
+                                        { name: "Cargo", status: "Requiere creación", action: "Crear en encuesta" },
+                                        { name: "Antigüedad", status: "Alineado", action: "Mantener" }
+                                      ].map(demo => (
+                                        <Card key={demo.name} className="bg-card border-border shadow-sm">
+                                          <CardContent className="p-3 flex items-center justify-between">
+                                             <div>
+                                               <p className="font-medium text-sm text-foreground">{demo.name}</p>
+                                               <p className="text-xs text-muted-foreground">{demo.status}</p>
+                                             </div>
+                                             <Badge variant={demo.status === "Alineado" ? "secondary" : "outline"} className="text-[10px]">
+                                               {demo.action}
+                                             </Badge>
+                                          </CardContent>
+                                        </Card>
+                                      ))}
+                                    </div>
+                                    {msg.nextActions && msg.nextActions.length > 0 && (
+                                      <div className="flex flex-wrap gap-2 mt-2">
+                                        {msg.nextActions.map((action) => (
+                                          <Button
+                                            key={action.id}
+                                            variant={action.actionType === "approve_demographics" ? "default" : "outline"}
+                                            size="sm"
+                                            className="text-xs"
+                                            onClick={() => handleAction(action.actionType)}
+                                          >
+                                            {action.label}
+                                          </Button>
+                                        ))}
+                                      </div>
+                                    )}
+                                  </>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </ScrollArea>
+                ) : (
+                  <ChatTimeline
+                    messages={messages}
+                    onAction={handleAction}
+                    onSandboxFilesSelected={handleSandboxFilesSelected}
+                  />
+                )}
                 <div className="p-4 mx-auto w-full max-w-4xl shrink-0">
                   <MessageComposer onSend={handleComposerSend} />
                 </div>
