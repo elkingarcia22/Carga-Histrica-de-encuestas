@@ -89,6 +89,9 @@ export default {
         card: "var(--shadow-card)",
         drawer: "var(--shadow-drawer)",
       },
+      backgroundImage: {
+        'ai-gradient': 'linear-gradient(135deg, hsl(var(--ai-gradient-start)) 0%, hsl(var(--ai-gradient-end)) 100%)',
+      },
       fontFamily: {
         sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
         body: ["var(--font-body)"],
