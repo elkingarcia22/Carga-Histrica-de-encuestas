@@ -1,3 +1,34 @@
+## Fase 11D-H44-H12-H1 · Adapter Fixture Main Panel Visual Hotfix
+
+Phase: Fase 11D-H44-H12-H1 · Adapter Fixture Main Panel Visual Hotfix
+
+Summary:
+- Updated `ChatFoundationVisualPlayground.tsx` to set the default selected scenario to `awaiting_survey_scope_selection` (id `scen-scope-selection`).
+- Promoted the Historical Import Flow Adapter Fixture chat display section to be the primary card at the top of the chat output column.
+- Demoted the Chat Foundation base messages section to be secondary and collapsible under a native `<details>` element, preventing it from dominating visual QA of the flow adapter.
+- Ensured zero product runtime integration, zero flow migration, and zero changes to the core components of the Chat Foundation.
+- Passed all compiler, ESLint, and whitespace checking audits.
+
+PHASE_11D_H44_H12_H1_ADAPTER_FIXTURE_MAIN_PANEL_VISUAL_HOTFIX_COMPLETE
+ADAPTER_FIXTURE_MESSAGES_VISIBLE_IN_MAIN_PANEL
+ADAPTER_FIXTURE_HEADER_VISIBLE_IN_MAIN_PANEL
+ADAPTER_FIXTURE_LABELS_INTERNAL_MOCK
+SELECTED_SCENARIO_MESSAGES_RENDERED
+CHAT_FOUNDATION_RENDERER_REUSED
+CHAT_FOUNDATION_CORE_UNCHANGED
+BASE_MESSAGES_STILL_AVAILABLE_BUT_SECONDARY
+NO_PRODUCT_RUNTIME_INTEGRATION
+NO_FLOW_MIGRATION
+NO_CONVERSATIONAL_IMPORT_WORKSPACE_CHANGES
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+VISIBLE_UI_CHECKPOINT_YES
+PHASE_11D_H44_H12_ADAPTER_VISUAL_QA_RETRY_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H44-H11 · Historical Import Flow Adapter Playground Fixture
 
 Phase: Fase 11D-H44-H11 · Historical Import Flow Adapter Playground Fixture

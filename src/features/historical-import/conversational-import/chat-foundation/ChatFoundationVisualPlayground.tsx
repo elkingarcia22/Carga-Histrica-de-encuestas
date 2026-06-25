@@ -4,8 +4,12 @@ import { chatFoundationPlaygroundMessages } from "./chatFoundationPlaygroundMess
 import { historicalImportFlowAdapterPlaygroundScenarios } from "../flow-adapter/historicalImportFlowAdapterPlaygroundFixture";
 
 export const ChatFoundationVisualPlayground: React.FC = () => {
+  const defaultScenario = historicalImportFlowAdapterPlaygroundScenarios.find(
+    (s) => s.step === "awaiting_survey_scope_selection"
+  );
+
   const [selectedScenarioId, setSelectedScenarioId] = useState(
-    historicalImportFlowAdapterPlaygroundScenarios[0]?.id || ""
+    defaultScenario?.id || historicalImportFlowAdapterPlaygroundScenarios[0]?.id || ""
   );
 
   const selectedScenario = historicalImportFlowAdapterPlaygroundScenarios.find(
@@ -100,22 +104,7 @@ export const ChatFoundationVisualPlayground: React.FC = () => {
         {/* Chat Output columns */}
         <div className="lg:col-span-2 flex flex-col gap-8">
 
-          {/* Base Messages Section */}
-          <div className="bg-card rounded-2xl shadow-sm border border-border p-6 flex flex-col gap-6">
-            <h2 className="text-lg font-bold border-b border-border pb-3">
-              Chat Foundation · Mensajes Base
-            </h2>
-            <div className="flex flex-col gap-6">
-              {chatFoundationPlaygroundMessages.map((message) => (
-                <ChatFoundationMessageRenderer
-                  key={message.id}
-                  message={message}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Adapter Scenario Messages Section */}
+          {/* Adapter Scenario Messages Section (Primary) */}
           <div className="bg-card rounded-2xl shadow-sm border border-border p-6 flex flex-col gap-6">
             <div className="border-b border-border pb-3 flex flex-col gap-1">
               <div className="flex justify-between items-center">
@@ -154,6 +143,26 @@ export const ChatFoundationVisualPlayground: React.FC = () => {
               </div>
             )}
           </div>
+
+          {/* Base Messages Section (Secondary & Collapsible) */}
+          <details className="group bg-card rounded-2xl shadow-sm border border-border p-6 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex justify-between items-center font-bold text-md cursor-pointer select-none">
+              <span className="text-muted-foreground group-open:text-foreground transition-colors">
+                Chat Foundation · Mensajes de Referencia (Base)
+              </span>
+              <span className="text-xs text-muted-foreground border border-border px-2 py-0.5 rounded transition-transform group-open:rotate-180">
+                Ver mensajes base
+              </span>
+            </summary>
+            <div className="flex flex-col gap-6 mt-6 border-t border-border pt-6">
+              {chatFoundationPlaygroundMessages.map((message) => (
+                <ChatFoundationMessageRenderer
+                  key={message.id}
+                  message={message}
+                />
+              ))}
+            </div>
+          </details>
 
         </div>
 
