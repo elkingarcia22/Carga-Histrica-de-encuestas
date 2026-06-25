@@ -1239,3 +1239,46 @@ Hotfix de avatar e iconos semánticos del Chat Foundation completado.
   - VISIBLE_UI_CHECKPOINT_NO
   - PHASE_11D_H44_H10_HISTORICAL_IMPORT_FLOW_ADAPTER_MESSAGE_MAPPER_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H44-H10 · Historical Import Flow Adapter Message Mapper
+- **Phase Status**: Completed
+- **Changes Made**: Created pure mapper functions to translate flow steps and wizard states into Chat Foundation messages.
+- **Rules applied**: Pure functional mapping, deterministic message and thinking ID generation, zero side effects.
+- **Summary**:
+  - Created `historicalImportFlowAdapterMessageMapper.ts` with `mapHistoricalImportFlowAdapterMessages` mapping all 27 steps.
+  - Handled thinking messages before agent replies using Chat Foundation's `shouldShowThinkingBeforeAssistantReply` and `createChatFoundationThinkingMessage`.
+  - Added warning, error, handoff, and safe details messages.
+  - Upgraded index exports.
+- **Markers**:
+  - PHASE_11D_H44_H10_HISTORICAL_IMPORT_FLOW_ADAPTER_MESSAGE_MAPPER_COMPLETE
+  - FLOW_ADAPTER_MESSAGE_MAPPER_CREATED
+  - FLOW_ADAPTER_MESSAGE_MAPPER_EXPORTED
+  - ALL_ADAPTER_STEPS_HANDLED
+  - MESSAGES_USE_CHAT_FOUNDATION_TYPES
+  - CONVERSATIONAL_WIZARD_TYPES_REUSED
+  - THINKING_MESSAGE_SUPPORTED
+  - THINKING_BEFORE_AGENT_REPLY
+  - SAFE_DETAILS_MESSAGES_SUPPORTED
+  - WARNING_MESSAGES_SUPPORTED
+  - ERROR_MESSAGES_SUPPORTED
+  - HANDOFF_MESSAGES_SUPPORTED
+  - NO_PII_VISIBLE
+  - NO_RAW_ROWS_VISIBLE
+  - NO_OPEN_TEXT_VISIBLE
+  - NO_WORKBOOK_DUMP_VISIBLE
+  - NO_RUNTIME_INTEGRATION
+  - NO_FLOW_MIGRATION
+  - NO_UI_CHANGES
+  - NO_COMPONENTS_CREATED
+  - NO_HOOKS_CREATED
+  - NO_FIXTURES_CREATED
+  - NO_CONVERSATIONAL_IMPORT_WORKSPACE_CHANGES
+  - NO_CHAT_FOUNDATION_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_NO
+  - PHASE_11D_H44_H11_HISTORICAL_IMPORT_FLOW_ADAPTER_PLAYGROUND_FIXTURE_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
