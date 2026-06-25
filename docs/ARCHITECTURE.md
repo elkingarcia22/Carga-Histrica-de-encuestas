@@ -1102,3 +1102,31 @@ Playground aislado y estilos visuales restaurados/alineados al chat existente.
   - VISIBLE_UI_CHECKPOINT_YES
   - PHASE_11D_H44_H7_CHAT_FOUNDATION_VISUAL_QA_RETRY_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## PHASE_11D_H44_H6_H2_DEDICATED_CHAT_PLAYGROUND_DEV_ENTRY_COMPLETE
+Entrada dedicada de desarrollo del Playground implementada.
+
+### Dedicated Chat Playground Dev Entry (Phase 11D-H44-H6-H2)
+- Added dedicated NPM script `dev:chat-foundation` in `package.json` to launch Vite on port 5174 with `--mode chat-foundation`.
+- Updated `src/App.tsx` to detect this mode using `import.meta.env.MODE === "chat-foundation"` to conditionally render the `ChatFoundationVisualPlayground` component.
+- Preserved the default `npm run dev` behavior to run on port 5173 and show the normal Historical Import flow (`ConversationalImportWorkspace`).
+- Phase Markers:
+  - DEV_CHAT_FOUNDATION_SCRIPT_CREATED
+  - NPM_RUN_DEV_STILL_SHOWS_HISTORICAL_IMPORT_FLOW
+  - NPM_RUN_DEV_CHAT_FOUNDATION_SHOWS_PLAYGROUND
+  - PLAYGROUND_RUNS_ON_LOCALHOST_5174
+  - NO_MANUAL_VITE_ENV_COMMAND_REQUIRED
+  - PACKAGE_LOCK_UNCHANGED
+  - NO_DEPENDENCIES_ADDED
+  - NO_ROUTE_PRODUCT_CREATED
+  - NO_NAVIGATION_PRODUCT_CREATED
+  - NO_CONVERSATIONAL_IMPORT_WORKSPACE_CHANGES
+  - NO_FLOW_MIGRATION
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_YES
+  - PHASE_11D_H44_H7_CHAT_FOUNDATION_VISUAL_QA_RETRY_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED

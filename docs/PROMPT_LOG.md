@@ -1,3 +1,35 @@
+## Fase 11D-H44-H6-H2 · Dedicated Chat Playground Dev Entry
+
+Phase: Fase 11D-H44-H6-H2 · Dedicated Chat Playground Dev Entry
+
+Summary:
+- Added a dedicated NPM dev script `dev:chat-foundation` in `package.json` to launch Vite on port 5174 with mode `chat-foundation`.
+- Updated `src/App.tsx` environment check to detect mode `chat-foundation` using `import.meta.env.MODE === "chat-foundation"`.
+- Verified that `npm run dev` defaults to port 5173 and shows the normal Historical Import flow (`ConversationalImportWorkspace`).
+- Verified that `npm run dev:chat-foundation` defaults to port 5174 and renders the Visual Playground.
+
+Commit SHA: 32833c2e9c570d81806037719f836f1c57f37255
+
+DEV_CHAT_FOUNDATION_SCRIPT_CREATED
+NPM_RUN_DEV_STILL_SHOWS_HISTORICAL_IMPORT_FLOW
+NPM_RUN_DEV_CHAT_FOUNDATION_SHOWS_PLAYGROUND
+PLAYGROUND_RUNS_ON_LOCALHOST_5174
+NO_MANUAL_VITE_ENV_COMMAND_REQUIRED
+PACKAGE_LOCK_UNCHANGED
+NO_DEPENDENCIES_ADDED
+NO_ROUTE_PRODUCT_CREATED
+NO_NAVIGATION_PRODUCT_CREATED
+NO_CONVERSATIONAL_IMPORT_WORKSPACE_CHANGES
+NO_FLOW_MIGRATION
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+VISIBLE_UI_CHECKPOINT_YES
+PHASE_11D_H44_H7_CHAT_FOUNDATION_VISUAL_QA_RETRY_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H44-H6-H1 · Playground Isolation and Visual Style Restore
 
 Phase: Fase 11D-H44-H6-H1 · Playground Isolation and Visual Style Restore
