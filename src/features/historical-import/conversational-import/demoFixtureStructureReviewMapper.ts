@@ -49,15 +49,21 @@ export function mapDemoFixtureToStructureReviewMessage(
   const metricsList = sourceLayer.metrics.slice(0, 8).map(m => m.displayLabel).join(', ');
   const pendingDecisions = sourceLayer.decisions.filter(d => d.reviewState === 'pending');
 
-  let msg = `🧩 **Revisión de estructura detectada**\n\n`;
+  let msg = "";
   if (scope === "2025") {
+    msg += `Perfecto. Procesaré QS Clima 2025 como encuesta seleccionada.\n\n`;
+    msg += `🧩 **Revisión de estructura detectada**\n\n`;
     msg += `Detecté automáticamente los archivos de QS Clima 2025.\n`;
     msg += `Tomé como referencia principal el archivo Resultdos Clima total QS 2025.xlsx.\n`;
     msg += `Los demás archivos 2025 detectados corresponden a cortes por gerencia del mismo levantamiento.\n\n`;
   } else if (scope === "2024") {
+    msg += `Perfecto. Procesaré QS Clima 2024 como encuesta seleccionada.\n\n`;
+    msg += `🧩 **Revisión de estructura detectada**\n\n`;
     msg += `Detecté QS Clima 2024 como encuesta seleccionada.\n`;
     msg += `Este archivo tiene estructura de respuestas por columnas y requiere cuidado por IDs seudonimizados.\n\n`;
   } else {
+    msg += `Perfecto. Procesaré la carga histórica multicíclo QS Clima 2024/2025.\n\n`;
+    msg += `🧩 **Revisión de estructura detectada**\n\n`;
     msg += `Carga histórica multicíclo QS Clima 2024/2025\n\n`;
   }
 

@@ -337,6 +337,35 @@ export function ConversationalImportWorkspace() {
     } else if (text.trim()) {
       const intent = detectIntent(text);
 
+      if (conversationalEditState === "awaiting_survey_scope_selection") {
+        let selectedScope: "2025" | "2024" | "multicycle" | null = null;
+        if (intent === "select_scope_1") selectedScope = "2025";
+        else if (intent === "select_scope_2") selectedScope = "2024";
+        else if (intent === "select_scope_3") selectedScope = "multicycle";
+
+        if (selectedScope) {
+          setSelectedSurveyScope(selectedScope);
+          setConversationalEditState("awaiting_structure_approval" as ConversationalEditState);
+          const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState, selectedScope);
+          void simulateChatFlow([{
+            id: `msg_assistant_scope_selected_${generateId()}`,
+            role: "assistant",
+            type: "guided_review_step",
+            content: reviewMsg,
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }]);
+        } else {
+          void simulateChatFlow([{
+            id: `msg_assistant_scope_invalid_${generateId()}`,
+            role: "assistant",
+            type: "text",
+            content: "Para continuar, responde 1, 2 o 3:\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025",
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }]);
+        }
+        return;
+      }
+
       if (intent === "cancel_import") {
         setChatStarted(false);
         setStagedFiles([]);
@@ -368,40 +397,6 @@ export function ConversationalImportWorkspace() {
         setTimeout(() => {
           setViewMode("draft_preview");
         }, 300);
-        return;
-      }
-
-      if (conversationalEditState === "awaiting_survey_scope_selection") {
-        let selectedScope: "2025" | "2024" | "multicycle" | null = null;
-        if (intent === "select_scope_1") selectedScope = "2025";
-        else if (intent === "select_scope_2") selectedScope = "2024";
-        else if (intent === "select_scope_3") selectedScope = "multicycle";
-
-        if (selectedScope) {
-          setSelectedSurveyScope(selectedScope);
-          // Set to new state instead of idle
-          // But actually, we don't have "awaiting_structure_approval" in the flow yet.
-          // Let's add it. But to avoid TS errors, let's cast it or add it to ConversationalEditState.
-          // We can update conversationalEditingFlow.ts next, but for now we can use "idle" or add it.
-          // Wait, I will add it to the flow file in the next step.
-          setConversationalEditState("awaiting_structure_approval" as ConversationalEditState);
-          const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState, selectedScope);
-          void simulateChatFlow([{
-            id: `msg_assistant_scope_selected_${generateId()}`,
-            role: "assistant",
-            type: "guided_review_step",
-            content: reviewMsg,
-            timestamp: "2025-01-01T12:00:00.000Z",
-          }]);
-        } else {
-          void simulateChatFlow([{
-            id: `msg_assistant_scope_invalid_${generateId()}`,
-            role: "assistant",
-            type: "text",
-            content: "Para continuar, responde 1, 2 o 3:\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025",
-            timestamp: "2025-01-01T12:00:00.000Z",
-          }]);
-        }
         return;
       }
 

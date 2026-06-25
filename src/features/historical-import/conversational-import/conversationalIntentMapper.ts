@@ -64,14 +64,13 @@ const INTENT_DICTIONARY: Record<ConversationalIntent, string[]> = {
     "4", "cancelar importacion", "cancelar carga", "cancelar proceso", "empezar de nuevo", "reiniciar", "9"
   ],
   select_scope_1: [
-    "1", "2025", "clima 2025", "qs clima 2025"
+    "1", "01", "opcion 1", "uno", "primera", "primer opcion", "primera opcion", "2025", "clima 2025", "qs clima 2025"
   ],
   select_scope_2: [
-    "2", "2024", "clima 2024", "qs clima 2024"
+    "2", "02", "opcion 2", "dos", "segunda", "segunda opcion", "2024", "clima 2024", "qs clima 2024"
   ],
   select_scope_3: [
-    "3", "todo", "ambas", "ambos", "multiciclo", "multiciclo qs clima",
-    "carga historica", "procesar todo", "todo junto"
+    "3", "03", "opcion 3", "tres", "tercera", "todo", "ambas", "ambos", "multiciclo", "procesar todo", "todo junto", "carga historica"
   ],
   unknown: []
 };
