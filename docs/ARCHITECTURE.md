@@ -190,6 +190,10 @@ La arquitectura técnica del dominio de importación (wizard, pipeline local, l�
 - [Inline Structure Review Architecture](./INLINE_STRUCTURE_REVIEW_ARCHITECTURE.md) - Definición de arquitectura para la revisión de estructura inline.
 - [Synthetic File Mount Flow Architecture](./SYNTHETIC_FILE_MOUNT_FLOW_ARCHITECTURE.md) - Definición del flujo de montaje sintético de archivos en el chat.
 
+## Conversational Import Wizard
+
+The historical import prototype will operate as a chat-first import assistant. It will guide survey scope selection, general configuration, structure matching, ambiguity resolution, sandbox import confirmation and result-link handoff entirely through conversational commands. Traditional mapping screens, tabs and side-panel editors are out of scope for this prototype flow.
+
 ## Conversational Structure Review
 
 * **Architecture Decision:** CONVERSATIONAL_STRUCTURE_REVIEW_ARCHITECTURE_LOCKED
