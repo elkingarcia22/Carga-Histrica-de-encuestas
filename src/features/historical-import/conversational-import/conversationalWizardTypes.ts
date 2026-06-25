@@ -7,6 +7,7 @@ export type ConversationalImportWizardStateId =
   | 'confirming_survey_name'
   | 'confirming_survey_type'
   | 'confirming_visibility'
+  | 'confirming_survey_end_date'
   | 'confirming_confidentiality_threshold'
   | 'confirming_main_file'
   | 'confirming_associated_files'
@@ -35,11 +36,12 @@ export type ConversationalSurveyScope =
 export type ConversationalSurveyVisibility =
   | 'public'
   | 'anonymous'
-  | 'private'
   | 'unknown';
 
 export type ConversationalSurveyType =
   | 'climate'
+  | 'culture'
+  | 'nps'
   | 'engagement'
   | 'enps'
   | 'mixed'
@@ -51,6 +53,7 @@ export type ConversationalGeneralConfiguration = {
   surveyName: string;
   surveyType: ConversationalSurveyType;
   visibility: ConversationalSurveyVisibility;
+  surveyEndDate: string | null;
   confidentialityThreshold: ConversationalConfidentialityThreshold;
   mainFileId: string | null;
   associatedFileIds: string[];
@@ -114,6 +117,7 @@ export type ConversationalWizardDecisionType =
   | 'confirm_survey_name'
   | 'confirm_survey_type'
   | 'confirm_visibility'
+  | 'confirm_survey_end_date'
   | 'confirm_confidentiality_threshold'
   | 'confirm_main_file'
   | 'confirm_associated_files'

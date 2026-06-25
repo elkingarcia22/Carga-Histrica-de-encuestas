@@ -32,9 +32,12 @@ import { DraftReadinessPreview } from "./DraftReadinessPreview";
 import { handleConversationalEdit, type ConversationalEditState, type ConversationalEditContext } from "./conversationalEditingFlow";
 import { detectIntent } from "./conversationalIntentMapper";
 import {
+  hasPII,
   getGeneralConfigSummaryMessage,
   validateConfidentialityThreshold,
   validateSurveyName,
+  validateSurveyEndDate,
+  inferSurveyEndDate,
   getSurveyNameSuggestion,
   getSurveyTypeSuggestion,
   getSurveyTypeLabel,
@@ -148,21 +151,25 @@ export function ConversationalImportWorkspace() {
         setMessages(prev => [...prev, msg]);
       } else {
         const typingId = `typing_${generateId()}`;
-        setMessages(prev => [...prev, {
-          id: typingId,
-          role: "assistant",
-          type: "analysis_progress",
-          content: "Pensando...",
-          timestamp: "2025-01-01T12:00:00.000Z"
-        }]);
+        setMessages(prev => {
+          const cleaned = prev.filter(m => !(m.role === "assistant" && m.type === "analysis_progress" && m.content === "Pensando..."));
+          return [...cleaned, {
+            id: typingId,
+            role: "assistant",
+            type: "analysis_progress",
+            content: "Pensando...",
+            timestamp: "2025-01-01T12:00:00.000Z"
+          }];
+        });
 
         const proceedThinking = await wait(1500);
-        if (!proceedThinking) return;
 
         setMessages(prev => {
           const filtered = prev.filter(m => m.id !== typingId);
+          if (!proceedThinking) return filtered;
           return [...filtered, msg];
         });
+        if (!proceedThinking) return;
 
         if (msg.content) {
           const proceedTyping = await waitTypewriter(msg.content.length, 300);
@@ -373,7 +380,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_scope_selected_${generateId()}`,
             role: "assistant",
             type: "text",
-            content: `Perfecto. Procesaré ${scopeLabel} como encuesta seleccionada.\n\nAntes de revisar la estructura, validaré la configuración general de la encuesta.\n\n1/6 · Nombre de la encuesta\n\nNombre sugerido: ${suggestion}.\n¿Quieres usar este nombre o escribir otro?`,
+            content: `Perfecto. Procesaré ${scopeLabel} como encuesta seleccionada.\n\nAntes de revisar la estructura, validaré la configuración general de la encuesta.\n\n1/7 · Nombre de la encuesta\n\nNombre sugerido: ${suggestion}.\n¿Quieres usar este nombre o escribir otro?`,
             timestamp: "2025-01-01T12:00:00.000Z",
           }]);
         } else {
@@ -388,7 +395,7 @@ export function ConversationalImportWorkspace() {
         return;
       }
 
-      if (conversationalEditState === "confirming_survey_name" || conversationalEditState === "confirming_survey_type" || conversationalEditState === "confirming_visibility" || conversationalEditState === "confirming_confidentiality_threshold" || conversationalEditState === "confirming_main_file" || conversationalEditState === "confirming_associated_files") {
+      if (conversationalEditState === "confirming_survey_name" || conversationalEditState === "confirming_survey_type" || conversationalEditState === "confirming_visibility" || conversationalEditState === "confirming_survey_end_date" || conversationalEditState === "confirming_confidentiality_threshold" || conversationalEditState === "confirming_main_file" || conversationalEditState === "confirming_associated_files") {
         if (intent === "cancel_import") {
           // Handled generically below, but we can let it fall through or handle it here
         } else {
@@ -409,7 +416,7 @@ export function ConversationalImportWorkspace() {
             setGeneralConfiguration(newConfig);
             setConversationalEditState("confirming_survey_type");
             const typeSuggestion = getSurveyTypeLabel(getSurveyTypeSuggestion(scope));
-            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `2/6 · Tipo de encuesta\n\nTipo sugerido: ${typeSuggestion}.\n¿Confirmas este tipo o quieres elegir otro?\n\nOpciones:\n1. Clima\n2. Engagement\n3. eNPS\n4. Mixta`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `2/7 · Tipo de encuesta\n\nTipo sugerido: ${typeSuggestion}.\n¿Confirmas este tipo o quieres elegir otro?\n\nOpciones:\n1. Clima\n2. Cultura\n3. NPS`, timestamp: "2025-01-01T12:00:00.000Z" }]);
             return;
           }
 
@@ -419,40 +426,60 @@ export function ConversationalImportWorkspace() {
             let resolvedType = suggestion;
             if (intent === "confirm_general_config" || intent === "ambiguous_confirmation" || finalType === "1" || finalType === "clima") {
               resolvedType = "climate";
-            } else if (finalType === "2" || finalType === "engagement") {
-              resolvedType = "engagement";
-            } else if (finalType === "3" || finalType === "enps") {
-              resolvedType = "enps";
-            } else if (finalType === "4" || finalType === "mixta" || finalType === "mixto") {
-              resolvedType = "mixed";
+            } else if (finalType === "2" || finalType === "cultura") {
+              resolvedType = "culture";
+            } else if (finalType === "3" || finalType === "nps" || finalType === "enps") {
+              resolvedType = "nps";
             } else {
-              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor elige una opción válida (1, 2, 3, 4 o el nombre del tipo).", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor elige una opción válida (1, 2, 3 o el nombre del tipo).", timestamp: "2025-01-01T12:00:00.000Z" }]);
               return;
             }
             setGeneralConfiguration(prev => ({ ...prev, surveyType: resolvedType }));
-            setConversationalEditState("confirming_visibility");
-            const visSuggestion = getVisibilitySuggestion() === 'anonymous' ? 'Anónima' : 'Privada';
-            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `3/6 · Visibilidad\n\nVisibilidad sugerida: ${visSuggestion}.\nEsto evita mostrar respuestas individuales o identificar personas.\n\nOpciones:\n1. Anónima\n2. Privada\n3. Pública`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            const piiDetected = hasPII(scope);
+            if (!piiDetected) {
+              const inferredDate = inferSurveyEndDate(generalConfiguration.surveyName || getSurveyNameSuggestion(scope), scope);
+              setGeneralConfiguration(prev => ({ ...prev, visibility: "anonymous", surveyEndDate: inferredDate }));
+              setConversationalEditState("confirming_confidentiality_threshold");
+              void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `3/7 · Tipo de visibilidad\n\nDetecté que los archivos no contienen datos personales directos (nombres, correos, etc.), por lo que la visibilidad será **Anónima**.\n\n4/7 · Fecha de finalización\n\nAsigné automáticamente la fecha inferida: ${inferredDate}.\n\n5/7 · Umbral de confidencialidad\n\nUmbral sugerido: 5 respuestas por grupo.\nEsto evita mostrar cortes con muy pocas respuestas.\n\n¿Confirmas este umbral o quieres escribir otro número?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else {
+              setConversationalEditState("confirming_visibility");
+              void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `3/7 · Tipo de visibilidad\n\nDetecté datos personales en los archivos (nombres, correos). ¿Quieres que la visibilidad sea Anónima (para proteger identidades en los resultados) o Pública?\n\nOpciones:\n1. Anónimo\n2. Público\n\n¿Qué visibilidad prefieres?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
             return;
           }
 
           if (conversationalEditState === "confirming_visibility") {
-            const suggestion = getVisibilitySuggestion();
+            const suggestion = getVisibilitySuggestion(scope);
             const finalVis = text.trim().toLowerCase();
             let resolvedVis = suggestion;
-            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation" || finalVis === "1" || finalVis === "anónima" || finalVis === "anonima") {
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation" || finalVis === "1" || finalVis === "anónimo" || finalVis === "anonimo") {
               resolvedVis = "anonymous";
-            } else if (finalVis === "2" || finalVis === "privada") {
-              resolvedVis = "private";
-            } else if (finalVis === "3" || finalVis === "pública" || finalVis === "publica") {
+            } else if (finalVis === "2" || finalVis === "público" || finalVis === "publico") {
               resolvedVis = "public";
             } else {
-              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor elige una opción válida (1, 2, 3 o el nombre de la visibilidad).", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor elige una opción válida (1, 2 o el nombre de la visibilidad).", timestamp: "2025-01-01T12:00:00.000Z" }]);
               return;
             }
             setGeneralConfiguration(prev => ({ ...prev, visibility: resolvedVis }));
+            setConversationalEditState("confirming_survey_end_date");
+            const dateSuggestion = inferSurveyEndDate(generalConfiguration.surveyName || getSurveyNameSuggestion(scope), scope);
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `4/7 · Fecha de finalización\n\nFecha sugerida: ${dateSuggestion}.\nInferí esta fecha a partir del nombre de la encuesta.\n\n¿Confirmas esta fecha o quieres escribir otra?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            return;
+          }
+
+          if (conversationalEditState === "confirming_survey_end_date") {
+            let finalDate = text.trim();
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              finalDate = inferSurveyEndDate(generalConfiguration.surveyName || getSurveyNameSuggestion(scope), scope);
+            }
+            const validation = validateSurveyEndDate(finalDate);
+            if (!validation.valid) {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: validation.error || "No pude interpretar la fecha.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+            setGeneralConfiguration(prev => ({ ...prev, surveyEndDate: validation.value }));
             setConversationalEditState("confirming_confidentiality_threshold");
-            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `4/6 · Umbral de confidencialidad\n\nUmbral sugerido: 5 respuestas por grupo.\nEsto evita mostrar cortes con muy pocas respuestas.\n\n¿Confirmas este umbral o quieres escribir otro número?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `5/7 · Umbral de confidencialidad\n\nUmbral sugerido: 5 respuestas por grupo.\nEsto evita mostrar cortes con muy pocas respuestas.\n\n¿Confirmas este umbral o quieres escribir otro número?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
             return;
           }
 
@@ -470,7 +497,7 @@ export function ConversationalImportWorkspace() {
             setGeneralConfiguration(newConfig);
             setConversationalEditState("confirming_main_file");
             const fileSuggestion = getMainFileSuggestion(scope);
-            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `5/6 · Archivo principal\n\nArchivo principal detectado:\n${fileSuggestion}\n\nLo usaré como referencia de estructura y resultados agregados.\n¿Confirmas este archivo principal?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `6/7 · Archivo principal\n\nArchivo principal detectado:\n${fileSuggestion}\n\nLo usaré como referencia de estructura y resultados agregados.\n¿Confirmas este archivo principal?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
             return;
           }
 
@@ -485,9 +512,9 @@ export function ConversationalImportWorkspace() {
             const filesList = getAssociatedFilesList(scope);
             let msgContent: string;
             if (filesList.length > 0) {
-              msgContent = `6/6 · Archivos asociados\n\nDetecté estos cortes por gerencia:\n${filesList.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\n¿Confirmas estos archivos asociados?`;
+              msgContent = `7/7 · Archivos asociados\n\nDetecté estos cortes por gerencia:\n${filesList.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\n¿Confirmas estos archivos asociados?`;
             } else {
-              msgContent = `6/6 · Archivos asociados\n\nNo detecté archivos adicionales.\n\n¿Confirmas esta configuración?`;
+              msgContent = `7/7 · Archivos asociados\n\nNo detecté archivos adicionales.\n\n¿Confirmas esta configuración?`;
             }
             void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: msgContent, timestamp: "2025-01-01T12:00:00.000Z" }]);
             return;
@@ -889,7 +916,7 @@ export function ConversationalImportWorkspace() {
       return;
     }
     if (actionType === "cancel_analysis") {
-      setMessages((prev) => [...prev, { id: `msg_cancel_${generateId()}`, role: "assistant", type: "text", content: "Análisis cancelado.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+      void simulateChatFlow([{ id: `msg_cancel_${generateId()}`, role: "assistant", type: "text", content: "Análisis cancelado.", timestamp: "2025-01-01T12:00:00.000Z" }]);
       return;
     }
 
@@ -909,15 +936,15 @@ export function ConversationalImportWorkspace() {
             type: "text",
             content: label,
             timestamp: "2025-01-01T12:00:00.000Z",
-          },
-          {
-            id: `msg_assistant_ack_${generateId()}`,
-            role: "assistant",
-            type: "text",
-            content: "Entendido. (Mock: Aplicando configuración al grupo...)",
-            timestamp: "2025-01-01T12:00:00.000Z",
           }
         ]);
+        void simulateChatFlow([{
+          id: `msg_assistant_ack_${generateId()}`,
+          role: "assistant",
+          type: "text",
+          content: "Entendido. (Mock: Aplicando configuración al grupo...)",
+          timestamp: "2025-01-01T12:00:00.000Z",
+        }]);
         return;
       }
 
@@ -1127,8 +1154,8 @@ export function ConversationalImportWorkspace() {
       const preview = await parseWorkbookPreview(file);
 
       if (preview.errors && preview.errors.length > 0) {
-        setMessages((prev) => [
-          ...prev.filter(m => m.type !== "analysis_progress"),
+        setMessages((prev) => prev.filter(m => m.type !== "analysis_progress"));
+        void simulateChatFlow([
           {
             id: `msg_assistant_parse_error_${generateId()}`,
             role: "assistant",
