@@ -1,3 +1,46 @@
+## Fase 11D-H44-H6-H1 · Playground Isolation and Visual Style Restore
+
+Phase: Fase 11D-H44-H6-H1 · Playground Isolation and Visual Style Restore
+
+Summary:
+- Isolated the Chat Foundation Visual Playground to render only when the environment variable `VITE_CHAT_FOUNDATION_PLAYGROUND` is set to `true`.
+- Restored the default rendering at `http://localhost:5173` to the normal Historical Import flow (`ConversationalImportWorkspace`).
+- Restored and aligned the Chat Foundation visual style to match the approved chat layout and UBITS tokens:
+  - User bubble style matches `rounded-2xl px-4 py-2.5 bg-muted text-foreground max-w-2xl`.
+  - Assistant plain text and structured messages render as simple text without card bubbles.
+  - Assistant warning, error, safety, and confirmation messages render as Cards (`bg-muted border border-border rounded-xl p-3`).
+  - Assistant avatar styled with `bg-ai-gradient text-primary-foreground shadow-sm` enclosing a sparkles UbitsIcon.
+  - Thinking loader styled as inline `AILoader` component.
+  - Removed all hardcoded hex values, Tailwind slate overrides, or prohibited styles.
+- Restructured `chatFoundationPlaygroundMessages.ts` to include simulated user and thinking messages before every assistant reply to enforce the thinking pattern rule.
+- Modified `ChatFoundationVisualPlayground.tsx` layout and elements to use UBITS tokens and show clear sandbox labels.
+
+Commit SHA: 73b50697c5bb6e476ca95536a346e0da0f031e73
+
+PHASE_11D_H44_H6_H1_PLAYGROUND_ISOLATION_AND_VISUAL_STYLE_RESTORE_COMPLETE
+LOCALHOST_5173_RESTORED_TO_HISTORICAL_IMPORT_FLOW
+PLAYGROUND_NOT_RENDERED_BY_DEFAULT
+PLAYGROUND_VISIBLE_ON_SEPARATE_DEV_CONTEXT
+PLAYGROUND_CAN_RUN_ON_PORT_5174
+CHAT_FOUNDATION_VISUAL_STYLE_MATCHES_EXISTING_CHAT
+MESSAGE_BUBBLES_MATCH_EXISTING_CHAT_STYLE
+ASSISTANT_AVATAR_VISIBLE
+ASSISTANT_ICON_VISIBLE
+ASSISTANT_ICON_NOT_BROKEN
+ASSISTANT_ICON_STYLE_MATCHES_EXISTING_CHAT
+THINKING_MESSAGE_VISIBLE
+THINKING_STYLE_MATCHES_EXISTING_CHAT
+NO_CONVERSATIONAL_IMPORT_WORKSPACE_CHANGES
+NO_FLOW_MIGRATION
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+VISIBLE_UI_CHECKPOINT_YES
+PHASE_11D_H44_H7_CHAT_FOUNDATION_VISUAL_QA_RETRY_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H44-H3 · Chat Foundation Message Renderer
 
 Phase: Fase 11D-H44-H3 · Chat Foundation Message Renderer
