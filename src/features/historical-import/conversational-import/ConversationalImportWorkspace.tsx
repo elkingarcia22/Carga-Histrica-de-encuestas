@@ -42,6 +42,8 @@ import {
   getMainFileSuggestion,
   getAssociatedFilesList
 } from "./conversationalGeneralConfigMapper";
+import { getDimensionsList } from "./conversationalEditingMapper";
+import { getMatchReviewSectionMessage } from "./conversationalMatchReviewMapper";
 import type { ConversationalGeneralConfiguration, ConversationalImportWizardStateId, ConversationalSurveyScope } from "./conversationalWizardTypes";
 import {
   initialMessages,
@@ -496,20 +498,150 @@ export function ConversationalImportWorkspace() {
             if (intent === "confirm_general_config" || intent === "ambiguous_confirmation" || ["usar estos", "estan bien", "están bien"].some(w => normalizedText.includes(w))) {
               const updatedConfig = { ...generalConfiguration, associatedFileIds: getAssociatedFilesList(scope) };
               setGeneralConfiguration(updatedConfig);
-              setConversationalEditState("awaiting_structure_approval");
+              setConversationalEditState("reviewing_structure_match");
 
               const summaryMsg = getGeneralConfigSummaryMessage(updatedConfig, scope);
-              const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState, scope);
+              const startMsg = getMatchReviewSectionMessage("start", scope, false);
 
               void simulateChatFlow([
                 { id: `msg_assistant_summary_${generateId()}`, role: "assistant", type: "text", content: summaryMsg, timestamp: "2025-01-01T12:00:00.000Z" },
-                { id: `msg_assistant_review_${generateId()}`, role: "assistant", type: "guided_review_step", content: reviewMsg, timestamp: "2025-01-01T12:00:00.000Z" }
-              ]);
+                { id: `msg_assistant_review_${generateId()}`, role: "assistant", type: "text", content: startMsg, timestamp: "2025-01-01T12:00:00.000Z" }
+              ]).then(() => {
+                setTimeout(() => {
+                  setConversationalEditState("reviewing_questions_and_scales");
+                  const qsMsg = getMatchReviewSectionMessage("questions_and_scales", scope, false);
+                  void simulateChatFlow([
+                    { id: `msg_assistant_qs_${generateId()}`, role: "assistant", type: "text", content: qsMsg, timestamp: "2025-01-01T12:00:00.000Z" }
+                  ]);
+                }, 1500);
+              });
               return;
             } else {
               void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Esta fase solo permite confirmar o cancelar, el ajuste avanzado de archivos queda para una fase posterior. Por favor responde 'sí', 'confirmar', 'usar estos', etc. o escribe 'cancelar importación'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
               return;
             }
+          }
+        }
+      }
+
+      if (
+        conversationalEditState === "reviewing_questions_and_scales" ||
+        conversationalEditState === "reviewing_demographics" ||
+        conversationalEditState === "reviewing_participants_or_responses" ||
+        conversationalEditState === "reviewing_dimensions" ||
+        conversationalEditState === "reviewing_question_dimension_mapping" ||
+        conversationalEditState === "reviewing_segments" ||
+        conversationalEditState === "reviewing_privacy" ||
+        conversationalEditState === "reviewing_structure_match"
+      ) {
+        if (intent === "cancel_import") {
+          // Fall through to general cancel
+        } else {
+          const scope = selectedSurveyScope || "qs_clima_multicycle_2024_2025";
+          const normalizedInput = text.trim().toLowerCase();
+
+          // Handle "ver detalles"
+          if (normalizedInput === "ver detalles" || normalizedInput.includes("detalles")) {
+            let detailSection: import("./conversationalMatchReviewMapper").MatchReviewSectionType | null = null;
+            if (conversationalEditState === "reviewing_questions_and_scales") detailSection = "questions_and_scales";
+            if (conversationalEditState === "reviewing_demographics") detailSection = "demographics";
+            if (conversationalEditState === "reviewing_participants_or_responses") detailSection = "participants_or_responses";
+            if (conversationalEditState === "reviewing_dimensions") detailSection = "dimensions";
+            if (conversationalEditState === "reviewing_question_dimension_mapping") detailSection = "question_dimension_mapping";
+            if (conversationalEditState === "reviewing_segments") detailSection = "segments";
+            if (conversationalEditState === "reviewing_privacy") detailSection = "privacy";
+
+            if (detailSection) {
+              const detailMsg = getMatchReviewSectionMessage(detailSection, scope, true);
+              void simulateChatFlow([{ id: `msg_assistant_detail_${generateId()}`, role: "assistant", type: "text", content: detailMsg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
+            return;
+          }
+
+          if (conversationalEditState === "reviewing_questions_and_scales") {
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              setConversationalEditState("reviewing_demographics");
+              const msg = getMatchReviewSectionMessage("demographics", scope, false);
+              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor responde 'confirmar' o 'ver detalles'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
+            return;
+          }
+
+          if (conversationalEditState === "reviewing_demographics") {
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              setConversationalEditState("reviewing_participants_or_responses");
+              const msg = getMatchReviewSectionMessage("participants_or_responses", scope, false);
+              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor responde 'confirmar' o 'ver detalles'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
+            return;
+          }
+
+          if (conversationalEditState === "reviewing_participants_or_responses") {
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              setConversationalEditState("reviewing_dimensions");
+              const msg = getMatchReviewSectionMessage("dimensions", scope, false);
+              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor responde 'confirmar' o 'ver detalles'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
+            return;
+          }
+
+          if (conversationalEditState === "reviewing_dimensions") {
+            // For dimensions, we have "1. Confirmar dimensiones", "2. Renombrar una dimensión por chat", "3. Ver lista"
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation" || normalizedInput === "1" || normalizedInput.includes("confirmar")) {
+              setConversationalEditState("reviewing_question_dimension_mapping");
+              const msg = getMatchReviewSectionMessage("question_dimension_mapping", scope, false);
+              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else if (normalizedInput === "2" || normalizedInput.includes("renombrar")) {
+              setConversationalEditState("asking_dimension");
+              setConversationalEditContext({ area: "dimensiones" });
+              const msg = `Estas son las dimensiones detectadas:\n${getDimensionsList(globalOverlayState)}\n\n¿Cuál quieres renombrar? (Responde con el número)`;
+              void simulateChatFlow([{ id: `msg_assistant_edit_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else if (normalizedInput === "3" || normalizedInput.includes("lista")) {
+              const msg = `Dimensiones:\n${getDimensionsList(globalOverlayState)}\n\n¿Confirmas esta sección?`;
+              void simulateChatFlow([{ id: `msg_assistant_list_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor responde 1, 2 o 3.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
+            return;
+          }
+
+          if (conversationalEditState === "reviewing_question_dimension_mapping") {
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              setConversationalEditState("reviewing_segments");
+              const msg = getMatchReviewSectionMessage("segments", scope, false);
+              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor responde 'confirmar' o 'ver detalles'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
+            return;
+          }
+
+          if (conversationalEditState === "reviewing_segments") {
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              setConversationalEditState("reviewing_privacy");
+              const msg = getMatchReviewSectionMessage("privacy", scope, false);
+              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor responde 'confirmar' o 'ver detalles'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
+            return;
+          }
+
+          if (conversationalEditState === "reviewing_privacy") {
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              setConversationalEditState("awaiting_structure_approval");
+              const msg = getMatchReviewSectionMessage("complete", scope, false);
+              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor responde 'confirmar' o 'ver detalles'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+            }
+            return;
           }
         }
       }

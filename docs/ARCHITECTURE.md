@@ -902,3 +902,9 @@ The conversational block injected by the homologation precheck has been refined 
 - VISIBLE_UI_CHECKPOINT_YES
 - PHASE_11D_H44_STRUCTURE_REVIEW_CONVERSATIONAL_FLOW_READY
 - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H44 · Conversational Match Review Flow
+- **Phase Status**: Completed
+- **Changes Made**: Added `conversationalMatchReviewMapper.ts` and updated `ConversationalImportWorkspace.tsx` to handle the conversational match review phase sequentially.
+- **Rules applied**: ALL_ACTIONS_BY_CHAT_TEXT_ONLY, NO_TABS, NO_SIDE_PANEL_EDITOR, NO_FORM_BASED_WIZARD.
+- **Markers**: PHASE_11D_H44_CONVERSATIONAL_MATCH_REVIEW_FLOW_COMPLETE.
