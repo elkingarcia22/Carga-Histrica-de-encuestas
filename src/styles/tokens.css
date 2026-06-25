@@ -30,10 +30,10 @@
   /* AI Features */
   --color-ai-bg: #f3f2ff;
   --color-ai-border: #97a5fd;
-  --color-ai-gradient-start: #2d5cf7;
-  --color-ai-gradient-end: #e11d48;
-  --color-ai-gradient-start-hsl: 226 92% 57%;
-  --color-ai-gradient-end-hsl: 347 77% 50%;
+  --color-ai-gradient-start: #0c5bef;
+  --color-ai-gradient-end: #4a74ee;
+  --color-ai-gradient-start-hsl: 219 91% 49%;
+  --color-ai-gradient-end-hsl: 225 83% 61%;
   --shadow-ai-premium: 0 4px 15px rgba(45, 92, 247, 0.3), 0 2px 5px rgba(225, 29, 72, 0.2);
   
   /* Radius — UBITS app uses generous rounding */
