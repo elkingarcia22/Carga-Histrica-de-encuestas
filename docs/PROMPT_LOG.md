@@ -1,3 +1,30 @@
+## Fase 11D-H43-H1 · Restore Draft Preview Mapper Boundary
+
+Phase: Fase 11D-H43-H1 · Restore Draft Preview Mapper Boundary
+
+Summary:
+- Restored `draftPreviewMapper.ts` to its pre-H43 state using checkout from previous commit.
+- Preserved H43 general configuration flow without modifying unauthorized files.
+- Maintained draft preview boundary limits.
+- Ensured no import execution, no sandbox runtime, no result link created.
+
+Commit SHA: PENDING_COMMIT
+
+DRAFT_PREVIEW_MAPPER_RESTORED_TO_PRE_H43
+H43_GENERAL_CONFIGURATION_FLOW_STILL_WORKS
+NO_H43_ALLOWED_FILES_MODIFIED_AGAIN
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+BUILD_PASSED
+CONVERSATIONAL_IMPORT_SCOPED_LINT_PASSED
+DRAFT_PREPARATION_SCOPED_LINT_PASSED
+OVERLAY_EDITING_SCOPED_LINT_PASSED
+HISTORICAL_IMPORT_SCOPED_LINT_PASSED
+GIT_SHOW_CHECK_PASSED
+
 ## Fase 11D-H41 · Conversational Import Wizard Architecture
 
 Phase: Fase 11D-H41 · Conversational Import Wizard Architecture
