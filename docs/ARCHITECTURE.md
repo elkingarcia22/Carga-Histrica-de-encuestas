@@ -1282,3 +1282,44 @@ Hotfix de avatar e iconos semánticos del Chat Foundation completado.
   - VISIBLE_UI_CHECKPOINT_NO
   - PHASE_11D_H44_H11_HISTORICAL_IMPORT_FLOW_ADAPTER_PLAYGROUND_FIXTURE_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H44-H11 · Historical Import Flow Adapter Playground Fixture
+- **Phase Status**: Completed
+- **Changes Made**: Created the playground fixture containing 18 scenarios, updated the index export, and integrated the scenario selector and interactive preview in the Chat Foundation Playground.
+- **Rules applied**: Pure functional mapping, deterministic IDs, safe mock state with no PII/raw rows, no product runtime integration.
+- **Summary**:
+  - Created `historicalImportFlowAdapterPlaygroundFixture.ts` with `historicalImportFlowAdapterPlaygroundScenarios`.
+  - Added scenario selector UI in `ChatFoundationVisualPlayground.tsx`.
+  - Integrated the preview section using existing `ChatFoundationMessageRenderer` without changing Chat Foundation core components.
+- **Markers**:
+  - PHASE_11D_H44_H11_HISTORICAL_IMPORT_FLOW_ADAPTER_PLAYGROUND_FIXTURE_COMPLETE
+  - FLOW_ADAPTER_PLAYGROUND_FIXTURE_CREATED
+  - FLOW_ADAPTER_PLAYGROUND_FIXTURE_EXPORTED
+  - FIXTURE_USES_MESSAGE_MAPPER
+  - FIXTURE_SCENARIOS_TYPED
+  - MINIMUM_SCENARIOS_COVERED
+  - MOCK_WIZARD_STATE_SAFE
+  - PLAYGROUND_SHOWS_ADAPTER_FIXTURE_SECTION
+  - PLAYGROUND_LABELS_ADAPTER_AS_INTERNAL_MOCK
+  - PLAYGROUND_STILL_SHOWS_CHAT_FOUNDATION_BASE_MESSAGES
+  - CHAT_FOUNDATION_RENDERER_REUSED
+  - CHAT_FOUNDATION_CORE_UNCHANGED
+  - NO_PII_VISIBLE
+  - NO_RAW_ROWS_VISIBLE
+  - NO_OPEN_TEXT_VISIBLE
+  - NO_WORKBOOK_DUMP_VISIBLE
+  - NO_REAL_CLIENT_DATA
+  - NPM_RUN_DEV_STILL_SHOWS_HISTORICAL_IMPORT_FLOW
+  - NPM_RUN_DEV_CHAT_FOUNDATION_SHOWS_PLAYGROUND
+  - PLAYGROUND_RUNS_ON_LOCALHOST_5174
+  - NO_PRODUCT_RUNTIME_INTEGRATION
+  - NO_FLOW_MIGRATION
+  - NO_CONVERSATIONAL_IMPORT_WORKSPACE_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_YES
+  - PHASE_11D_H44_H12_ADAPTER_VISUAL_QA_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
