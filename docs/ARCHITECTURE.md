@@ -1197,3 +1197,45 @@ Hotfix de avatar e iconos semánticos del Chat Foundation completado.
   - VISIBLE_UI_CHECKPOINT_NO
   - PHASE_11D_H44_H9_HISTORICAL_IMPORT_FLOW_ADAPTER_TYPES_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H44-H9 · Historical Import Flow Adapter Types
+- **Phase Status**: Completed
+- **Changes Made**: Created type contracts for the Historical Import Flow Adapter in `historicalImportFlowAdapterTypes.ts` and exported them via `index.ts`.
+- **Rules applied**: Pure contract-driven typing, no runtime integration, zero `any` or `as any` usage.
+- **Summary**:
+  - Defined `HistoricalImportFlowAdapterStep` covering 27 flow steps.
+  - Defined `HistoricalImportFlowAdapterActionType` and `HistoricalImportFlowAdapterAction` covering 15 actions.
+  - Defined `HistoricalImportFlowAdapterExpectedInputType` and `HistoricalImportFlowAdapterExpectedInput` with explicit constraint typing.
+  - Defined `HistoricalImportFlowAdapterSafetySignal` and `HistoricalImportFlowAdapterSafetyState` to manage privacy and safety validation.
+  - Defined `HistoricalImportFlowAdapterThinkingState` and `HistoricalImportFlowAdapterMetadata`.
+  - Defined `HistoricalImportFlowAdapterSnapshot` referencing Chat Foundation message shapes and Conversational Import Wizard state.
+- **Markers**:
+  - PHASE_11D_H44_H9_HISTORICAL_IMPORT_FLOW_ADAPTER_TYPES_COMPLETE
+  - FLOW_ADAPTER_TYPES_CREATED
+  - FLOW_ADAPTER_INDEX_CREATED
+  - ADAPTER_STEP_CONTRACT_DEFINED
+  - ADAPTER_ACTION_CONTRACT_DEFINED
+  - ADAPTER_EXPECTED_INPUT_CONTRACT_DEFINED
+  - ADAPTER_SNAPSHOT_CONTRACT_DEFINED
+  - ADAPTER_SAFETY_CONTRACT_DEFINED
+  - ADAPTER_THINKING_CONTRACT_DEFINED
+  - ADAPTER_METADATA_CONTRACT_DEFINED
+  - CHAT_FOUNDATION_TYPES_REUSED
+  - CONVERSATIONAL_WIZARD_TYPES_REUSED
+  - NO_RUNTIME_MAPPERS_CREATED
+  - NO_COMPONENTS_CREATED
+  - NO_HOOKS_CREATED
+  - NO_FIXTURES_CREATED
+  - NO_UI_CHANGES
+  - NO_RUNTIME_INTEGRATION
+  - NO_FLOW_MIGRATION
+  - NO_CONVERSATIONAL_IMPORT_WORKSPACE_CHANGES
+  - NO_CHAT_FOUNDATION_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_NO
+  - PHASE_11D_H44_H10_HISTORICAL_IMPORT_FLOW_ADAPTER_MESSAGE_MAPPER_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
