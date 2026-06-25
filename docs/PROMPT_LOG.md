@@ -1,3 +1,35 @@
+## Fase 11D-H44-H13 · Controlled Runtime Integration Architecture
+
+Phase: Fase 11D-H44-H13 · Controlled Runtime Integration Architecture
+
+Summary:
+- Defined the architecture and strategy for a controlled, gradual, and gated integration between ConversationalImportWorkspace, Historical Import Flow Adapter, and Chat Foundation.
+- Created `docs/CONTROLLED_RUNTIME_INTEGRATION_ARCHITECTURE.md` to specify integration principles, boundaries, feature gating logic, parity criteria, risk mitigation, and allowed files.
+- Ensured zero source code changes, zero runtime integration, zero UI changes, and zero flow migration in this phase.
+- Defined roadmap for future stages of implementation.
+
+PHASE_11D_H44_H13_CONTROLLED_RUNTIME_INTEGRATION_ARCHITECTURE_COMPLETE
+CONTROLLED_RUNTIME_INTEGRATION_ARCHITECTURE_LOCKED
+RUNTIME_BOUNDARIES_DEFINED
+INTEGRATION_STAGES_DEFINED
+FEATURE_GATE_STRATEGY_DEFINED
+PARITY_CRITERIA_DEFINED
+RISK_MITIGATION_DEFINED
+FUTURE_FILES_BOUNDARY_DEFINED
+H44_H14_CRITERIA_DEFINED
+NO_SRC_CHANGES
+NO_RUNTIME_INTEGRATION
+NO_UI_CHANGES
+NO_FLOW_MIGRATION
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H44_H14_CONTROLLED_RUNTIME_INTEGRATION_BUILD_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H44-H12-H1 · Adapter Fixture Main Panel Visual Hotfix
 
 Phase: Fase 11D-H44-H12-H1 · Adapter Fixture Main Panel Visual Hotfix

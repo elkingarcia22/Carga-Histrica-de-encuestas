@@ -1352,3 +1352,34 @@ Hotfix de avatar e iconos semánticos del Chat Foundation completado.
   - VISIBLE_UI_CHECKPOINT_YES
   - PHASE_11D_H44_H12_ADAPTER_VISUAL_QA_RETRY_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H44-H13 · Controlled Runtime Integration Architecture
+- **Phase Status**: Completed
+- **Changes Made**: Locked the controlled runtime integration architecture by creating design and strategy documentation for the integration between ConversationalImportWorkspace, Historical Import Flow Adapter, and Chat Foundation. No runtime changes or UI modifications were made.
+- **Rules applied**: Non-disruptive evolution, feature gating, separation of concerns.
+- **Summary**:
+  - Controlled Runtime Integration Architecture locked.
+  - The real historical import flow remains intact.
+  - Runtime integration will be gradual, gated and visually reviewed.
+- **Markers**:
+  - PHASE_11D_H44_H13_CONTROLLED_RUNTIME_INTEGRATION_ARCHITECTURE_COMPLETE
+  - CONTROLLED_RUNTIME_INTEGRATION_ARCHITECTURE_LOCKED
+  - RUNTIME_BOUNDARIES_DEFINED
+  - INTEGRATION_STAGES_DEFINED
+  - FEATURE_GATE_STRATEGY_DEFINED
+  - PARITY_CRITERIA_DEFINED
+  - RISK_MITIGATION_DEFINED
+  - FUTURE_FILES_BOUNDARY_DEFINED
+  - H44_H14_CRITERIA_DEFINED
+  - NO_SRC_CHANGES
+  - NO_RUNTIME_INTEGRATION
+  - NO_UI_CHANGES
+  - NO_FLOW_MIGRATION
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_NO
+  - PHASE_11D_H44_H14_CONTROLLED_RUNTIME_INTEGRATION_BUILD_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
