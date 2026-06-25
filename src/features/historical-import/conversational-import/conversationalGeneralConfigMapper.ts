@@ -3,7 +3,7 @@ import type { ConversationalSurveyScope, ConversationalSurveyType, Conversationa
 export function getGeneralConfigSummaryMessage(config: ConversationalGeneralConfiguration, scope: ConversationalSurveyScope): string {
   const associatedCount = config.associatedFileIds.length;
   const associatedText = scope === "qs_clima_multicycle_2024_2025" ? "2024 + 2025" : `${associatedCount} cortes por gerencia`;
-  
+
   return `Configuración general confirmada
 
 - Encuesta: ${config.surveyName}
@@ -40,7 +40,7 @@ export function validateSurveyName(input: string): { valid: boolean, value?: str
   if (offensiveWords.some(w => trimmed.toLowerCase().includes(w))) {
     return { valid: false, error: "El nombre contiene lenguaje no permitido." };
   }
-  
+
   return { valid: true, value: trimmed };
 }
 

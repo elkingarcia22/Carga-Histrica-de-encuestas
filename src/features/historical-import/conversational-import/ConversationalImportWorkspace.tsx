@@ -352,7 +352,7 @@ export function ConversationalImportWorkspace() {
 
       if (conversationalEditState === "awaiting_survey_scope_selection") {
         let selectedScope: ConversationalSurveyScope | null = null;
-        
+
         const normalizedInput = text.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ");
         const scope1Keywords = ["1", "01", "opcion 1", "uno", "primera", "primer opcion", "primera opcion", "2025", "clima 2025", "qs clima 2025"];
         const scope2Keywords = ["2", "02", "opcion 2", "dos", "segunda", "segunda opcion", "2024", "clima 2024", "qs clima 2024"];
@@ -391,7 +391,7 @@ export function ConversationalImportWorkspace() {
           // Handled generically below, but we can let it fall through or handle it here
         } else {
           const scope = selectedSurveyScope || "qs_clima_multicycle_2024_2025";
-          
+
           if (conversationalEditState === "confirming_survey_name") {
             const suggestion = getSurveyNameSuggestion(scope);
             let finalName = text.trim();
@@ -497,10 +497,10 @@ export function ConversationalImportWorkspace() {
               const updatedConfig = { ...generalConfiguration, associatedFileIds: getAssociatedFilesList(scope) };
               setGeneralConfiguration(updatedConfig);
               setConversationalEditState("awaiting_structure_approval");
-              
+
               const summaryMsg = getGeneralConfigSummaryMessage(updatedConfig, scope);
               const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState, scope);
-              
+
               void simulateChatFlow([
                 { id: `msg_assistant_summary_${generateId()}`, role: "assistant", type: "text", content: summaryMsg, timestamp: "2025-01-01T12:00:00.000Z" },
                 { id: `msg_assistant_review_${generateId()}`, role: "assistant", type: "guided_review_step", content: reviewMsg, timestamp: "2025-01-01T12:00:00.000Z" }
