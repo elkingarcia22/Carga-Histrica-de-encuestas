@@ -51,24 +51,38 @@ export function mapDemoFixtureToStructureReviewMessage(
 
   let msg = `🧩 **Revisión de estructura detectada**\n\n`;
   if (scope === "2025") {
-    msg += `Detecté automáticamente los archivos QS Clima 2024/2025 cargados.\n`;
-    msg += `Encontré una estructura demo lista para revisar. El demo muestra el set QS Clima con foco en 2025.\n\n`;
+    msg += `Detecté automáticamente los archivos de QS Clima 2025.\n`;
+    msg += `Tomé como referencia principal el archivo Resultdos Clima total QS 2025.xlsx.\n`;
+    msg += `Los demás archivos 2025 detectados corresponden a cortes por gerencia del mismo levantamiento.\n\n`;
   } else if (scope === "2024") {
-    msg += `Detecté automáticamente los archivos QS Clima 2024/2025 cargados.\n`;
-    msg += `Encontré una estructura demo lista para revisar con foco en 2024 y privacidad media por ID seudonimizado.\n\n`;
+    msg += `Detecté QS Clima 2024 como encuesta seleccionada.\n`;
+    msg += `Este archivo tiene estructura de respuestas por columnas y requiere cuidado por IDs seudonimizados.\n\n`;
   } else {
-    msg += `Detecté automáticamente los archivos QS Clima 2024/2025 cargados.\n`;
-    msg += `Encontré una estructura demo lista para revisar antes de preparar el borrador de carga histórica multicíclo completa.\n\n`;
+    msg += `Carga histórica multicíclo QS Clima 2024/2025\n\n`;
   }
 
-  msg += `📊 **Resumen**\n`;
-  msg += `- Ciclos detectados: ${cyclesCount} (QS Clima 2024 y QS Clima 2025)\n`;
-  msg += `- Archivos relacionados: ${filesCount}\n`;
-  msg += `- Dimensiones detectadas: ${dimensionsCount}\n`;
-  msg += `- Preguntas/ítems detectados: ${questionsCount}\n`;
-  msg += `- Demográficos detectados: ${demographicsCount}\n`;
-  msg += `- Métricas detectadas: ${metricsCount}\n`;
-  msg += `- Segmentos/cortes detectados: ${segmentsCount}\n\n`;
+  if (scope === "2025") {
+    msg += `📊 **Resumen**\n`;
+    msg += `- Encuesta seleccionada: QS Clima 2025\n`;
+    msg += `- Archivo principal: Resultdos Clima total QS 2025.xlsx\n`;
+    msg += `- Archivos 2025 relacionados: 8\n`;
+    msg += `- Hojas detectadas: Clima, Engagement, eNPS\n`;
+    msg += `- Dimensiones detectadas: 10\n`;
+    msg += `- Preguntas/ítems detectados: 37\n`;
+    msg += `- Demográficos detectados: 7\n`;
+    msg += `- Métricas detectadas: 10\n`;
+    msg += `- Segmentos/cortes 2025 detectados: 9\n`;
+    msg += `- Participación / respuestas agregadas detectadas: ${qsClimaDemoMetadata?.aggregatedParticipationCount || 'pendiente de confirmación'}\n\n`;
+  } else {
+    msg += `📊 **Resumen**\n`;
+    msg += `- Ciclos detectados: ${cyclesCount} (QS Clima 2024 y QS Clima 2025)\n`;
+    msg += `- Archivos relacionados: ${filesCount}\n`;
+    msg += `- Dimensiones detectadas: ${dimensionsCount}\n`;
+    msg += `- Preguntas/ítems detectados: ${questionsCount}\n`;
+    msg += `- Demográficos detectados: ${demographicsCount}\n`;
+    msg += `- Métricas detectadas: ${metricsCount}\n`;
+    msg += `- Segmentos/cortes detectados: ${segmentsCount}\n\n`;
+  }
 
   msg += `📚 **Dimensiones y preguntas (Muestra)**\n`;
   dimQuestions.forEach(dq => {
@@ -92,19 +106,21 @@ export function mapDemoFixtureToStructureReviewMessage(
     msg += `- Nivel de riesgo: Bajo (solo datos agregados, sin identificadores directos).\n`;
   }
 
-  msg += `\n👥 **Participación / respuestas**\n`;
-  if (qsClimaDemoMetadata && qsClimaDemoMetadata.aggregatedParticipationCount) {
-    const count = qsClimaDemoMetadata.aggregatedParticipationCount;
-    if (scope === "2024" || scope === "multicycle") {
-      msg += `- Participantes/respuestas seudonimizadas detectadas: ${count}\n`;
+  if (scope !== "2025") {
+    msg += `\n👥 **Participación / respuestas**\n`;
+    if (qsClimaDemoMetadata && qsClimaDemoMetadata.aggregatedParticipationCount) {
+      const count = qsClimaDemoMetadata.aggregatedParticipationCount;
+      if (scope === "2024" || scope === "multicycle") {
+        msg += `- Participantes/respuestas seudonimizadas detectadas: ${count}\n`;
+      } else {
+        msg += `- Respuestas agregadas detectadas: ${count}\n`;
+      }
     } else {
-      msg += `- Respuestas agregadas detectadas: ${count}\n`;
+      msg += `- Participantes o respuestas detectadas: pendiente de confirmación\n`;
     }
-  } else {
-    msg += `- Participantes o respuestas detectadas: pendiente de confirmación\n`;
+    msg += `- Fuente: conteo agregado seguro del fixture demo.\n`;
+    msg += `- Privacidad: no se muestran personas, IDs, respuestas individuales ni comentarios abiertos.\n`;
   }
-  msg += `- Fuente: conteo agregado seguro del fixture demo.\n`;
-  msg += `- Privacidad: no se muestran personas, IDs, respuestas individuales ni comentarios abiertos.\n`;
 
   if (pendingDecisions.length > 0) {
     msg += `\n⚠️ **Decisiones pendientes principales:**\n`;
@@ -113,17 +129,11 @@ export function mapDemoFixtureToStructureReviewMessage(
     });
   }
 
-  msg += `\n➡️ **Siguiente paso:**\n`;
-  msg += `¿Qué quieres revisar primero?\n\n`;
-  msg += `1. Dimensiones\n`;
-  msg += `2. Preguntas\n`;
-  msg += `3. Demográficos\n`;
-  msg += `4. Métricas\n`;
-  msg += `5. Segmentos\n`;
-  msg += `6. Decisiones pendientes\n`;
-  msg += `7. Preview del borrador\n`;
-  msg += `8. Aprobar estructura\n`;
-  msg += `9. Cancelar importación\n\n`;
+  msg += `\n➡️ **¿Qué quieres hacer ahora?**\n\n`;
+  msg += `1. Aprobar esta estructura y revisar los resultados detectados\n`;
+  msg += `2. Ajustar nombres de dimensiones o preguntas\n`;
+  msg += `3. Ver archivos usados para esta encuesta\n`;
+  msg += `4. Cancelar importación\n\n`;
   msg += `Puedes responder con el número o con el nombre de la opción.`;
 
   return msg;

@@ -5,6 +5,8 @@ import { detectIntent } from "./conversationalIntentMapper";
 export type ConversationalEditState =
   | "idle"
   | "awaiting_survey_scope_selection"
+  | "awaiting_structure_approval"
+  | "showing_results_review"
   | "asking_edit_area"
   | "asking_dimension"
   | "showing_questions"

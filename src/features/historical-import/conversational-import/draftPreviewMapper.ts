@@ -4,7 +4,8 @@ import type { OverlayAction } from "../overlay-editing/types";
 
 export function mapDemoFixtureToReadinessInput(
   fixture: DemoFixtureDataset,
-  overlayState: Record<string, string>
+  overlayState: Record<string, string>,
+  scope: "2025" | "2024" | "multicycle" = "multicycle"
 ): DraftReadinessInput {
   const sourceKind = 'review_overlay';
 
@@ -22,15 +23,29 @@ export function mapDemoFixtureToReadinessInput(
     createdAtLabel: '2025-01-01T12:00:00.000Z'
   }));
 
+  const cycleFilter = (item: { cycleId: string }) => {
+    if (scope === "multicycle") return true;
+    if (scope === "2025" && item.cycleId === "qs_clima_2025") return true;
+    if (scope === "2024" && item.cycleId === "qs_clima_2024") return true;
+    return false;
+  };
+
+  const filteredCycles = fixture.surveyCycles.filter(c => {
+    if (scope === "multicycle") return true;
+    if (scope === "2025" && c === "qs_clima_2025") return true;
+    if (scope === "2024" && c === "qs_clima_2024") return true;
+    return false;
+  });
+
   return {
-    sourceCycles: fixture.surveyCycles.map(c => ({
+    sourceCycles: filteredCycles.map(c => ({
       id: c,
       label: c,
       yearLabel: c.replace('qs_clima_', ''),
       sourceKind,
       reviewState: 'reviewed'
     })),
-    sourceDimensions: fixture.sourceLayer.dimensions.map(d => ({
+    sourceDimensions: fixture.sourceLayer.dimensions.filter(cycleFilter).map(d => ({
       id: d.id,
       sourceDimensionId: d.id,
       label: overlayState[d.id] || d.displayLabel,
@@ -39,7 +54,7 @@ export function mapDemoFixtureToReadinessInput(
       sourceKind,
       reviewState: 'reviewed'
     })),
-    sourceQuestions: fixture.sourceLayer.questions.map(q => ({
+    sourceQuestions: fixture.sourceLayer.questions.filter(cycleFilter).map(q => ({
       id: q.id,
       sourceQuestionId: q.id,
       label: overlayState[q.id] || q.displayLabel,
@@ -49,7 +64,7 @@ export function mapDemoFixtureToReadinessInput(
       sourceKind,
       reviewState: 'reviewed'
     })),
-    sourceQuestionMappings: fixture.sourceLayer.mappings.map(m => ({
+    sourceQuestionMappings: fixture.sourceLayer.mappings.filter(cycleFilter).map(m => ({
       id: m.id,
       questionId: m.questionId,
       dimensionId: m.detectedDimensionId,
@@ -58,7 +73,7 @@ export function mapDemoFixtureToReadinessInput(
       sourceKind,
       reviewState: 'reviewed'
     })),
-    sourceMetrics: fixture.sourceLayer.metrics.map(m => ({
+    sourceMetrics: fixture.sourceLayer.metrics.filter(cycleFilter).map(m => ({
       id: m.id,
       label: m.displayLabel,
       metricType: m.metricType,
@@ -66,7 +81,7 @@ export function mapDemoFixtureToReadinessInput(
       sourceKind,
       reviewState: 'reviewed'
     })),
-    sourceDemographics: fixture.sourceLayer.demographics.map(d => ({
+    sourceDemographics: fixture.sourceLayer.demographics.filter(cycleFilter).map(d => ({
       id: d.id,
       label: d.displayLabel,
       demographicType: d.demographicType,
@@ -76,7 +91,7 @@ export function mapDemoFixtureToReadinessInput(
       sourceKind,
       reviewState: 'reviewed'
     })),
-    sourceSegments: fixture.sourceLayer.segments.map(s => ({
+    sourceSegments: fixture.sourceLayer.segments.filter(cycleFilter).map(s => ({
       id: s.id,
       label: s.displayLabel,
       segmentType: s.segmentType,
@@ -85,7 +100,7 @@ export function mapDemoFixtureToReadinessInput(
       sourceKind,
       reviewState: 'reviewed'
     })),
-    reviewDecisions: fixture.sourceLayer.decisions.map(d => ({
+    reviewDecisions: fixture.sourceLayer.decisions.filter(cycleFilter).map(d => ({
       id: d.id,
       title: d.title,
       description: d.description,

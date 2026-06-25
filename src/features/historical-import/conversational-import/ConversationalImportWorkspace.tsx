@@ -119,6 +119,7 @@ export function ConversationalImportWorkspace() {
   const [resolvedDecisionIds, setResolvedDecisionIds] = useState<string[]>([]);
   const [conversationalEditState, setConversationalEditState] = useState<ConversationalEditState>("idle");
   const [conversationalEditContext, setConversationalEditContext] = useState<ConversationalEditContext>({});
+  const [selectedSurveyScope, setSelectedSurveyScope] = useState<"2025" | "2024" | "multicycle" | null>(null);
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
@@ -178,6 +179,9 @@ export function ConversationalImportWorkspace() {
   const handleNewChat = () => {
     setChatStarted(false);
     setViewMode("chat");
+    setSelectedSurveyScope(null);
+    setConversationalEditState("idle");
+    setConversationalEditContext({});
     setMessages(initialMessages);
   };
 
@@ -338,6 +342,7 @@ export function ConversationalImportWorkspace() {
         setStagedFiles([]);
         setGlobalOverlayState({});
         setConversationalEditState("idle");
+        setSelectedSurveyScope(null);
         setConversationalEditContext({});
         setMessages([
           initialMessages[0],
@@ -373,7 +378,13 @@ export function ConversationalImportWorkspace() {
         else if (intent === "select_scope_3") selectedScope = "multicycle";
 
         if (selectedScope) {
-          setConversationalEditState("idle");
+          setSelectedSurveyScope(selectedScope);
+          // Set to new state instead of idle
+          // But actually, we don't have "awaiting_structure_approval" in the flow yet.
+          // Let's add it. But to avoid TS errors, let's cast it or add it to ConversationalEditState.
+          // We can update conversationalEditingFlow.ts next, but for now we can use "idle" or add it.
+          // Wait, I will add it to the flow file in the next step.
+          setConversationalEditState("awaiting_structure_approval" as ConversationalEditState);
           const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState, selectedScope);
           void simulateChatFlow([{
             id: `msg_assistant_scope_selected_${generateId()}`,
@@ -394,17 +405,81 @@ export function ConversationalImportWorkspace() {
         return;
       }
 
-      if (intent === "approve_structure") {
-        setConversationalEditState("idle");
-        setConversationalEditContext({});
-        void simulateChatFlow([{
-          id: `msg_assistant_approve_${generateId()}`,
-          role: "assistant",
-          type: "text",
-          content: "Estructura aprobada para preparar el preview del borrador.\nNo se ejecutó importación ni se guardaron datos.\nPuedes escribir “preview” para revisar el borrador local antes de cualquier acción futura.",
-          timestamp: "2025-01-01T12:00:00.000Z",
-        }]);
-        return;
+      if (conversationalEditState === "awaiting_structure_approval" as ConversationalEditState) {
+        if (intent === "approve_structure_and_review_results" || intent === "skip_current_section") {
+          setConversationalEditState("showing_results_review" as ConversationalEditState);
+          let resultsMsg = `Estructura aprobada localmente.\nNo se ejecutó importación ni se guardaron datos.\n\nAhora revisemos los resultados detectados para ${selectedSurveyScope === "2025" ? "QS Clima 2025" : selectedSurveyScope === "2024" ? "QS Clima 2024" : "QS Clima multicíclo"}.\n\n`;
+          resultsMsg += `📊 Resultados detectados\n`;
+          resultsMsg += `- Métricas agregadas disponibles: Percepción Negativa, Percepción Neutra, Percepción Positiva, Total de respuestas, Favorabilidad, Participación, eNPS Score.\n`;
+          resultsMsg += `- Participación / respuestas agregadas: ${qsClimaDemoMetadata?.aggregatedParticipationCount || 'pendiente de confirmación'}.\n`;
+          resultsMsg += `- Segmentos disponibles: Total compañía + cortes por gerencia.\n`;
+          resultsMsg += `- Privacidad: no se muestran respuestas individuales, personas, IDs, correos ni comentarios abiertos.\n\n`;
+          resultsMsg += `¿Qué quieres revisar de los resultados?\n\n1. Métricas detectadas\n2. Participación / respuestas\n3. Segmentos por gerencia\n4. Preview del borrador\n5. Cancelar importación`;
+
+          void simulateChatFlow([{
+            id: `msg_assistant_approve_${generateId()}`,
+            role: "assistant",
+            type: "text",
+            content: resultsMsg,
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }]);
+          return;
+        } else if (intent === "start_structure_name_adjustment") {
+          setConversationalEditState("asking_edit_area");
+          void simulateChatFlow([{
+            id: `msg_assistant_adjust_${generateId()}`,
+            role: "assistant",
+            type: "text",
+            content: "¿Qué quieres revisar o ajustar primero?\n\nPuedes responder:\n- dimensiones\n- preguntas",
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }]);
+          return;
+        } else if (intent === "show_selected_scope_files") {
+          if (selectedSurveyScope === "2025") {
+            let filesMsg = `🗂️ Archivos 2025 asociados\n`;
+            filesMsg += `- Resultdos Clima total QS 2025.xlsx — archivo principal\n`;
+            filesMsg += `- Resultado Gerencia Agropecuario 2025.xlsx — corte por gerencia\n`;
+            filesMsg += `- Resultados Administracion y finanzas 2025.xlsx — corte por gerencia\n`;
+            filesMsg += `- Resultados Gerencia Comercial 2025.xlsx — corte por gerencia\n`;
+            filesMsg += `- Resultados Gerencia General 2025.xlsx — corte por gerencia\n`;
+            filesMsg += `- Resultados Gerencia Industrial 2025.xlsx — corte por gerencia\n`;
+            filesMsg += `- Resultados Gerencia Marketing 2025.xlsx — corte por gerencia\n`;
+            filesMsg += `- Resultados Gerencia Personas y Organizacion 2025.xlsx — corte por gerencia\n`;
+            filesMsg += `- Resultados Gerencia Supply Chain 2025.xlsx — corte por gerencia\n`;
+            void simulateChatFlow([{
+              id: `msg_assistant_files_${generateId()}`,
+              role: "assistant",
+              type: "text",
+              content: filesMsg + "\n¿Qué quieres hacer ahora?\n1. Aprobar esta estructura y revisar los resultados detectados\n2. Ajustar nombres de dimensiones o preguntas\n3. Cancelar importación",
+              timestamp: "2025-01-01T12:00:00.000Z",
+            }]);
+          } else {
+            void simulateChatFlow([{
+              id: `msg_assistant_files_${generateId()}`,
+              role: "assistant",
+              type: "text",
+              content: "🗂️ Archivos asociados:\n- Resultados Encuesta de Clima 2024.xlsx\n\n¿Qué quieres hacer ahora?\n1. Aprobar esta estructura\n2. Cancelar",
+              timestamp: "2025-01-01T12:00:00.000Z",
+            }]);
+          }
+          return;
+        }
+      }
+
+      if (conversationalEditState === "showing_results_review" as ConversationalEditState) {
+        if (["preview", "ver preview", "4"].includes(text.trim().toLowerCase())) {
+          setViewMode("draft_preview");
+          return;
+        } else {
+          void simulateChatFlow([{
+            id: `msg_assistant_results_generic_${generateId()}`,
+            role: "assistant",
+            type: "text",
+            content: "Para ver el borrador, escribe '4' o 'preview'.",
+            timestamp: "2025-01-01T12:00:00.000Z",
+          }]);
+          return;
+        }
       }
 
       const normalizedText = text.trim().toLowerCase();
@@ -425,7 +500,7 @@ export function ConversationalImportWorkspace() {
             if (m.type === "guided_review_step" && m.id.startsWith("msg_assistant_qs_clima_review")) {
               return {
                 ...m,
-                content: mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, finalOverlay)
+                content: mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, finalOverlay, selectedSurveyScope || "multicycle")
               };
             }
             return m;
@@ -1029,7 +1104,7 @@ export function ConversationalImportWorkspace() {
                 <div className="flex-1 flex flex-col overflow-y-auto">
                   {viewMode === "draft_preview" ? (
                     (() => {
-                      const input = mapDemoFixtureToReadinessInput(qsClimaDemoFixture, globalOverlayState);
+                      const input = mapDemoFixtureToReadinessInput(qsClimaDemoFixture, globalOverlayState, selectedSurveyScope || "multicycle");
                       const readiness = evaluateDraftReadiness(input);
                       return (
                         <div className="flex flex-col h-full bg-card">
