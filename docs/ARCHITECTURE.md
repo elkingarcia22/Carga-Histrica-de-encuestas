@@ -1130,3 +1130,33 @@ Entrada dedicada de desarrollo del Playground implementada.
   - VISIBLE_UI_CHECKPOINT_YES
   - PHASE_11D_H44_H7_CHAT_FOUNDATION_VISUAL_QA_RETRY_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## PHASE_11D_H44_H7_H1_CHAT_FOUNDATION_AVATAR_AND_SEMANTIC_ICONS_HOTFIX_COMPLETE
+Hotfix de avatar e iconos semánticos del Chat Foundation completado.
+
+### Chat Foundation Avatar & Semantic Icons Hotfix (Phase 11D-H44-H7-H1)
+- Removed internal sparkles icon from assistant avatar to render as gradient-only circle matching the existing approved chat.
+- Ensured assistant avatar does not change per message type or compete with semantic icons.
+- Configured icons to render only when providing semantic meaning (confirmation, warning, error, safety, handoff, safe_details, thinking).
+- Added an info icon header to safe_details messages.
+- Avoided decorative icon repetition on plain text, structured messages, avatar, and other fields.
+- Phase Markers:
+  - PHASE_11D_H44_H7_H1_CHAT_FOUNDATION_AVATAR_AND_SEMANTIC_ICONS_HOTFIX_COMPLETE
+  - AGENT_AVATAR_GRADIENT_ONLY
+  - AGENT_AVATAR_INTERNAL_ICON_REMOVED
+  - SEMANTIC_ICONS_ONLY_WHEN_MEANINGFUL
+  - NO_DECORATIVE_ICON_REPETITION
+  - NO_ICON_SATURATION
+  - CHAT_FOUNDATION_VISUAL_STYLE_MATCHES_EXISTING_CHAT
+  - MESSAGE_BUBBLES_MATCH_EXISTING_CHAT_STYLE
+  - PLAYGROUND_STILL_RUNS_ON_LOCALHOST_5174
+  - NPM_RUN_DEV_STILL_SHOWS_HISTORICAL_IMPORT_FLOW
+  - NO_CONVERSATIONAL_IMPORT_WORKSPACE_CHANGES
+  - NO_FLOW_MIGRATION
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_YES
+  - PHASE_11D_H44_H7_CHAT_FOUNDATION_VISUAL_QA_RETRY_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED

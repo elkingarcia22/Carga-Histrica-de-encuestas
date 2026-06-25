@@ -54,12 +54,10 @@ export function ChatFoundationMessageBubble({
         <div className="flex-shrink-0 mt-0.5">
           <div className={cn(
             "flex h-8 w-8 items-center justify-center rounded-full shadow-sm",
-            isUser ? "bg-primary text-primary-foreground" : "bg-ai-gradient text-primary-foreground"
+            isUser ? "bg-primary text-primary-foreground" : "bg-ai-gradient"
           )}>
-            {isUser ? (
+            {isUser && (
               <UbitsIcon name="users" size="sm" tone="inverse" />
-            ) : (
-              <UbitsIcon name="sparkles" size="sm" tone="inverse" />
             )}
           </div>
         </div>
@@ -74,7 +72,7 @@ export function ChatFoundationMessageBubble({
             </div>
           ) : (
             <>
-              {/* Header for warning/error/handoff inside Card-styled assistant messages */}
+              {/* Header for warning/error/handoff/details inside Card-styled assistant messages */}
               {isAssistant && (kind === 'warning' || tone === 'warning') && (
                 <div className="flex items-center gap-2 mb-2 font-semibold text-warning">
                   <UbitsIcon name="warning" size="sm" tone="warning" />
@@ -103,6 +101,12 @@ export function ChatFoundationMessageBubble({
                 <div className="flex items-center gap-2 mb-2 font-semibold text-success">
                   <UbitsIcon name="success" size="sm" tone="positive" />
                   <span>Confirmación</span>
+                </div>
+              )}
+              {isAssistant && kind === 'safe_details' && (
+                <div className="flex items-center gap-2 mb-2 font-semibold text-muted-foreground">
+                  <UbitsIcon name="info" size="sm" tone="muted" />
+                  <span>Detalles de Carga Segura</span>
                 </div>
               )}
 

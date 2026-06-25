@@ -24,13 +24,19 @@ export const ChatFoundationVisualPlayground: React.FC = () => {
               </h2>
               <ul className="space-y-2 text-sm text-foreground/90">
                 <li className="flex items-center gap-2">
-                  <span className="text-success">✓</span> Avatar del asistente visible
+                  <span className="text-success">✓</span> Avatar del asistente (solo gradiente)
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-success">✓</span> Icono del asistente consistente
+                  <span className="text-success">✓</span> Sin icono interno en el avatar
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-success">✓</span> Thinking visible
+                  <span className="text-success">✓</span> Iconos semánticos en mensajes coherentes
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-success">✓</span> Sin iconos decorativos redundantes
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="text-success">✓</span> Thinking visible (sutil)
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-success">✓</span> Warning visible
@@ -39,7 +45,7 @@ export const ChatFoundationVisualPlayground: React.FC = () => {
                   <span className="text-success">✓</span> Error visible
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className="text-success">✓</span> Safe details visible
+                  <span className="text-success">✓</span> Safe details con icono visible
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="text-success">✓</span> Respuesta PII segura
