@@ -32,6 +32,18 @@ import { DraftReadinessPreview } from "./DraftReadinessPreview";
 import { handleConversationalEdit, type ConversationalEditState, type ConversationalEditContext } from "./conversationalEditingFlow";
 import { detectIntent } from "./conversationalIntentMapper";
 import {
+  getGeneralConfigSummaryMessage,
+  validateConfidentialityThreshold,
+  validateSurveyName,
+  getSurveyNameSuggestion,
+  getSurveyTypeSuggestion,
+  getSurveyTypeLabel,
+  getVisibilitySuggestion,
+  getMainFileSuggestion,
+  getAssociatedFilesList
+} from "./conversationalGeneralConfigMapper";
+import type { ConversationalGeneralConfiguration, ConversationalImportWizardStateId, ConversationalSurveyScope } from "./conversationalWizardTypes";
+import {
   initialMessages,
   simulatedFormatMessages,
   quickActionItems,
@@ -117,9 +129,10 @@ export function ConversationalImportWorkspace() {
   const [draftContract, setDraftContract] = useState<SurveyFileAnalysisContract | null>(null);
   const [currentDecisionIndex, setCurrentDecisionIndex] = useState(0);
   const [resolvedDecisionIds, setResolvedDecisionIds] = useState<string[]>([]);
-  const [conversationalEditState, setConversationalEditState] = useState<ConversationalEditState>("idle");
+  const [conversationalEditState, setConversationalEditState] = useState<ConversationalEditState | ConversationalImportWizardStateId>("idle");
   const [conversationalEditContext, setConversationalEditContext] = useState<ConversationalEditContext>({});
-  const [selectedSurveyScope, setSelectedSurveyScope] = useState<"2025" | "2024" | "multicycle" | null>(null);
+  const [selectedSurveyScope, setSelectedSurveyScope] = useState<ConversationalSurveyScope | null>(null);
+  const [generalConfiguration, setGeneralConfiguration] = useState<Partial<ConversationalGeneralConfiguration>>({});
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
@@ -338,26 +351,27 @@ export function ConversationalImportWorkspace() {
       const intent = detectIntent(text);
 
       if (conversationalEditState === "awaiting_survey_scope_selection") {
-        let selectedScope: "2025" | "2024" | "multicycle" | null = null;
+        let selectedScope: ConversationalSurveyScope | null = null;
         
         const normalizedInput = text.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ");
         const scope1Keywords = ["1", "01", "opcion 1", "uno", "primera", "primer opcion", "primera opcion", "2025", "clima 2025", "qs clima 2025"];
         const scope2Keywords = ["2", "02", "opcion 2", "dos", "segunda", "segunda opcion", "2024", "clima 2024", "qs clima 2024"];
         const scope3Keywords = ["3", "03", "opcion 3", "tres", "tercera", "todo", "ambas", "ambos", "multiciclo", "procesar todo", "todo junto", "carga historica"];
 
-        if (scope1Keywords.includes(normalizedInput) || intent === "select_scope_1") selectedScope = "2025";
-        else if (scope2Keywords.includes(normalizedInput) || intent === "select_scope_2") selectedScope = "2024";
-        else if (scope3Keywords.includes(normalizedInput) || intent === "select_scope_3") selectedScope = "multicycle";
+        if (scope1Keywords.includes(normalizedInput) || intent === "select_scope_1") selectedScope = "qs_clima_2025";
+        else if (scope2Keywords.includes(normalizedInput) || intent === "select_scope_2") selectedScope = "qs_clima_2024";
+        else if (scope3Keywords.includes(normalizedInput) || intent === "select_scope_3") selectedScope = "qs_clima_multicycle_2024_2025";
 
         if (selectedScope) {
           setSelectedSurveyScope(selectedScope);
-          setConversationalEditState("awaiting_structure_approval" as ConversationalEditState);
-          const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState, selectedScope);
+          setConversationalEditState("confirming_survey_name");
+          const scopeLabel = selectedScope === "qs_clima_2025" ? "QS Clima 2025" : selectedScope === "qs_clima_2024" ? "QS Clima 2024" : "QS Clima Histórico 2024/2025";
+          const suggestion = getSurveyNameSuggestion(selectedScope);
           void simulateChatFlow([{
             id: `msg_assistant_scope_selected_${generateId()}`,
             role: "assistant",
-            type: "guided_review_step",
-            content: reviewMsg,
+            type: "text",
+            content: `Perfecto. Procesaré ${scopeLabel} como encuesta seleccionada.\n\nAntes de revisar la estructura, validaré la configuración general de la encuesta.\n\n1/6 · Nombre de la encuesta\n\nNombre sugerido: ${suggestion}.\n¿Quieres usar este nombre o escribir otro?`,
             timestamp: "2025-01-01T12:00:00.000Z",
           }]);
         } else {
@@ -370,6 +384,134 @@ export function ConversationalImportWorkspace() {
           }]);
         }
         return;
+      }
+
+      if (conversationalEditState === "confirming_survey_name" || conversationalEditState === "confirming_survey_type" || conversationalEditState === "confirming_visibility" || conversationalEditState === "confirming_confidentiality_threshold" || conversationalEditState === "confirming_main_file" || conversationalEditState === "confirming_associated_files") {
+        if (intent === "cancel_import") {
+          // Handled generically below, but we can let it fall through or handle it here
+        } else {
+          const scope = selectedSurveyScope || "qs_clima_multicycle_2024_2025";
+          
+          if (conversationalEditState === "confirming_survey_name") {
+            const suggestion = getSurveyNameSuggestion(scope);
+            let finalName = text.trim();
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              finalName = suggestion;
+            }
+            const validation = validateSurveyName(finalName);
+            if (!validation.valid) {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: validation.error || "Nombre no válido.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+            const newConfig = { ...generalConfiguration, surveyName: validation.value };
+            setGeneralConfiguration(newConfig);
+            setConversationalEditState("confirming_survey_type");
+            const typeSuggestion = getSurveyTypeLabel(getSurveyTypeSuggestion(scope));
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `2/6 · Tipo de encuesta\n\nTipo sugerido: ${typeSuggestion}.\n¿Confirmas este tipo o quieres elegir otro?\n\nOpciones:\n1. Clima\n2. Engagement\n3. eNPS\n4. Mixta`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            return;
+          }
+
+          if (conversationalEditState === "confirming_survey_type") {
+            const suggestion = getSurveyTypeSuggestion(scope);
+            const finalType = text.trim().toLowerCase();
+            let resolvedType = suggestion;
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation" || finalType === "1" || finalType === "clima") {
+              resolvedType = "climate";
+            } else if (finalType === "2" || finalType === "engagement") {
+              resolvedType = "engagement";
+            } else if (finalType === "3" || finalType === "enps") {
+              resolvedType = "enps";
+            } else if (finalType === "4" || finalType === "mixta" || finalType === "mixto") {
+              resolvedType = "mixed";
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor elige una opción válida (1, 2, 3, 4 o el nombre del tipo).", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+            setGeneralConfiguration(prev => ({ ...prev, surveyType: resolvedType }));
+            setConversationalEditState("confirming_visibility");
+            const visSuggestion = getVisibilitySuggestion() === 'anonymous' ? 'Anónima' : 'Privada';
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `3/6 · Visibilidad\n\nVisibilidad sugerida: ${visSuggestion}.\nEsto evita mostrar respuestas individuales o identificar personas.\n\nOpciones:\n1. Anónima\n2. Privada\n3. Pública`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            return;
+          }
+
+          if (conversationalEditState === "confirming_visibility") {
+            const suggestion = getVisibilitySuggestion();
+            const finalVis = text.trim().toLowerCase();
+            let resolvedVis = suggestion;
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation" || finalVis === "1" || finalVis === "anónima" || finalVis === "anonima") {
+              resolvedVis = "anonymous";
+            } else if (finalVis === "2" || finalVis === "privada") {
+              resolvedVis = "private";
+            } else if (finalVis === "3" || finalVis === "pública" || finalVis === "publica") {
+              resolvedVis = "public";
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor elige una opción válida (1, 2, 3 o el nombre de la visibilidad).", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+            setGeneralConfiguration(prev => ({ ...prev, visibility: resolvedVis }));
+            setConversationalEditState("confirming_confidentiality_threshold");
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `4/6 · Umbral de confidencialidad\n\nUmbral sugerido: 5 respuestas por grupo.\nEsto evita mostrar cortes con muy pocas respuestas.\n\n¿Confirmas este umbral o quieres escribir otro número?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            return;
+          }
+
+          if (conversationalEditState === "confirming_confidentiality_threshold") {
+            let thresholdInput = text.trim();
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
+              thresholdInput = "5";
+            }
+            const validation = validateConfidentialityThreshold(thresholdInput);
+            if (!validation.valid) {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: validation.error || "Umbral inválido.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+            const newConfig = { ...generalConfiguration, confidentialityThreshold: validation.value };
+            setGeneralConfiguration(newConfig);
+            setConversationalEditState("confirming_main_file");
+            const fileSuggestion = getMainFileSuggestion(scope);
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: `5/6 · Archivo principal\n\nArchivo principal detectado:\n${fileSuggestion}\n\nLo usaré como referencia de estructura y resultados agregados.\n¿Confirmas este archivo principal?`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            return;
+          }
+
+          if (conversationalEditState === "confirming_main_file") {
+            if (intent !== "confirm_general_config" && intent !== "ambiguous_confirmation") {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Para esta fase, solo puedes confirmar el archivo sugerido. Responde 'sí' o 'confirmar'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+            const newConfig = { ...generalConfiguration, mainFileId: getMainFileSuggestion(scope) };
+            setGeneralConfiguration(newConfig);
+            setConversationalEditState("confirming_associated_files");
+            const filesList = getAssociatedFilesList(scope);
+            let msgContent: string;
+            if (filesList.length > 0) {
+              msgContent = `6/6 · Archivos asociados\n\nDetecté estos cortes por gerencia:\n${filesList.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\n¿Confirmas estos archivos asociados?`;
+            } else {
+              msgContent = `6/6 · Archivos asociados\n\nNo detecté archivos adicionales.\n\n¿Confirmas esta configuración?`;
+            }
+            void simulateChatFlow([{ id: `msg_assistant_next_${generateId()}`, role: "assistant", type: "text", content: msgContent, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            return;
+          }
+
+          if (conversationalEditState === "confirming_associated_files") {
+            const normalizedText = text.trim().toLowerCase();
+            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation" || ["usar estos", "estan bien", "están bien"].some(w => normalizedText.includes(w))) {
+              const updatedConfig = { ...generalConfiguration, associatedFileIds: getAssociatedFilesList(scope) };
+              setGeneralConfiguration(updatedConfig);
+              setConversationalEditState("awaiting_structure_approval");
+              
+              const summaryMsg = getGeneralConfigSummaryMessage(updatedConfig, scope);
+              const reviewMsg = mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, globalOverlayState, scope);
+              
+              void simulateChatFlow([
+                { id: `msg_assistant_summary_${generateId()}`, role: "assistant", type: "text", content: summaryMsg, timestamp: "2025-01-01T12:00:00.000Z" },
+                { id: `msg_assistant_review_${generateId()}`, role: "assistant", type: "guided_review_step", content: reviewMsg, timestamp: "2025-01-01T12:00:00.000Z" }
+              ]);
+              return;
+            } else {
+              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Esta fase solo permite confirmar o cancelar, el ajuste avanzado de archivos queda para una fase posterior. Por favor responde 'sí', 'confirmar', 'usar estos', etc. o escribe 'cancelar importación'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+          }
+        }
       }
 
       if (intent === "cancel_import") {
@@ -409,7 +551,7 @@ export function ConversationalImportWorkspace() {
       if (conversationalEditState === "awaiting_structure_approval" as ConversationalEditState) {
         if (intent === "approve_structure_and_review_results" || intent === "skip_current_section") {
           setConversationalEditState("showing_results_review" as ConversationalEditState);
-          let resultsMsg = `Estructura aprobada localmente.\nNo se ejecutó importación ni se guardaron datos.\n\nAhora revisemos los resultados detectados para ${selectedSurveyScope === "2025" ? "QS Clima 2025" : selectedSurveyScope === "2024" ? "QS Clima 2024" : "QS Clima multicíclo"}.\n\n`;
+          let resultsMsg = `Estructura aprobada localmente.\nNo se ejecutó importación ni se guardaron datos.\n\nAhora revisemos los resultados detectados para ${selectedSurveyScope === "qs_clima_2025" ? "QS Clima 2025" : selectedSurveyScope === "qs_clima_2024" ? "QS Clima 2024" : "QS Clima multicíclo"}.\n\n`;
           resultsMsg += `📊 Resultados detectados\n`;
           resultsMsg += `- Métricas agregadas disponibles: Percepción Negativa, Percepción Neutra, Percepción Positiva, Total de respuestas, Favorabilidad, Participación, eNPS Score.\n`;
           resultsMsg += `- Participación / respuestas agregadas: ${qsClimaDemoMetadata?.aggregatedParticipationCount || 'pendiente de confirmación'}.\n`;
@@ -436,7 +578,7 @@ export function ConversationalImportWorkspace() {
           }]);
           return;
         } else if (intent === "show_selected_scope_files") {
-          if (selectedSurveyScope === "2025") {
+          if (selectedSurveyScope === "qs_clima_2025") {
             let filesMsg = `🗂️ Archivos 2025 asociados\n`;
             filesMsg += `- Resultdos Clima total QS 2025.xlsx — archivo principal\n`;
             filesMsg += `- Resultado Gerencia Agropecuario 2025.xlsx — corte por gerencia\n`;
@@ -485,7 +627,7 @@ export function ConversationalImportWorkspace() {
 
       const normalizedText = text.trim().toLowerCase();
       if (conversationalEditState !== "idle" || /preguntas|dimensiones|demográficos|demograficos|métricas|metricas|segmentos|decisiones|menu|menú|volver/i.test(normalizedText) || intent === "show_review_menu") {
-        const response = handleConversationalEdit(text, conversationalEditState, conversationalEditContext, globalOverlayState);
+        const response = handleConversationalEdit(text, conversationalEditState as ConversationalEditState, conversationalEditContext, globalOverlayState);
         setConversationalEditState(response.newState);
         setConversationalEditContext(response.newContext);
 
@@ -501,7 +643,7 @@ export function ConversationalImportWorkspace() {
             if (m.type === "guided_review_step" && m.id.startsWith("msg_assistant_qs_clima_review")) {
               return {
                 ...m,
-                content: mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, finalOverlay, selectedSurveyScope || "multicycle")
+                content: mapDemoFixtureToStructureReviewMessage(qsClimaDemoFixture, finalOverlay, selectedSurveyScope || "qs_clima_multicycle_2024_2025")
               };
             }
             return m;
@@ -1105,7 +1247,7 @@ export function ConversationalImportWorkspace() {
                 <div className="flex-1 flex flex-col overflow-y-auto">
                   {viewMode === "draft_preview" ? (
                     (() => {
-                      const input = mapDemoFixtureToReadinessInput(qsClimaDemoFixture, globalOverlayState, selectedSurveyScope || "multicycle");
+                      const input = mapDemoFixtureToReadinessInput(qsClimaDemoFixture, globalOverlayState, selectedSurveyScope || "qs_clima_multicycle_2024_2025");
                       const readiness = evaluateDraftReadiness(input);
                       return (
                         <div className="flex flex-col h-full bg-card">

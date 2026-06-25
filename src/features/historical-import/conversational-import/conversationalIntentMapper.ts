@@ -13,6 +13,7 @@ export type ConversationalIntent =
   | "select_scope_1"
   | "select_scope_2"
   | "select_scope_3"
+  | "confirm_general_config"
   | "unknown";
 
 function normalizeText(text: string): string {
@@ -71,6 +72,9 @@ const INTENT_DICTIONARY: Record<ConversationalIntent, string[]> = {
   ],
   select_scope_3: [
     "3", "03", "opcion 3", "tres", "tercera", "todo", "ambas", "ambos", "multiciclo", "procesar todo", "todo junto", "carga historica"
+  ],
+  confirm_general_config: [
+    "usar ese", "usar este", "aprobar", "confirmar", "si", "ok", "correcto", "usar estos", "estan bien", "están bien"
   ],
   unknown: []
 };

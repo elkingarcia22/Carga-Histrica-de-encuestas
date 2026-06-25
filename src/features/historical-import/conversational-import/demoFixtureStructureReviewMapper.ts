@@ -1,5 +1,6 @@
 import type { DemoFixtureDataset } from "../demo-fixture/types";
 import { qsClimaDemoMetadata } from "../demo-fixture/qsClimaFixture";
+import type { ConversationalSurveyScope } from "./conversationalWizardTypes";
 
 /**
  * Generates a clean markdown string reviewing the demo fixture structure,
@@ -8,7 +9,7 @@ import { qsClimaDemoMetadata } from "../demo-fixture/qsClimaFixture";
 export function mapDemoFixtureToStructureReviewMessage(
   fixture: DemoFixtureDataset,
   overlayState: Record<string, string> = {},
-  scope: "2025" | "2024" | "multicycle" = "multicycle"
+  scope: ConversationalSurveyScope = "qs_clima_multicycle_2024_2025"
 ): string {
   const { sourceLayer, surveyCycles, privacyBoundary } = fixture;
 
@@ -50,13 +51,13 @@ export function mapDemoFixtureToStructureReviewMessage(
   const pendingDecisions = sourceLayer.decisions.filter(d => d.reviewState === 'pending');
 
   let msg = "";
-  if (scope === "2025") {
+  if (scope === "qs_clima_2025") {
     msg += `Perfecto. Procesaré QS Clima 2025 como encuesta seleccionada.\n\n`;
     msg += `🧩 **Revisión de estructura detectada**\n\n`;
     msg += `Detecté automáticamente los archivos de QS Clima 2025.\n`;
     msg += `Tomé como referencia principal el archivo Resultdos Clima total QS 2025.xlsx.\n`;
     msg += `Los demás archivos 2025 detectados corresponden a cortes por gerencia del mismo levantamiento.\n\n`;
-  } else if (scope === "2024") {
+  } else if (scope === "qs_clima_2024") {
     msg += `Perfecto. Procesaré QS Clima 2024 como encuesta seleccionada.\n\n`;
     msg += `🧩 **Revisión de estructura detectada**\n\n`;
     msg += `Detecté QS Clima 2024 como encuesta seleccionada.\n`;
@@ -67,7 +68,7 @@ export function mapDemoFixtureToStructureReviewMessage(
     msg += `Carga histórica multicíclo QS Clima 2024/2025\n\n`;
   }
 
-  if (scope === "2025") {
+  if (scope === "qs_clima_2025") {
     msg += `📊 **Resumen**\n`;
     msg += `- Encuesta seleccionada: QS Clima 2025\n`;
     msg += `- Archivo principal: Resultdos Clima total QS 2025.xlsx\n`;
@@ -112,11 +113,11 @@ export function mapDemoFixtureToStructureReviewMessage(
     msg += `- Nivel de riesgo: Bajo (solo datos agregados, sin identificadores directos).\n`;
   }
 
-  if (scope !== "2025") {
+  if (scope !== "qs_clima_2025") {
     msg += `\n👥 **Participación / respuestas**\n`;
     if (qsClimaDemoMetadata && qsClimaDemoMetadata.aggregatedParticipationCount) {
       const count = qsClimaDemoMetadata.aggregatedParticipationCount;
-      if (scope === "2024" || scope === "multicycle") {
+      if (scope === "qs_clima_2024" || scope === "qs_clima_multicycle_2024_2025") {
         msg += `- Participantes/respuestas seudonimizadas detectadas: ${count}\n`;
       } else {
         msg += `- Respuestas agregadas detectadas: ${count}\n`;

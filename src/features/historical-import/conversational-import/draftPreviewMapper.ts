@@ -1,11 +1,12 @@
 import type { DemoFixtureDataset } from "../demo-fixture/types";
 import type { DraftReadinessInput } from "../draft-preparation/draftReadinessMapper";
 import type { OverlayAction } from "../overlay-editing/types";
+import type { ConversationalSurveyScope } from "./conversationalWizardTypes";
 
 export function mapDemoFixtureToReadinessInput(
   fixture: DemoFixtureDataset,
   overlayState: Record<string, string>,
-  scope: "2025" | "2024" | "multicycle" = "multicycle"
+  scope: ConversationalSurveyScope = "qs_clima_multicycle_2024_2025"
 ): DraftReadinessInput {
   const sourceKind = 'review_overlay';
 
@@ -24,16 +25,16 @@ export function mapDemoFixtureToReadinessInput(
   }));
 
   const cycleFilter = (item: { cycleId: string }) => {
-    if (scope === "multicycle") return true;
-    if (scope === "2025" && item.cycleId === "qs_clima_2025") return true;
-    if (scope === "2024" && item.cycleId === "qs_clima_2024") return true;
+    if (scope === "qs_clima_multicycle_2024_2025") return true;
+    if (scope === "qs_clima_2025" && item.cycleId === "qs_clima_2025") return true;
+    if (scope === "qs_clima_2024" && item.cycleId === "qs_clima_2024") return true;
     return false;
   };
 
   const filteredCycles = fixture.surveyCycles.filter(c => {
-    if (scope === "multicycle") return true;
-    if (scope === "2025" && c === "qs_clima_2025") return true;
-    if (scope === "2024" && c === "qs_clima_2024") return true;
+    if (scope === "qs_clima_multicycle_2024_2025") return true;
+    if (scope === "qs_clima_2025" && c === "qs_clima_2025") return true;
+    if (scope === "qs_clima_2024" && c === "qs_clima_2024") return true;
     return false;
   });
 
