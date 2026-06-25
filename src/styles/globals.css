@@ -198,11 +198,11 @@
 
   /* AI Premium Utilities */
   .bg-ai-gradient {
-    background: linear-gradient(135deg, hsl(var(--ai-gradient-start)) 0%, hsl(var(--ai-gradient-end)) 100%) !important;
+    background: linear-gradient(90deg, #0c5bef, #8823ea, #ea066f, #ff5416) !important;
   }
 
   .text-ai-gradient {
-    background: linear-gradient(135deg, hsl(var(--ai-gradient-start)) 0%, hsl(var(--ai-gradient-end)) 100%);
+    background: linear-gradient(90deg, #0c5bef, #8823ea, #ea066f, #ff5416);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -211,7 +211,7 @@
   .border-ai-gradient {
     border: 1px solid transparent !important;
     background: linear-gradient(hsl(var(--background)), hsl(var(--background))) padding-box,
-                linear-gradient(135deg, hsl(var(--ai-gradient-start)), hsl(var(--ai-gradient-end))) border-box !important;
+                linear-gradient(90deg, #0c5bef, #8823ea, #ea066f, #ff5416) border-box !important;
   }
 
   .shadow-ai-premium {

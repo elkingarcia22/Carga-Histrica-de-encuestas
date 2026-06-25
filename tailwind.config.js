@@ -90,7 +90,7 @@ export default {
         drawer: "var(--shadow-drawer)",
       },
       backgroundImage: {
-        'ai-gradient': 'linear-gradient(135deg, hsl(var(--ai-gradient-start)) 0%, hsl(var(--ai-gradient-end)) 100%)',
+        'ai-gradient': 'linear-gradient(90deg, #0c5bef, #8823ea, #ea066f, #ff5416)',
       },
       fontFamily: {
         sans: ["'Inter'", "system-ui", "-apple-system", "sans-serif"],
