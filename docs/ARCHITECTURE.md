@@ -914,6 +914,15 @@ The conversational block injected by the homologation precheck has been refined 
 
 * **Markers:**
   - PHASE_11D_H44_H1_CONVERSATIONAL_CHAT_FOUNDATION_ARCHITECTURE_COMPLETE
+
+### Phase 11D-H44-H2 · Chat Foundation Types
+- Created the strict typescript contracts for the Chat Foundation layer (`chatFoundationTypes.ts`).
+- Defines core models without implementing runtime behavior or UI functions.
+- Models messages, roles, expected inputs, intents, policies (thinking, safety, conversation), and flow adapters.
+- Validated to have ZERO `any` usage, ZERO execution code.
+- **Markers**:
+  - PHASE_11D_H44_H2_CHAT_FOUNDATION_TYPES_COMPLETE
+  - PHASE_11D_H44_H3_CHAT_FOUNDATION_MESSAGE_RENDERER_READY
   - CONVERSATIONAL_CHAT_FOUNDATION_ARCHITECTURE_LOCKED
   - CHAT_SHELL_LAYER_DEFINED
   - MESSAGE_RENDERER_LAYER_DEFINED

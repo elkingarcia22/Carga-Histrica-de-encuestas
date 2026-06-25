@@ -1,3 +1,45 @@
+## Fase 11D-H44-H2 · Chat Foundation Types
+
+Phase: Fase 11D-H44-H2 · Chat Foundation Types
+
+Summary:
+- Created the Chat Foundation types module (`src/features/historical-import/conversational-import/chat-foundation/chatFoundationTypes.ts`).
+- Created types for ChatFoundationRole, MessageKinds, MessageStatuses, Tones, and ChatFoundationMessage.
+- Created ChatFoundationRenderMetadata for presentation rules.
+- Created ChatFoundationThinkingBehavior and ChatFoundationThinkingPolicy for UX delays.
+- Created ChatFoundationAction, ExpectedInputs, NormalizedIntent, SafetyPolicy, and ConversationPolicy types.
+- Created the Flow Adapter and Domain Flow contract types.
+- Established ChatFoundationBehaviorInvariants.
+- Verified ZERO functions, ZERO `any`, ZERO runtime UI integration.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11D_H44_H2_CHAT_FOUNDATION_TYPES_COMPLETE
+CHAT_FOUNDATION_TYPES_CREATED
+CHAT_FOUNDATION_ROLE_TYPED
+CHAT_FOUNDATION_MESSAGE_TYPED
+CHAT_FOUNDATION_RENDER_METADATA_TYPED
+CHAT_FOUNDATION_THINKING_BEHAVIOR_TYPED
+CHAT_FOUNDATION_ACTIONS_TYPED
+CHAT_FOUNDATION_EXPECTED_INPUTS_TYPED
+CHAT_FOUNDATION_INTENT_NORMALIZATION_TYPED
+CHAT_FOUNDATION_SAFETY_POLICY_TYPED
+CHAT_FOUNDATION_CONVERSATION_POLICY_TYPED
+CHAT_FOUNDATION_FLOW_ADAPTER_CONTRACT_TYPED
+CHAT_FOUNDATION_DOMAIN_FLOW_CONTRACT_TYPED
+CHAT_FOUNDATION_BEHAVIOR_INVARIANTS_TYPED
+NO_FUNCTIONS_CREATED
+NO_RUNTIME_UI_INTEGRATION
+NO_FLOW_CHANGES
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H44_H3_CHAT_FOUNDATION_MESSAGE_RENDERER_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H44-H1 · Conversational Chat Foundation Architecture
 
 Phase: Fase 11D-H44-H1 · Conversational Chat Foundation Architecture

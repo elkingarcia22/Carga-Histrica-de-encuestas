@@ -32,7 +32,6 @@ import { DraftReadinessPreview } from "./DraftReadinessPreview";
 import { handleConversationalEdit, type ConversationalEditState, type ConversationalEditContext } from "./conversationalEditingFlow";
 import { detectIntent } from "./conversationalIntentMapper";
 import {
-  hasPII,
   getGeneralConfigSummaryMessage,
   validateConfidentialityThreshold,
   validateSurveyName,
@@ -435,7 +434,7 @@ export function ConversationalImportWorkspace() {
               return;
             }
             setGeneralConfiguration(prev => ({ ...prev, surveyType: resolvedType }));
-            const piiDetected = hasPII(scope);
+            const piiDetected = scope !== "qs_clima_2024";
             if (!piiDetected) {
               const inferredDate = inferSurveyEndDate(generalConfiguration.surveyName || getSurveyNameSuggestion(scope), scope);
               setGeneralConfiguration(prev => ({ ...prev, visibility: "anonymous", surveyEndDate: inferredDate }));
