@@ -2,8 +2,16 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { UbitsToaster } from "@/components/feedback";
 import { ConversationalImportWorkspace } from "@/features/historical-import/conversational-import";
+import { ChatFoundationVisualPlayground } from "@/features/historical-import/conversational-import/chat-foundation";
+
+// Playground Toggle - Set to false to restore the real flow
+const SHOW_CHAT_FOUNDATION_PLAYGROUND = true;
 
 function App() {
+  if (SHOW_CHAT_FOUNDATION_PLAYGROUND) {
+    return <ChatFoundationVisualPlayground />;
+  }
+
   return (
     <TooltipProvider>
       <UbitsToaster />
