@@ -832,3 +832,10 @@ The conversational block injected by the homologation precheck has been refined 
   - `DraftReadinessPreview`: Renders readiness state, dimension/question summary, privacy boundaries, and potential blockers/warnings.
   - `draftPreviewMapper`: Maps the demo fixture and overlay state to the `DraftReadinessInput` shape for evaluation.
 - **Changes in Workspace:** Added secondary action "Ver preview del borrador" which enables `draft_preview` viewMode and renders `DraftReadinessPreview`.
+
+### Fase 11D-H40-H6 · Numbered Conversational Menu and Participation Count Hotfix
+- **Objetivo**: Fix up conversational menu to correctly display numbers (1-9) for navigation and allow input by numeric option. Ensures participation count is visible for structural reviews securely utilizing `qsClimaDemoMetadata`.
+- **Componentes**: 
+  - `ConversationalImportWorkspace`: Draft Preview component overlay wrapper added participation count.
+  - `conversationalEditingFlow`, `conversationalEditingMapper`, `conversationalIntentMapper`: Updated to properly map numbers and display the numbered list correctly.
+  - `demoFixtureStructureReviewMapper`, `qsClimaFixture`: Added securely aggregated participation count display to initial analysis.

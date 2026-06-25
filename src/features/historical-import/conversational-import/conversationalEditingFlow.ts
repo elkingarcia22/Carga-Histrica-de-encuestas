@@ -29,7 +29,7 @@ export interface ChatResponse {
   cancelFlow?: boolean;
 }
 
-const GUIDE_SUFFIX = `\n\nPuedes responder:\n- dimensiones\n- preguntas\n- demográficos\n- métricas\n- segmentos\n- decisiones pendientes\n- preview\n- aprobar estructura\n- cancelar importación`;
+const GUIDE_SUFFIX = `\n\n¿Qué quieres revisar primero?\n\n1. Dimensiones\n2. Preguntas\n3. Demográficos\n4. Métricas\n5. Segmentos\n6. Decisiones pendientes\n7. Preview del borrador\n8. Aprobar estructura\n9. Cancelar importación\n\nPuedes responder con el número o con el nombre de la opción.`;
 
 export function handleConversationalEdit(
   input: string,
@@ -70,21 +70,21 @@ export function handleConversationalEdit(
   switch (state) {
     case "idle":
     case "asking_edit_area": {
-      if (normalizedInput.includes("dimensione") || normalizedInput === "dimensiones" || normalizedInput === "dimension") {
+      if (normalizedInput.includes("dimensione") || normalizedInput === "dimensiones" || normalizedInput === "dimension" || normalizedInput === "1") {
         return {
           message: `Estas son las dimensiones detectadas:\n${getDimensionsList(overlayState)}\n\n¿Cuál quieres renombrar? (Responde con el número)`,
           newState: "asking_dimension",
           newContext: { area: "dimensiones" }
         };
       }
-      if (normalizedInput.includes("pregunta") || normalizedInput === "preguntas" || normalizedInput === "pregunta") {
+      if (normalizedInput.includes("pregunta") || normalizedInput === "preguntas" || normalizedInput === "pregunta" || normalizedInput === "2") {
         return {
           message: `¿Sobre qué dimensión quieres trabajar?\n${getDimensionsList(overlayState)}\n\n(Responde con el número de la dimensión)`,
           newState: "asking_dimension",
           newContext: { area: "preguntas" }
         };
       }
-      if (["demográficos", "demograficos", "métricas", "metricas", "segmentos", "decisiones", "decisiones pendientes"].some(w => normalizedInput.includes(w))) {
+      if (["demográficos", "demograficos", "métricas", "metricas", "segmentos", "decisiones", "decisiones pendientes", "3", "4", "5", "6"].some(w => normalizedInput.includes(w))) {
         return {
           message: `En esta fase puedo mostrar esta información, pero la edición habilitada por chat es solo para etiquetas visibles de dimensiones y preguntas.\n¿Quieres revisar otra sección o aprobar la estructura como está?${GUIDE_SUFFIX}`,
           newState: "asking_edit_area",

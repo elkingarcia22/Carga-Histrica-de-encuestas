@@ -23,7 +23,7 @@ import { mapHomologationPrecheck } from "../homologation-precheck";
 
 import { mapStructureInventory } from "../structure-inventory";
 import { mapStructureInventoryToChat } from "./structureInventoryChatMapper";
-import { qsClimaDemoFixture } from "../demo-fixture/qsClimaFixture";
+import { qsClimaDemoFixture, qsClimaDemoMetadata } from "../demo-fixture/qsClimaFixture";
 import { isQsClimaDemoFixture } from "./demoFixtureAutoDetectionMapper";
 import { mapDemoFixtureToStructureReviewMessage } from "./demoFixtureStructureReviewMapper";
 import { mapDemoFixtureToReadinessInput } from "./draftPreviewMapper";
@@ -1032,11 +1032,20 @@ export function ConversationalImportWorkspace() {
                       const input = mapDemoFixtureToReadinessInput(qsClimaDemoFixture, globalOverlayState);
                       const readiness = evaluateDraftReadiness(input);
                       return (
-                        <DraftReadinessPreview
-                          input={input}
-                          readiness={readiness}
-                          onCancel={() => setViewMode("chat")}
-                        />
+                        <div className="flex flex-col h-full bg-card">
+                          <div className="px-6 py-3 bg-muted/20 border-b shrink-0">
+                            <p className="text-sm text-foreground">
+                              <strong>Participación / respuestas incluidas:</strong> {qsClimaDemoMetadata?.aggregatedParticipationCount || 'pendiente de confirmación'} (Como dato agregado seguro)
+                            </p>
+                          </div>
+                          <div className="flex-1 overflow-hidden relative">
+                            <DraftReadinessPreview
+                              input={input}
+                              readiness={readiness}
+                              onCancel={() => setViewMode("chat")}
+                            />
+                          </div>
+                        </div>
                       );
                     })()
                   ) : (

@@ -11508,3 +11508,6 @@ R1H5_DEFINED_BUT_NOT_TRIGGERED
 - VISIBLE_UI_CHECKPOINT_YES
 - PHASE_11D_H39_DRAFT_PREVIEW_VISUAL_QA_READY
 - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
+## Fase 11D-H40-H6 · Numbered Conversational Menu and Participation Count Hotfix
+Implemented numbered lists for conversational menu navigation (options 1-9), updated intents to match them. Included `qsClimaDemoMetadata` containing aggregated secure participation count to both `demoFixtureStructureReviewMapper` and `ConversationalImportWorkspace` for the `DraftReadinessPreview` view without modifying the preview's native component.

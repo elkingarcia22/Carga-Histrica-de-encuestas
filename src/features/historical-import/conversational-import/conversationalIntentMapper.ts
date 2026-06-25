@@ -31,14 +31,14 @@ const INTENT_DICTIONARY: Record<ConversationalIntent, string[]> = {
   approve_structure: [
     "aprobar estructura", "confirmar estructura", "aprobar todo", "confirmar todo",
     "todo aprobado", "aprobar como esta", "confirmar como esta", "sin cambios aprobar",
-    "no modificar y aprobar"
+    "no modificar y aprobar", "8"
   ],
   show_review_menu: [
     "menu", "volver", "volver al menu", "que puedo hacer", "ayuda", "opciones"
   ],
   open_draft_preview: [
     "preview", "ver preview", "ver preview del borrador", "borrador",
-    "previsualizar borrador", "vista previa del borrador"
+    "previsualizar borrador", "vista previa del borrador", "7"
   ],
   strict_confirmation_approve: [
     "aprobar"
@@ -53,7 +53,7 @@ const INTENT_DICTIONARY: Record<ConversationalIntent, string[]> = {
     "cancelar", "cancelar ajuste", "cancelar cambio"
   ],
   cancel_import: [
-    "cancelar importacion", "cancelar carga", "cancelar proceso", "empezar de nuevo", "reiniciar"
+    "cancelar importacion", "cancelar carga", "cancelar proceso", "empezar de nuevo", "reiniciar", "9"
   ],
   select_scope_1: [
     "1", "2025", "clima 2025", "qs clima 2025"

@@ -1,4 +1,5 @@
 import type { DemoFixtureDataset } from "../demo-fixture/types";
+import { qsClimaDemoMetadata } from "../demo-fixture/qsClimaFixture";
 
 /**
  * Generates a clean markdown string reviewing the demo fixture structure,
@@ -91,6 +92,20 @@ export function mapDemoFixtureToStructureReviewMessage(
     msg += `- Nivel de riesgo: Bajo (solo datos agregados, sin identificadores directos).\n`;
   }
 
+  msg += `\n👥 **Participación / respuestas**\n`;
+  if (qsClimaDemoMetadata && qsClimaDemoMetadata.aggregatedParticipationCount) {
+    const count = qsClimaDemoMetadata.aggregatedParticipationCount;
+    if (scope === "2024" || scope === "multicycle") {
+      msg += `- Participantes/respuestas seudonimizadas detectadas: ${count}\n`;
+    } else {
+      msg += `- Respuestas agregadas detectadas: ${count}\n`;
+    }
+  } else {
+    msg += `- Participantes o respuestas detectadas: pendiente de confirmación\n`;
+  }
+  msg += `- Fuente: conteo agregado seguro del fixture demo.\n`;
+  msg += `- Privacidad: no se muestran personas, IDs, respuestas individuales ni comentarios abiertos.\n`;
+
   if (pendingDecisions.length > 0) {
     msg += `\n⚠️ **Decisiones pendientes principales:**\n`;
     pendingDecisions.slice(0, 3).forEach(d => {
@@ -100,15 +115,16 @@ export function mapDemoFixtureToStructureReviewMessage(
 
   msg += `\n➡️ **Siguiente paso:**\n`;
   msg += `¿Qué quieres revisar primero?\n\n`;
-  msg += `Puedes responder con:\n`;
-  msg += `- dimensiones\n`;
-  msg += `- preguntas\n`;
-  msg += `- demográficos\n`;
-  msg += `- métricas\n`;
-  msg += `- segmentos\n`;
-  msg += `- decisiones pendientes\n`;
-  msg += `- preview\n`;
-  msg += `- cancelar importación`;
+  msg += `1. Dimensiones\n`;
+  msg += `2. Preguntas\n`;
+  msg += `3. Demográficos\n`;
+  msg += `4. Métricas\n`;
+  msg += `5. Segmentos\n`;
+  msg += `6. Decisiones pendientes\n`;
+  msg += `7. Preview del borrador\n`;
+  msg += `8. Aprobar estructura\n`;
+  msg += `9. Cancelar importación\n\n`;
+  msg += `Puedes responder con el número o con el nombre de la opción.`;
 
   return msg;
 }

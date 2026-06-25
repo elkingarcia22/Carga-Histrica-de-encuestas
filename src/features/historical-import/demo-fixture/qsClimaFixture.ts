@@ -415,3 +415,7 @@ export const qsClimaDemoFixture: DemoFixtureDataset = {
     claudeConnected: false
   }
 };
+
+export const qsClimaDemoMetadata = {
+  aggregatedParticipationCount: 2730
+};
