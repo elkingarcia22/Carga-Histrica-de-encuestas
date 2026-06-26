@@ -1722,3 +1722,44 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - NO_UI_CHANGES
   - PHASE_11D_H48_READY_FOR_CLOSURE
 
+## Fase 11D-H49 · Ambiguity Runtime Integration
+- **Phase Status**: Completed
+- **Problem**: Hardcoded survey scope selection messages in `ConversationalImportWorkspace.tsx` (`handleComposerSend`, `handleSandboxFilesSelected`) needed replacement with the ambiguity runtime chain when `MultipleSurveyScopeAmbiguity` is detected.
+- **Solution**: Integrated `mapWorkspaceToAmbiguityDetectionInput` → `detectHistoricalImportAmbiguities` → `mapAmbiguityResolutionToChatMessages` → `mapChatFoundationToRuntimeMessage` chain in both file selection handlers. Filtered `thinking` kind messages from chain output to prevent double-thinking indicators. Preserved hardcoded fallback when no `MultipleSurveyScopeAmbiguity`.
+- **Changes Made**:
+  - `ConversationalImportWorkspace.tsx`: Added imports for ambiguity chain, added `mapChatFoundationToRuntimeMessage` helper, integrated chain in `handleComposerSend` and `handleSandboxFilesSelected`.
+  - `ambiguity-resolution/index.ts`: Exported `WorkspaceAmbiguityContext` type and `mapWorkspaceToAmbiguityDetectionInput` function for H49 runtime use.
+  - `ambiguityRuntimeMapper.ts`: Created with `mapWorkspaceToAmbiguityDetectionInput` mapper and `WorkspaceAmbiguityContext` type.
+  - `ambiguityRuntimeMapper.test.ts`: Created with 25 tests for all mapper scenarios.
+- **Markers**:
+  - PHASE_11D_H49_AMBIGUITY_RUNTIME_INTEGRATION_COMPLETE
+  - AMBIGUITY_RUNTIME_INTEGRATION_COMPLETE
+  - AMBIGUITY_DETECTION_CONNECTED_TO_REAL_WORKSPACE
+  - AMBIGUITY_CONVERSATION_MESSAGES_CONNECTED_TO_REAL_WORKSPACE
+  - MULTIPLE_SURVEY_SCOPE_AMBIGUITY_VISIBLE_IN_REAL_WORKSPACE
+  - TEXT_ONLY_RESOLUTION_PRESERVED
+  - USER_RESPONSE_1_STILL_ADVANCES_TO_GENERAL_CONFIGURATION
+  - REAL_WORKSPACE_STATE_LOGIC_PRESERVED
+  - REAL_WORKSPACE_INPUT_PRESERVED
+  - CHAT_FOUNDATION_RENDERER_STILL_USED
+  - NO_DUPLICATE_AMBIGUITY_MESSAGES
+  - MESSAGE_IDS_DETERMINISTIC
+  - NO_UNSANITIZED_LABELS_VISIBLE
+  - THINKING_VISIBLE_IN_REAL_WORKSPACE
+  - THINKING_MESSAGES_FILTERED_WITHOUT_VISUAL_REGRESSION
+  - HARDCODED_SCOPE_SELECTION_FALLBACK_ONLY_WHEN_NO_AMBIGUITY
+  - NO_FULL_WORKSPACE_REWRITE
+  - NO_CHAT_FOUNDATION_CORE_CHANGES
+  - NO_DETECTION_MAPPER_CHANGES
+  - NO_CONVERSATION_MAPPER_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PLAYGROUND_5174_STILL_WORKS
+  - PLAYGROUND_ADAPTER_FIXTURE_STILL_VISIBLE
+  - VISIBLE_UI_CHECKPOINT_YES
+  - PHASE_11D_H50_AMBIGUITY_VISUAL_QA_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
+

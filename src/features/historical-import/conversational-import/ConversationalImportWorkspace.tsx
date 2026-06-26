@@ -56,7 +56,15 @@ import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
 import { SandboxUploadPanel } from "./SandboxUploadPanel";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
 import { ChatFoundationMessageRenderer } from "./chat-foundation";
+import type { ChatFoundationMessage } from "./chat-foundation";
 import { mapRuntimeMessageToChatFoundation } from "./flow-adapter";
+
+import {
+  mapWorkspaceToAmbiguityDetectionInput,
+  detectHistoricalImportAmbiguities,
+  mapAmbiguityResolutionToChatMessages,
+} from "./ambiguity-resolution";
+import type { WorkspaceAmbiguityContext } from "./ambiguity-resolution";
 
 const HISTORICAL_IMPORT_CHAT_FOUNDATION_RUNTIME_ENABLED = true;
 
@@ -136,6 +144,30 @@ const playNotificationSound = () => {
     console.log("Audio play failed", e);
   }
 };
+
+function mapChatFoundationToRuntimeMessage(
+  cfMsg: ChatFoundationMessage,
+): ChatMessage {
+  let msgType: ChatMessage["type"];
+  switch (cfMsg.kind) {
+    case "thinking":
+      msgType = "analysis_progress";
+      break;
+    case "warning":
+    case "error":
+      msgType = "warning";
+      break;
+    default:
+      msgType = "text";
+  }
+  return {
+    id: cfMsg.id,
+    role: cfMsg.role,
+    type: msgType,
+    content: cfMsg.content,
+    timestamp: "2025-01-01T12:00:00.000Z",
+  };
+}
 
 export function ConversationalImportWorkspace() {
   const [chatStarted, setChatStarted] = useState(false);
@@ -329,14 +361,42 @@ export function ConversationalImportWorkspace() {
       });
 
       if (isQsClimaDemoFixture(files)) {
+        const ambiguityContext: WorkspaceAmbiguityContext = {
+          stagedFileNames: files.map(f => f.name),
+          selectedSurveyScope: null,
+          currentWizardState: "awaiting_survey_scope_selection",
+          userLastText: text.trim(),
+          surveyName: "",
+          surveyTypeConfirmed: false,
+          inferredSurveyType: "",
+          visibilityConfirmed: false,
+          inferredVisibility: "",
+          surveyEndDate: null,
+          confidentialityThreshold: null,
+          hasPrivacyRisk: false,
+        };
+
+        const detectionInput = mapWorkspaceToAmbiguityDetectionInput(ambiguityContext);
+        const snapshot = detectHistoricalImportAmbiguities(detectionInput);
+        const ambiguity = snapshot.activeAmbiguity;
+
         setConversationalEditState("awaiting_survey_scope_selection");
-        newMsgs.push({
-          id: `msg_assistant_scope_selection_${generateId()}`,
-          role: "assistant",
-          type: "guided_review_step",
-          content: "Detecté más de una encuesta o ciclo en los archivos cargados.\n\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025\n\n¿Qué quieres procesar primero? Responde 1, 2 o 3.",
-          timestamp: "2025-01-01T12:00:00.000Z",
-        });
+
+        if (ambiguity?.type === "MultipleSurveyScopeAmbiguity") {
+          const cfMessages = mapAmbiguityResolutionToChatMessages(snapshot);
+          const runtimeMessages = cfMessages
+            .filter(m => m.kind !== "thinking")
+            .map(mapChatFoundationToRuntimeMessage);
+          newMsgs.push(...runtimeMessages);
+        } else {
+          newMsgs.push({
+            id: `msg_assistant_scope_selection_${generateId()}`,
+            role: "assistant",
+            type: "guided_review_step",
+            content: "Detecté más de una encuesta o ciclo en los archivos cargados.\n\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025\n\n¿Qué quieres procesar primero? Responde 1, 2 o 3.",
+            timestamp: "2025-01-01T12:00:00.000Z",
+          });
+        }
 
         void simulateChatFlow(newMsgs);
         return;
@@ -864,14 +924,42 @@ export function ConversationalImportWorkspace() {
     });
 
     if (rawFiles.length > 0 && isQsClimaDemoFixture(rawFiles)) {
+      const ambiguityContext: WorkspaceAmbiguityContext = {
+        stagedFileNames: rawFiles.map(f => f.name),
+        selectedSurveyScope: null,
+        currentWizardState: "awaiting_survey_scope_selection",
+        userLastText: "",
+        surveyName: "",
+        surveyTypeConfirmed: false,
+        inferredSurveyType: "",
+        visibilityConfirmed: false,
+        inferredVisibility: "",
+        surveyEndDate: null,
+        confidentialityThreshold: null,
+        hasPrivacyRisk: false,
+      };
+
+      const detectionInput = mapWorkspaceToAmbiguityDetectionInput(ambiguityContext);
+      const snapshot = detectHistoricalImportAmbiguities(detectionInput);
+      const ambiguity = snapshot.activeAmbiguity;
+
       setConversationalEditState("awaiting_survey_scope_selection");
-      newMsgs.push({
-        id: `msg_assistant_scope_selection_${generateId()}`,
-        role: "assistant",
-        type: "guided_review_step",
-        content: "Detecté más de una encuesta o ciclo en los archivos cargados.\n\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025\n\n¿Qué quieres procesar primero? Responde 1, 2 o 3.",
-        timestamp: "2025-01-01T12:00:00.000Z",
-      });
+
+      if (ambiguity?.type === "MultipleSurveyScopeAmbiguity") {
+        const cfMessages = mapAmbiguityResolutionToChatMessages(snapshot);
+        const runtimeMessages = cfMessages
+          .filter(m => m.kind !== "thinking")
+          .map(mapChatFoundationToRuntimeMessage);
+        newMsgs.push(...runtimeMessages);
+      } else {
+        newMsgs.push({
+          id: `msg_assistant_scope_selection_${generateId()}`,
+          role: "assistant",
+          type: "guided_review_step",
+          content: "Detecté más de una encuesta o ciclo en los archivos cargados.\n\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025\n\n¿Qué quieres procesar primero? Responde 1, 2 o 3.",
+          timestamp: "2025-01-01T12:00:00.000Z",
+        });
+      }
 
       void simulateChatFlow(newMsgs);
       return;

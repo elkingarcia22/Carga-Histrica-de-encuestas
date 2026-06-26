@@ -51,3 +51,7 @@ export { detectHistoricalImportAmbiguities } from './ambiguityDetectionMapper';
 
 // H48 mapper function
 export { mapAmbiguityResolutionToChatMessages } from './ambiguityConversationMapper';
+
+// H49 runtime mapper type and function
+export type { WorkspaceAmbiguityContext } from './ambiguityRuntimeMapper';
+export { mapWorkspaceToAmbiguityDetectionInput } from './ambiguityRuntimeMapper';
