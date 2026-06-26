@@ -1429,3 +1429,44 @@ Se completó con éxito la integración en runtime del renderizador de Chat Foun
 - PHASE_11D_H44_H15_HISTORICAL_IMPORT_FLOW_VISUAL_REGRESSION_QA_READY
 - R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## PHASE_11D_H44_H17_CHAT_FOUNDATION_RUNTIME_STABILIZATION_COMPLETE
+
+Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundation dentro de la Carga Histórica real sin alterar el comportamiento interactivo, aislando los elementos del playground y asegurando invariantes técnicas.
+
+### Invariantes y Verificaciones
+- **Aislamiento de Exports**: Se modificó `flow-adapter/index.ts` para exportar únicamente `mapRuntimeMessageToChatFoundation`, evitando la mezcla de código y fixtures de playground con el flujo real.
+- **Determinismo y Pureza**: El mapper en runtime no genera efectos secundarios, es 100% puro y carece de uso de variables temporales o aleatorias.
+- **Mapeo de Roles y Estilo**: Los avatares del asistente se muestran como gradientes sin iconos internos decorativos, los mensajes mantienen orden estable e identificadores coherentes heredados del estado.
+
+### Marcadores de Cumplimiento
+- PHASE_11D_H44_H17_CHAT_FOUNDATION_RUNTIME_STABILIZATION_COMPLETE
+- CHAT_FOUNDATION_RUNTIME_STABILIZATION_COMPLETE
+- RUNTIME_ADAPTER_MAPPER_STABLE
+- RUNTIME_MESSAGE_IDS_DETERMINISTIC
+- RUNTIME_MESSAGE_ORDER_STABLE
+- RUNTIME_MAPPER_HAS_NO_SIDE_EFFECTS
+- RUNTIME_MAPPER_DOES_NOT_EXPOSE_PII
+- WORKSPACE_STATE_LOGIC_STILL_PRESERVED
+- WORKSPACE_INPUT_STILL_PRESERVED
+- WORKSPACE_INTENT_FLOW_STILL_PRESERVED
+- CHAT_FOUNDATION_RENDERER_STILL_USED_IN_REAL_WORKSPACE
+- CHAT_FOUNDATION_CORE_UNCHANGED
+- FLOW_ADAPTER_EXPORTS_STABLE
+- NO_PLAYGROUND_RUNTIME_MIXING
+- SCOPE_SELECTION_STILL_WORKS
+- GENERAL_CONFIGURATION_STILL_WORKS
+- MATCH_REVIEW_STILL_WORKS
+- NO_NEW_FEATURES
+- NO_NEW_SCREEN
+- NO_FULL_WORKSPACE_REWRITE
+- NO_IMPORT_EXECUTION
+- NO_SANDBOX_IMPORT_RUNTIME
+- NO_RESULT_LINK_CREATED
+- NO_DASHBOARD_OR_COMPARISON_CHANGES
+- READY_FOR_COMPARISON_OUTPUT_DISABLED
+- PLAYGROUND_5174_STILL_WORKS
+- PLAYGROUND_ADAPTER_FIXTURE_STILL_VISIBLE
+- VISIBLE_UI_CHECKPOINT_NO_UNLESS_VISIBLE_CHANGE
+- PHASE_11D_H45_AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE_READY
+- R1H5_DEFINED_BUT_NOT_TRIGGERED
+
