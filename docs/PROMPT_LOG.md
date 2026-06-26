@@ -97,6 +97,38 @@ VISIBLE_UI_CHECKPOINT_NO
 PHASE_11D_H49_AMBIGUITY_RUNTIME_INTEGRATION_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Fase 11D-H48-H1 · Fix Ambiguity Conversation Mapper Governance
+
+Phase: Fase 11D-H48-H1 · Fix Ambiguity Conversation Mapper Governance
+
+Summary:
+- Removed unauthorized test from `tests/historical-import/conversational-import/ambiguity-resolution/ambiguityConversationMapper.test.ts`.
+- Created authorized test at `src/features/historical-import/conversational-import/ambiguity-resolution/__tests__/ambiguityConversationMapper.test.ts` with corrected relative imports.
+- Updated `vitest.config.ts` to include `src/**/__tests__/**/*.test.ts` so authorized tests are runnable.
+- Updated `docs/QA_CHECKLIST.md` with H48-H1 governance hotfix section.
+- Updated `docs/PROMPT_LOG.md` with this entry.
+- Updated `docs/ARCHITECTURE.md` with H48-H1 governance hotfix section.
+- No conversation mapper logic changed. No detection logic changed. No runtime integration. No UI changes.
+- Build passed. All ESLint scopes passed. All tests pass from authorized location.
+- No root tests remaining.
+
+PHASE_11D_H48_H1_AMBIGUITY_CONVERSATION_MAPPER_GOVERNANCE_HOTFIX_COMPLETE
+QA_CHECKLIST_UPDATED_FOR_H48
+UNAUTHORIZED_ROOT_TEST_REMOVED
+AUTHORIZED_SRC_TEST_PRESENT
+AMBIGUITY_CONVERSATION_TEST_COVERAGE_PRESERVED
+NO_CONVERSATION_MAPPER_LOGIC_CHANGES
+NO_DETECTION_LOGIC_CHANGES
+NO_RUNTIME_INTEGRATION
+NO_WORKSPACE_CHANGES
+NO_CHAT_FOUNDATION_CHANGES
+NO_FLOW_ADAPTER_CHANGES
+NO_UI_CHANGES
+NO_ROOT_TESTS_REMAINING
+PHASE_11D_H48_READY_FOR_CLOSURE
+
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H46 · Ambiguity Resolution Types
 
 Phase: Fase 11D-H46 · Ambiguity Resolution Types

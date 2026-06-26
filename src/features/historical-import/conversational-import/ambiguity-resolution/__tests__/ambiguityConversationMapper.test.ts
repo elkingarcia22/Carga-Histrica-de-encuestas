@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { mapAmbiguityResolutionToChatMessages } from '../../../../src/features/historical-import/conversational-import/ambiguity-resolution/ambiguityConversationMapper';
-import type { AmbiguityResolutionSnapshot as AmbiguityResolutionSnapshotType } from '../../../../src/features/historical-import/conversational-import/ambiguity-resolution/ambiguityResolutionTypes';
+import { mapAmbiguityResolutionToChatMessages } from '../ambiguityConversationMapper';
+import type { AmbiguityResolutionSnapshot } from '../ambiguityResolutionTypes';
 
 function buildSurveyTypeAmbiguitySnapshot(
-  overrides?: Partial<AmbiguityResolutionSnapshotType>,
-): AmbiguityResolutionSnapshotType {
+  overrides?: Partial<AmbiguityResolutionSnapshot>,
+): AmbiguityResolutionSnapshot {
   return {
     activeAmbiguity: {
       id: 'ambiguity-survey-type-ambiguity',
@@ -61,8 +61,8 @@ function buildSurveyTypeAmbiguitySnapshot(
 }
 
 function buildSurveyNameAmbiguitySnapshot(
-  overrides?: Partial<AmbiguityResolutionSnapshotType>,
-): AmbiguityResolutionSnapshotType {
+  overrides?: Partial<AmbiguityResolutionSnapshot>,
+): AmbiguityResolutionSnapshot {
   return {
     activeAmbiguity: {
       id: 'ambiguity-survey-name-ambiguity',
@@ -93,8 +93,8 @@ function buildSurveyNameAmbiguitySnapshot(
 }
 
 function buildPrivacyThresholdBlockingSnapshot(
-  overrides?: Partial<AmbiguityResolutionSnapshotType>,
-): AmbiguityResolutionSnapshotType {
+  overrides?: Partial<AmbiguityResolutionSnapshot>,
+): AmbiguityResolutionSnapshot {
   return {
     activeAmbiguity: {
       id: 'ambiguity-privacy-threshold-ambiguity',
@@ -127,8 +127,8 @@ function buildPrivacyThresholdBlockingSnapshot(
 }
 
 function buildOutOfScopeSnapshot(
-  overrides?: Partial<AmbiguityResolutionSnapshotType>,
-): AmbiguityResolutionSnapshotType {
+  overrides?: Partial<AmbiguityResolutionSnapshot>,
+): AmbiguityResolutionSnapshot {
   return {
     activeAmbiguity: {
       id: 'ambiguity-out-of-scope-request-ambiguity',
@@ -160,7 +160,7 @@ function buildOutOfScopeSnapshot(
   };
 }
 
-function buildEmptySnapshot(): AmbiguityResolutionSnapshotType {
+function buildEmptySnapshot(): AmbiguityResolutionSnapshot {
   return {
     activeAmbiguity: undefined,
     resolvedAmbiguities: [],
