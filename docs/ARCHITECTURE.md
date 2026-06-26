@@ -1560,4 +1560,56 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - VISIBLE_UI_CHECKPOINT_NO
   - PHASE_11D_H47_AMBIGUITY_DETECTION_MAPPER_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
+## Fase 11D-H47 · Ambiguity Detection Mapper
+- **Phase Status**: Completed (pure mapper, no runtime integration)
+- **Module**: `src/features/historical-import/conversational-import/ambiguity-resolution/`
+- **Files Created**:
+  - `ambiguityDetectionMapper.ts` — Sanitized input contract + pure detection mapper.
+  - `src/.../ambiguity-resolution/__tests__/ambiguityDetectionMapper.test.ts` — Unit tests (canonical).
+  - `tests/historical-import/conversational-import/ambiguity-resolution/ambiguityDetectionMapper.test.ts` — Vitest-runnable mirror.
+- **Files Modified**:
+  - `index.ts` — Extended to export H47 mapper function and input contract types.
+- **Changes Made**: Created `detectHistoricalImportAmbiguities`, a pure deterministic mapper that receives a sanitized `AmbiguityDetectionInput` and returns an `AmbiguityResolutionSnapshot`. No runtime integration, no UI, no side effects.
+- **Summary**:
+  - Defined `AmbiguityDetectionInput` — sanitized input contract covering all 14 signal types (scopes, name, type, visibility, date, files, associated files, question/scales, demographics, dimensions, segment/cuts, privacy, conflicts, out-of-scope).
+  - Implemented 14 detection functions — one per approved ambiguity category.
+  - Priority order defined and enforced: Privacy (1) → OutOfScope (2) → MultipleSurveyScope (3) → MainFile (4) → DuplicateOrConflict (5) → SurveyType (6) → Visibility (7) → EndDate (8) → SurveyName (9) → AssociatedFiles (10) → QuestionScale (11) → DemographicMapping (12) → DimensionMapping (13) → SegmentCut (14).
+  - `PrivacyThresholdAmbiguity` is `blocking` when `privacyRisk = true`.
+  - `OutOfScopeRequestAmbiguity` always sets `status = 'out_of_scope_redirected'`.
+  - `resolvedAmbiguities` is always empty in H47 (no resolution applied).
+  - IDs are deterministic (type slug + position index, no Date/Math.random).
+  - Input is never mutated.
+  - 19 unit tests cover all 14 ambiguity types + priority, determinism, mutation safety, privacy safety.
+- **Markers**:
+  - PHASE_11D_H47_AMBIGUITY_DETECTION_MAPPER_COMPLETE
+  - AMBIGUITY_DETECTION_MAPPER_CREATED
+  - AMBIGUITY_DETECTION_MAPPER_EXPORTED
+  - SANITIZED_INPUT_CONTRACT_DEFINED
+  - ALL_APPROVED_AMBIGUITY_TYPES_DETECTABLE
+  - DETECTION_RULES_DETERMINISTIC
+  - ACTIVE_AMBIGUITY_PRIORITY_DEFINED
+  - BLOCKING_PRIVACY_PRIORITY_SUPPORTED
+  - OUT_OF_SCOPE_REDIRECT_SUPPORTED
+  - RESOLUTION_NOT_APPLIED
+  - NO_RUNTIME_SIDE_EFFECTS
+  - INPUT_NOT_MUTATED
+  - AMBIGUITY_DETECTION_TESTS_CREATED
+  - NO_CONVERSATION_MAPPER_CREATED
+  - NO_RUNTIME_INTEGRATION
+  - NO_WORKSPACE_CHANGES
+  - NO_CHAT_FOUNDATION_CHANGES
+  - NO_FLOW_ADAPTER_CHANGES
+  - NO_UI_CHANGES
+  - NO_COMPONENTS_CREATED
+  - NO_HOOKS_CREATED
+  - NO_ROUTES_CREATED
+  - NO_PRODUCT_FIXTURES_CREATED
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_NO
+  - PHASE_11D_H48_AMBIGUITY_CONVERSATION_MAPPER_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
 
