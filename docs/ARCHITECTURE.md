@@ -1470,3 +1470,43 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
 - PHASE_11D_H45_AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE_READY
 - R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Fase 11D-H45 · Ambiguity Resolution Flow Architecture
+- **Phase Status**: Completed (docs only)
+- **Document**: [AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE.md](./AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE.md)
+- **Changes Made**: Created the architecture document defining the conversational ambiguity resolution flow for the historical import prototype.
+- **Rules applied**: No source code changes, no runtime integration, no UI changes, no flow migration, no import execution.
+- **Summary**:
+  - Defined 14 ambiguity types covering survey scope, naming, type, visibility, dates, files, scales, demographics, dimensions, segments, privacy, duplicates, and out-of-scope requests.
+  - Defined 11-state finite flow from `no_ambiguity` to `blocked_until_user_clarifies`.
+  - Defined conversation pattern with thinking + explanation + numbered options + text response.
+  - Defined resolution rules for number, text, ambiguous, out-of-scope, privacy, and import handling.
+  - Defined boundaries with Chat Foundation (render-only), Flow Adapter (translation-only), and Workspace (domain state + orchestration).
+  - Enforced privacy and security invariants: NO_PII_VISIBLE, NO_RAW_ROWS_VISIBLE, NO_OPEN_TEXT_VISIBLE, etc.
+  - Defined roadmap for H46–H51 future implementation phases.
+  - Defined H46 criteria for creating ambiguity resolution types if authorized.
+- **Markers**:
+  - PHASE_11D_H45_AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE_COMPLETE
+  - AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE_LOCKED
+  - AMBIGUITY_TYPES_DEFINED
+  - AMBIGUITY_STATES_DEFINED
+  - AMBIGUITY_CONVERSATION_PATTERN_DEFINED
+  - AMBIGUITY_RESOLUTION_RULES_DEFINED
+  - CHAT_FOUNDATION_BOUNDARY_DEFINED
+  - FLOW_ADAPTER_BOUNDARY_DEFINED
+  - WORKSPACE_BOUNDARY_DEFINED
+  - PRIVACY_RULES_DEFINED
+  - OUT_OF_SCOPE_RULES_DEFINED
+  - H46_CRITERIA_DEFINED
+  - NO_SRC_CHANGES
+  - NO_RUNTIME_INTEGRATION
+  - NO_UI_CHANGES
+  - NO_FLOW_MIGRATION
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_NO
+  - PHASE_11D_H46_AMBIGUITY_RESOLUTION_TYPES_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
+

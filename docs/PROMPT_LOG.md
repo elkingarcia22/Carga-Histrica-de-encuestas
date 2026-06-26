@@ -40,6 +40,46 @@ VISIBLE_UI_CHECKPOINT_NO_UNLESS_VISIBLE_CHANGE
 PHASE_11D_H45_AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Fase 11D-H45 · Ambiguity Resolution Flow Architecture
+
+Phase: Fase 11D-H45 · Ambiguity Resolution Flow Architecture
+
+Summary:
+- Locked architecture for conversational ambiguity resolution flow during historical import preparation.
+- Defined 14 ambiguity types covering all known detection scenarios.
+- Defined 11-state finite flow with deterministic progression.
+- Defined conversation pattern: thinking + explanation + numbered options + text-only response.
+- Defined resolution rules for valid number, equivalent text, ambiguous text, out-of-scope, privacy, and import execution requests.
+- Defined strict boundaries: Chat Foundation (render-only), Flow Adapter (translation-only), Workspace (domain state + orchestration).
+- Enforced privacy invariants: NO_PII_VISIBLE, NO_RAW_ROWS_VISIBLE, NO_OPEN_TEXT_VISIBLE, NO_WORKBOOK_DUMP_VISIBLE, NO_REAL_CLIENT_DATA, NO_EXTERNAL_API, NO_IMPORT_EXECUTION.
+- Defined future roadmap (H46–H51) and H46 criteria for type creation if authorized.
+- No source code changes, no runtime integration, no UI changes, no flow migration, no import execution.
+
+PHASE_11D_H45_AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE_COMPLETE
+AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE_LOCKED
+AMBIGUITY_TYPES_DEFINED
+AMBIGUITY_STATES_DEFINED
+AMBIGUITY_CONVERSATION_PATTERN_DEFINED
+AMBIGUITY_RESOLUTION_RULES_DEFINED
+CHAT_FOUNDATION_BOUNDARY_DEFINED
+FLOW_ADAPTER_BOUNDARY_DEFINED
+WORKSPACE_BOUNDARY_DEFINED
+PRIVACY_RULES_DEFINED
+OUT_OF_SCOPE_RULES_DEFINED
+H46_CRITERIA_DEFINED
+NO_SRC_CHANGES
+NO_RUNTIME_INTEGRATION
+NO_UI_CHANGES
+NO_FLOW_MIGRATION
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H46_AMBIGUITY_RESOLUTION_TYPES_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H44-H14 · Controlled Runtime Integration Build
 
 Phase: Fase 11D-H44-H14 · Controlled Runtime Integration Build
