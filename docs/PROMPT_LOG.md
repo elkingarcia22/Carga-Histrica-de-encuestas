@@ -129,6 +129,35 @@ PHASE_11D_H48_READY_FOR_CLOSURE
 
 R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Fase 11D-H48-H2 · Revert Unauthorized Vitest Config Change
+
+Phase: Fase 11D-H48-H2 · Revert Unauthorized Vitest Config Change
+
+Summary:
+- Reverted `vitest.config.ts` to remove `src/**/__tests__/**/*.test.ts` from include pattern, restoring pre-H48-H1 state.
+- Updated `docs/QA_CHECKLIST.md` with H48-H2 revert section.
+- Updated `docs/PROMPT_LOG.md` with this entry.
+- No conversation mapper logic changed. No detection logic changed. No runtime integration. No UI changes.
+- Build passed. All ESLint scopes passed. Authorized src test still present. No root tests remaining.
+
+VITEST_CONFIG_REVERTED = YES
+AMBIGUITY_CONVERSATION_SRC_TEST_STILL_PRESENT = YES
+ROOT_TESTS_REMAIN_REMOVED = YES
+QA_CHECKLIST_REMAINS_UPDATED = YES
+
+PHASE_11D_H48_H2_VITEST_CONFIG_REVERT_COMPLETE
+NO_CONVERSATION_MAPPER_LOGIC_CHANGES
+NO_DETECTION_LOGIC_CHANGES
+NO_TEST_CONFIG_SCOPE_EXPANSION
+NO_RUNTIME_INTEGRATION
+NO_WORKSPACE_CHANGES
+NO_CHAT_FOUNDATION_CHANGES
+NO_FLOW_ADAPTER_CHANGES
+NO_UI_CHANGES
+NO_ROOT_TESTS_REMAINING
+
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H46 · Ambiguity Resolution Types
 
 Phase: Fase 11D-H46 · Ambiguity Resolution Types
