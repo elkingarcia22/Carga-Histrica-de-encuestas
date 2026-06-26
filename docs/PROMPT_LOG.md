@@ -40,6 +40,65 @@ VISIBLE_UI_CHECKPOINT_NO_UNLESS_VISIBLE_CHANGE
 PHASE_11D_H45_AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE_READY
 R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Fase 11D-H46 · Ambiguity Resolution Types
+
+Phase: Fase 11D-H46 · Ambiguity Resolution Types
+
+Summary:
+- Created pure TypeScript type contracts for the Ambiguity Resolution Flow within the Conversational Historical Import Wizard.
+- Created `src/features/historical-import/conversational-import/ambiguity-resolution/ambiguityResolutionTypes.ts` with all required contracts.
+- Created `src/features/historical-import/conversational-import/ambiguity-resolution/index.ts` as public barrel export.
+- Defined `AmbiguityType` union with all 14 canonical categories from AMBIGUITY_RESOLUTION_FLOW_ARCHITECTURE.md.
+- Defined `AmbiguitySeverity` (low | medium | high | blocking).
+- Defined `AmbiguityResolutionFlowState` with 11 states.
+- Defined `AmbiguityResolutionOption` with deterministic id, label, optional description, isRecommended, safetyNote. No callbacks, no handlers, no JSX.
+- Defined `AmbiguityExpectedInputKind` (numeric_choice | free_text | confirmation | clarification) and `AmbiguityExpectedInput` with required flag.
+- Defined `AmbiguityPrivacyFlags` (privacyRisk, safeToRender, requiresExplicitConfirmation, redactionApplied).
+- Defined `ActiveAmbiguity` as the primary ambiguity entity. No PII, no raw rows, no open text, no workbook dumps.
+- Defined `AmbiguityResolutionReceived` for user-submitted resolutions. Sanitized input only. No raw file content.
+- Defined `AmbiguityResolutionSnapshot` as point-in-time state compatible with future H47/H48/H49 mappers and Flow Adapter.
+- Updated docs/ARCHITECTURE.md, docs/PROMPT_LOG.md, docs/QA_CHECKLIST.md.
+- Build passed. All ESLint scopes passed. Git diff clean.
+- No UI changes, no runtime integration, no workspace changes, no Chat Foundation changes, no Flow Adapter changes.
+
+PHASE_11D_H46_AMBIGUITY_RESOLUTION_TYPES_COMPLETE
+AMBIGUITY_RESOLUTION_TYPES_CREATED
+AMBIGUITY_RESOLUTION_INDEX_CREATED
+AMBIGUITY_TYPES_UNION_DEFINED
+AMBIGUITY_SEVERITY_DEFINED
+AMBIGUITY_STATES_DEFINED
+AMBIGUITY_OPTION_CONTRACT_DEFINED
+AMBIGUITY_EXPECTED_INPUT_DEFINED
+ACTIVE_AMBIGUITY_CONTRACT_DEFINED
+AMBIGUITY_RESOLUTION_CONTRACT_DEFINED
+AMBIGUITY_SNAPSHOT_CONTRACT_DEFINED
+AMBIGUITY_PRIVACY_FLAGS_DEFINED
+PUBLIC_EXPORTS_DEFINED
+NO_DETECTION_LOGIC_CREATED
+NO_CONVERSATION_MAPPER_CREATED
+NO_RUNTIME_INTEGRATION
+NO_WORKSPACE_CHANGES
+NO_CHAT_FOUNDATION_CHANGES
+NO_FLOW_ADAPTER_CHANGES
+NO_UI_CHANGES
+NO_COMPONENTS_CREATED
+NO_HOOKS_CREATED
+NO_ROUTES_CREATED
+NO_FIXTURES_CREATED
+NO_PII_VISIBLE
+NO_RAW_ROWS_VISIBLE
+NO_OPEN_TEXT_VISIBLE
+NO_WORKBOOK_DUMP_VISIBLE
+NO_REAL_CLIENT_DATA
+NO_IMPORT_EXECUTION
+NO_SANDBOX_IMPORT_RUNTIME
+NO_RESULT_LINK_CREATED
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+VISIBLE_UI_CHECKPOINT_NO
+PHASE_11D_H47_AMBIGUITY_DETECTION_MAPPER_READY
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H45 · Ambiguity Resolution Flow Architecture
 
 Phase: Fase 11D-H45 · Ambiguity Resolution Flow Architecture

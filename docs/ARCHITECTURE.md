@@ -1510,3 +1510,54 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - PHASE_11D_H46_AMBIGUITY_RESOLUTION_TYPES_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Fase 11D-H46 · Ambiguity Resolution Types
+- **Phase Status**: Completed (types only)
+- **Module**: `src/features/historical-import/conversational-import/ambiguity-resolution/`
+- **Files Created**:
+  - `ambiguityResolutionTypes.ts` — Full type contract for the ambiguity resolution flow.
+  - `index.ts` — Public barrel export.
+- **Changes Made**: Created pure TypeScript type contracts for the Ambiguity Resolution Flow. No runtime logic, no UI, no mappers, no hooks, no routes.
+- **Summary**:
+  - Defined `AmbiguityType` union covering all 14 canonical ambiguity categories.
+  - Defined `AmbiguitySeverity` — `low | medium | high | blocking`.
+  - Defined `AmbiguityResolutionFlowState` — 11-state finite flow.
+  - Defined `AmbiguityResolutionOption` — deterministic id, label, description, isRecommended, safetyNote. No callbacks.
+  - Defined `AmbiguityExpectedInputKind` and `AmbiguityExpectedInput` — supports numeric_choice, free_text, confirmation, clarification. Required flag included.
+  - Defined `AmbiguityPrivacyFlags` — privacyRisk, safeToRender, requiresExplicitConfirmation, redactionApplied.
+  - Defined `ActiveAmbiguity` — primary ambiguity entity contract with all required fields. No PII, no raw rows, no open text.
+  - Defined `AmbiguityResolutionReceived` — resolution submitted by user, sanitized input only.
+  - Defined `AmbiguityResolutionSnapshot` — point-in-time state snapshot compatible with future H47/H48/H49 phases.
+- **Markers**:
+  - PHASE_11D_H46_AMBIGUITY_RESOLUTION_TYPES_COMPLETE
+  - AMBIGUITY_RESOLUTION_TYPES_CREATED
+  - AMBIGUITY_RESOLUTION_INDEX_CREATED
+  - AMBIGUITY_TYPES_UNION_DEFINED
+  - AMBIGUITY_SEVERITY_DEFINED
+  - AMBIGUITY_STATES_DEFINED
+  - AMBIGUITY_OPTION_CONTRACT_DEFINED
+  - AMBIGUITY_EXPECTED_INPUT_DEFINED
+  - ACTIVE_AMBIGUITY_CONTRACT_DEFINED
+  - AMBIGUITY_RESOLUTION_CONTRACT_DEFINED
+  - AMBIGUITY_SNAPSHOT_CONTRACT_DEFINED
+  - AMBIGUITY_PRIVACY_FLAGS_DEFINED
+  - PUBLIC_EXPORTS_DEFINED
+  - NO_DETECTION_LOGIC_CREATED
+  - NO_CONVERSATION_MAPPER_CREATED
+  - NO_RUNTIME_INTEGRATION
+  - NO_WORKSPACE_CHANGES
+  - NO_CHAT_FOUNDATION_CHANGES
+  - NO_FLOW_ADAPTER_CHANGES
+  - NO_UI_CHANGES
+  - NO_COMPONENTS_CREATED
+  - NO_HOOKS_CREATED
+  - NO_ROUTES_CREATED
+  - NO_FIXTURES_CREATED
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_NO
+  - PHASE_11D_H47_AMBIGUITY_DETECTION_MAPPER_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
