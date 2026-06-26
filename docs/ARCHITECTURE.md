@@ -1702,3 +1702,23 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - NO_ROOT_TESTS_REMAINING
   - PHASE_11D_H48_READY_FOR_CLOSURE
 
+## Fase 11D-H48-DG1 · Test Discovery Scope Decision Gate
+- **Phase Status**: Completed (decision gate)
+- **Problem**: H48-H2 reverted the vitest config scope expansion, leaving the authorized test at `src/.../__tests__/ambiguityConversationMapper.test.ts` undiscoverable by the runner. H48 could not close with `AMBIGUITY_CONVERSATION_TEST_PASSED = NO`.
+- **Decision**: Approve minimal `vitest.config.ts` expansion to `src/features/**/__tests__/**/*.test.ts` — scoped to `src/features` only, not the entire `src/` tree. No aliases, environment, setup files, or coverage changes.
+- **Changes Made**:
+  - Updated `vitest.config.ts` include pattern: `'src/features/**/__tests__/**/*.test.ts'` added alongside existing `'tests/**/*.test.ts'`.
+  - No product logic changes. No runtime integration. No UI changes. No test file changes.
+- **Markers**:
+  - PHASE_11D_H48_DG1_TEST_DISCOVERY_SCOPE_DECISION_GATE_COMPLETE
+  - SRC_FEATURES_TEST_DISCOVERY_APPROVED
+  - VITEST_CONFIG_SCOPE_EXPANSION_MINIMAL
+  - AUTHORIZED_SRC_TEST_DISCOVERABLE
+  - NO_ROOT_TESTS_CREATED
+  - NO_RUNTIME_INTEGRATION
+  - NO_WORKSPACE_CHANGES
+  - NO_CHAT_FOUNDATION_CHANGES
+  - NO_FLOW_ADAPTER_CHANGES
+  - NO_UI_CHANGES
+  - PHASE_11D_H48_READY_FOR_CLOSURE
+

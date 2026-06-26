@@ -7,7 +7,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8'
     },
-    include: ['tests/**/*.test.ts'],
+    include: ['tests/**/*.test.ts', 'src/features/**/__tests__/**/*.test.ts'],
     exclude: ['node_modules', 'dist', 'coverage']
   }
 });

@@ -158,6 +158,32 @@ NO_ROOT_TESTS_REMAINING
 
 R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Fase 11D-H48-DG1 · Test Discovery Scope Decision Gate
+
+Phase: Fase 11D-H48-DG1 · Test Discovery Scope Decision Gate
+
+Summary:
+- Approved and applied minimal `vitest.config.ts` expansion: `'src/features/**/__tests__/**/*.test.ts'`.
+- Authorized test at `src/.../ambiguity-resolution/__tests__/ambiguityConversationMapper.test.ts` is now discoverable.
+- All 66 regression tests pass. No root tests created. No product logic changes.
+- docs/ARCHITECTURE.md updated with DG1 section.
+- docs/QA_CHECKLIST.md updated with DG1 section.
+- docs/PROMPT_LOG.md updated with this entry.
+
+PHASE_11D_H48_DG1_TEST_DISCOVERY_SCOPE_DECISION_GATE_COMPLETE
+SRC_FEATURES_TEST_DISCOVERY_APPROVED
+VITEST_CONFIG_SCOPE_EXPANSION_MINIMAL
+AUTHORIZED_SRC_TEST_DISCOVERABLE
+NO_ROOT_TESTS_CREATED
+NO_RUNTIME_INTEGRATION
+NO_WORKSPACE_CHANGES
+NO_CHAT_FOUNDATION_CHANGES
+NO_FLOW_ADAPTER_CHANGES
+NO_UI_CHANGES
+PHASE_11D_H48_READY_FOR_CLOSURE
+
+R1H5_DEFINED_BUT_NOT_TRIGGERED
+
 ## Fase 11D-H46 · Ambiguity Resolution Types
 
 Phase: Fase 11D-H46 · Ambiguity Resolution Types
