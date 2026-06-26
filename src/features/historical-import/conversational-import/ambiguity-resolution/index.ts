@@ -1,8 +1,8 @@
 /**
- * Phase 11D-H46/H47 · Ambiguity Resolution — Public Exports
+ * Phase 11D-H46/H47/H48 · Ambiguity Resolution — Public Exports
  *
  * Exports the public type contracts needed by future phases:
- * - H47 · Ambiguity Detection Mapper (this phase)
+ * - H47 · Ambiguity Detection Mapper
  * - H48 · Ambiguity Conversation Mapper
  * - H49 · Ambiguity Runtime Integration
  *
@@ -48,3 +48,6 @@ export type {
 
 // H47 mapper function
 export { detectHistoricalImportAmbiguities } from './ambiguityDetectionMapper';
+
+// H48 mapper function
+export { mapAmbiguityResolutionToChatMessages } from './ambiguityConversationMapper';

@@ -1613,3 +1613,67 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - PHASE_11D_H48_AMBIGUITY_CONVERSATION_MAPPER_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Fase 11D-H48 · Ambiguity Conversation Mapper
+- **Phase Status**: Completed (pure mapper, no runtime integration)
+- **Module**: `src/features/historical-import/conversational-import/ambiguity-resolution/`
+- **Files Created**:
+  - `ambiguityConversationMapper.ts` — Pure conversation mapper.
+  - `src/.../ambiguity-resolution/__tests__/ambiguityConversationMapper.test.ts` — Unit tests.
+- **Files Modified**:
+  - `index.ts` — Extended to export H48 mapper function.
+- **Changes Made**: Created `mapAmbiguityResolutionToChatMessages`, a pure deterministic mapper that receives an `AmbiguityResolutionSnapshot` and returns an ordered array of `ChatFoundationMessage` instances. No runtime integration, no UI, no side effects.
+- **Summary**:
+  - When no `activeAmbiguity` exists, returns an empty array.
+  - When an ambiguity is active, produces 9 message types in stable order.
+  - Thinking message appears first (assistant, thinking kind).
+  - Explanation message contains the user-facing explanation (plain_text).
+  - Impact message rendered as safe_details with impactSummary content.
+  - Numbered options rendered as plain text with "1. Label (Recomendado)" format.
+  - Question message adapts to expectedInput.kind (numeric_choice, free_text, confirmation, clarification).
+  - Expected input hint as plain text describing the required response format.
+  - Privacy warning rendered as warning message when privacyRisk is true.
+  - Blocking error rendered as error/blocked for blocking severity (excluding OutOfScope).
+  - Safe redirect rendered as handoff for OutOfScopeRequestAmbiguity.
+  - All IDs deterministic (amb-conv-{ambiguityId}-assistant-{kind}).
+  - No resolution applied. No runtime integration. No UI changes.
+  - 18 unit tests cover all required scenarios.
+- **Markers**:
+  - PHASE_11D_H48_AMBIGUITY_CONVERSATION_MAPPER_COMPLETE
+  - AMBIGUITY_CONVERSATION_MAPPER_CREATED
+  - AMBIGUITY_CONVERSATION_MAPPER_EXPORTED
+  - CHAT_FOUNDATION_MESSAGE_CONTRACT_USED
+  - ACTIVE_AMBIGUITY_TO_MESSAGES_SUPPORTED
+  - NO_AMBIGUITY_STATE_SUPPORTED
+  - THINKING_BEFORE_AGENT_MESSAGE_SUPPORTED
+  - AMBIGUITY_EXPLANATION_RENDERED
+  - IMPACT_SUMMARY_RENDERED
+  - NUMBERED_OPTIONS_RENDERED_AS_TEXT
+  - EXPECTED_INPUT_RENDERED_AS_TEXT
+  - PRIVACY_WARNING_RENDERED
+  - BLOCKING_AMBIGUITY_RENDERED_SAFELY
+  - OUT_OF_SCOPE_REDIRECT_RENDERED_SAFELY
+  - MESSAGE_IDS_DETERMINISTIC
+  - INPUT_NOT_MUTATED
+  - NO_RESOLUTION_APPLIED
+  - NO_RUNTIME_SIDE_EFFECTS
+  - AMBIGUITY_CONVERSATION_TESTS_CREATED
+  - NO_DETECTION_LOGIC_CHANGES
+  - NO_RUNTIME_INTEGRATION
+  - NO_WORKSPACE_CHANGES
+  - NO_CHAT_FOUNDATION_CORE_CHANGES
+  - NO_FLOW_ADAPTER_CHANGES
+  - NO_UI_CHANGES
+  - NO_COMPONENTS_CREATED
+  - NO_HOOKS_CREATED
+  - NO_ROUTES_CREATED
+  - NO_PRODUCT_FIXTURES_CREATED
+  - NO_ROOT_TESTS_CREATED
+  - NO_IMPORT_EXECUTION
+  - NO_SANDBOX_IMPORT_RUNTIME
+  - NO_RESULT_LINK_CREATED
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - VISIBLE_UI_CHECKPOINT_NO
+  - PHASE_11D_H49_AMBIGUITY_RUNTIME_INTEGRATION_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
