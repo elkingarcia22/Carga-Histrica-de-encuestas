@@ -13011,3 +13011,10 @@ TEST_MOVED_TO_AUTHORIZED_TESTS_FOLDER
 UNAUTHORIZED_TESTS_FOLDER_REMOVED
 QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 
+
+## Phase 11F-E: Conversational Question Editing Mapper
+- Created `questionScaleDimensionEditingMapper.ts`
+- Added types and intents (`view_overview`, `change_question_dimension`, etc.)
+- Exported from `index.ts`
+- Implemented tests for all commands and sanitization
+- Completed Phase 11F-E

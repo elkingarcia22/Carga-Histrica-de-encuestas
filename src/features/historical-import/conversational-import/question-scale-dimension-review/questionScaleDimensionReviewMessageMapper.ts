@@ -1,11 +1,11 @@
-import {
+import type {
   ConversationalOverview,
   DimensionGroupEntry,
   NeedsReviewEntry,
   QuestionDetailView,
   SectionConfirmationState,
 } from './questionScaleDimensionReviewMapper';
-import {
+import type {
   QuestionReviewConversationResponse,
   ConversationSection,
   QuestionType,
@@ -158,7 +158,7 @@ export function mapQuestionReviewQuestionDetailToConversation(
   // Map detailed scale text as requested
   if (detail.scaleType === 'likert_5') {
     contentLines.push('Detalle: Muy en desacuerdo · En desacuerdo · Neutral · De acuerdo · Muy de acuerdo');
-  } else if (detail.scaleType === 'nps_0_10' || detail.scaleType === 'nps' || detail.scaleType === 'enps') {
+  } else if (detail.scaleType === 'nps_0_10') {
     contentLines.push('Detalle: 0 a 10 · Detractores 0–6 · Pasivos 7–8 · Promotores 9–10');
   } else if (detail.scaleDetailAnchorsText && detail.scaleDetailAnchorsText !== 'N/A') {
     contentLines.push(`Detalle: ${detail.scaleDetailAnchorsText}`);

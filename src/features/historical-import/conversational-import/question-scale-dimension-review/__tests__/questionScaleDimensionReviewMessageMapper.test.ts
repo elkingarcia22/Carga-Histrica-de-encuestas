@@ -6,7 +6,7 @@ import {
   mapQuestionReviewQuestionDetailToConversation,
   mapQuestionReviewConfirmationStateToConversation,
 } from '../questionScaleDimensionReviewMessageMapper';
-import {
+import type {
   ConversationalOverview,
   DimensionGroupEntry,
   NeedsReviewEntry,
@@ -27,8 +27,8 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
         canConfirmSection: false,
         blockingIssues: ['7 pregunta(s) requieren revisión'],
         suggestedCommands: [
-          { command: 'ver preguntas por dimensión' },
-          { command: 'ver preguntas que requieren revisión' },
+          { command: 'ver preguntas por dimensión', description: 'Ver preguntas por dimensión' },
+          { command: 'ver preguntas que requieren revisión', description: 'Ver preguntas que requieren revisión' },
         ],
       };
 
@@ -57,7 +57,7 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
         needsReviewCount: 0,
         canConfirmSection: true,
         blockingIssues: [],
-        suggestedCommands: [{ command: 'confirmar esta sección' }],
+        suggestedCommands: [{ command: 'confirmar esta sección', description: 'Confirmar' }],
       };
 
       const result = mapQuestionReviewOverviewToConversation(overview);
