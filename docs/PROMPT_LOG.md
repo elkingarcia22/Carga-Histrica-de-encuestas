@@ -1,3 +1,49 @@
+## Fase 11F-F · Question Review Workspace Integration
+
+Phase: Phase 11F-F · Question Review Workspace Integration
+
+Summary:
+- Integrated the conversational question, scale, and dimension review into the step `1/7 · Preguntas y escalas` of `ConversationalImportWorkspace.tsx`.
+- Replaced the simple aggregated summary with a fully interactive, text-driven review of questions, scales, and dimensions, operating strictly on local mock/sanitized state.
+- Supported reading commands by text (`ver resumen`, `ver preguntas por dimensión`, `ver preguntas que requieren revisión`, `ver pregunta 3`).
+- Supported editing commands by text in local mock state (`cambia la dimensión de la pregunta 3 a Liderazgo`, `asigna la pregunta 5 a Compromiso`, `la pregunta 8 es NPS`, `la pregunta 10 es abierta`, `ajusta la escala de la pregunta 5 a Likert 5`, `la pregunta 9 usa NPS 0 a 10`, `confirma la pregunta 4`).
+- Supported section confirmation checks and transitioned to demographics step.
+- Handled ambiguous and invalid inputs with Spanish clarifications.
+- Zero any/as any, Date, random, storage, API, or dashboard changes.
+- Build, lint, and all tests pass cleanly.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11F_F_QUESTION_REVIEW_WORKSPACE_INTEGRATION_COMPLETE
+QUESTION_REVIEW_WORKSPACE_INTEGRATION_COMPLETE
+QUESTION_REVIEW_VISIBLE_IN_STEP_1
+STEP_1_SHOWS_QUESTION_REVIEW_OVERVIEW
+STEP_1_SHOWS_TOTAL_QUESTIONS
+STEP_1_SHOWS_DIMENSION_GROUPS
+STEP_1_SHOWS_SCALE_TYPES
+STEP_1_SHOWS_NEEDS_REVIEW_SUMMARY
+STEP_1_SHOWS_TEXT_COMMAND_SUGGESTIONS
+VIEW_OVERVIEW_COMMAND_WORKS
+VIEW_BY_DIMENSION_COMMAND_WORKS
+VIEW_NEEDS_REVIEW_COMMAND_WORKS
+VIEW_QUESTION_DETAIL_COMMAND_WORKS
+CHANGE_DIMENSION_COMMAND_WORKS_IN_LOCAL_STATE
+CHANGE_QUESTION_TYPE_COMMAND_WORKS_IN_LOCAL_STATE
+CHANGE_SCALE_TYPE_COMMAND_WORKS_IN_LOCAL_STATE
+CONFIRM_QUESTION_COMMAND_WORKS_IN_LOCAL_STATE
+CONFIRM_SECTION_COMMAND_HANDLED
+AMBIGUOUS_INPUT_HANDLED
+INVALID_INPUT_HANDLED
+LOCAL_SANITIZED_MOCK_STATE_ONLY
+ALL_ACTIONS_BY_CHAT_TEXT_ONLY
+NO_ACTION_BUTTONS_FOR_REVIEW
+NO_SIDE_PANEL_EDITOR
+NO_EXTERNAL_REVIEW_TAB
+NO_FORM_MODE_EDITOR
+VISIBLE_UI_CHANGE_INTRODUCED
+VISUAL_REVIEW_REQUIRED
+PHASE_11F_G_VISUAL_QA_READY
+
 ## Fase 11F-A · Question Scale Dimension Review Architecture
 
 Phase: Phase 11F-A · Question Scale Dimension Review Architecture

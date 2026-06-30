@@ -46,6 +46,27 @@ import {
 } from "./conversationalGeneralConfigMapper";
 import { getDimensionsList } from "./conversationalEditingMapper";
 import { getMatchReviewSectionMessage } from "./conversationalMatchReviewMapper";
+import {
+  mapQuestionReviewToConversationalOverview,
+  mapQuestionReviewToDimensionGroups,
+  mapQuestionReviewToNeedsReviewList,
+  mapQuestionReviewToQuestionDetail,
+  mapQuestionReviewToSectionConfirmationState,
+  mapQuestionReviewOverviewToConversation,
+  mapQuestionReviewNeedsReviewToConversation,
+  mapQuestionReviewQuestionDetailToConversation,
+  mapQuestionReviewConfirmationStateToConversation,
+  mapQuestionReviewUserTextToEditingIntent,
+  questionScaleDimensionReviewMockData37,
+  type QuestionReviewItem,
+  type QuestionReviewStepSummary,
+  type QuestionReviewConversationResponse,
+  type CriticalIssue,
+  type DimensionSummary,
+  type ScaleTypeSummary,
+  type ScaleType,
+  type ScaleDetail,
+} from "./question-scale-dimension-review";
 import type { ConversationalGeneralConfiguration, ConversationalImportWizardStateId, ConversationalSurveyScope } from "./conversationalWizardTypes";
 import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -187,6 +208,220 @@ export function ConversationalImportWorkspace() {
   const [activeAmbiguity, setActiveAmbiguity] = useState<ActiveAmbiguity | null>(null);
   const [isProcessingNextStep, setIsProcessingNextStep] = useState(false);
   const sandboxFileInputRef = useRef<HTMLInputElement>(null);
+
+  const [questionReviewData, setQuestionReviewData] = useState<QuestionReviewItem[]>(() => {
+    const rawQuestions = [...questionScaleDimensionReviewMockData37.questions];
+    // Modify some questions to trigger needs_review status dynamically
+    rawQuestions[2] = { ...rawQuestions[2], status: 'needs_review', reviewNotes: 'Verificar si corresponde a Liderazgo o Comunicación.' }; // q_3
+    rawQuestions[4] = { ...rawQuestions[4], status: 'needs_review', scaleType: 'unknown', reviewNotes: 'Escala no determinada automáticamente.' }; // q_5
+    rawQuestions[7] = { ...rawQuestions[7], status: 'needs_review', reviewNotes: 'Revisión manual requerida.' }; // q_8
+    return rawQuestions;
+  });
+
+  const getScaleDetailByScaleType = (scaleType: ScaleType): ScaleDetail => {
+    switch (scaleType) {
+      case 'likert_5':
+        return {
+          scaleLabel: 'Likert 5 puntos',
+          scaleValueRange: '1–5',
+          scaleAnchors: ['Muy en desacuerdo', 'En desacuerdo', 'Neutral', 'De acuerdo', 'Muy de acuerdo'],
+          scoreDirection: 'positive_up',
+          favorableValues: [4, 5],
+          neutralValues: [3],
+          unfavorableValues: [1, 2],
+        };
+      case 'likert_7':
+        return {
+          scaleLabel: 'Likert 7 puntos',
+          scaleValueRange: '1–7',
+          scaleAnchors: [
+            'Totalmente en desacuerdo',
+            'En desacuerdo',
+            'Parcialmente en desacuerdo',
+            'Neutral',
+            'Parcialmente de acuerdo',
+            'De acuerdo',
+            'Totalmente de acuerdo',
+          ],
+          scoreDirection: 'positive_up',
+          favorableValues: [6, 7],
+          neutralValues: [4],
+          unfavorableValues: [1, 2, 3],
+        };
+      case 'nps_0_10':
+        return {
+          scaleLabel: 'NPS 0–10',
+          scaleValueRange: '0–10',
+          scaleAnchors: ['0 a 10 · Detractores 0–6 · Pasivos 7–8 · Promotores 9–10'],
+          scoreDirection: 'positive_up',
+          favorableValues: [9, 10],
+          neutralValues: [7, 8],
+          unfavorableValues: [0, 1, 2, 3, 4, 5, 6],
+        };
+      case 'binary_yes_no':
+        return {
+          scaleLabel: 'Binaria Sí/No',
+          scaleValueRange: '0–1',
+          scaleAnchors: ['No', 'Sí'],
+          scoreDirection: 'positive_up',
+          favorableValues: [1],
+          neutralValues: [],
+          unfavorableValues: [0],
+        };
+      case 'frequency':
+        return {
+          scaleLabel: 'Frecuencia',
+          scaleValueRange: '1–5',
+          scaleAnchors: ['Nunca', 'Rara vez', 'A veces', 'Frecuentemente', 'Siempre'],
+          scoreDirection: 'positive_up',
+          favorableValues: [4, 5],
+          neutralValues: [3],
+          unfavorableValues: [1, 2],
+        };
+      case 'not_applicable':
+        return {
+          scaleLabel: 'No aplica',
+          scaleValueRange: 'N/A',
+          scaleAnchors: [],
+          scoreDirection: 'positive_up',
+          favorableValues: [],
+          neutralValues: [],
+          unfavorableValues: [],
+        };
+      default:
+        return {
+          scaleLabel: 'No determinado',
+          scaleValueRange: 'unknown',
+          scaleAnchors: [],
+          scoreDirection: 'positive_up',
+          favorableValues: [],
+          neutralValues: [],
+          unfavorableValues: [],
+        };
+    }
+  };
+
+  const recalculateSummary = (questions: QuestionReviewItem[]): QuestionReviewStepSummary => {
+    const totalQuestions = questions.length;
+    const alignedQuestions = questions.filter(q => q.status === 'aligned').length;
+    const needsReviewQuestions = questions.filter(q => q.status === 'needs_review').length;
+    const newQuestions = questions.filter(q => q.status === 'new_question').length;
+    const uninterpretableQuestions = questions.filter(q => q.status === 'uninterpretable').length;
+
+    const dimMap = new Map<string, { name: string; count: number; scale: ScaleType }>();
+    const scaleMap = new Map<ScaleType, number>();
+    const criticalIssues: CriticalIssue[] = [];
+
+    questions.forEach(q => {
+      const dimKey = q.dimensionAssignment.dimensionId;
+      if (dimMap.has(dimKey)) {
+        const entry = dimMap.get(dimKey)!;
+        entry.count++;
+      } else {
+        dimMap.set(dimKey, {
+          name: q.dimensionAssignment.dimensionName,
+          count: 1,
+          scale: q.scaleType,
+        });
+      }
+
+      const scaleKey = q.scaleType;
+      scaleMap.set(scaleKey, (scaleMap.get(scaleKey) || 0) + 1);
+
+      if (q.questionType === 'unknown') {
+        criticalIssues.push({
+          questionId: q.questionId,
+          displayIndex: q.displayIndex,
+          issueType: 'missing_question_type',
+          description: `Pregunta #${q.displayIndex}: tipo de pregunta no definido`,
+        });
+      }
+      if (q.scaleType === 'unknown' && q.questionType !== 'open_text') {
+        criticalIssues.push({
+          questionId: q.questionId,
+          displayIndex: q.displayIndex,
+          issueType: 'missing_scale_type',
+          description: `Pregunta #${q.displayIndex}: escala no asignada`,
+        });
+      }
+      if (q.dimensionAssignment.source === 'not_assigned') {
+        criticalIssues.push({
+          questionId: q.questionId,
+          displayIndex: q.displayIndex,
+          issueType: 'missing_dimension',
+          description: `Pregunta #${q.displayIndex}: dimensión no asignada`,
+        });
+      }
+      if (q.status === 'uninterpretable') {
+        criticalIssues.push({
+          questionId: q.questionId,
+          displayIndex: q.displayIndex,
+          issueType: 'uninterpretable',
+          description: `Pregunta #${q.displayIndex}: no interpretable`,
+        });
+      }
+      if (q.status === 'needs_review') {
+        criticalIssues.push({
+          questionId: q.questionId,
+          displayIndex: q.displayIndex,
+          issueType: 'needs_review',
+          description: `Pregunta #${q.displayIndex}: requiere revisión`,
+        });
+      }
+    });
+
+    const questionsByDimension: DimensionSummary[] = Array.from(dimMap.entries()).map(
+      ([dimensionId, entry]) => ({
+        dimensionId,
+        dimensionName: entry.name,
+        questionCount: entry.count,
+        scaleType: entry.scale,
+      }),
+    );
+
+    const questionsByScaleType: ScaleTypeSummary[] = Array.from(scaleMap.entries()).map(
+      ([scaleType, questionCount]) => ({
+        scaleType,
+        questionCount,
+      }),
+    );
+
+    const canConfirmSection =
+      criticalIssues.length === 0 &&
+      questions.every(q => q.questionType !== 'unknown') &&
+      questions
+        .filter(q => q.questionType !== 'open_text')
+        .every(q => q.scaleType !== 'unknown' && q.scaleType !== 'not_applicable');
+
+    return {
+      totalQuestions,
+      alignedQuestions,
+      needsReviewQuestions,
+      newQuestions,
+      uninterpretableQuestions,
+      questionsByDimension,
+      questionsByScaleType,
+      criticalIssues,
+      canConfirmSection,
+    };
+  };
+
+  const formatConversationResponse = (resp: QuestionReviewConversationResponse): string => {
+    const parts: string[] = [];
+    if (resp.title) {
+      parts.push(`**${resp.title}**`);
+    }
+    if (resp.intro) {
+      parts.push(resp.intro);
+    }
+    resp.sections.forEach(sec => {
+      parts.push(sec.content);
+    });
+    if (resp.suggestedTextCommands && resp.suggestedTextCommands.length > 0) {
+      parts.push(`Puedes responder:\n${resp.suggestedTextCommands.join('\n')}`);
+    }
+    return parts.join('\n\n');
+  };
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
@@ -648,7 +883,10 @@ export function ConversationalImportWorkspace() {
               ], { keepThinkingAfter: true }).then(() => {
                 setTimeout(() => {
                   setConversationalEditState("reviewing_questions_and_scales");
-                  const qsMsg = getMatchReviewSectionMessage("questions_and_scales", scope, false);
+                  const currentSummary = recalculateSummary(questionReviewData);
+                  const overviewObj = mapQuestionReviewToConversationalOverview(questionReviewData, currentSummary);
+                  const convResponse = mapQuestionReviewOverviewToConversation(overviewObj);
+                  const qsMsg = formatConversationResponse(convResponse);
                   void simulateChatFlow([
                     { id: `msg_assistant_qs_${generateId()}`, role: "assistant", type: "text", content: qsMsg, timestamp: "2025-01-01T12:00:00.000Z" }
                   ]);
@@ -698,13 +936,255 @@ export function ConversationalImportWorkspace() {
           }
 
           if (conversationalEditState === "reviewing_questions_and_scales") {
-            if (intent === "confirm_general_config" || intent === "ambiguous_confirmation") {
-              setConversationalEditState("reviewing_demographics");
-              const msg = getMatchReviewSectionMessage("demographics", scope, false);
-              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-            } else {
-              void simulateChatFlow([{ id: `msg_assistant_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor responde 'confirmar' o 'ver detalles'.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+            const intentObj = mapQuestionReviewUserTextToEditingIntent(text);
+
+            if (intentObj.intent === "view_overview") {
+              const summaryObj = recalculateSummary(questionReviewData);
+              const overviewObj = mapQuestionReviewToConversationalOverview(questionReviewData, summaryObj);
+              const convResponse = mapQuestionReviewOverviewToConversation(overviewObj);
+              const msg = formatConversationResponse(convResponse);
+              void simulateChatFlow([{ id: `msg_assistant_qs_overview_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
             }
+
+            if (intentObj.intent === "view_by_dimension") {
+              const groups = mapQuestionReviewToDimensionGroups(questionReviewData);
+              const sections = groups.map(g => {
+                const scaleLabels = g.scaleTypes.map(st => st === 'likert_5' ? 'Likert 5 puntos' : st === 'nps_0_10' ? 'NPS 0–10' : st).join(', ');
+                return {
+                  type: 'dimension_group' as const,
+                  content: `Dimensión: ${g.dimensionName}\nPreguntas: ${g.questionCount}\nEscalas: ${scaleLabels}\nPor revisar: ${g.needsReviewCount}`
+                };
+              });
+              const convResponse: QuestionReviewConversationResponse = {
+                responseId: `dimension-groups-overview`,
+                intro: `Aquí están las preguntas agrupadas por dimensión:`,
+                sections,
+                suggestedTextCommands: [
+                  "1. Ver preguntas que requieren revisión",
+                  "2. Ver resumen",
+                  "3. Confirmar esta sección"
+                ],
+                status: 'info'
+              };
+              const msg = formatConversationResponse(convResponse);
+              void simulateChatFlow([{ id: `msg_assistant_qs_dims_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+
+            if (intentObj.intent === "view_needs_review") {
+              const needsReviewList = mapQuestionReviewToNeedsReviewList(questionReviewData);
+              const convResponse = mapQuestionReviewNeedsReviewToConversation(needsReviewList);
+              const msg = formatConversationResponse(convResponse);
+              void simulateChatFlow([{ id: `msg_assistant_qs_needs_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+
+            if (intentObj.intent === "view_question_detail") {
+              const index = intentObj.targetQuestionDisplayIndex;
+              if (index === undefined) {
+                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica el número de pregunta (ej: ver pregunta 3).", timestamp: "2025-01-01T12:00:00.000Z" }]);
+                return;
+              }
+              const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
+              if (!detail) {
+                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: `No encontré la pregunta #${index}.`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+                return;
+              }
+              const convResponse = mapQuestionReviewQuestionDetailToConversation(detail);
+              const msg = formatConversationResponse(convResponse);
+              void simulateChatFlow([{ id: `msg_assistant_qs_detail_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+
+            if (intentObj.intent === "change_question_dimension") {
+              const index = intentObj.targetQuestionDisplayIndex;
+              const dimName = intentObj.targetDimensionName;
+              if (index === undefined || !dimName) {
+                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica la pregunta y la dimensión.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+                return;
+              }
+
+              let updatedQuestion: QuestionReviewItem | null = null;
+              setQuestionReviewData(prev => {
+                const next = [...prev];
+                const qIdx = next.findIndex(q => q.displayIndex === index);
+                if (qIdx !== -1) {
+                  next[qIdx] = {
+                    ...next[qIdx],
+                    dimensionAssignment: {
+                      dimensionId: `dim_${dimName.toLowerCase().replace(/\s+/g, '_')}`,
+                      dimensionName: dimName,
+                      source: 'user_corrected',
+                      confidence: 'high'
+                    },
+                    status: 'edited'
+                  };
+                  updatedQuestion = next[qIdx];
+                }
+                return next;
+              });
+
+              setTimeout(() => {
+                if (!updatedQuestion) {
+                  void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: `No encontré la pregunta #${index}.`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+                  return;
+                }
+                const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
+                if (detail) {
+                  detail.dimensionName = dimName;
+                  detail.status = 'edited';
+                  detail.statusLabel = 'Editada';
+                }
+                const msg = `Listo. Actualicé la pregunta ${index} en esta revisión.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel || 'Escala de valoración'}\nTipo de escala: ${detail?.scaleTypeLabel || 'Likert 5 puntos'}\nDimensión: ${dimName}\nEstado: Editada\n\nPuedes responder:\n1. Ver preguntas que requieren revisión\n2. Ver otra pregunta\n3. Confirmar esta sección`;
+                void simulateChatFlow([{ id: `msg_assistant_qs_edit_dim_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              }, 50);
+              return;
+            }
+
+            if (intentObj.intent === "change_question_type") {
+              const index = intentObj.targetQuestionDisplayIndex;
+              const qType = intentObj.targetQuestionType;
+              if (index === undefined || !qType) {
+                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica la pregunta y el tipo de pregunta.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+                return;
+              }
+
+              let updatedQuestion: QuestionReviewItem | null = null;
+              setQuestionReviewData(prev => {
+                const next = [...prev];
+                const qIdx = next.findIndex(q => q.displayIndex === index);
+                if (qIdx !== -1) {
+                  next[qIdx] = {
+                    ...next[qIdx],
+                    questionType: qType,
+                    status: 'edited'
+                  };
+                  updatedQuestion = next[qIdx];
+                }
+                return next;
+              });
+
+              setTimeout(() => {
+                if (!updatedQuestion) {
+                  void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: `No encontré la pregunta #${index}.`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+                  return;
+                }
+                const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
+                if (detail) {
+                  detail.questionType = qType;
+                  detail.questionTypeLabel = qType === 'nps' ? 'NPS' : qType === 'enps' ? 'eNPS' : qType === 'open_text' ? 'Texto abierto' : qType;
+                  detail.status = 'edited';
+                  detail.statusLabel = 'Editada';
+                }
+                const msg = `Listo. Actualicé la pregunta ${index} en esta revisión.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel}\nTipo de escala: ${detail?.scaleTypeLabel}\nDimensión: ${detail?.dimensionName}\nEstado: Editada\n\nPuedes responder:\n1. Ver preguntas que requieren revisión\n2. Ver otra pregunta\n3. Confirmar esta sección`;
+                void simulateChatFlow([{ id: `msg_assistant_qs_edit_type_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              }, 50);
+              return;
+            }
+
+            if (intentObj.intent === "change_scale_type") {
+              const index = intentObj.targetQuestionDisplayIndex;
+              const sType = intentObj.targetScaleType;
+              if (index === undefined || !sType) {
+                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica la pregunta y el tipo de escala.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+                return;
+              }
+
+              let updatedQuestion: QuestionReviewItem | null = null;
+              setQuestionReviewData(prev => {
+                const next = [...prev];
+                const qIdx = next.findIndex(q => q.displayIndex === index);
+                if (qIdx !== -1) {
+                  next[qIdx] = {
+                    ...next[qIdx],
+                    scaleType: sType,
+                    scaleDetail: getScaleDetailByScaleType(sType),
+                    status: 'edited'
+                  };
+                  updatedQuestion = next[qIdx];
+                }
+                return next;
+              });
+
+              setTimeout(() => {
+                if (!updatedQuestion) {
+                  void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: `No encontré la pregunta #${index}.`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+                  return;
+                }
+                const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
+                if (detail) {
+                  detail.scaleType = sType;
+                  detail.scaleTypeLabel = sType === 'likert_5' ? 'Likert 5 puntos' : sType === 'nps_0_10' ? 'NPS 0–10' : sType;
+                  detail.status = 'edited';
+                  detail.statusLabel = 'Editada';
+                }
+                const msg = `Listo. Actualicé la pregunta ${index} en esta revisión.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel}\nTipo de escala: ${detail?.scaleTypeLabel}\nDimensión: ${detail?.dimensionName}\nEstado: Editada\n\nPuedes responder:\n1. Ver preguntas que requieren revisión\n2. Ver otra pregunta\n3. Confirmar esta sección`;
+                void simulateChatFlow([{ id: `msg_assistant_qs_edit_scale_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              }, 50);
+              return;
+            }
+
+            if (intentObj.intent === "confirm_question") {
+              const index = intentObj.targetQuestionDisplayIndex;
+              if (index === undefined) {
+                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica el número de pregunta (ej: confirma la pregunta 4).", timestamp: "2025-01-01T12:00:00.000Z" }]);
+                return;
+              }
+
+              let updatedQuestion: QuestionReviewItem | null = null;
+              setQuestionReviewData(prev => {
+                const next = [...prev];
+                const qIdx = next.findIndex(q => q.displayIndex === index);
+                if (qIdx !== -1) {
+                  next[qIdx] = {
+                    ...next[qIdx],
+                    status: 'confirmed'
+                  };
+                  updatedQuestion = next[qIdx];
+                }
+                return next;
+              });
+
+              setTimeout(() => {
+                if (!updatedQuestion) {
+                  void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: `No encontré la pregunta #${index}.`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+                  return;
+                }
+                const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
+                if (detail) {
+                  detail.status = 'confirmed';
+                  detail.statusLabel = 'Confirmada';
+                }
+                const msg = `Confirmé la pregunta ${index}.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel}\nTipo de escala: ${detail?.scaleTypeLabel}\nDimensión: ${detail?.dimensionName}\nEstado: Confirmada\n\nPuedes responder:\n1. Ver preguntas que requieren revisión\n2. Ver otra pregunta\n3. Confirmar esta sección`;
+                void simulateChatFlow([{ id: `msg_assistant_qs_confirm_q_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              }, 50);
+              return;
+            }
+
+            if (intentObj.intent === "confirm_section") {
+              const currentSummary = recalculateSummary(questionReviewData);
+              if (!currentSummary.canConfirmSection) {
+                const stateObj = mapQuestionReviewToSectionConfirmationState(questionReviewData);
+                const convResponse = mapQuestionReviewConfirmationStateToConversation(stateObj);
+                const msg = formatConversationResponse(convResponse);
+                void simulateChatFlow([{ id: `msg_assistant_qs_blocked_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              } else {
+                setConversationalEditState("reviewing_demographics");
+                const msg = `Sección 1/7 · Preguntas y escalas confirmada.\n\nResumen final:\n• ${currentSummary.totalQuestions} preguntas revisadas\n• ${currentSummary.totalQuestions} preguntas con tipo asignado\n• ${currentSummary.totalQuestions - currentSummary.questionsByScaleType.filter(s => s.scaleType === 'not_applicable').reduce((acc, curr) => acc + curr.questionCount, 0)} preguntas con escala asignada\n• ${currentSummary.questionsByScaleType.filter(s => s.scaleType === 'not_applicable').reduce((acc, curr) => acc + curr.questionCount, 0)} pregunta abierta sin escala\n• ${currentSummary.totalQuestions} preguntas con dimensión\n• 0 preguntas no interpretables\n\nAvanzando a 2/7 · Demográficos...\n\n` + getMatchReviewSectionMessage("demographics", scope, false);
+                void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              }
+              return;
+            }
+
+            if (intentObj.intent === "ambiguous_input" || intentObj.intent === "invalid_input") {
+              const msg = `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“cambia la dimensión de la pregunta 3 a Liderazgo”.`;
+              void simulateChatFlow([{ id: `msg_assistant_qs_amb_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+
+            const msg = `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“cambia la dimensión de la pregunta 3 a Liderazgo”.`;
+            void simulateChatFlow([{ id: `msg_assistant_qs_inv_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
             return;
           }
 
