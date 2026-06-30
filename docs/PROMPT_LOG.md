@@ -75,6 +75,44 @@ NO_DASHBOARD_OR_COMPARISON_CHANGES
 READY_FOR_COMPARISON_OUTPUT_DISABLED
 PHASE_11F_C_READY
 
+## Fase 11F-C · Question Review Mapper
+
+Phase: Phase 11F-C · Question Review Mapper
+
+Summary:
+- Created `questionScaleDimensionReviewMapper.ts` with 6 pure mapper functions: mapQuestionReviewToConversationalOverview, mapQuestionReviewToDimensionGroups, mapQuestionReviewToNeedsReviewList, mapQuestionReviewToQuestionDetail, mapQuestionReviewToScaleDetailText, mapQuestionReviewToSectionConfirmationState.
+- Functions are deterministic, no Date/Math.random/API calls/DOM access.
+- ConversationalOverview returns structured data with header, summary line, dimension lines, counts, blocking issues, and text-based suggested commands.
+- Created 36 tests covering all acceptance criteria including privacy (no PII, raw rows, open text, workbook dump), determinism, immutability, and scale detail edge cases (Likert 5 anchors, NPS 0-10, open_text not_applicable).
+- Updated index.ts to export the mapper.
+- Build, lint, and all 59 module tests pass (23 mock data + 36 mapper).
+
+PHASE_11F_C_QUESTION_REVIEW_MAPPER_COMPLETE
+QUESTION_REVIEW_MAPPER_COMPLETE
+PURE_QUESTION_REVIEW_MAPPER_CREATED
+QUESTION_REVIEW_MAPPER_EXPORTED
+QUESTION_REVIEW_SUMMARY_MAPPED
+QUESTION_REVIEW_DIMENSION_GROUPS_MAPPED
+QUESTION_REVIEW_NEEDS_REVIEW_LIST_MAPPED
+QUESTION_REVIEW_DETAIL_MAPPED
+LIKERT_SCALE_DETAIL_MAPPED
+NPS_SCALE_DETAIL_MAPPED
+SECTION_CONFIRMATION_STATE_MAPPED
+CONVERSATIONAL_COMMAND_SUGGESTIONS_MAPPED
+NO_ACTION_PAYLOADS_CREATED
+DETERMINISTIC_OUTPUT
+INPUT_NOT_MUTATED
+PRIVACY_SAFE_OUTPUT
+QUESTION_REVIEW_MAPPER_TESTS_CREATED
+QUESTION_REVIEW_MAPPER_TESTS_PASSED
+NO_WORKSPACE_INTEGRATION
+NO_RUNTIME_INTEGRATION
+NO_UI_CHANGES
+NO_IMPORT_EXECUTION
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+PHASE_11F_D_READY
+
 ## Fase 11D-H44-H17 · Chat Foundation Runtime Stabilization
 
 Phase: Phase 11D-H44-H17 · Chat Foundation Runtime Stabilization

@@ -2104,6 +2104,48 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
   - PHASE_11F_C_READY
 
+## Phase 11F-C · Question Review Mapper
+- **Phase Status**: Completed
+- **Phase**: Phase 11F-C · Question Review Mapper
+- **Summary**: Created a pure, deterministic mapper that converts the question/scale/dimension mock data contract into structured conversational views ready for future chat responses.
+- **Files Created**:
+  - `src/features/historical-import/conversational-import/question-scale-dimension-review/questionScaleDimensionReviewMapper.ts` — 6 exported pure functions: `mapQuestionReviewToConversationalOverview`, `mapQuestionReviewToDimensionGroups`, `mapQuestionReviewToNeedsReviewList`, `mapQuestionReviewToQuestionDetail`, `mapQuestionReviewToScaleDetailText`, `mapQuestionReviewToSectionConfirmationState`.
+  - `src/features/historical-import/conversational-import/question-scale-dimension-review/__tests__/questionScaleDimensionReviewMapper.test.ts` — 36 tests covering overview, dimension groups, needs review, question detail, scale detail, confirmation state, privacy, determinism, immutability, and edge cases.
+- **Files Modified**:
+  - `src/features/historical-import/conversational-import/question-scale-dimension-review/index.ts` — added `export * from './questionScaleDimensionReviewMapper'`.
+- **Design Decisions**:
+  - Functions are pure, deterministic, no Date, no Math.random, no side effects, no API calls.
+  - ConversationalOverview returns structured data (not strings) so future message composition can consume it as needed.
+  - QuestionDetailView includes human-readable labels (questionTypeLabel, scaleTypeLabel, statusLabel) to avoid duplication in future mappers.
+  - `_questions` parameter kept in `mapQuestionReviewToConversationalOverview` for API consistency (prefixed with underscore as allowed by TS convention).
+  - All 36 tests pass, all lints pass.
+- **Markers**:
+  - PHASE_11F_C_QUESTION_REVIEW_MAPPER_COMPLETE
+  - QUESTION_REVIEW_MAPPER_COMPLETE
+  - PURE_QUESTION_REVIEW_MAPPER_CREATED
+  - QUESTION_REVIEW_MAPPER_EXPORTED
+  - QUESTION_REVIEW_SUMMARY_MAPPED
+  - QUESTION_REVIEW_DIMENSION_GROUPS_MAPPED
+  - QUESTION_REVIEW_NEEDS_REVIEW_LIST_MAPPED
+  - QUESTION_REVIEW_DETAIL_MAPPED
+  - LIKERT_SCALE_DETAIL_MAPPED
+  - NPS_SCALE_DETAIL_MAPPED
+  - SECTION_CONFIRMATION_STATE_MAPPED
+  - CONVERSATIONAL_COMMAND_SUGGESTIONS_MAPPED
+  - NO_ACTION_PAYLOADS_CREATED
+  - DETERMINISTIC_OUTPUT
+  - INPUT_NOT_MUTATED
+  - PRIVACY_SAFE_OUTPUT
+  - QUESTION_REVIEW_MAPPER_TESTS_CREATED
+  - QUESTION_REVIEW_MAPPER_TESTS_PASSED
+  - NO_WORKSPACE_INTEGRATION
+  - NO_RUNTIME_INTEGRATION
+  - NO_UI_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11F_D_READY
+
 ## Phase 11E-H1 · Chat Foundation Thinking Continuity Hotfix
 - **Phase Status**: Completed
 - **Problem**: After "Configuración general confirmada" → "Ahora revisaré el match detectado de la estructura.", the chat showed no thinking indicator between the end of one `simulateChatFlow` batch and the start of the next chained batch (via `.then()` → `setTimeout`). The conversation appeared stuck even though the flow was about to continue.
