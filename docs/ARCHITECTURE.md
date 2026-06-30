@@ -1826,3 +1826,32 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - NO_DASHBOARD_OR_COMPARISON_CHANGES
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
   - PHASE_11D_H53_AMBIGUITY_RESOLUTION_APPLICATION_ARCHITECTURE_READY
+
+## Phase 11D-H53 · Ambiguity Resolution Application Architecture
+- **Phase Status**: Completed (architecture-only — no code changes)
+- **Problem**: After H49 (runtime integration), H50 (visual QA), and H51 (stabilization), the ambiguity chain has detection, conversation, runtime visibility, and runtime mapping — but no typed layer that takes a user's text response and produces a validated, deterministic state patch. The current scope resolution in `ConversationalImportWorkspace.tsx` uses hardcoded keyword matching (`scope1Keywords`, `scope2Keywords`, `scope3Keywords`) for "1", "2", "3" responses. Each new ambiguity type would require duplicating this ad-hoc pattern.
+- **Solution**: Designed the Ambiguity Resolution Application Architecture — a new pure, deterministic layer that receives `(activeAmbiguity, sanitizedUserText, currentStateSnapshot)` and produces an `AmbiguityResolutionApplicationResult` with 6 possible states (`applied`, `invalid_input`, `needs_clarification`, `blocked_privacy`, `out_of_scope_redirect`, `no_active_ambiguity`). Defined the input contract, output contract, privacy precedence rules, invalid input rules, and a future implementation plan (H54–H58). Documented in `docs/AMBIGUITY_RESOLUTION_APPLICATION_ARCHITECTURE.md`.
+- **Changes Made**:
+  - Created `docs/AMBIGUITY_RESOLUTION_APPLICATION_ARCHITECTURE.md` with 11 sections covering purpose, boundary, input/output contracts, MultipleSurveyScopeAmbiguity rules, invalid input rules, privacy/security, precedence order, state/side-effects, testing strategy, and future implementation plan.
+- **Markers**:
+  - PHASE_11D_H53_AMBIGUITY_RESOLUTION_APPLICATION_ARCHITECTURE_COMPLETE
+  - AMBIGUITY_RESOLUTION_APPLICATION_ARCHITECTURE_LOCKED
+  - RESOLUTION_APPLICATION_BOUNDARY_DEFINED
+  - TEXT_INPUT_TO_TYPED_RESOLUTION_CONTRACT_DEFINED
+  - ACTIVE_AMBIGUITY_INPUT_CONTRACT_DEFINED
+  - RESOLUTION_APPLICATION_OUTPUT_CONTRACT_DEFINED
+  - MULTIPLE_SURVEY_SCOPE_RESOLUTION_RULES_DEFINED
+  - INVALID_INPUT_RULES_DEFINED
+  - PRIVACY_PRECEDENCE_RULES_DEFINED
+  - OUT_OF_SCOPE_RULES_DEFINED
+  - STATE_PATCH_CONCEPT_DEFINED
+  - SIDE_EFFECTS_FORBIDDEN
+  - TESTING_STRATEGY_DEFINED
+  - FUTURE_IMPLEMENTATION_PLAN_DEFINED
+  - NO_CODE_CHANGES
+  - NO_RUNTIME_CHANGES
+  - NO_UI_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11D_H54_READY
