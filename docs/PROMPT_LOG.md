@@ -37,6 +37,44 @@ NO_DASHBOARD_OR_COMPARISON_CHANGES
 READY_FOR_COMPARISON_OUTPUT_DISABLED
 PHASE_11F_B_READY
 
+## Fase 11F-B · Question Scale Dimension Mock Data Contract
+
+Phase: Phase 11F-B · Question Scale Dimension Mock Data Contract
+
+Summary:
+- Created deterministic, sanitized types and mock data for the question/scale/dimension review contract.
+- Created `questionScaleDimensionReviewTypes.ts` with 8 export types: QuestionType union (8 values), ScaleType union (9 values), ScaleDetail interface, DimensionAssignment with source tracking, QuestionReviewStatus union, QuestionReviewItem interface, QuestionReviewStepSummary, ConversationalCommandSuggestion, and QuestionReviewMockDataset.
+- Created `questionScaleDimensionReviewMockData.ts` with 37 sanitized questions (29 Clima rating_scale/likert_5, 6 Engagement with 4 likert_5 + 1 frequency + 1 binary_yes_no, 1 eNPS nps_0_10, 1 open_text not_applicable).
+- Created `index.ts` with public re-exports.
+- Created 23 privacy and contract validation tests.
+- Build, lint, and all 23 tests pass.
+
+PHASE_11F_B_QUESTION_SCALE_DIMENSION_MOCK_DATA_CONTRACT_COMPLETE
+QUESTION_SCALE_DIMENSION_MOCK_DATA_CONTRACT_COMPLETE
+QUESTION_REVIEW_TYPES_CREATED
+QUESTION_REVIEW_MOCK_DATA_CREATED
+QUESTION_CONTRACT_FIELDS_DEFINED
+QUESTION_TYPE_UNION_DEFINED
+SCALE_TYPE_UNION_DEFINED
+SCALE_DETAIL_CONTRACT_DEFINED
+DIMENSION_ASSIGNMENT_CONTRACT_DEFINED
+QUESTION_REVIEW_STATUS_DEFINED
+QUESTION_REVIEW_SUMMARY_DEFINED
+CONVERSATIONAL_COMMAND_SUGGESTIONS_DEFINED
+MOCK_DATA_SANITIZED
+NO_REAL_CLIENT_DATA
+NO_RAW_ROWS_IN_MOCK
+NO_OPEN_TEXT_ANSWERS_IN_MOCK
+NO_WORKBOOK_DUMP_IN_MOCK
+EXPORTED_FROM_INDEX
+NO_WORKSPACE_INTEGRATION
+NO_RUNTIME_INTEGRATION
+NO_UI_CHANGES
+NO_IMPORT_EXECUTION
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+PHASE_11F_C_READY
+
 ## Fase 11D-H44-H17 · Chat Foundation Runtime Stabilization
 
 Phase: Phase 11D-H44-H17 · Chat Foundation Runtime Stabilization

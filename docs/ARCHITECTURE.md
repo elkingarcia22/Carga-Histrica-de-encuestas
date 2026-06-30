@@ -2061,6 +2061,49 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
   - PHASE_11F_B_READY
 
+## Phase 11F-B · Question Scale Dimension Mock Data Contract
+- **Phase Status**: Completed
+- **Phase**: Phase 11F-B · Question Scale Dimension Mock Data Contract
+- **Summary**: Created the mock data contract for questions, scales, and dimensions. Built deterministic, sanitized types and data that will serve as the source for future mappers.
+- **Files Created**:
+  - `src/features/historical-import/conversational-import/question-scale-dimension-review/questionScaleDimensionReviewTypes.ts` — types for QuestionReviewItem, QuestionType, ScaleType, ScaleDetail, DimensionAssignment, QuestionReviewStatus, QuestionReviewStepSummary, and ConversationalCommandSuggestion.
+  - `src/features/historical-import/conversational-import/question-scale-dimension-review/questionScaleDimensionReviewMockData.ts` — 37 sanitized questions from Clima (29), Engagement (6), eNPS (1), and open_text (1); with summary, critical issues, suggested commands.
+  - `src/features/historical-import/conversational-import/question-scale-dimension-review/index.ts` — public exports.
+  - `src/features/historical-import/conversational-import/question-scale-dimension-review/__tests__/questionScaleDimensionReviewMockData.test.ts` — 23 tests verifying contract (count, IDs, types, privacy, dimensions, summary).
+- **Design Decisions**:
+  - Types are pure union + interface. No functions. No runtime. No UI.
+  - Mock data is deterministic: no Date, no Math.random, no side effects, no API calls.
+  - 37 questions total to maintain consistency with the current 1/7 summary.
+  - Covers 9 dimensions, 4 scale types (likert_5, frequency, binary_yes_no, nps_0_10, not_applicable), both rating_scale/open_text/enps question types.
+  - Summary contract includes total, aligned/needs_review/new/uninterpretable counts, questionsByDimension, questionsByScaleType, criticalIssues, canConfirmSection.
+  - Privacy tests confirm no PII, no raw rows, no open text answers, no workbook dump.
+- **Markers**:
+  - PHASE_11F_B_QUESTION_SCALE_DIMENSION_MOCK_DATA_CONTRACT_COMPLETE
+  - QUESTION_SCALE_DIMENSION_MOCK_DATA_CONTRACT_COMPLETE
+  - QUESTION_REVIEW_TYPES_CREATED
+  - QUESTION_REVIEW_MOCK_DATA_CREATED
+  - QUESTION_CONTRACT_FIELDS_DEFINED
+  - QUESTION_TYPE_UNION_DEFINED
+  - SCALE_TYPE_UNION_DEFINED
+  - SCALE_DETAIL_CONTRACT_DEFINED
+  - DIMENSION_ASSIGNMENT_CONTRACT_DEFINED
+  - QUESTION_REVIEW_STATUS_DEFINED
+  - QUESTION_REVIEW_SUMMARY_DEFINED
+  - CONVERSATIONAL_COMMAND_SUGGESTIONS_DEFINED
+  - MOCK_DATA_SANITIZED
+  - NO_REAL_CLIENT_DATA
+  - NO_RAW_ROWS_IN_MOCK
+  - NO_OPEN_TEXT_ANSWERS_IN_MOCK
+  - NO_WORKBOOK_DUMP_IN_MOCK
+  - EXPORTED_FROM_INDEX
+  - NO_WORKSPACE_INTEGRATION
+  - NO_RUNTIME_INTEGRATION
+  - NO_UI_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11F_C_READY
+
 ## Phase 11E-H1 · Chat Foundation Thinking Continuity Hotfix
 - **Phase Status**: Completed
 - **Problem**: After "Configuración general confirmada" → "Ahora revisaré el match detectado de la estructura.", the chat showed no thinking indicator between the end of one `simulateChatFlow` batch and the start of the next chained batch (via `.then()` → `setTimeout`). The conversation appeared stuck even though the flow was about to continue.
