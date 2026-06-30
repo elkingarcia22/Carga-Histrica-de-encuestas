@@ -2025,3 +2025,37 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - NATIVE_FILE_PICKER_VIA_HIDDEN_INPUT
   - NEXT_SCOPE_OPTION_C_SELECTED
   - CONVERSATIONAL_EDITING_HARDENING_NEXT
+## Phase 11E-H1 · Chat Foundation Thinking Continuity Hotfix
+- **Phase Status**: Completed
+- **Problem**: After "Configuración general confirmada" → "Ahora revisaré el match detectado de la estructura.", the chat showed no thinking indicator between the end of one `simulateChatFlow` batch and the start of the next chained batch (via `.then()` → `setTimeout`). The conversation appeared stuck even though the flow was about to continue.
+- **Diagnosis**:
+  - Root cause: `simulateChatFlow` managed thinking only WITHIN its own batch of messages (adding a "Pensando..." `analysis_progress` message per assistant message in the batch).
+  - Between chained `simulateChatFlow` calls (e.g., `.then(() => { setTimeout(() => { simulateChatFlow(nextBatch); }, 1500); })`), there was no thinking signal.
+  - The gap occurred at ~`ConversationalImportWorkspace.tsx:636-646` where `msg_assistant_summary` + `msg_assistant_review` were sent in one batch, then 1500ms later the next batch started with `msg_assistant_qs`.
+  - Two additional chained sites had the same gap: `handleSandboxFilesSelected` → `handleLocalAnalysisStart` (500ms gap).
+- **Solution**:
+  1. Added `isProcessingNextStep` state to the workspace — tracks whether the agent has pending responses.
+  2. Modified `simulateChatFlow` to accept `{ keepThinkingAfter?: boolean }` option — when true, keeps `isProcessingNextStep` true after the batch finishes.
+  3. Updated 3 chained call sites to use `keepThinkingAfter: true` on the first call in the chain.
+  4. Added `finally { setIsProcessingNextStep(false); }` to `handleLocalAnalysisStart`.
+  5. In the Chat Foundation render section, when `isProcessingNextStep` is true and the last message is not already an `analysis_progress` type, renders a `ChatFoundationMessage` with `kind: "thinking"` → `AILoader` "Pensando..." via `ChatFoundationMessageRenderer`.
+  6. Thinking comes from the master Chat Foundation component (`ChatFoundationMessageBubble`), not from hardcoded workspace text or timeout hacks.
+- **Verification**: Build passes, ESLint clean, 155/155 regression tests pass.
+- **Markers**:
+  - PHASE_11E_H1_CHAT_FOUNDATION_THINKING_CONTINUITY_HOTFIX_COMPLETE
+  - CHAT_FOUNDATION_THINKING_CONTINUITY_HOTFIX_COMPLETE
+  - THINKING_STATE_SOURCE_IDENTIFIED
+  - THINKING_STATE_SOURCE = simulateChatFlow batch gaps (no cross-batch thinking signal)
+  - THINKING_RENDERED_FROM_MASTER_COMPONENT
+  - NO_FAKE_AGENT_TEXT_USED_FOR_THINKING
+  - NO_TIMEOUT_HACKS
+  - CHAT_FOUNDATION_STYLE_PRESERVED
+  - NO_IMPORT_EXECUTION
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - 5173_THINKING_VISIBLE_AFTER_GENERAL_CONFIG_CONFIRMATION
+  - 5173_NEXT_AGENT_STEP_NO_LONGER_LOOKS_STUCK
+  - 5173_CHAT_STILL_WORKS
+  - 5173_INPUT_1_STILL_ADVANCES
+  - 5173_INVALID_INPUT_STILL_REPROMPTS
+  - PHASE_11E_H2_VISUAL_QA_READY

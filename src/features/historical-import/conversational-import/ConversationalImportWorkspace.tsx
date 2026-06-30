@@ -185,13 +185,15 @@ export function ConversationalImportWorkspace() {
   const [selectedSurveyScope, setSelectedSurveyScope] = useState<ConversationalSurveyScope | null>(null);
   const [generalConfiguration, setGeneralConfiguration] = useState<Partial<ConversationalGeneralConfiguration>>({});
   const [activeAmbiguity, setActiveAmbiguity] = useState<ActiveAmbiguity | null>(null);
+  const [isProcessingNextStep, setIsProcessingNextStep] = useState(false);
   const sandboxFileInputRef = useRef<HTMLInputElement>(null);
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
   const { wait, waitTypewriter, isMounted } = useMessageSequenceGate();
 
-  const simulateChatFlow = async (newMessages: ChatMessage[]) => {
+  const simulateChatFlow = async (newMessages: ChatMessage[], options?: { keepThinkingAfter?: boolean }) => {
+    setIsProcessingNextStep(true);
     initAudioSync();
 
     for (const msg of newMessages) {
@@ -227,6 +229,9 @@ export function ConversationalImportWorkspace() {
           if (!proceedWait) return;
         }
       }
+    }
+    if (!options?.keepThinkingAfter) {
+      setIsProcessingNextStep(false);
     }
     if (isMounted.current) {
       playNotificationSound();
@@ -435,9 +440,13 @@ export function ConversationalImportWorkspace() {
         });
       }
 
-      void simulateChatFlow(newMsgs).then(() => {
+      void simulateChatFlow(newMsgs, { keepThinkingAfter: true }).then(() => {
         if (groups.length <= 1) {
-          setTimeout(() => handleLocalAnalysisStart(files), 500);
+          setTimeout(() => handleLocalAnalysisStart(files).finally(() => {
+            setIsProcessingNextStep(false);
+          }), 500);
+        } else {
+          setIsProcessingNextStep(false);
         }
       });
     } else if (text.trim()) {
@@ -636,7 +645,7 @@ export function ConversationalImportWorkspace() {
               void simulateChatFlow([
                 { id: `msg_assistant_summary_${generateId()}`, role: "assistant", type: "text", content: summaryMsg, timestamp: "2025-01-01T12:00:00.000Z" },
                 { id: `msg_assistant_review_${generateId()}`, role: "assistant", type: "text", content: startMsg, timestamp: "2025-01-01T12:00:00.000Z" }
-              ]).then(() => {
+              ], { keepThinkingAfter: true }).then(() => {
                 setTimeout(() => {
                   setConversationalEditState("reviewing_questions_and_scales");
                   const qsMsg = getMatchReviewSectionMessage("questions_and_scales", scope, false);
@@ -1018,9 +1027,13 @@ export function ConversationalImportWorkspace() {
       });
     }
 
-    void simulateChatFlow(newMsgs).then(() => {
+    void simulateChatFlow(newMsgs, { keepThinkingAfter: true }).then(() => {
       if (groups.length <= 1 && rawFiles.length > 0) {
-        setTimeout(() => handleLocalAnalysisStart(rawFiles), 500);
+        setTimeout(() => handleLocalAnalysisStart(rawFiles).finally(() => {
+          setIsProcessingNextStep(false);
+        }), 500);
+      } else {
+        setIsProcessingNextStep(false);
       }
     });
   };
@@ -1456,6 +1469,8 @@ export function ConversationalImportWorkspace() {
           timestamp: "2025-01-01T12:00:00.000Z",
         }
       ]);
+    } finally {
+      setIsProcessingNextStep(false);
     }
   };
 
@@ -1687,6 +1702,27 @@ export function ConversationalImportWorkspace() {
                           </div>
                         );
                       })}
+                      {isProcessingNextStep && (() => {
+                        const lastMsg = messages[messages.length - 1];
+                        const isLastMsgThinking = lastMsg?.type === "analysis_progress";
+                        if (isLastMsgThinking) return null;
+                        return (
+                          <ChatFoundationMessageRenderer
+                            message={{
+                              id: 'thinking_continuity',
+                              role: 'assistant',
+                              kind: 'thinking',
+                              status: 'thinking',
+                              tone: 'neutral',
+                              content: '',
+                              metadata: {
+                                showAvatar: true,
+                                showTimestamp: false,
+                              }
+                            }}
+                          />
+                        );
+                      })()}
                     </div>
                   </ScrollArea>
                 ) : (
