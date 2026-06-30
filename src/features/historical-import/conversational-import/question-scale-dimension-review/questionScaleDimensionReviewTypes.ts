@@ -151,3 +151,28 @@ export const DIMENSION_SOURCE_ORDER: DimensionSource[] = [
   'user_corrected',
   'not_assigned',
 ];
+
+export type ConversationSectionType =
+  | 'summary'
+  | 'dimension_group'
+  | 'needs_review'
+  | 'question_detail'
+  | 'scale_detail'
+  | 'confirmation_state'
+  | 'warning';
+
+export interface ConversationSection {
+  type: ConversationSectionType;
+  content: string;
+}
+
+export interface QuestionReviewConversationResponse {
+  responseId: string;
+  title?: string;
+  intro?: string;
+  sections: ConversationSection[];
+  suggestedTextCommands: string[];
+  privacySafeNotes?: string;
+  status: 'ready' | 'needs_review' | 'info';
+}
+
