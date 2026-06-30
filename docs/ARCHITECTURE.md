@@ -1763,3 +1763,32 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - PHASE_11D_H50_AMBIGUITY_VISUAL_QA_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Phase 11D-H51 · Ambiguity Runtime Stabilization
+- **Phase Status**: Completed (stabilization — no code changes)
+- **Problem**: Post-integration review needed to verify that the ambiguity runtime (H49) is deterministic, produces no duplicate messages, sanitizes all labels, exposes no PII/raw rows/open text/workbook dump, and preserves all workspace invariants (`awaiting_survey_scope_selection` state, Chat Foundation renderer, hardcoded fallback when no ambiguity).
+- **Solution**: Performed a cross‑surface audit of the runtime integration. Confirmed that `handleComposerSend` and `handleSandboxFilesSelected` in `ConversationalImportWorkspace.tsx` use the ambiguity chain without introducing duplicates; `ambiguityRuntimeMapper.ts` is deterministic (same input → same output), pure (no input mutation, no side effects), and sanitizes‑only (no PII, raw rows, open text, or workbook dump). Ran the full QA suite — build, scoped ESLint, vitest, git whitespace check — all green. No code changes were required.
+- **Markers**:
+  - PHASE_11D_H51_AMBIGUITY_RUNTIME_STABILIZATION_COMPLETE
+  - AMBIGUITY_RUNTIME_STABILIZATION_COMPLETE
+  - RUNTIME_MAPPER_DETERMINISTIC
+  - RUNTIME_MAPPER_NO_INPUT_MUTATION
+  - RUNTIME_MAPPER_LABELS_SANITIZED
+  - RUNTIME_MAPPER_NO_PII
+  - RUNTIME_MAPPER_NO_RAW_ROWS
+  - RUNTIME_MAPPER_NO_OPEN_TEXT
+  - RUNTIME_MAPPER_NO_WORKBOOK_DUMP
+  - NO_DUPLICATE_AMBIGUITY_MESSAGES
+  - AWAITING_SURVEY_SCOPE_SELECTION_STATE_PRESERVED
+  - CHAT_FOUNDATION_RENDERER_STILL_USED
+  - HARDCODED_SCOPE_SELECTION_FALLBACK_PRESERVED
+  - NO_CODE_CHANGES_REQUIRED
+  - BUILD_PASSED
+  - AMBIGUITY_RESOLUTION_SCOPED_LINT_PASSED
+  - CONVERSATIONAL_IMPORT_SCOPED_LINT_PASSED
+  - HISTORICAL_IMPORT_SCOPED_LINT_PASSED
+  - FULL_REGRESSION_TESTS_PASSED
+  - GIT_SHOW_CHECK_PASSED
+  - VISIBLE_UI_CHECKPOINT_YES
+  - PHASE_11D_H52_AMBIGUITY_READY
+  - R1H5_DEFINED_BUT_NOT_TRIGGERED
+
