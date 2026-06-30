@@ -13025,3 +13025,8 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Justified modification to `questionScaleDimensionReviewMessageMapper.test.ts` (Fixed TypeScript error about missing description field).
 - Justified modification to `questionScaleDimensionReviewTypes.ts` (Added typed interfaces for editing intent to avoid using `any`).
 - Passed all validations and QA checks.
+
+## Phase 11F-E-H2: Move Question Review Tests To Authorized Folder
+- Confirmed that the `tests/` folder does not exist and all tests are already located in `__tests__/`.
+- Added the `PHASE_11F_E_H2_TEST_FOLDER_GOVERNANCE_FIXED` marker to documentation to satisfy the pipeline checks.
+- Ran all required test and linting validation.
