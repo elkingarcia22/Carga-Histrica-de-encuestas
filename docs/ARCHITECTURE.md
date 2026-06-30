@@ -1887,4 +1887,40 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - NO_IMPORT_EXECUTION
   - NO_DASHBOARD_OR_COMPARISON_CHANGES
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
-  - PHASE_11D_H55_READY
+## Phase 11D-H55 · Resolution Application Mapper
+- **Phase Status**: Completed (pure mapper + tests — no workspace/runtime/UI integration)
+- **Problem**: The resolution application types (H54) defined the contracts, but no mapper existed to convert a user's text response into a typed resolution result. The workspace handles scope resolution via hardcoded keyword matching without a layered mapper.
+- **Solution**: Created `mapTextToAmbiguityResolutionApplicationResult` — a pure, deterministic mapper that applies strict precedence rules: `blocked_privacy` > `out_of_scope_redirect` > `no_active_ambiguity` > applied > invalid_input. Supports `MultipleSurveyScopeAmbiguity` numeric choice parsing (1/2/3) with deterministic scope ID derivation from option labels. 27 tests cover all paths.
+- **Changes Made**:
+  - Created `src/.../ambiguity-resolution/ambiguityResolutionApplicationMapper.ts` (~340 lines, pure mapper + helpers).
+  - Created `src/.../ambiguity-resolution/__tests__/ambiguityResolutionApplicationMapper.test.ts` (~420 lines, 27 tests).
+  - Updated `src/.../ambiguity-resolution/index.ts` to export the new mapper function.
+  - Updated `docs/QA_CHECKLIST.md` with H55 section.
+- **Markers**:
+  - PHASE_11D_H55_RESOLUTION_APPLICATION_MAPPER_COMPLETE
+  - RESOLUTION_APPLICATION_MAPPER_CREATED
+  - MAPPER_FUNCTION_CREATED
+  - MAPPER_FUNCTION_EXPORTED
+  - MULTIPLE_SURVEY_SCOPE_RESOLUTION_SUPPORTED
+  - VALID_NUMERIC_INPUT_ACCEPTED
+  - INVALID_INPUT_REJECTED
+  - BLOCKED_PRIVACY_PRECEDENCE
+  - OUT_OF_SCOPE_REDIRECT_SUPPORTED
+  - NO_ACTIVE_AMBIGUITY_HANDLED
+  - UNSUPPORTED_TYPES_NEED_CLARIFICATION
+  - DETERMINISTIC_OUTPUT_VERIFIED
+  - NO_INPUT_MUTATION
+  - NO_PII_EXPOSED
+  - NO_RUNTIME_INTEGRATION
+  - NO_WORKSPACE_INTEGRATION
+  - NO_REACT_IMPORTS
+  - NO_COMPONENTS_CREATED
+  - NO_TESTS_MODIFIED
+  - NO_UI_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - BUILD_PASSED
+  - AMBIGUITY_TESTS_PASSED
+  - GIT_SHOW_CHECK_PASSED
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11D_H56_READY

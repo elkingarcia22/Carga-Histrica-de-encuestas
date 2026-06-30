@@ -69,3 +69,6 @@ export type {
   AmbiguityResolutionApplicationResult,
   MultipleSurveyScopeOptionMapping,
 } from './ambiguityResolutionApplicationTypes';
+
+// H55 resolution application mapper function
+export { mapTextToAmbiguityResolutionApplicationResult } from './ambiguityResolutionApplicationMapper';
