@@ -1990,22 +1990,23 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - PLAYWRIGHT_QA_PASSED_7_OF_7
   - PRE_EXISTING_UPLOAD_PANEL_BUG_DOCUMENTED
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
-## Phase 11D-H58 · Stabilization — Sandbox Upload Panel Hotfix
-- **Phase Status**: Completed (minimal hotfix — message type changed from `"text"` to `"sandbox_upload_panel"`, redundant `setTimeout` removed)
-- **Problem**: H57 QA discovered that the `sandbox_upload_panel` message type was defined and rendered in the code but never added to chat history. Clicking "Cargar encuesta" showed only a text message with no file input, making the button non-functional.
-- **Root Cause**: `handleSandboxUploadStart` added the assistant message as `type: "text"` instead of `type: "sandbox_upload_panel"`. The `SandboxUploadPanel` component is only rendered when `msg.type === "sandbox_upload_panel"`. The `setTimeout` that tried to click `input[type="file"]` was also redundant since the panel natively handles file selection.
-- **Fix**: Changed the assistant message `type` from `"text"` to `"sandbox_upload_panel"` and removed the `content` field and `setTimeout` block.
-- **Verification**: Build passes, ESLint clean, 155/155 regression tests pass.
+## Phase 11D-H58 · Stabilization — Native File Picker (hidden input)
+- **Phase Status**: Completed (hidden `<input type="file">` with `useRef`, reverted `sandbox_upload_panel` approach)
+- **Problem**: H57 QA discovered the "Cargar encuesta" button couldn't trigger file selection: no `input[type="file"]` existed in the DOM for the `setTimeout` click to find.
+- **Root Cause**: `handleSandboxUploadStart` relied on `document.querySelector('input[type="file"]')` but no such element existed. H58 first tried showing `SandboxUploadPanel`, but the user wants a native file picker, not a visual upload component.
+- **Fix**: Added a hidden `<input type="file" accept=".xlsx,.xls,.csv" multiple>` with `useRef` in the component JSX. `handleSandboxUploadStart` clicks the ref to open the native OS file picker. `handleSandboxFileChange` converts FileList to `SandboxFileMetadata[]` and calls `handleSandboxFilesSelected`.
+- **Verification**: Build passes, ESLint clean, 155/155 regression tests pass. Playwright e2e confirms: click "Cargar encuesta" → "Adjunta aquí" text shown → files selected via hidden input → ambiguity detected → typing "1" advances to general config.
 - **Markers**:
   - PHASE_11D_H58_STABILIZATION_COMPLETE
-  - SANDBOX_UPLOAD_PANEL_NOW_RENDERS
+  - NATIVE_FILE_PICKER_VIA_HIDDEN_INPUT
   - CARGAR_ENCUESTA_BUTTON_WORKS
-  - MSG_TYPE_CHANGED_TEXT_TO_SANDBOX_UPLOAD_PANEL
-  - REDUNDANT_SETTIMEOUT_REMOVED
+  - USE_REF_INPUT_FILE
+  - SETTIMEOUT_CLICKS_REF
   - NO_NEW_FEATURES_INTRODUCED
   - BUILD_PASSED
   - ESLINT_PASSED
   - FULL_REGRESSION_TESTS_PASSED
+  - E2E_UPLOAD_AND_TYPE_1_ADVANCES
   - GIT_SHOW_CHECK_PASSED
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
   - PHASE_11D_COMPLETE

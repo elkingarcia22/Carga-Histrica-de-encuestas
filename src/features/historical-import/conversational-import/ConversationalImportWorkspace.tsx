@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./ai-theme.css";
 import { parseWorkbookPreview } from "../local-parser/localParser";
 import { assembleDraftSurveyFileAnalysisContract } from "../contract-assembler";
@@ -185,6 +185,7 @@ export function ConversationalImportWorkspace() {
   const [selectedSurveyScope, setSelectedSurveyScope] = useState<ConversationalSurveyScope | null>(null);
   const [generalConfiguration, setGeneralConfiguration] = useState<Partial<ConversationalGeneralConfiguration>>({});
   const [activeAmbiguity, setActiveAmbiguity] = useState<ActiveAmbiguity | null>(null);
+  const sandboxFileInputRef = useRef<HTMLInputElement>(null);
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
@@ -294,13 +295,31 @@ export function ConversationalImportWorkspace() {
         timestamp: isoString,
       },
       {
-        id: `msg_assistant_upload_panel_${generateId()}`,
+        id: `msg_assistant_upload_prompt_${generateId()}`,
         role: "assistant",
-        type: "sandbox_upload_panel",
-        content: "",
+        type: "text",
+        content: "Adjunta aquí los archivos de resultados históricos para analizarlos.",
         timestamp: isoString,
-      }
+      },
     ]);
+
+    setTimeout(() => {
+      sandboxFileInputRef.current?.click();
+    }, 100);
+  };
+
+  const handleSandboxFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const metadata: import("./SandboxUploadPanel").SandboxFileMetadata[] = Array.from(files).map(file => ({
+      name: file.name,
+      size: file.size,
+      type: file.type || file.name.split('.').pop() || "unknown",
+      lastModified: file.lastModified,
+      rawFile: file,
+    }));
+    e.target.value = "";
+    handleSandboxFilesSelected(metadata);
   };
 
   const handleComposerSend = (text: string, files: File[]) => {
@@ -1443,6 +1462,14 @@ export function ConversationalImportWorkspace() {
 
   return (
     <div className="flex h-screen w-screen bg-muted/30 p-6 gap-6 font-sans overflow-hidden">
+      <input
+        ref={sandboxFileInputRef}
+        type="file"
+        accept=".xlsx,.xls,.csv"
+        multiple
+        className="hidden"
+        onChange={handleSandboxFileChange}
+      />
       {/* Left Sidebar */}
       <ChatHistorySidebar
         onNewChat={handleNewChat}
