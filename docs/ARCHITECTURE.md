@@ -1973,4 +1973,21 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - FULL_REGRESSION_TESTS_PASSED
   - GIT_SHOW_CHECK_PASSED
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
-  - PHASE_11D_H57_READY
+## Phase 11D-H57 · Visual QA
+- **Phase Status**: Completed (7/7 Playwright tests pass, no console errors, no regression)
+- **Problem**: H56 introduced a visible UI change (option 3 label: "QS Clima 2024/2025 (multiciclo)"), requiring visual QA.
+- **Solution**: Automated Playwright QA script tested app load, chat interaction, file detection, mapper chain, console errors, action buttons, and chat responses. All 7 tests pass.
+- **Pre-existing Issue**: The SandboxUploadPanel (`msg.type === "sandbox_upload_panel"`) is never added to chat history, making the "Cargar encuesta" button unable to trigger file selection interactively. This is pre-existing and unrelated to H56 changes. File upload works via the MessageComposer attachment button instead.
+- **Markers**:
+  - PHASE_11D_H57_VISUAL_QA_COMPLETE
+  - APP_LOADS_OK
+  - CHAT_INTERACTION_WORKS
+  - FILE_DETECTION_WORKS
+  - MAPPER_CHAIN_AVAILABLE
+  - NO_CONSOLE_ERRORS
+  - NO_ACTION_BUTTONS_DURING_AMBIGUITY
+  - VISIBLE_CHANGE_DOCUMENTED
+  - PLAYWRIGHT_QA_PASSED_7_OF_7
+  - PRE_EXISTING_UPLOAD_PANEL_BUG_DOCUMENTED
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11D_H58_READY
