@@ -188,7 +188,10 @@ export type QuestionReviewEditingIntentType =
   | 'confirm_section'
   | 'invalid_input'
   | 'ambiguous_input'
-  | 'unsupported_intent';
+  | 'unsupported_intent'
+  | 'view_all_questions_in_blocks'
+  | 'view_next_block'
+  | 'view_prev_block';
 
 export interface QuestionReviewEditingIntent {
   intent: QuestionReviewEditingIntentType;

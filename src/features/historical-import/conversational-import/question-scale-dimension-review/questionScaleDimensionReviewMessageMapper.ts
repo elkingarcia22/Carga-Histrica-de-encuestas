@@ -12,7 +12,7 @@ import type {
   ScaleType,
 } from './questionScaleDimensionReviewTypes';
 
-const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {
+export const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {
   rating_scale: 'Escala de valoración',
   single_choice: 'Selección única',
   multiple_choice: 'Selección múltiple',

@@ -65,10 +65,73 @@ function extractScaleType(text: string): ScaleType | undefined {
  * Pure function that maps user text into a typed editing intent.
  */
 export function mapQuestionReviewUserTextToEditingIntent(
-  userText: string
+  userText: string,
+  canConfirmSection: boolean = false
 ): QuestionReviewEditingIntent {
   const sanitized = normalizeText(userText);
   const rawUserTextSanitized = sanitized;
+
+  // 1. Strict number check for alias mapping
+  const numberMatch = sanitized.match(/^(\d+)$/);
+  if (numberMatch) {
+    const num = parseInt(numberMatch[1], 10);
+    if (num === 1) {
+      return {
+        intent: 'view_by_dimension',
+        rawUserTextSanitized,
+        confidence: 'high',
+      };
+    } else if (num === 2) {
+      return {
+        intent: 'view_needs_review',
+        rawUserTextSanitized,
+        confidence: 'high',
+      };
+    } else if (num === 3) {
+      return {
+        intent: 'view_all_questions_in_blocks',
+        rawUserTextSanitized,
+        confidence: 'high',
+      };
+    } else if (num === 4 && canConfirmSection) {
+      return {
+        intent: 'confirm_section',
+        rawUserTextSanitized,
+        confidence: 'high',
+      };
+    } else {
+      const maxRange = canConfirmSection ? 4 : 3;
+      return {
+        intent: 'invalid_input',
+        rawUserTextSanitized,
+        confidence: 'low',
+        clarificationPrompt: `El número ${num} está fuera de rango. Por favor selecciona una opción válida del 1 al ${maxRange}.`,
+      };
+    }
+  }
+
+  // Block viewing and pagination intents
+  if (sanitized === 'ver todas las preguntas en bloques' || sanitized === 'ver preguntas en bloques' || sanitized === 'preguntas en bloques') {
+    return {
+      intent: 'view_all_questions_in_blocks',
+      rawUserTextSanitized,
+      confidence: 'high',
+    };
+  }
+  if (sanitized === 'ver siguiente bloque' || sanitized === 'siguiente bloque' || sanitized === 'siguiente') {
+    return {
+      intent: 'view_next_block',
+      rawUserTextSanitized,
+      confidence: 'high',
+    };
+  }
+  if (sanitized === 'ver bloque anterior' || sanitized === 'bloque anterior' || sanitized === 'ver anterior bloque' || sanitized === 'anterior') {
+    return {
+      intent: 'view_prev_block',
+      rawUserTextSanitized,
+      confidence: 'high',
+    };
+  }
 
   // View intents
   if (sanitized === 'ver resumen') {

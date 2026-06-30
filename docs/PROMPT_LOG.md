@@ -1,3 +1,25 @@
+## Fase 11F-F-H1 · Hotfix Question Review Numbered Commands and Copy Rendering
+
+Phase: Fase 11F-F-H1 · Hotfix Question Review Numbered Commands and Copy Rendering
+
+Summary:
+- Resolved Visual QA failures on localhost by supporting numbered alias commands (`1`, `2`, `3`, `4`) mapped contextually during step 1/7 of the conversational import.
+- Added block-based paginated viewing of all questions (`ver todas las preguntas en bloques`, `ver siguiente bloque`, `ver bloque anterior`) to handle long question lists safely without exposing raw files or PII.
+- Removed literal markdown double-asterisks (`**`) from the section title rendering to fix copy rendering bugs.
+- Replaced the generic placeholder with a stage-specific contextual placeholder (`Escribe una instrucción sobre preguntas y escalas`) for this step.
+- Added and verified regression tests and ESLint compliance.
+
+Commit SHA: PENDING_COMMIT
+
+HOTFIX_11F_F_H1_COMPLETE
+NUMBERED_ALIAS_COMMANDS_1_2_3_MAPPED
+VIEW_ALL_QUESTIONS_IN_BLOCKS_SUPPORTED
+OUT_OF_RANGE_NUMBER_HANDLED_WITH_CLARIFICATION
+TITLE_MARKDOWN_DOUBLE_ASTERISKS_REMOVED
+CONTEXTUAL_STAGE_PLACEHOLDER_SUPPORTED
+SCOPED_LINT_CHECKS_PASSED
+FULL_REGRESSION_TESTS_PASSED
+
 ## Fase 11F-F · Question Review Workspace Integration
 
 Phase: Phase 11F-F · Question Review Workspace Integration

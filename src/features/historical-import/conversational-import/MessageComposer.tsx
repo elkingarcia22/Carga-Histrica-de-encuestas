@@ -5,9 +5,10 @@ import { ArrowRight, Paperclip, X, File as FileIcon } from "lucide-react";
 interface MessageComposerProps {
   onSend?: (text: string, files: File[]) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
-export function MessageComposer({ onSend, disabled }: MessageComposerProps) {
+export function MessageComposer({ onSend, disabled, placeholder }: MessageComposerProps) {
   const [text, setText] = useState("");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -39,7 +40,7 @@ export function MessageComposer({ onSend, disabled }: MessageComposerProps) {
   return (
     <div className={`relative border border-border bg-card rounded-2xl p-4 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all shadow-sm w-full ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
       <textarea
-        placeholder="Cuéntame qué encuesta quieres cargar"
+        placeholder={placeholder || "Cuéntame qué encuesta quieres cargar"}
         className="w-full min-h-[100px] bg-transparent outline-none resize-none text-sm placeholder:text-muted-foreground/75 text-foreground pb-12"
         disabled={disabled}
         value={text}

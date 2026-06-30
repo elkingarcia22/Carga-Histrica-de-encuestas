@@ -58,6 +58,7 @@ import {
   mapQuestionReviewConfirmationStateToConversation,
   mapQuestionReviewUserTextToEditingIntent,
   questionScaleDimensionReviewMockData37,
+  QUESTION_TYPE_LABELS,
   type QuestionReviewItem,
   type QuestionReviewStepSummary,
   type QuestionReviewConversationResponse,
@@ -217,6 +218,8 @@ export function ConversationalImportWorkspace() {
     rawQuestions[7] = { ...rawQuestions[7], status: 'needs_review', reviewNotes: 'Revisión manual requerida.' }; // q_8
     return rawQuestions;
   });
+
+  const [currentQuestionBlockPage, setCurrentQuestionBlockPage] = useState(1);
 
   const getScaleDetailByScaleType = (scaleType: ScaleType): ScaleDetail => {
     switch (scaleType) {
@@ -409,7 +412,7 @@ export function ConversationalImportWorkspace() {
   const formatConversationResponse = (resp: QuestionReviewConversationResponse): string => {
     const parts: string[] = [];
     if (resp.title) {
-      parts.push(`**${resp.title}**`);
+      parts.push(resp.title);
     }
     if (resp.intro) {
       parts.push(resp.intro);
@@ -936,10 +939,63 @@ export function ConversationalImportWorkspace() {
           }
 
           if (conversationalEditState === "reviewing_questions_and_scales") {
-            const intentObj = mapQuestionReviewUserTextToEditingIntent(text);
+            const summaryObj = recalculateSummary(questionReviewData);
+            const intentObj = mapQuestionReviewUserTextToEditingIntent(text, summaryObj.canConfirmSection);
+
+            if (intentObj.intent === "view_all_questions_in_blocks" || intentObj.intent === "view_next_block" || intentObj.intent === "view_prev_block") {
+              let page = currentQuestionBlockPage;
+              const pageSize = 10;
+              const totalPages = Math.ceil(questionReviewData.length / pageSize);
+
+              if (intentObj.intent === "view_next_block") {
+                page = Math.min(page + 1, totalPages);
+              } else if (intentObj.intent === "view_prev_block") {
+                page = Math.max(page - 1, 1);
+              } else {
+                page = 1;
+              }
+              setCurrentQuestionBlockPage(page);
+
+              const startIndex = (page - 1) * pageSize;
+              const endIndex = Math.min(startIndex + pageSize, questionReviewData.length);
+              const pageQuestions = questionReviewData.slice(startIndex, endIndex);
+
+              const content = pageQuestions.map(q => {
+                const qType = QUESTION_TYPE_LABELS[q.questionType] || q.questionType;
+                return `${q.displayIndex}. "${q.questionText}" [${qType}]`;
+              }).join('\n');
+
+              const intro = `Vista en bloques (Bloque ${page} de ${totalPages}):\nMostrando preguntas ${startIndex + 1} a ${endIndex} de ${questionReviewData.length}.`;
+
+              const suggestedTextCommands = [];
+              let menuIdx = 1;
+              if (page < totalPages) {
+                suggestedTextCommands.push(`${menuIdx++}. Ver siguiente bloque`);
+              }
+              if (page > 1) {
+                suggestedTextCommands.push(`${menuIdx++}. Ver bloque anterior`);
+              }
+              suggestedTextCommands.push(`${menuIdx}. Ver resumen`);
+
+              const convResponse: QuestionReviewConversationResponse = {
+                responseId: `all-questions-blocks-p${page}`,
+                intro,
+                sections: [
+                  {
+                    type: 'summary',
+                    content
+                  }
+                ],
+                suggestedTextCommands,
+                status: 'info'
+              };
+
+              const msg = formatConversationResponse(convResponse);
+              void simulateChatFlow([{ id: `msg_assistant_qs_blocks_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
 
             if (intentObj.intent === "view_overview") {
-              const summaryObj = recalculateSummary(questionReviewData);
               const overviewObj = mapQuestionReviewToConversationalOverview(questionReviewData, summaryObj);
               const convResponse = mapQuestionReviewOverviewToConversation(overviewObj);
               const msg = formatConversationResponse(convResponse);
@@ -1178,12 +1234,12 @@ export function ConversationalImportWorkspace() {
             }
 
             if (intentObj.intent === "ambiguous_input" || intentObj.intent === "invalid_input") {
-              const msg = `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“cambia la dimensión de la pregunta 3 a Liderazgo”.`;
+              const msg = intentObj.clarificationPrompt || `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“cambia la dimensión de la pregunta 3 a Liderazgo”.`;
               void simulateChatFlow([{ id: `msg_assistant_qs_amb_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
               return;
             }
 
-            const msg = `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“cambia la dimensión de la pregunta 3 a Liderazgo”.`;
+            const msg = intentObj.clarificationPrompt || `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“cambia la dimensión de la pregunta 3 a Liderazgo”.`;
             void simulateChatFlow([{ id: `msg_assistant_qs_inv_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
             return;
           }
@@ -2213,7 +2269,10 @@ export function ConversationalImportWorkspace() {
                   />
                 )}
                 <div className="p-4 mx-auto w-full max-w-4xl shrink-0">
-                  <MessageComposer onSend={handleComposerSend} />
+                  <MessageComposer
+                    onSend={handleComposerSend}
+                    placeholder={conversationalEditState === "reviewing_questions_and_scales" ? "Escribe una instrucción sobre preguntas y escalas" : undefined}
+                  />
                 </div>
               </div>
             ) : (
