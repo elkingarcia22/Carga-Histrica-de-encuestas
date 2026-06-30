@@ -1792,3 +1792,37 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - PHASE_11D_H52_AMBIGUITY_READY
   - R1H5_DEFINED_BUT_NOT_TRIGGERED
 
+## Phase 11D-H52 · Next Scope Decision Gate
+- **Phase Status**: Completed (decision gate — no code changes)
+- **Problem**: After closing H49 (Ambiguity Runtime Integration), H50 (Ambiguity Visual QA), and H51 (Ambiguity Runtime Stabilization), the team needed a structured decision on the next governed block.
+- **Options Evaluated**:
+  - **Option A · Ambiguity Resolution Application Architecture** — Design how a user text response resolves an active ambiguity in a typed, safe, reversible way. Architecture only.
+  - **Option B · Expand Next Visible Ambiguity** — Define and expose the next ambiguity category (e.g., SurveyTypeAmbiguity) after MultipleSurveyScopeAmbiguity.
+  - **Option C · Conversational Editing Hardening** — Strengthen post-hoc editing of name, type, date, visibility, or threshold via chat.
+  - **Option D · Import Preparation Contract** — Move toward the final historical import preparation contract.
+- **Decision**: **Select Option A** as H53.
+- **Rationale**: Option A is the natural dependency for all other options. Without a typed resolution architecture, each new ambiguity (B) would require ad-hoc wiring; conversational editing (C) would lack a resolution contract; and import preparation (D) is premature without stable typed resolution and conversational review. The current flow uses hardcoded transitions (`"1" → general_configuration`) per ambiguity type — Option A formalizes this into a reusable, testable, typed contract. Architecture-only, no code changes.
+- **Rejection Rationale**:
+  - **Option B rejected**: Premature without a resolution architecture. Adding SurveyTypeAmbiguity now would require duplicating the hardcoded pattern from scope ambiguity.
+  - **Option C rejected**: Conversational editing depends on the typed resolution contract that Option A defines. Doing C before A would result in ad-hoc editing without a stable resolution foundation.
+  - **Option D rejected**: Import preparation requires closed resolution and review flows. Premature while ambiguity types are still being integrated.
+- **Risks**: Over-engineering if the typed resolution contract becomes too abstract. Mitigation: scope H53 to one concrete ambiguity type (MultipleSurveyScopeAmbiguity) and derive the contract from its actual resolution pattern.
+- **Non-goals**: No UI changes. No runtime changes. No new visible ambiguities. No import execution. No dashboard or comparison.
+- **Files expected for H53**: New doc file `docs/AMBIGUITY_RESOLUTION_APPLICATION_ARCHITECTURE.md`, plus markers in existing docs.
+- **Visual review expected**: No (architecture-only).
+- **Markers**:
+  - PHASE_11D_H52_NEXT_SCOPE_DECISION_COMPLETE
+  - NEXT_SCOPE_DECISION_COMPLETE
+  - OPTIONS_EVALUATED_A_B_C_D
+  - RECOMMENDED_NEXT_PHASE_H53_AMBIGUITY_RESOLUTION_APPLICATION_ARCHITECTURE
+  - OPTION_A_SELECTED
+  - OPTION_B_REJECTED_PREMATURE_WITHOUT_RESOLUTION_ARCHITECTURE
+  - OPTION_C_REJECTED_DEPENDS_ON_RESOLUTION_CONTRACT
+  - OPTION_D_REJECTED_PREMATURE_IMPORT_PREP
+  - NO_CODE_CHANGES
+  - NO_RUNTIME_CHANGES
+  - NO_UI_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11D_H53_AMBIGUITY_RESOLUTION_APPLICATION_ARCHITECTURE_READY
