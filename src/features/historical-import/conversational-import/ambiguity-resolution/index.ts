@@ -1,10 +1,11 @@
 /**
- * Phase 11D-H46/H47/H48 · Ambiguity Resolution — Public Exports
+ * Phase 11D-H46/H47/H48/H54 · Ambiguity Resolution — Public Exports
  *
  * Exports the public type contracts needed by future phases:
  * - H47 · Ambiguity Detection Mapper
  * - H48 · Ambiguity Conversation Mapper
  * - H49 · Ambiguity Runtime Integration
+ * - H54 · Resolution Application Types
  *
  * Rules:
  * - No runtime side effects exported.
@@ -55,3 +56,16 @@ export { mapAmbiguityResolutionToChatMessages } from './ambiguityConversationMap
 // H49 runtime mapper type and function
 export type { WorkspaceAmbiguityContext } from './ambiguityRuntimeMapper';
 export { mapWorkspaceToAmbiguityDetectionInput } from './ambiguityRuntimeMapper';
+
+// H54 resolution application types
+export type {
+  AmbiguityResolutionApplicationStatus,
+  WorkspaceResolutionSnapshot,
+  AmbiguityResolutionApplicationInput,
+  SurveyScopeSelectionPatch,
+  AmbiguityResolutionStatePatch,
+  NextWorkspaceStep,
+  AgentFollowUpMessageIntent,
+  AmbiguityResolutionApplicationResult,
+  MultipleSurveyScopeOptionMapping,
+} from './ambiguityResolutionApplicationTypes';

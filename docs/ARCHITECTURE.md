@@ -1855,3 +1855,36 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - NO_DASHBOARD_OR_COMPARISON_CHANGES
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
   - PHASE_11D_H54_READY
+
+## Phase 11D-H54 · Resolution Application Types
+- **Phase Status**: Completed (types-only — no runtime logic, no mapper, no workspace integration)
+- **Problem**: The resolution application architecture (H53) defined the conceptual contracts, but no TypeScript types existed for the application layer. The workspace currently handles scope resolution via hardcoded keyword matching without a typed contract.
+- **Solution**: Created `src/.../ambiguity-resolution/ambiguityResolutionApplicationTypes.ts` with 9 new contracts: `AmbiguityResolutionApplicationStatus` (6-state union), `WorkspaceResolutionSnapshot` (sanitized workspace snapshot), `AmbiguityResolutionApplicationInput` (input contract), `SurveyScopeSelectionPatch` (scope resolution patch), `AmbiguityResolutionStatePatch` (discriminated union by type), `NextWorkspaceStep` (wizard step targets), `AgentFollowUpMessageIntent` (follow-up semantics), `AmbiguityResolutionApplicationApplicationResult` (output contract), and `MultipleSurveyScopeOptionMapping` (option→scope mapping). Exported all from `index.ts`.
+- **Changes Made**:
+  - Created `src/features/historical-import/conversational-import/ambiguity-resolution/ambiguityResolutionApplicationTypes.ts` (181 lines, types only).
+  - Updated `src/features/historical-import/conversational-import/ambiguity-resolution/index.ts` to export all new types.
+- **Markers**:
+  - PHASE_11D_H54_RESOLUTION_APPLICATION_TYPES_COMPLETE
+  - RESOLUTION_APPLICATION_TYPES_COMPLETE
+  - APPLICATION_INPUT_TYPE_DEFINED
+  - APPLICATION_RESULT_TYPE_DEFINED
+  - APPLICATION_STATUS_UNION_DEFINED
+  - WORKSPACE_STATE_SNAPSHOT_TYPE_DEFINED
+  - STATE_PATCH_CONCEPT_TYPE_DEFINED
+  - NEXT_WORKSPACE_STEP_TYPE_DEFINED
+  - AGENT_FOLLOW_UP_INTENT_TYPE_DEFINED
+  - MULTIPLE_SURVEY_SCOPE_TYPE_SUPPORT_DEFINED
+  - PRIVACY_SAFE_DETAILS_TYPE_DEFINED
+  - NO_EXISTING_TYPES_DUPLICATED
+  - EXPORTED_FROM_INDEX
+  - NO_RUNTIME_LOGIC_CREATED
+  - NO_MAPPER_LOGIC_CREATED
+  - NO_WORKSPACE_INTEGRATION
+  - NO_REACT_IMPORTS
+  - NO_COMPONENTS_CREATED
+  - NO_TESTS_CREATED
+  - NO_UI_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11D_H55_READY
