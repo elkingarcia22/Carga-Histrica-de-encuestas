@@ -294,25 +294,13 @@ export function ConversationalImportWorkspace() {
         timestamp: isoString,
       },
       {
-        id: `msg_assistant_upload_prompt_${generateId()}`,
+        id: `msg_assistant_upload_panel_${generateId()}`,
         role: "assistant",
-        type: "text",
-        content: "Adjunta aquí los archivos de resultados históricos para analizarlos.",
+        type: "sandbox_upload_panel",
+        content: "",
         timestamp: isoString,
       }
     ]);
-
-    setTimeout(() => {
-      const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-      if (fileInput) {
-        try {
-          fileInput.click();
-        } catch {
-          const btn = fileInput.parentElement?.querySelector('button') as HTMLButtonElement;
-          if (btn) btn.focus();
-        }
-      }
-    }, 100);
   };
 
   const handleComposerSend = (text: string, files: File[]) => {
