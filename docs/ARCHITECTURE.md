@@ -2009,4 +2009,19 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - E2E_UPLOAD_AND_TYPE_1_ADVANCES
   - GIT_SHOW_CHECK_PASSED
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
-  - PHASE_11D_COMPLETE
+   - PHASE_11D_COMPLETE
+## Phase 11D Close · Conversational Import (Ambiguity Resolution)
+- **Phase Status**: Closed — report at `docs/PHASE_11D_CLOSE_REPORT.md`
+- **Scope Delivered**: Full ambiguity resolution flow for MultipleSurveyScopeAmbiguity — detection, typed resolution application, workspace integration, native file picker
+- **Next Scope Decision**: **Option C — Conversational Editing Hardening** selected
+- **Rationale**: Strengthen post-hoc editing of survey metadata (name, type, date, visibility, threshold) via chat. Highest product visibility and user value now that the resolution architecture is in place. Prerequisite for ambiguity expansion and import preparation.
+- **Prior Art**: `docs/CONTROLLED_OVERLAY_EDITING_ARCHITECTURE.md` defines overlay editing rules, permitted/prohibited actions, resolved view calculation, conflict rules, and privacy boundaries. Also see `docs/CONVERSATIONAL_IMPORT_NEXT_CAPABILITY.md`.
+- **Markers**:
+  - PHASE_11D_CLOSE_COMPLETE
+  - PHASE_11D_CLOSE_REPORT_CREATED
+  - H49_THROUGH_H58_COMPLETE
+  - FULL_REGRESSION_PASSED_155
+  - PLAYWRIGHT_QA_PASSED_7_OF_7
+  - NATIVE_FILE_PICKER_VIA_HIDDEN_INPUT
+  - NEXT_SCOPE_OPTION_C_SELECTED
+  - CONVERSATIONAL_EDITING_HARDENING_NEXT
