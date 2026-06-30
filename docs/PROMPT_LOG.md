@@ -1,3 +1,42 @@
+## Fase 11F-A · Question Scale Dimension Review Architecture
+
+Phase: Phase 11F-A · Question Scale Dimension Review Architecture
+
+Summary:
+- Designed and documented the architecture to evolve step `1/7 · Preguntas y escalas` from an aggregate summary into a conversational, chat-driven question/scale/dimension review and editing experience.
+- Document is architecture-only: NO_CODE_CHANGES, NO_RUNTIME_CHANGES, NO_UI_CHANGES, NO_NEW_COMPONENTS, NO_NEW_ROUTES.
+- Defined full question contract (questionId, displayIndex, questionText, questionType, scaleType, scaleDetail, dimensionId, dimensionName, status).
+- Defined scale type taxonomy (likert_5, likert_7, nps_0_10, binary_yes_no, frequency, agreement, custom, not_applicable, unknown).
+- Defined dimension assignment model with origin tracking (detected_by_sheet, detected_by_column, inferred_by_dictionary, user_corrected, not_assigned).
+- Defined conversational commands for navigation, editing, and confirmation — all by chat text only.
+- Defined 6 step states: summary_ready → listing_by_dimension/listing_needs_review → viewing_question_detail → editing_* → confirmed/blocked.
+- Defined privacy rules: NO_PII, NO_RAW_ROWS, NO_OPEN_TEXT_ANSWERS, NO_WORKBOOK_DUMP, NO_REAL_CLIENT_DATA.
+- Defined full implementation plan (11F-B through 11F-H).
+- Updated ARCHITECTURE.md, PROMPT_LOG.md, QA_CHECKLIST.md.
+
+PHASE_11F_A_QUESTION_SCALE_DIMENSION_REVIEW_ARCHITECTURE_COMPLETE
+QUESTION_SCALE_DIMENSION_REVIEW_ARCHITECTURE_LOCKED
+QUESTION_REVIEW_BOUNDARY_DEFINED
+QUESTION_CONTRACT_DEFINED
+QUESTION_TYPE_CONTRACT_DEFINED
+SCALE_TYPE_CONTRACT_DEFINED
+SCALE_DETAIL_CONTRACT_DEFINED
+DIMENSION_ASSIGNMENT_CONTRACT_DEFINED
+QUESTION_REVIEW_CONVERSATIONAL_COMMANDS_DEFINED
+QUESTION_REVIEW_EDITING_RULES_DEFINED
+QUESTION_REVIEW_PRIVACY_RULES_DEFINED
+QUESTION_REVIEW_STEP_STATES_DEFINED
+QUESTION_REVIEW_CONFIRMATION_RULES_DEFINED
+QUESTION_REVIEW_TESTING_STRATEGY_DEFINED
+QUESTION_REVIEW_IMPLEMENTATION_PLAN_DEFINED
+NO_CODE_CHANGES
+NO_RUNTIME_CHANGES
+NO_UI_CHANGES
+NO_IMPORT_EXECUTION
+NO_DASHBOARD_OR_COMPARISON_CHANGES
+READY_FOR_COMPARISON_OUTPUT_DISABLED
+PHASE_11F_B_READY
+
 ## Fase 11D-H44-H17 · Chat Foundation Runtime Stabilization
 
 Phase: Phase 11D-H44-H17 · Chat Foundation Runtime Stabilization

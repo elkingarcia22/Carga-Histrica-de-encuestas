@@ -2025,6 +2025,42 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - NATIVE_FILE_PICKER_VIA_HIDDEN_INPUT
   - NEXT_SCOPE_OPTION_C_SELECTED
   - CONVERSATIONAL_EDITING_HARDENING_NEXT
+## Phase 11F-A · Question Scale Dimension Review Architecture
+- **Phase Status**: Completed (architecture-only — no code changes)
+- **Phase**: Phase 11F-A · Question Scale Dimension Review Architecture
+- **Summary**: Designed the architecture to convert step `1/7 · Preguntas y escalas` from an aggregate summary into a conversational, chat-driven question/scale/dimension review and editing experience.
+- **Key Design Decisions**:
+  - The review stays entirely inside chat: NO_ACTION_BUTTONS_FOR_REVIEW, NO_SIDE_PANEL_EDITOR, NO_EXTERNAL_REVIEW_TAB, NO_FORM_MODE_EDITOR.
+  - Questions are grouped progressively (by dimension, then by review status) rather than listing all 37 at once.
+  - A new **Question Scale Dimension Review Layer** sits between the workspace and chat foundation.
+  - Editing happens by text commands like "cambia la dimensión de la pregunta 3 a Liderazgo".
+  - Privacy rules: NO_PII_VISIBLE, NO_RAW_ROWS_VISIBLE, NO_OPEN_TEXT_VISIBLE, NO_WORKBOOK_DUMP_VISIBLE, NO_REAL_CLIENT_DATA.
+- **Document**: [QUESTION_SCALE_DIMENSION_REVIEW_ARCHITECTURE.md](./QUESTION_SCALE_DIMENSION_REVIEW_ARCHITECTURE.md)
+- **Changes Made**: Created `docs/QUESTION_SCALE_DIMENSION_REVIEW_ARCHITECTURE.md` with 15 sections covering purpose, boundary, question contract, scale detail, dimensions, conversational experience, commands, editing rules, privacy rules, states, confirmation rules, mock data relationship, out-of-scope rules, testing strategy, and future implementation plan. Updated `docs/ARCHITECTURE.md`, `docs/PROMPT_LOG.md`, `docs/QA_CHECKLIST.md`.
+- **Markers**:
+  - PHASE_11F_A_QUESTION_SCALE_DIMENSION_REVIEW_ARCHITECTURE_COMPLETE
+  - QUESTION_SCALE_DIMENSION_REVIEW_ARCHITECTURE_LOCKED
+  - QUESTION_REVIEW_BOUNDARY_DEFINED
+  - QUESTION_CONTRACT_DEFINED
+  - QUESTION_TYPE_CONTRACT_DEFINED
+  - SCALE_TYPE_CONTRACT_DEFINED
+  - SCALE_DETAIL_CONTRACT_DEFINED
+  - DIMENSION_ASSIGNMENT_CONTRACT_DEFINED
+  - QUESTION_REVIEW_CONVERSATIONAL_COMMANDS_DEFINED
+  - QUESTION_REVIEW_EDITING_RULES_DEFINED
+  - QUESTION_REVIEW_PRIVACY_RULES_DEFINED
+  - QUESTION_REVIEW_STEP_STATES_DEFINED
+  - QUESTION_REVIEW_CONFIRMATION_RULES_DEFINED
+  - QUESTION_REVIEW_TESTING_STRATEGY_DEFINED
+  - QUESTION_REVIEW_IMPLEMENTATION_PLAN_DEFINED
+  - NO_CODE_CHANGES
+  - NO_RUNTIME_CHANGES
+  - NO_UI_CHANGES
+  - NO_IMPORT_EXECUTION
+  - NO_DASHBOARD_OR_COMPARISON_CHANGES
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11F_B_READY
+
 ## Phase 11E-H1 · Chat Foundation Thinking Continuity Hotfix
 - **Phase Status**: Completed
 - **Problem**: After "Configuración general confirmada" → "Ahora revisaré el match detectado de la estructura.", the chat showed no thinking indicator between the end of one `simulateChatFlow` batch and the start of the next chained batch (via `.then()` → `setTimeout`). The conversation appeared stuck even though the flow was about to continue.
