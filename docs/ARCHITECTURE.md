@@ -1923,4 +1923,54 @@ Se estabilizó con éxito el runtime integrado del renderizador de Chat Foundati
   - AMBIGUITY_TESTS_PASSED
   - GIT_SHOW_CHECK_PASSED
   - READY_FOR_COMPARISON_OUTPUT_DISABLED
-  - PHASE_11D_H56_READY
+## Phase 11D-H56 · Resolution Application Workspace Integration
+- **Phase Status**: Completed (minimal workspace integration — mapper connected, keyword matching replaced, no full rewrite)
+- **Problem**: The workspace's `awaiting_survey_scope_selection` branch used hardcoded keyword matching (`scope1Keywords`, `scope2Keywords`, `scope3Keywords`) and intent detection to interpret user text. This was untested business logic coupled directly to the workspace component.
+- **Solution**: Connected `mapTextToAmbiguityResolutionApplicationResult` to the `awaiting_survey_scope_selection` branch. The workspace now stores the `activeAmbiguity` when detected (from the file upload pipeline), constructs a sanitized `AmbiguityResolutionApplicationInput`, and delegates text interpretation to the typed mapper. The mapper's result drives the transition: `applied` advances to general config, `invalid_input` keeps ambiguity active with the mapper's validation message, and all other statuses produce safe fallback messages.
+- **Changes Made**:
+  - Modified `src/.../ConversationalImportWorkspace.tsx`:
+    - Added `setActiveAmbiguity` state to persist detected ambiguity.
+    - Added `setActiveAmbiguity(ambiguity ?? null)` in both file upload paths (handleComposerSend and handleSandboxFilesSelected).
+    - Added reset in `handleNewChat`.
+    - Replaced keyword matching + intent detection in `awaiting_survey_scope_selection` branch with mapper call.
+    - Added imports for `mapTextToAmbiguityResolutionApplicationResult` and `ActiveAmbiguity`.
+  - Updated `docs/QA_CHECKLIST.md` with H56 section.
+- **Markers**:
+  - PHASE_11D_H56_RESOLUTION_APPLICATION_WORKSPACE_INTEGRATION_COMPLETE
+  - RESOLUTION_APPLICATION_WORKSPACE_INTEGRATION_COMPLETE
+  - APPLICATION_MAPPER_CONNECTED_TO_WORKSPACE
+  - TEXT_INPUT_RESOLUTION_USES_APPLICATION_MAPPER
+  - AWAITING_SURVEY_SCOPE_SELECTION_USES_TYPED_RESULT
+  - USER_RESPONSE_1_STILL_ADVANCES_TO_GENERAL_CONFIGURATION
+  - INVALID_INPUT_HANDLED_BY_TYPED_RESULT
+  - NO_DUPLICATE_SCOPE_SELECTION_MESSAGES
+  - TEXT_ONLY_RESOLUTION_STILL_PRESERVED
+  - APPLICATION_RESULT_PATCH_APPLIED_BY_WORKSPACE_ONLY
+  - CHAT_FOUNDATION_NOT_COUPLED_TO_BUSINESS_RULES
+  - NO_FULL_WORKSPACE_REWRITE
+  - NO_CHAT_FOUNDATION_CORE_CHANGES
+  - NO_FLOW_ADAPTER_CHANGES
+  - NO_DETECTION_MAPPER_CHANGES
+  - NO_CONVERSATION_MAPPER_CHANGES
+  - NO_RUNTIME_MAPPER_CHANGES
+  - NO_APPLICATION_MAPPER_CHANGES
+  - NO_APPLICATION_TYPES_CHANGES
+  - NO_NEW_VISIBLE_AMBIGUITY_CATEGORY
+  - NO_NEW_COMPONENTS
+  - NO_NEW_ROUTES
+  - NO_ACTION_BUTTONS_FOR_REVIEW
+  - NO_SIDE_PANEL_EDITOR
+  - NO_EXTERNAL_REVIEW_TAB
+  - NO_FORM_MODE_EDITOR
+  - ALL_ACTIONS_BY_CHAT_TEXT_ONLY
+  - NO_PII_VISIBLE
+  - NO_RAW_ROWS_VISIBLE
+  - NO_OPEN_TEXT_VISIBLE
+  - NO_WORKBOOK_DUMP_VISIBLE
+  - NO_REAL_CLIENT_DATA
+  - BUILD_PASSED
+  - AMBIGUITY_TESTS_PASSED
+  - FULL_REGRESSION_TESTS_PASSED
+  - GIT_SHOW_CHECK_PASSED
+  - READY_FOR_COMPARISON_OUTPUT_DISABLED
+  - PHASE_11D_H57_READY

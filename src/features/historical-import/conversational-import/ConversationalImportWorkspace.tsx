@@ -63,8 +63,10 @@ import {
   mapWorkspaceToAmbiguityDetectionInput,
   detectHistoricalImportAmbiguities,
   mapAmbiguityResolutionToChatMessages,
+  mapTextToAmbiguityResolutionApplicationResult,
 } from "./ambiguity-resolution";
 import type { WorkspaceAmbiguityContext } from "./ambiguity-resolution";
+import type { ActiveAmbiguity } from "./ambiguity-resolution";
 
 const HISTORICAL_IMPORT_CHAT_FOUNDATION_RUNTIME_ENABLED = true;
 
@@ -182,6 +184,7 @@ export function ConversationalImportWorkspace() {
   const [conversationalEditContext, setConversationalEditContext] = useState<ConversationalEditContext>({});
   const [selectedSurveyScope, setSelectedSurveyScope] = useState<ConversationalSurveyScope | null>(null);
   const [generalConfiguration, setGeneralConfiguration] = useState<Partial<ConversationalGeneralConfiguration>>({});
+  const [activeAmbiguity, setActiveAmbiguity] = useState<ActiveAmbiguity | null>(null);
 
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
 
@@ -248,6 +251,7 @@ export function ConversationalImportWorkspace() {
     setSelectedSurveyScope(null);
     setConversationalEditState("idle");
     setConversationalEditContext({});
+    setActiveAmbiguity(null);
     setMessages(initialMessages);
   };
 
@@ -381,6 +385,7 @@ export function ConversationalImportWorkspace() {
         const ambiguity = snapshot.activeAmbiguity;
 
         setConversationalEditState("awaiting_survey_scope_selection");
+        setActiveAmbiguity(ambiguity ?? null);
 
         if (ambiguity?.type === "MultipleSurveyScopeAmbiguity") {
           const cfMessages = mapAmbiguityResolutionToChatMessages(snapshot);
@@ -432,27 +437,46 @@ export function ConversationalImportWorkspace() {
       const intent = detectIntent(text);
 
       if (conversationalEditState === "awaiting_survey_scope_selection") {
-        let selectedScope: ConversationalSurveyScope | null = null;
+        if (activeAmbiguity) {
+          const result = mapTextToAmbiguityResolutionApplicationResult({
+            activeAmbiguity,
+            userTextSanitized: text.trim(),
+            workspaceSnapshot: {
+              selectedSurveyScopeId: selectedSurveyScope,
+              currentStep: conversationalEditState,
+              hasSelectedScope: selectedSurveyScope !== null,
+              hasConfiguredGeneralSettings: generalConfiguration.surveyName !== undefined,
+              safeFileLabels: stagedFiles.map(f => f.name),
+              safeCycleLabels: activeAmbiguity.options.map(o => o.label),
+            },
+            availableOptions: activeAmbiguity.options,
+            currentWizardStep: conversationalEditState,
+            privacyFlags: activeAmbiguity.privacyFlags,
+          });
 
-        const normalizedInput = text.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ");
-        const scope1Keywords = ["1", "01", "opcion 1", "uno", "primera", "primer opcion", "primera opcion", "2025", "clima 2025", "qs clima 2025"];
-        const scope2Keywords = ["2", "02", "opcion 2", "dos", "segunda", "segunda opcion", "2024", "clima 2024", "qs clima 2024"];
-        const scope3Keywords = ["3", "03", "opcion 3", "tres", "tercera", "todo", "ambas", "ambos", "multiciclo", "procesar todo", "todo junto", "carga historica"];
+          if (result.status === 'applied' && result.statePatch?.patch.selectedSurveyScopeId) {
+            const selectedScope = result.statePatch.patch.selectedSurveyScopeId;
+            if (selectedScope === 'qs_clima_2025' || selectedScope === 'qs_clima_2024' || selectedScope === 'qs_clima_multicycle_2024_2025') {
+              setSelectedSurveyScope(selectedScope);
+              setConversationalEditState("confirming_survey_name");
+              const scopeLabel = result.statePatch.patch.safeScopeLabel;
+              const suggestion = getSurveyNameSuggestion(selectedScope);
+              void simulateChatFlow([{
+                id: `msg_assistant_scope_selected_${generateId()}`,
+                role: "assistant",
+                type: "text",
+                content: `Perfecto. Procesaré ${scopeLabel} como encuesta seleccionada.\n\nAntes de revisar la estructura, validaré la configuración general de la encuesta.\n\n1/7 · Nombre de la encuesta\n\nNombre sugerido: ${suggestion}.\n¿Quieres usar este nombre o escribir otro?`,
+                timestamp: "2025-01-01T12:00:00.000Z",
+              }]);
+              return;
+            }
+          }
 
-        if (scope1Keywords.includes(normalizedInput) || intent === "select_scope_1") selectedScope = "qs_clima_2025";
-        else if (scope2Keywords.includes(normalizedInput) || intent === "select_scope_2") selectedScope = "qs_clima_2024";
-        else if (scope3Keywords.includes(normalizedInput) || intent === "select_scope_3") selectedScope = "qs_clima_multicycle_2024_2025";
-
-        if (selectedScope) {
-          setSelectedSurveyScope(selectedScope);
-          setConversationalEditState("confirming_survey_name");
-          const scopeLabel = selectedScope === "qs_clima_2025" ? "QS Clima 2025" : selectedScope === "qs_clima_2024" ? "QS Clima 2024" : "QS Clima Histórico 2024/2025";
-          const suggestion = getSurveyNameSuggestion(selectedScope);
           void simulateChatFlow([{
-            id: `msg_assistant_scope_selected_${generateId()}`,
+            id: `msg_assistant_scope_invalid_${generateId()}`,
             role: "assistant",
             type: "text",
-            content: `Perfecto. Procesaré ${scopeLabel} como encuesta seleccionada.\n\nAntes de revisar la estructura, validaré la configuración general de la encuesta.\n\n1/7 · Nombre de la encuesta\n\nNombre sugerido: ${suggestion}.\n¿Quieres usar este nombre o escribir otro?`,
+            content: result.validationMessage || "Por favor responde 1, 2 o 3.",
             timestamp: "2025-01-01T12:00:00.000Z",
           }]);
         } else {
@@ -460,7 +484,7 @@ export function ConversationalImportWorkspace() {
             id: `msg_assistant_scope_invalid_${generateId()}`,
             role: "assistant",
             type: "text",
-            content: "Para continuar, responde 1, 2 o 3:\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025",
+            content: "Para continuar, responde 1, 2 o 3:\n1. QS Clima 2025\n2. QS Clima 2024\n3. QS Clima 2024/2025 (multiciclo)",
             timestamp: "2025-01-01T12:00:00.000Z",
           }]);
         }
@@ -944,6 +968,7 @@ export function ConversationalImportWorkspace() {
       const ambiguity = snapshot.activeAmbiguity;
 
       setConversationalEditState("awaiting_survey_scope_selection");
+      setActiveAmbiguity(ambiguity ?? null);
 
       if (ambiguity?.type === "MultipleSurveyScopeAmbiguity") {
         const cfMessages = mapAmbiguityResolutionToChatMessages(snapshot);
