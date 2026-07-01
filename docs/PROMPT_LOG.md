@@ -13363,3 +13363,9 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Confirmed that no unauthorized `tests/` directory exists under `question-scale-dimension-review/`.
 - Updated test file metadata/comments to reflect folder governance verification.
 - Ran quality checks: eslint, tests, tsc, and build passed cleanly.
+
+## Phase 11F-F-H4-D-B-G3 · Correct Failed Test Folder Move
+- Verified that no unauthorized `tests/` directory exists under `question-scale-dimension-review/` on the filesystem or in git.
+- Confirmed that all question review test files are correctly and solely located under the authorized `__tests__/` directory.
+- Registered governance correction markers in ARCHITECTURE.md, QA_CHECKLIST.md, and PROMPT_LOG.md.
+- Ran QA checks: npm run build, eslint scoped paths, and unit test suite successfully.
