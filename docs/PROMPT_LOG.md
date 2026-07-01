@@ -1,3 +1,37 @@
+## Fase 11F-F-H4-A · Simplified Question Review Flow Architecture Lock
+
+Phase: Fase 11F-F-H4-A · Simplified Question Review Flow Architecture Lock
+
+Summary:
+- Locked the architecture for the simplified question review flow in Step 1/7 (Preguntas y escalas).
+- Documented showing all questions grouped by dimension, each exhibiting question type, scale type, and scale detail.
+- Specified only question fields (type, scale type, scale detail) are editable, while dimension modifications are blocked.
+- Locked the guided flow (select question index -> choose field -> insert value) and free-text NLP/Command parsing.
+- Defined post-edit actions and transition to Step 2/7 (Demográficos) keeping changes locally.
+- Described impact on mappers (`questionScaleDimensionReviewMessageMapper.ts`, `questionScaleDimensionEditingMapper.ts`) and workspace states.
+- Created the specification file `docs/QUESTION_REVIEW_SIMPLIFIED_FLOW_ARCHITECTURE.md`.
+
+Commit SHA: PENDING_COMMIT
+
+QUESTION_REVIEW_SIMPLIFIED_FLOW_ARCHITECTURE_LOCKED
+SHOW_ALL_QUESTIONS_BY_DIMENSION_DEFINED
+QUESTION_FIELDS_VISIBLE_DEFINED
+DIMENSION_EDITING_DISABLED_DEFINED
+QUESTION_ONLY_EDITING_DEFINED
+EDITABLE_FIELDS_DEFINED
+GUIDED_QUESTION_SELECTION_DEFINED
+GUIDED_FIELD_SELECTION_DEFINED
+FREE_TEXT_EDITING_DEFINED
+POST_EDIT_CONTINUE_OR_DEMOGRAPHICS_DEFINED
+DEMOGRAPHICS_TRANSITION_DEFINED
+MAPPER_IMPACT_DEFINED
+WORKSPACE_STATE_IMPACT_DEFINED
+QA_VISUAL_CHECKLIST_DEFINED
+NO_CODE_CHANGES
+NO_RUNTIME_CHANGES
+NO_UI_CHANGES
+VISUAL_REVIEW_REQUIRED
+
 ## Fase 11F-F-H3-D · Focus Composer When Awaiting User Input
 
 Phase: Fase 11F-F-H3-D · Focus Composer When Awaiting User Input
