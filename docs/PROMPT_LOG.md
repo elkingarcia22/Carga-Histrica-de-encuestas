@@ -1,3 +1,35 @@
+## Fase 11F-F-H3-A · Chat Master Runtime UX Architecture Lock
+
+Phase: Fase 11F-F-H3-A · Chat Master Runtime UX Architecture Lock
+
+Summary:
+- Locked the architecture for master chat runtime UX fixes.
+- Documented sticky auto-scroll mechanics to scroll feed to bottom on new user messages or assistant thinking states, avoiding hijacking manual scrolling.
+- Documented styling rules for making scrollbars visible without hardcoded colors.
+- Documented send button visual enhancement using approved AI gradient tokens.
+- Documented send button loader animation and Enter key-lock behavior during active processing.
+- Documented assistant response processing transition rules to ensure all responses are preceded by a visual progress loader.
+- Defined file boundaries for implementation to restrict changes to only composer, workspace, chat foundation, and CSS styling files.
+- No code, runtime, or UI changes introduced.
+
+Commit SHA: PENDING_COMMIT
+
+CHAT_MASTER_RUNTIME_UX_ARCHITECTURE_LOCKED
+OWNER_DECISION_GATE_FOR_MASTER_CHAT_CHANGES_DOCUMENTED
+AUTO_SCROLL_TO_PROCESSING_ARCHITECTURE_DEFINED
+VISIBLE_SCROLLBAR_ARCHITECTURE_DEFINED
+AI_GRADIENT_SEND_BUTTON_ARCHITECTURE_DEFINED
+SEND_BUTTON_PROCESSING_LOADER_ARCHITECTURE_DEFINED
+PROCESSING_BEFORE_ASSISTANT_RESPONSE_ARCHITECTURE_DEFINED
+MASTER_COMPONENT_BOUNDARY_DEFINED
+WORKSPACE_VS_CHAT_FOUNDATION_RESPONSIBILITY_DEFINED
+FILES_ALLOWED_FOR_IMPLEMENTATION_DEFINED
+FILES_PROHIBITED_FOR_IMPLEMENTATION_DEFINED
+NO_CODE_CHANGES
+NO_RUNTIME_CHANGES
+NO_UI_CHANGES
+VISUAL_REVIEW_REQUIRED
+
 ## Fase 11F-F-H2 · Consolidate Survey Selection Prompt Messages
 
 Phase: Fase 11F-F-H2 · Consolidate Survey Selection Prompt Messages
