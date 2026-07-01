@@ -1,5 +1,11 @@
 # Chat Master Runtime UX Architecture
 
+<!-- PHASE_11F_F_H3_E_B_SELECTIVE_THINKING_VISIBILITY_IMPLEMENTED -->
+<!-- FEED_LEVEL_THINKING_ONLY_FOR_HEAVY_PROCESSING -->
+<!-- THINKING_CLEARS_AFTER_FINAL_RESPONSE -->
+<!-- PERSISTENT_THINKING_AFTER_RESPONSE_FIXED -->
+<!-- OWNER_VISUAL_REVIEW_REQUIRED -->
+
 This document defines the architectural specifications for the master chat runtime's UX enhancements, specifically covering auto-scroll behavior, scrollbar visibility, AI gradient styling, processing states, and execution boundaries.
 
 ---

@@ -2491,3 +2491,39 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - ALL_QUESTION_REVIEW_TESTS_IN_AUTHORIZED___TESTS__FOLDER = YES
 - UNAUTHORIZED_TESTS_FOLDER_EXISTS = NO
 - UNAUTHORIZED_TESTS_FOLDER_REMOVED = YES
+
+## Phase 11F-F-H3-E-B · Selective Chat Thinking Visibility
+
+### isFeedThinking State Architecture
+
+Two separate states now govern the processing+thinking UX:
+
+| State | Scope | When true |
+|---|---|---|
+| `isProcessingNextStep` | Composer-level | ALL operations (locks composer, shows send loader) |
+| `isFeedThinking` | Feed-level | ONLY heavy operations (shows Pensando... bubble) |
+
+### simulateChatFlow Options
+
+```ts
+simulateChatFlow(messages, { keepThinkingAfter?: boolean; feedThinking?: boolean })
+```
+
+- `feedThinking: true` → injects Pensando... in feed (heavy only)
+- `feedThinking` omitted/false → delivers response directly, no feed bubble
+
+### Heavy operations (feedThinking: true)
+- File upload → handleLocalAnalysisStart
+- confirming_associated_files → structure match review + question overview
+- handleSandboxFilesSelected → handleLocalAnalysisStart
+
+### Lightweight operations (feedThinking: false / omitted)
+All guided-prompt wizard steps: scope selection, 1/7–7/7 general config, question selection, edit field/value, post-edit summary, errors, confirmations.
+
+## Phase 11F-F-H3-E-B Markers
+- PHASE_11F_F_H3_E_B_SELECTIVE_THINKING_VISIBILITY_IMPLEMENTED = YES
+- SELECTIVE_THINKING_VISIBILITY_IMPLEMENTED = YES
+- FEED_LEVEL_THINKING_ONLY_FOR_HEAVY_PROCESSING = YES
+- THINKING_CLEARS_AFTER_FINAL_RESPONSE = YES
+- PERSISTENT_THINKING_AFTER_RESPONSE_FIXED = YES
+- OWNER_VISUAL_REVIEW_REQUIRED = YES

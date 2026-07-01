@@ -13369,3 +13369,15 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Confirmed that all question review test files are correctly and solely located under the authorized `__tests__/` directory.
 - Registered governance correction markers in ARCHITECTURE.md, QA_CHECKLIST.md, and PROMPT_LOG.md.
 - Ran QA checks: npm run build, eslint scoped paths, and unit test suite successfully.
+
+## Phase 11F-F-H3-E-B · Selective Chat Thinking Visibility
+- Diagnosed two root causes of persistent `Pensando...` bug:
+  1. `simulateChatFlow` injected a feed-level `Pensando...` bubble for EVERY assistant message, regardless of whether the operation was lightweight or heavy.
+  2. The `thinking_continuity` DOM block guarded on `isProcessingNextStep` (always true during any response) instead of a dedicated feed-thinking flag.
+- Introduced `isFeedThinking: boolean` as a separate React state from `isProcessingNextStep` in `ConversationalImportWorkspace.tsx`.
+- Extended `simulateChatFlow` options with `feedThinking?: boolean` (default: false). Only heavy calls (`keepThinkingAfter: true`) pass `feedThinking: true`.
+- Updated the `thinking_continuity` render block to guard on `isFeedThinking` instead of `isProcessingNextStep`.
+- Updated auto-scroll logic to use `isFeedThinking` for thinking-based scroll trigger.
+- All `.finally()` handlers that call `setIsProcessingNextStep(false)` now also call `setIsFeedThinking(false)`.
+- No changes to `chat-foundation/`, `MessageComposer.tsx`, taxonomies, mappers, tests, or forbidden files.
+- Build, lint (scoped to conversational-import and historical-import), and full regression tests (268 tests) passed.

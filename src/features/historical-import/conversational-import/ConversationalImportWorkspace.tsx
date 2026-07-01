@@ -186,6 +186,11 @@ export function ConversationalImportWorkspace() {
   const [generalConfiguration, setGeneralConfiguration] = useState<Partial<ConversationalGeneralConfiguration>>({});
   const [activeAmbiguity, setActiveAmbiguity] = useState<ActiveAmbiguity | null>(null);
   const [isProcessingNextStep, setIsProcessingNextStep] = useState(false);
+  // FEED_LEVEL_THINKING_POLICY = selective_only
+  // isFeedThinking controls the Pensando... bubble in the chat feed.
+  // It is ONLY set true for heavy operations (file analysis, structure match review,
+  // multi-step transitions). Lightweight responses never set this flag.
+  const [isFeedThinking, setIsFeedThinking] = useState(false);
   const sandboxFileInputRef = useRef<HTMLInputElement>(null);
 
   const [questionReviewData, setQuestionReviewData] = useState<QuestionReviewItem[]>(() => {
@@ -447,34 +452,51 @@ export function ConversationalImportWorkspace() {
 
   const { wait, waitTypewriter, isMounted } = useMessageSequenceGate();
 
-  const simulateChatFlow = async (newMessages: ChatMessage[], options?: { keepThinkingAfter?: boolean }) => {
+  const simulateChatFlow = async (
+    newMessages: ChatMessage[],
+    options?: { keepThinkingAfter?: boolean; feedThinking?: boolean }
+  ) => {
+    // FEED_LEVEL_THINKING_POLICY: only activate feed bubble when explicitly requested
+    const showFeedThinking = options?.feedThinking === true;
     setIsProcessingNextStep(true);
+    if (showFeedThinking) setIsFeedThinking(true);
     initAudioSync();
 
     for (const msg of newMessages) {
       if (msg.role === "user") {
         setMessages(prev => [...prev, msg]);
       } else {
-        const typingId = `msg_typing_${generateId()}`;
-        setMessages(prev => {
-          const cleaned = prev.filter(m => !(m.role === "assistant" && m.type === "analysis_progress" && m.content === "Pensando..."));
-          return [...cleaned, {
-            id: typingId,
-            role: "assistant",
-            type: "analysis_progress",
-            content: "Pensando...",
-            timestamp: "2025-01-01T12:00:00.000Z"
-          }];
-        });
+        if (showFeedThinking) {
+          // Heavy operation: inject Pensando... bubble into the feed
+          const typingId = `msg_typing_${generateId()}`;
+          setMessages(prev => {
+            const cleaned = prev.filter(m => !(m.role === "assistant" && m.type === "analysis_progress" && m.content === "Pensando..."));
+            return [...cleaned, {
+              id: typingId,
+              role: "assistant",
+              type: "analysis_progress",
+              content: "Pensando...",
+              timestamp: "2025-01-01T12:00:00.000Z"
+            }];
+          });
 
-        const proceedThinking = await wait(1500);
+          const proceedThinking = await wait(1500);
 
-        setMessages(prev => {
-          const filtered = prev.filter(m => m.id !== typingId);
-          if (!proceedThinking) return filtered;
-          return [...filtered, msg];
-        });
-        if (!proceedThinking) return;
+          setMessages(prev => {
+            const filtered = prev.filter(m => m.id !== typingId);
+            if (!proceedThinking) return filtered;
+            return [...filtered, msg];
+          });
+          if (!proceedThinking) return;
+        } else {
+          // Lightweight operation: deliver response directly, no feed bubble
+          const proceed = await wait(0);
+          if (!proceed) return;
+          setMessages(prev => {
+            const cleaned = prev.filter(m => !(m.role === "assistant" && m.type === "analysis_progress" && m.content === "Pensando..."));
+            return [...cleaned, msg];
+          });
+        }
 
         if (msg.content) {
           const proceedTyping = await waitTypewriter(msg.content.length, 300);
@@ -487,6 +509,7 @@ export function ConversationalImportWorkspace() {
     }
     if (!options?.keepThinkingAfter) {
       setIsProcessingNextStep(false);
+      setIsFeedThinking(false);
     }
     if (isMounted.current) {
       playNotificationSound();
@@ -504,7 +527,7 @@ export function ConversationalImportWorkspace() {
 
           const lastMsgData = messages[messages.length - 1];
           const isLastMsgUser = lastMsgData?.role === "user";
-          const isLastMsgThinking = lastMsgData?.type === "analysis_progress" || isProcessingNextStep;
+          const isLastMsgThinking = lastMsgData?.type === "analysis_progress" || isFeedThinking;
 
           if (isNearBottom || isLastMsgUser || isLastMsgThinking) {
             const lastMsg = document.querySelectorAll('[id^="msg_"]');
@@ -521,7 +544,7 @@ export function ConversationalImportWorkspace() {
       }, 100);
       return () => clearTimeout(timeout);
     }
-  }, [messages, chatStarted, viewMode, isProcessingNextStep]);
+  }, [messages, chatStarted, viewMode, isProcessingNextStep, isFeedThinking]);
 
   const handleNewChat = () => {
     setChatStarted(false);
@@ -725,13 +748,16 @@ export function ConversationalImportWorkspace() {
         });
       }
 
-      void simulateChatFlow(newMsgs, { keepThinkingAfter: true }).then(() => {
+      // SHOW_THINKING_FOR_HEAVY_PROCESSING: file upload → analysis is heavy
+      void simulateChatFlow(newMsgs, { keepThinkingAfter: true, feedThinking: true }).then(() => {
         if (groups.length <= 1) {
           setTimeout(() => handleLocalAnalysisStart(files).finally(() => {
             setIsProcessingNextStep(false);
+            setIsFeedThinking(false);
           }), 500);
         } else {
           setIsProcessingNextStep(false);
+          setIsFeedThinking(false);
         }
       });
     } else if (text.trim()) {
@@ -927,10 +953,11 @@ export function ConversationalImportWorkspace() {
               const summaryMsg = getGeneralConfigSummaryMessage(updatedConfig, scope);
               const startMsg = getMatchReviewSectionMessage("start", scope, false);
 
+              // SHOW_THINKING_FOR_HEAVY_PROCESSING: structure match review transition is heavy
               void simulateChatFlow([
                 { id: `msg_assistant_summary_${generateId()}`, role: "assistant", type: "text", content: summaryMsg, timestamp: "2025-01-01T12:00:00.000Z" },
                 { id: `msg_assistant_review_${generateId()}`, role: "assistant", type: "text", content: startMsg, timestamp: "2025-01-01T12:00:00.000Z" }
-              ], { keepThinkingAfter: true }).then(() => {
+              ], { keepThinkingAfter: true, feedThinking: true }).then(() => {
                 setTimeout(() => {
                   setConversationalEditState("reviewing_questions_and_scales");
                   const currentSummary = recalculateSummary(questionReviewData);
@@ -1982,13 +2009,16 @@ export function ConversationalImportWorkspace() {
       });
     }
 
-    void simulateChatFlow(newMsgs, { keepThinkingAfter: true }).then(() => {
+    // SHOW_THINKING_FOR_HEAVY_PROCESSING: sandbox file analysis is heavy
+    void simulateChatFlow(newMsgs, { keepThinkingAfter: true, feedThinking: true }).then(() => {
       if (groups.length <= 1 && rawFiles.length > 0) {
         setTimeout(() => handleLocalAnalysisStart(rawFiles).finally(() => {
           setIsProcessingNextStep(false);
+          setIsFeedThinking(false);
         }), 500);
       } else {
         setIsProcessingNextStep(false);
+        setIsFeedThinking(false);
       }
     });
   };
@@ -2428,6 +2458,7 @@ export function ConversationalImportWorkspace() {
       ]);
     } finally {
       setIsProcessingNextStep(false);
+      setIsFeedThinking(false);
     }
   };
 
@@ -2659,7 +2690,8 @@ export function ConversationalImportWorkspace() {
                           </div>
                         );
                       })}
-                      {isProcessingNextStep && (() => {
+                      {/* FEED_LEVEL_THINKING_POLICY: only render thinking bubble for heavy operations */}
+                      {isFeedThinking && (() => {
                         const lastMsg = messages[messages.length - 1];
                         const isLastMsgThinking = lastMsg?.type === "analysis_progress";
                         if (isLastMsgThinking) return null;

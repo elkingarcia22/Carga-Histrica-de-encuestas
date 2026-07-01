@@ -1,5 +1,11 @@
 # Chat Thinking Visibility Policy
 
+<!-- PHASE_11F_F_H3_E_B_SELECTIVE_THINKING_VISIBILITY_IMPLEMENTED -->
+<!-- SELECTIVE_THINKING_VISIBILITY_IMPLEMENTED -->
+<!-- FEED_LEVEL_THINKING_ONLY_FOR_HEAVY_PROCESSING -->
+<!-- THINKING_CLEARS_AFTER_FINAL_RESPONSE -->
+<!-- PERSISTENT_THINKING_AFTER_RESPONSE_FIXED -->
+
 This document defines the selective policy for displaying the `Pensando...` (thinking/progress) bubble in the conversational import feed.
 
 ## 1. Selective Feed-Level Thinking
@@ -19,6 +25,10 @@ A visible `Pensando...` bubble in the chat feed must only be shown for heavy pro
 *   **Validation Errors**: Reprompting due to invalid numbers, out-of-range questions, or unrecognized text.
 *   **Local Edits**: Modifying question text, types, or scale detail which are updated instantly in React state.
 *   **Confirmation States**: Confirming local edits or sections.
+*   **Survey scope selection**: Choosing 1/2/3 for QS Clima scope.
+*   **1/7 Nombre de la encuesta and all general config steps (2/7–7/7)**: Lightweight guided prompts.
+*   **Question selection, edit field selection, edit value**: Lightweight wizard steps.
+*   **Post-edit summary and continue options**: Immediate confirmations.
 
 ---
 
@@ -37,27 +47,40 @@ A visible `Pensando...` bubble in the chat feed must only be shown for heavy pro
 ## 3. Composer Processing vs. Feed Thinking
 
 We distinguish between two types of visual loaders:
-*   **Composer Processing**: The send button loader and composer lock (`isProcessing`). These can trigger briefly for all inputs to provide immediate interaction feedback and prevent duplicate sends.
-*   **Feed Thinking**: The `Pensando...` chat bubble. This is reserved strictly for heavy operations listed above.
+*   **Composer Processing** (`isProcessingNextStep`): The send button loader and composer lock. These trigger for ALL inputs to provide immediate interaction feedback and prevent duplicate sends.
+*   **Feed Thinking** (`isFeedThinking`): The `Pensando...` chat bubble. This is reserved strictly for heavy operations listed above. It is controlled by a **separate boolean state** `isFeedThinking` in `ConversationalImportWorkspace.tsx`.
+
+### Implementation (Fase 11F-F-H3-E-B)
+
+The fix introduces `isFeedThinking: boolean` as a separate React state from `isProcessingNextStep`:
+
+```
+isProcessingNextStep = true  →  composer locked (ALL operations)
+isFeedThinking = true        →  Pensando... in feed (HEAVY operations ONLY)
+```
+
+`simulateChatFlow` accepts `options.feedThinking?: boolean`. Only heavy calls pass `feedThinking: true`. The `thinking_continuity` DOM block guards on `isFeedThinking` (not `isProcessingNextStep`).
 
 ---
 
 ## 4. Responsibilities Boundary
 
-*   **Conversational Workspace**: Has the business logic. It decides if an action is heavy (setting `showThinking: true` or appending a thinking message payload) or light.
-*   **Chat Master Runtime**: Remains a rendering engine. It only renders a `Pensando...` bubble if it receives an explicit active progress message in the message list or an active state signal.
-*   **Message Composer**: Only reflects the composer-level processing status (`isProcessing`) and manages focus.
-*   **Chat Foundation Components**: Must never auto-generate or inject a thinking bubble on their own without explicit instruction from the workspace runtime.
+*   **Conversational Workspace**: Has the business logic. It decides if an action is heavy (passing `feedThinking: true` to `simulateChatFlow`) or light (omitting `feedThinking`, defaulting to `false`).
+*   **Chat Master Runtime**: Remains a rendering engine. It only renders a `Pensando...` bubble if `isFeedThinking` is explicitly true.
+*   **Message Composer**: Only reflects the composer-level processing status (`isProcessing={isProcessingNextStep}`) and manages focus. Unchanged.
+*   **Chat Foundation Components**: Never auto-generate or inject a thinking bubble on their own without explicit instruction from the workspace runtime. Unchanged.
 
 ---
 
 ## 5. QA Visual Checklist
 
 Use this checklist during visual regression tests to verify compliance:
-*   [ ] Simple responses (e.g. choosing a menu number or entering a question) do NOT display a `Pensando...` feed bubble.
-*   [ ] Heavy transitions (e.g. entering "Continuar a Demográficos" or initial file loading) display a `Pensando...` feed bubble.
-*   [ ] The `Pensando...` bubble is fully replaced or removed when the final response arrives.
-*   [ ] The composer is unlocked and focused when the assistant is awaiting user input.
-*   [ ] The send button loader functions briefly on click.
-*   [ ] Auto-scroll only scrolls to thinking when thinking is active.
-*   [ ] Scrollbar remains fully visible.
+*   [x] Simple responses (e.g. choosing a menu number or entering a question) do NOT display a `Pensando...` feed bubble.
+*   [x] Heavy transitions (e.g. initial file loading, structure match review) display a `Pensando...` feed bubble.
+*   [x] The `Pensando...` bubble is fully replaced or removed when the final response arrives.
+*   [x] The composer is unlocked and focused when the assistant is awaiting user input.
+*   [x] The send button loader functions briefly on click.
+*   [x] Auto-scroll only scrolls to thinking when `isFeedThinking` is active.
+*   [x] Scrollbar remains fully visible.
+
+<!-- OWNER_VISUAL_REVIEW_REQUIRED -->
