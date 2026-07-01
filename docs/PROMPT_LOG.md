@@ -13309,3 +13309,17 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Confirmed that the `tests/` folder does not exist and all tests are already located in `__tests__/`.
 - Added the `PHASE_11F_E_H2_TEST_FOLDER_GOVERNANCE_FIXED` marker to documentation to satisfy the pipeline checks.
 - Ran all required test and linting validation.
+
+## Phase 11F-F-H4-A: Simplified Question Review Flow Architecture
+- Created and locked the architecture document for the simplified question review flow (`docs/QUESTION_REVIEW_SIMPLIFIED_FLOW_ARCHITECTURE.md`).
+- Defined the layout of Step 1/7 to list all questions grouped by dimension, showing question type, scale type, and scale detail.
+- Specified blocking dimension edits while allowing other fields (question type, scale type, scale detail, free text) to be modified.
+- Outlined state machine modifications, mappers, and visual QA checkpoints.
+
+## Phase 11F-F-H4-B: Implement Simplified Question Review Flow
+- Implemented the complete simplified question review flow in Step 1/7 of the conversational workspace.
+- Updated `ConversationalImportWorkspace.tsx` to list all questions by dimension, reject dimension modifications, support guided editing flow (question index -> field selection -> value entry), and handle free-text edits.
+- Expanded `ConversationalEditState` and `ConversationalEditContext` to support intermediate conversational sub-states for guided selection.
+- Established a formal Decision Gate documenting the extension of `ConversationalEditState` to justify the changes.
+- Checked that tests are correctly stored under `__tests__/` and that no files exist under `tests/`.
+- Ensured visual compatibility and auto-scroll/scrollbar functionality.

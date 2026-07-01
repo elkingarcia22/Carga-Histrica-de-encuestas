@@ -122,3 +122,35 @@ When the user chooses to continue (either via "2" or typing "Continuar a Demogr√
 *   Confirm "Continuar a Demogr√°ficos" advances step to 2/7.
 *   Check that composer focus is maintained after each assistant turn.
 *   Verify no action buttons, side panels, or form editors are rendered.
+
+---
+
+## 8. Decision Gate: Conversational Editing Flow Modifications
+
+**CONVERSATIONAL_EDITING_FLOW_CHANGE_STATUS = JUSTIFIED_BY_DECISION_GATE**
+
+### Rationale: Why extending `ConversationalEditState` was necessary
+To implement the guided, multi-step conversational editing flow required by this phase (selecting a question, choosing which field to edit, entering the new value, and reviewing the post-edit summary) while strictly avoiding any custom UI buttons, side panels, or form editors, it was necessary to maintain conversational state inside the workspace. The existing `ConversationalEditState` did not support intermediate stages of a multi-turn sub-flow.
+
+### Added States & Context Fields
+*   **New States in `ConversationalEditState`**:
+    *   `"awaiting_question_selection"`: The agent expects the user to pick which question to edit by number/index.
+    *   `"awaiting_edit_field_selection"`: The agent asks which field (question type, scale type, scale detail, free text) to modify.
+    *   `"awaiting_edit_value"`: The agent awaits the new value/text input for the selected field.
+    *   `"edited_question_summary"`: The agent displays the modification results and asks the user whether to continue editing questions or proceed to Demographics.
+*   **New Context Fields in `ConversationalEditContext`**:
+    *   `targetQuestionIndex?: number`: Tracks which question index is currently being edited.
+    *   `editingField?: "question_type" | "scale_type" | "scale_detail" | "free_text"`: Identifies the target field for the modification.
+
+### Safety & No-Regressions Analysis
+1.  **Does not break existing flows**: The new states are fully contained within the Question/Scale Review stage (Step 1/7). Transitions to and from other steps (Survey Selection, General Config, Match Review, Ambiguity, and the final transition to Demographics) remain entirely unaffected because they do not enter these specific sub-states.
+2.  **No APIs/Persistence/Real Data**: All state modifications are stored purely in React local component memory (`questionReviewData` hook state) and mapped dynamically. There are no HTTP requests, no local storage/IndexedDB writes, and no real import executions.
+3.  **Clean architectural boundary**: The workspace component handles state transitions (the State Machine role), while the mappers (`questionScaleDimensionEditingMapper` and `questionScaleDimensionReviewMessageMapper`) remain pure functions translating user text inputs to typed intents, and data back to natural language chat messages.
+
+### QA Validation Checklist
+*   [x] Survey selection is still fully functional (single assistant bubble prompt, options 1/2/3 select successfully).
+*   [x] General configuration and match review screens function normally.
+*   [x] Ambiguity resolution works (e.g. typing conflicting names prompts for clarification).
+*   [x] Question review loads the comprehensive list grouped by dimension.
+*   [x] Dimension changes are blocked and show a clear warning message.
+*   [x] Transition to step 2/7 (Demographics) executes correctly upon user choice.

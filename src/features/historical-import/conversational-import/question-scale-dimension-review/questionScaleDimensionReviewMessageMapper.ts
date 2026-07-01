@@ -74,8 +74,8 @@ export function mapQuestionReviewOverviewToConversation(
     const dimMap = new Map<string, QuestionReviewItem[]>();
 
     questions.forEach(q => {
-      const dimName = q.dimensionAssignment.source === 'not_assigned' 
-        ? 'Sin dimensión' 
+      const dimName = q.dimensionAssignment.source === 'not_assigned'
+        ? 'Sin dimensión'
         : q.dimensionAssignment.dimensionName || 'Sin dimensión';
       if (!dimMap.has(dimName)) {
         dimMap.set(dimName, []);
