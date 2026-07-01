@@ -78,13 +78,11 @@ import { SyntheticMountedFilesPanel } from "./SyntheticMountedFilesPanel";
 import { SandboxUploadPanel } from "./SandboxUploadPanel";
 import { ApprovedContractSummary } from "./ApprovedContractSummary";
 import { ChatFoundationMessageRenderer } from "./chat-foundation";
-import type { ChatFoundationMessage } from "./chat-foundation";
 import { mapRuntimeMessageToChatFoundation } from "./flow-adapter";
 
 import {
   mapWorkspaceToAmbiguityDetectionInput,
   detectHistoricalImportAmbiguities,
-  mapAmbiguityResolutionToChatMessages,
   mapTextToAmbiguityResolutionApplicationResult,
 } from "./ambiguity-resolution";
 import type { WorkspaceAmbiguityContext } from "./ambiguity-resolution";
@@ -169,29 +167,7 @@ const playNotificationSound = () => {
   }
 };
 
-function mapChatFoundationToRuntimeMessage(
-  cfMsg: ChatFoundationMessage,
-): ChatMessage {
-  let msgType: ChatMessage["type"];
-  switch (cfMsg.kind) {
-    case "thinking":
-      msgType = "analysis_progress";
-      break;
-    case "warning":
-    case "error":
-      msgType = "warning";
-      break;
-    default:
-      msgType = "text";
-  }
-  return {
-    id: cfMsg.id,
-    role: cfMsg.role,
-    type: msgType,
-    content: cfMsg.content,
-    timestamp: "2025-01-01T12:00:00.000Z",
-  };
-}
+
 
 export function ConversationalImportWorkspace() {
   const [chatStarted, setChatStarted] = useState(false);
@@ -638,17 +614,30 @@ export function ConversationalImportWorkspace() {
         setActiveAmbiguity(ambiguity ?? null);
 
         if (ambiguity?.type === "MultipleSurveyScopeAmbiguity") {
-          const cfMessages = mapAmbiguityResolutionToChatMessages(snapshot);
-          const runtimeMessages = cfMessages
-            .filter(m => m.kind !== "thinking")
-            .map(mapChatFoundationToRuntimeMessage);
-          newMsgs.push(...runtimeMessages);
+          const optionsText = ambiguity.options.map((opt, idx) => {
+            const recommended = opt.isRecommended ? " (Recomendado)" : "";
+            let label = opt.label;
+            if (label.toLowerCase().includes("multiciclo") || label.toLowerCase().includes("multicíclo")) {
+              label = "QS Clima 2024/2025 (multiciclo)";
+            }
+            return `${idx + 1}. ${label}${recommended}`;
+          }).join("\n");
+
+          const consolidatedContent = `Selecciona la encuesta que quieres cargar:\n\n${optionsText}\n\nResponde con 1, 2 o 3.`;
+
+          newMsgs.push({
+            id: `msg_assistant_scope_selection_${generateId()}`,
+            role: "assistant",
+            type: "guided_review_step",
+            content: consolidatedContent,
+            timestamp: "2025-01-01T12:00:00.000Z",
+          });
         } else {
           newMsgs.push({
             id: `msg_assistant_scope_selection_${generateId()}`,
             role: "assistant",
             type: "guided_review_step",
-            content: "Detecté más de una encuesta o ciclo en los archivos cargados.\n\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025\n\n¿Qué quieres procesar primero? Responde 1, 2 o 3.",
+            content: "Selecciona la encuesta que quieres cargar:\n\n1. QS Clima 2025 (Recomendado)\n2. QS Clima 2024\n3. QS Clima 2024/2025 (multiciclo)\n\nResponde con 1, 2 o 3.",
             timestamp: "2025-01-01T12:00:00.000Z",
           });
         }
@@ -1523,17 +1512,30 @@ export function ConversationalImportWorkspace() {
       setActiveAmbiguity(ambiguity ?? null);
 
       if (ambiguity?.type === "MultipleSurveyScopeAmbiguity") {
-        const cfMessages = mapAmbiguityResolutionToChatMessages(snapshot);
-        const runtimeMessages = cfMessages
-          .filter(m => m.kind !== "thinking")
-          .map(mapChatFoundationToRuntimeMessage);
-        newMsgs.push(...runtimeMessages);
+        const optionsText = ambiguity.options.map((opt, idx) => {
+          const recommended = opt.isRecommended ? " (Recomendado)" : "";
+          let label = opt.label;
+          if (label.toLowerCase().includes("multiciclo") || label.toLowerCase().includes("multicíclo")) {
+            label = "QS Clima 2024/2025 (multiciclo)";
+          }
+          return `${idx + 1}. ${label}${recommended}`;
+        }).join("\n");
+
+        const consolidatedContent = `Selecciona la encuesta que quieres cargar:\n\n${optionsText}\n\nResponde con 1, 2 o 3.`;
+
+        newMsgs.push({
+          id: `msg_assistant_scope_selection_${generateId()}`,
+          role: "assistant",
+          type: "guided_review_step",
+          content: consolidatedContent,
+          timestamp: "2025-01-01T12:00:00.000Z",
+        });
       } else {
         newMsgs.push({
           id: `msg_assistant_scope_selection_${generateId()}`,
           role: "assistant",
           type: "guided_review_step",
-          content: "Detecté más de una encuesta o ciclo en los archivos cargados.\n\n1. QS Clima 2025\n2. QS Clima 2024\n3. Carga histórica multicíclo QS Clima 2024/2025\n\n¿Qué quieres procesar primero? Responde 1, 2 o 3.",
+          content: "Selecciona la encuesta que quieres cargar:\n\n1. QS Clima 2025 (Recomendado)\n2. QS Clima 2024\n3. QS Clima 2024/2025 (multiciclo)\n\nResponde con 1, 2 o 3.",
           timestamp: "2025-01-01T12:00:00.000Z",
         });
       }

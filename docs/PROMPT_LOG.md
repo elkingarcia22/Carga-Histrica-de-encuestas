@@ -1,3 +1,42 @@
+## Fase 11F-F-H2 · Consolidate Survey Selection Prompt Messages
+
+Phase: Fase 11F-F-H2 · Consolidate Survey Selection Prompt Messages
+
+Summary:
+- Consolidated the multiple initial survey selection prompt messages into a single, clean assistant bubble.
+- Formatted options list using option labels dynamically, mapping the multicycle option to a user-friendly text "QS Clima 2024/2025 (multiciclo)".
+- Consolidated invalid inputs to respond with a single, clear error message: "No pude identificar la opción. Responde con 1, 2 o 3." without generating extra messages.
+- Removed the independent "Respuesta esperada: número de opción" message to reduce chat noise.
+- Verified that all downstream question reviews, numbered commands, and contextual placeholders remain fully functional.
+
+Commit SHA: PENDING_COMMIT
+
+SURVEY_SELECTION_MESSAGES_CONSOLIDATED
+SURVEY_SELECTION_SINGLE_ASSISTANT_BUBBLE
+SURVEY_SELECTION_OPTIONS_VISIBLE
+SURVEY_SELECTION_INSTRUCTION_VISIBLE
+SURVEY_SELECTION_EXPECTED_RESPONSE_EXTRA_MESSAGE_REMOVED
+OPTION_1_SURVEY_SELECTION_WORKS
+OPTION_2_SURVEY_SELECTION_WORKS
+OPTION_3_SURVEY_SELECTION_WORKS
+INVALID_SURVEY_SELECTION_HANDLED_WITH_SINGLE_MESSAGE
+QUESTION_REVIEW_NUMBERED_COMMANDS_STILL_WORK
+QUESTION_REVIEW_PLACEHOLDER_STILL_CONTEXTUAL
+QUESTION_REVIEW_TITLE_STILL_CLEAN
+NO_ACTION_BUTTONS_CREATED
+NO_SIDE_PANEL_EDITOR
+NO_EXTERNAL_REVIEW_TAB
+NO_FORM_MODE_EDITOR
+NO_CHAT_FOUNDATION_CHANGES
+NO_FLOW_ADAPTER_CHANGES
+NO_AMBIGUITY_RESOLUTION_CHANGES
+NO_REAL_IMPORT_EXECUTION
+NO_API_CALLS
+NO_STORAGE_PERSISTENCE
+NO_REAL_CLIENT_DATA
+VISIBLE_UI_CHANGE_INTRODUCED
+OWNER_VISUAL_REVIEW_REQUIRED
+
 ## Fase 11F-F-H1 · Hotfix Question Review Numbered Commands and Copy Rendering
 
 Phase: Fase 11F-F-H1 · Hotfix Question Review Numbered Commands and Copy Rendering
