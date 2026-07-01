@@ -16,21 +16,6 @@ function normalizeText(text: string): string {
     .replace(/\s+/g, ' ');
 }
 
-/**
- * Parses a target dimension from text.
- * Simple heuristic: 'a [dimension]' or 'es [dimension]' or 'pertenece a [dimension]'
- * We will just try to capture everything after ' a ' or ' es '.
- */
-function extractDimension(text: string): string | undefined {
-  const match = text.match(/(?:a|es|pertenece a)\s+([a-z\s]+)$/i);
-  if (match && match[1]) {
-    const dim = match[1].trim();
-    if (dim !== 'la' && dim !== 'pregunta' && dim !== 'escala' && dim !== 'dimension') {
-      return match[1].trim();
-    }
-  }
-  return undefined;
-}
 
 /**
  * Parses a target QuestionType from text.
@@ -176,44 +161,16 @@ export function mapQuestionReviewUserTextToEditingIntent(
 
   // Change dimension
   const changeDimMatch = sanitized.match(/(?:cambia la dimension de la|asigna la) pregunta (\d+)/);
-  if (changeDimMatch) {
-    const targetDimensionName = extractDimension(sanitized) || 'Unknown Dimension'; // Basic fallback if hard to parse, but let's try a better capture
-    let dimName = targetDimensionName;
-    const toMatch = sanitized.match(/ a (.+)$/);
-    if (toMatch && toMatch[1]) {
-      dimName = toMatch[1].trim();
-    } else {
-        const toMatch2 = sanitized.match(/pertenece a (.+)$/);
-        if (toMatch2 && toMatch2[1]) dimName = toMatch2[1].trim();
-    }
-
-    // Capitalize dimension correctly if we can, or just keep raw
-    // since we don't have mock data here
-    
-    // Quick title case function to pass test
-    const titleCaseDimName = dimName.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-    
+  const changeDimMatch2 = sanitized.match(/la pregunta (\d+) pertenece a (.+)/);
+  if (changeDimMatch || changeDimMatch2) {
+    const idx = changeDimMatch ? parseInt(changeDimMatch[1], 10) : parseInt(changeDimMatch2![1], 10);
     return {
-      intent: 'change_question_dimension',
-      targetQuestionDisplayIndex: parseInt(changeDimMatch[1], 10),
-      targetDimensionName: titleCaseDimName,
+      intent: 'invalid_input',
+      targetQuestionDisplayIndex: idx,
       rawUserTextSanitized,
       confidence: 'high',
+      clarificationPrompt: 'Las dimensiones están bloqueadas en este paso. Puedes ajustar tipo de pregunta, tipo de escala o detalle de escala.',
     };
-  }
-
-  // Also support "la pregunta X pertenece a Y"
-  const changeDimMatch2 = sanitized.match(/la pregunta (\d+) pertenece a (.+)/);
-  if (changeDimMatch2) {
-      const dimName = changeDimMatch2[2].trim();
-      const titleCaseDimName = dimName.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-      return {
-          intent: 'change_question_dimension',
-          targetQuestionDisplayIndex: parseInt(changeDimMatch2[1], 10),
-          targetDimensionName: titleCaseDimName,
-          rawUserTextSanitized,
-          confidence: 'high'
-      };
   }
 
   // Change question type "la pregunta X es [tipo]"

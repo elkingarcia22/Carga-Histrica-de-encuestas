@@ -48,17 +48,13 @@ import { getDimensionsList } from "./conversationalEditingMapper";
 import { getMatchReviewSectionMessage } from "./conversationalMatchReviewMapper";
 import {
   mapQuestionReviewToConversationalOverview,
-  mapQuestionReviewToDimensionGroups,
-  mapQuestionReviewToNeedsReviewList,
   mapQuestionReviewToQuestionDetail,
-  mapQuestionReviewToSectionConfirmationState,
   mapQuestionReviewOverviewToConversation,
-  mapQuestionReviewNeedsReviewToConversation,
-  mapQuestionReviewQuestionDetailToConversation,
-  mapQuestionReviewConfirmationStateToConversation,
   mapQuestionReviewUserTextToEditingIntent,
   questionScaleDimensionReviewMockData37,
+  getScaleDetailText,
   QUESTION_TYPE_LABELS,
+  SCALE_TYPE_LABELS,
   type QuestionReviewItem,
   type QuestionReviewStepSummary,
   type QuestionReviewConversationResponse,
@@ -67,6 +63,7 @@ import {
   type ScaleTypeSummary,
   type ScaleType,
   type ScaleDetail,
+  type QuestionType,
 } from "./question-scale-dimension-review";
 import type { ConversationalGeneralConfiguration, ConversationalImportWizardStateId, ConversationalSurveyScope } from "./conversationalWizardTypes";
 import { Card, CardContent } from "@/components/ui/card";
@@ -195,7 +192,6 @@ export function ConversationalImportWorkspace() {
     return rawQuestions;
   });
 
-  const [currentQuestionBlockPage, setCurrentQuestionBlockPage] = useState(1);
 
   const getScaleDetailByScaleType = (scaleType: ScaleType): ScaleDetail => {
     switch (scaleType) {
@@ -894,7 +890,7 @@ export function ConversationalImportWorkspace() {
                   setConversationalEditState("reviewing_questions_and_scales");
                   const currentSummary = recalculateSummary(questionReviewData);
                   const overviewObj = mapQuestionReviewToConversationalOverview(questionReviewData, currentSummary);
-                  const convResponse = mapQuestionReviewOverviewToConversation(overviewObj);
+                  const convResponse = mapQuestionReviewOverviewToConversation(overviewObj, questionReviewData);
                   const qsMsg = formatConversationResponse(convResponse);
                   void simulateChatFlow([
                     { id: `msg_assistant_qs_${generateId()}`, role: "assistant", type: "text", content: qsMsg, timestamp: "2025-01-01T12:00:00.000Z" }
@@ -944,185 +940,486 @@ export function ConversationalImportWorkspace() {
             return;
           }
 
-          if (conversationalEditState === "reviewing_questions_and_scales") {
+          const currentStateStr = conversationalEditState as string;
+          if (
+            currentStateStr === "reviewing_questions_and_scales" ||
+            currentStateStr === "awaiting_question_selection" ||
+            currentStateStr === "awaiting_edit_field_selection" ||
+            currentStateStr === "awaiting_edit_value" ||
+            currentStateStr === "edited_question_summary"
+          ) {
             const summaryObj = recalculateSummary(questionReviewData);
-            const intentObj = mapQuestionReviewUserTextToEditingIntent(text, summaryObj.canConfirmSection);
 
-            if (intentObj.intent === "view_all_questions_in_blocks" || intentObj.intent === "view_next_block" || intentObj.intent === "view_prev_block") {
-              let page = currentQuestionBlockPage;
-              const pageSize = 10;
-              const totalPages = Math.ceil(questionReviewData.length / pageSize);
-
-              if (intentObj.intent === "view_next_block") {
-                page = Math.min(page + 1, totalPages);
-              } else if (intentObj.intent === "view_prev_block") {
-                page = Math.max(page - 1, 1);
-              } else {
-                page = 1;
+            if (currentStateStr === "edited_question_summary") {
+              const choice = text.trim().toLowerCase();
+              if (choice === "1" || choice.includes("seguir") || choice.includes("editar")) {
+                setConversationalEditState("awaiting_question_selection");
+                void simulateChatFlow([{
+                  id: `msg_assistant_await_q_${generateId()}`,
+                  role: "assistant",
+                  type: "text",
+                  content: "¿Qué pregunta quieres modificar? Responde con el número de pregunta, por ejemplo: 5.",
+                  timestamp: "2025-01-01T12:00:00.000Z"
+                }]);
+                return;
               }
-              setCurrentQuestionBlockPage(page);
 
-              const startIndex = (page - 1) * pageSize;
-              const endIndex = Math.min(startIndex + pageSize, questionReviewData.length);
-              const pageQuestions = questionReviewData.slice(startIndex, endIndex);
-
-              const content = pageQuestions.map(q => {
-                const qType = QUESTION_TYPE_LABELS[q.questionType] || q.questionType;
-                return `${q.displayIndex}. "${q.questionText}" [${qType}]`;
-              }).join('\n');
-
-              const intro = `Vista en bloques (Bloque ${page} de ${totalPages}):\nMostrando preguntas ${startIndex + 1} a ${endIndex} de ${questionReviewData.length}.`;
-
-              const suggestedTextCommands = [];
-              let menuIdx = 1;
-              if (page < totalPages) {
-                suggestedTextCommands.push(`${menuIdx++}. Ver siguiente bloque`);
+              if (choice === "2" || choice.includes("continuar") || choice.includes("demograficos") || choice.includes("demográficos")) {
+                setConversationalEditState("reviewing_demographics");
+                const msg = `Sección 1/7 · Preguntas y escalas confirmada.\n\nAvanzando a 2/7 · Demográficos...\n\n` + getMatchReviewSectionMessage("demographics", scope, false);
+                void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+                return;
               }
-              if (page > 1) {
-                suggestedTextCommands.push(`${menuIdx++}. Ver bloque anterior`);
-              }
-              suggestedTextCommands.push(`${menuIdx}. Ver resumen`);
 
-              const convResponse: QuestionReviewConversationResponse = {
-                responseId: `all-questions-blocks-p${page}`,
-                intro,
-                sections: [
-                  {
-                    type: 'summary',
-                    content
-                  }
-                ],
-                suggestedTextCommands,
-                status: 'info'
-              };
-
-              const msg = formatConversationResponse(convResponse);
-              void simulateChatFlow([{ id: `msg_assistant_qs_blocks_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              void simulateChatFlow([{
+                id: `msg_assistant_err_${generateId()}`,
+                role: "assistant",
+                type: "text",
+                content: "Por favor responde 1 o 2.",
+                timestamp: "2025-01-01T12:00:00.000Z"
+              }]);
               return;
             }
 
-            if (intentObj.intent === "view_overview") {
-              const overviewObj = mapQuestionReviewToConversationalOverview(questionReviewData, summaryObj);
-              const convResponse = mapQuestionReviewOverviewToConversation(overviewObj);
-              const msg = formatConversationResponse(convResponse);
-              void simulateChatFlow([{ id: `msg_assistant_qs_overview_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+            if (currentStateStr === "awaiting_question_selection") {
+              const num = parseInt(text.trim(), 10);
+              if (isNaN(num) || num < 1 || num > questionReviewData.length) {
+                void simulateChatFlow([{
+                  id: `msg_assistant_invalid_q_${generateId()}`,
+                  role: "assistant",
+                  type: "text",
+                  content: `Por favor ingresa un número de pregunta válido entre 1 y ${questionReviewData.length}.`,
+                  timestamp: "2025-01-01T12:00:00.000Z"
+                }]);
+                return;
+              }
+
+              setConversationalEditContext({
+                ...conversationalEditContext,
+                targetQuestionIndex: num
+              });
+              setConversationalEditState("awaiting_edit_field_selection");
+              void simulateChatFlow([{
+                id: `msg_assistant_field_sel_${generateId()}`,
+                role: "assistant",
+                type: "text",
+                content: `¿Qué quieres modificar de la pregunta ${num}?\n\n1. Tipo de pregunta\n2. Tipo de escala\n3. Detalle de la escala\n4. Escribir el ajuste con tus palabras`,
+                timestamp: "2025-01-01T12:00:00.000Z"
+              }]);
               return;
             }
 
-            if (intentObj.intent === "view_by_dimension") {
-              const groups = mapQuestionReviewToDimensionGroups(questionReviewData);
-              const sections = groups.map(g => {
-                const scaleLabels = g.scaleTypes.map(st => st === 'likert_5' ? 'Likert 5 puntos' : st === 'nps_0_10' ? 'NPS 0–10' : st).join(', ');
-                return {
-                  type: 'dimension_group' as const,
-                  content: `Dimensión: ${g.dimensionName}\nPreguntas: ${g.questionCount}\nEscalas: ${scaleLabels}\nPor revisar: ${g.needsReviewCount}`
+            if (currentStateStr === "awaiting_edit_field_selection") {
+              const choice = text.trim();
+              const qIdx = conversationalEditContext.targetQuestionIndex;
+              if (!qIdx) {
+                setConversationalEditState("reviewing_questions_and_scales");
+                return;
+              }
+
+              if (choice === "1" || choice.toLowerCase().includes("tipo de pregunta")) {
+                setConversationalEditContext({
+                  ...conversationalEditContext,
+                  editingField: "question_type"
+                });
+                setConversationalEditState("awaiting_edit_value");
+                void simulateChatFlow([{
+                  id: `msg_assistant_type_sel_${generateId()}`,
+                  role: "assistant",
+                  type: "text",
+                  content: `Elige el nuevo tipo de pregunta para la pregunta ${qIdx}:\n\n1. Escala de valoración\n2. Selección única\n3. Selección múltiple\n4. Texto abierto\n5. NPS\n6. eNPS\n7. Matriz\n8. Desconocido`,
+                  timestamp: "2025-01-01T12:00:00.000Z"
+                }]);
+                return;
+              }
+
+              if (choice === "2" || choice.toLowerCase().includes("tipo de escala")) {
+                setConversationalEditContext({
+                  ...conversationalEditContext,
+                  editingField: "scale_type"
+                });
+                setConversationalEditState("awaiting_edit_value");
+                void simulateChatFlow([{
+                  id: `msg_assistant_scale_sel_${generateId()}`,
+                  role: "assistant",
+                  type: "text",
+                  content: `Elige el nuevo tipo de escala para la pregunta ${qIdx}:\n\n1. Likert 5\n2. Likert 7\n3. NPS 0–10\n4. Sí / No\n5. Frecuencia\n6. Acuerdo\n7. Personalizada\n8. No aplica\n9. Desconocida`,
+                  timestamp: "2025-01-01T12:00:00.000Z"
+                }]);
+                return;
+              }
+
+              if (choice === "3" || choice.toLowerCase().includes("detalle")) {
+                setConversationalEditContext({
+                  ...conversationalEditContext,
+                  editingField: "scale_detail"
+                });
+                setConversationalEditState("awaiting_edit_value");
+                void simulateChatFlow([{
+                  id: `msg_assistant_detail_ent_${generateId()}`,
+                  role: "assistant",
+                  type: "text",
+                  content: `Escribe el nuevo detalle de escala para la pregunta ${qIdx}.`,
+                  timestamp: "2025-01-01T12:00:00.000Z"
+                }]);
+                return;
+              }
+
+              if (choice === "4" || choice.toLowerCase().includes("palabras") || choice.toLowerCase().includes("ajuste")) {
+                setConversationalEditContext({
+                  ...conversationalEditContext,
+                  editingField: "free_text"
+                });
+                setConversationalEditState("awaiting_edit_value");
+                void simulateChatFlow([{
+                  id: `msg_assistant_free_text_${generateId()}`,
+                  role: "assistant",
+                  type: "text",
+                  content: `Escribe el ajuste con tus palabras para la pregunta ${qIdx}.`,
+                  timestamp: "2025-01-01T12:00:00.000Z"
+                }]);
+                return;
+              }
+
+              void simulateChatFlow([{
+                id: `msg_assistant_err_${generateId()}`,
+                role: "assistant",
+                type: "text",
+                content: "Por favor responde 1, 2, 3 o 4.",
+                timestamp: "2025-01-01T12:00:00.000Z"
+              }]);
+              return;
+            }
+
+            if (currentStateStr === "awaiting_edit_value") {
+              const qIdx = conversationalEditContext.targetQuestionIndex;
+              const field = conversationalEditContext.editingField;
+              if (!qIdx || !field) {
+                setConversationalEditState("reviewing_questions_and_scales");
+                return;
+              }
+
+              if (field === "question_type") {
+                const choice = text.trim();
+                const types: Record<string, QuestionType> = {
+                  "1": "rating_scale",
+                  "2": "single_choice",
+                  "3": "multiple_choice",
+                  "4": "open_text",
+                  "5": "nps",
+                  "6": "enps",
+                  "7": "matrix",
+                  "8": "unknown"
                 };
-              });
-              const convResponse: QuestionReviewConversationResponse = {
-                responseId: `dimension-groups-overview`,
-                intro: `Aquí están las preguntas agrupadas por dimensión:`,
-                sections,
-                suggestedTextCommands: [
-                  "1. Ver preguntas que requieren revisión",
-                  "2. Ver resumen",
-                  "3. Confirmar esta sección"
-                ],
-                status: 'info'
-              };
-              const msg = formatConversationResponse(convResponse);
-              void simulateChatFlow([{ id: `msg_assistant_qs_dims_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-              return;
-            }
 
-            if (intentObj.intent === "view_needs_review") {
-              const needsReviewList = mapQuestionReviewToNeedsReviewList(questionReviewData);
-              const convResponse = mapQuestionReviewNeedsReviewToConversation(needsReviewList);
-              const msg = formatConversationResponse(convResponse);
-              void simulateChatFlow([{ id: `msg_assistant_qs_needs_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-              return;
-            }
-
-            if (intentObj.intent === "view_question_detail") {
-              const index = intentObj.targetQuestionDisplayIndex;
-              if (index === undefined) {
-                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica el número de pregunta (ej: ver pregunta 3).", timestamp: "2025-01-01T12:00:00.000Z" }]);
-                return;
-              }
-              const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
-              if (!detail) {
-                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: `No encontré la pregunta #${index}.`, timestamp: "2025-01-01T12:00:00.000Z" }]);
-                return;
-              }
-              const convResponse = mapQuestionReviewQuestionDetailToConversation(detail);
-              const msg = formatConversationResponse(convResponse);
-              void simulateChatFlow([{ id: `msg_assistant_qs_detail_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-              return;
-            }
-
-            if (intentObj.intent === "change_question_dimension") {
-              const index = intentObj.targetQuestionDisplayIndex;
-              const dimName = intentObj.targetDimensionName;
-              if (index === undefined || !dimName) {
-                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica la pregunta y la dimensión.", timestamp: "2025-01-01T12:00:00.000Z" }]);
-                return;
-              }
-
-              let updatedQuestion: QuestionReviewItem | null = null;
-              setQuestionReviewData(prev => {
-                const next = [...prev];
-                const qIdx = next.findIndex(q => q.displayIndex === index);
-                if (qIdx !== -1) {
-                  next[qIdx] = {
-                    ...next[qIdx],
-                    dimensionAssignment: {
-                      dimensionId: `dim_${dimName.toLowerCase().replace(/\s+/g, '_')}`,
-                      dimensionName: dimName,
-                      source: 'user_corrected',
-                      confidence: 'high'
-                    },
-                    status: 'edited'
-                  };
-                  updatedQuestion = next[qIdx];
-                }
-                return next;
-              });
-
-              setTimeout(() => {
-                if (!updatedQuestion) {
-                  void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: `No encontré la pregunta #${index}.`, timestamp: "2025-01-01T12:00:00.000Z" }]);
+                const qType = types[choice];
+                if (!qType) {
+                  void simulateChatFlow([{
+                    id: `msg_assistant_err_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: "Opción no válida. Por favor elige un número del 1 al 8.",
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
                   return;
                 }
-                const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
-                if (detail) {
-                  detail.dimensionName = dimName;
-                  detail.status = 'edited';
-                  detail.statusLabel = 'Editada';
-                }
-                const msg = `Listo. Actualicé la pregunta ${index} en esta revisión.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel || 'Escala de valoración'}\nTipo de escala: ${detail?.scaleTypeLabel || 'Likert 5 puntos'}\nDimensión: ${dimName}\nEstado: Editada\n\nPuedes responder:\n1. Ver preguntas que requieren revisión\n2. Ver otra pregunta\n3. Confirmar esta sección`;
-                void simulateChatFlow([{ id: `msg_assistant_qs_edit_dim_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-              }, 50);
-              return;
-            }
 
-            if (intentObj.intent === "change_question_type") {
-              const index = intentObj.targetQuestionDisplayIndex;
-              const qType = intentObj.targetQuestionType;
-              if (index === undefined || !qType) {
-                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica la pregunta y el tipo de pregunta.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+                let updatedQuestion: QuestionReviewItem | null = null;
+                setQuestionReviewData(prev => {
+                  const next = [...prev];
+                  const idx = next.findIndex(q => q.displayIndex === qIdx);
+                  if (idx !== -1) {
+                    next[idx] = {
+                      ...next[idx],
+                      questionType: qType,
+                      status: "edited"
+                    };
+                    updatedQuestion = next[idx];
+                  }
+                  return next;
+                });
+
+                setTimeout(() => {
+                  if (!updatedQuestion) return;
+                  const qTypeLabel = QUESTION_TYPE_LABELS[qType];
+                  const sTypeLabel = SCALE_TYPE_LABELS[updatedQuestion.scaleType] || updatedQuestion.scaleType;
+                  const detailText = getScaleDetailText(updatedQuestion);
+
+                  const msg = `Listo. Actualicé la pregunta ${qIdx}.\n\nPregunta ${qIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                  setConversationalEditState("edited_question_summary");
+                  void simulateChatFlow([{
+                    id: `msg_assistant_summary_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: msg,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                }, 50);
                 return;
               }
 
+              if (field === "scale_type") {
+                const choice = text.trim();
+                const scales: Record<string, ScaleType> = {
+                  "1": "likert_5",
+                  "2": "likert_7",
+                  "3": "nps_0_10",
+                  "4": "binary_yes_no",
+                  "5": "frequency",
+                  "6": "agreement",
+                  "7": "custom",
+                  "8": "not_applicable",
+                  "9": "unknown"
+                };
+
+                const sType = scales[choice];
+                if (!sType) {
+                  void simulateChatFlow([{
+                    id: `msg_assistant_err_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: "Opción no válida. Por favor elige un número del 1 al 9.",
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                  return;
+                }
+
+                let updatedQuestion: QuestionReviewItem | null = null;
+                setQuestionReviewData(prev => {
+                  const next = [...prev];
+                  const idx = next.findIndex(q => q.displayIndex === qIdx);
+                  if (idx !== -1) {
+                    next[idx] = {
+                      ...next[idx],
+                      scaleType: sType,
+                      scaleDetail: getScaleDetailByScaleType(sType),
+                      status: "edited"
+                    };
+                    updatedQuestion = next[idx];
+                  }
+                  return next;
+                });
+
+                setTimeout(() => {
+                  if (!updatedQuestion) return;
+                  const qTypeLabel = QUESTION_TYPE_LABELS[updatedQuestion.questionType] || updatedQuestion.questionType;
+                  const sTypeLabel = SCALE_TYPE_LABELS[sType];
+                  const detailText = getScaleDetailText(updatedQuestion);
+
+                  const msg = `Listo. Actualicé la pregunta ${qIdx}.\n\nPregunta ${qIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                  setConversationalEditState("edited_question_summary");
+                  void simulateChatFlow([{
+                    id: `msg_assistant_summary_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: msg,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                }, 50);
+                return;
+              }
+
+              if (field === "scale_detail") {
+                const detailInput = text.trim();
+                let updatedQuestion: QuestionReviewItem | null = null;
+                setQuestionReviewData(prev => {
+                  const next = [...prev];
+                  const idx = next.findIndex(q => q.displayIndex === qIdx);
+                  if (idx !== -1) {
+                    next[idx] = {
+                      ...next[idx],
+                      scaleDetail: {
+                        ...next[idx].scaleDetail,
+                        scaleAnchors: [detailInput]
+                      },
+                      status: "edited"
+                    };
+                    updatedQuestion = next[idx];
+                  }
+                  return next;
+                });
+
+                setTimeout(() => {
+                  if (!updatedQuestion) return;
+                  const qTypeLabel = QUESTION_TYPE_LABELS[updatedQuestion.questionType] || updatedQuestion.questionType;
+                  const sTypeLabel = SCALE_TYPE_LABELS[updatedQuestion.scaleType] || updatedQuestion.scaleType;
+                  const detailText = getScaleDetailText(updatedQuestion);
+
+                  const msg = `Listo. Actualicé la pregunta ${qIdx}.\n\nPregunta ${qIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                  setConversationalEditState("edited_question_summary");
+                  void simulateChatFlow([{
+                    id: `msg_assistant_summary_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: msg,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                }, 50);
+                return;
+              }
+
+              if (field === "free_text") {
+                const intentObj = mapQuestionReviewUserTextToEditingIntent(text);
+                const targetIdx = intentObj.targetQuestionDisplayIndex || qIdx;
+
+                if (intentObj.intent === "change_question_type" && intentObj.targetQuestionType) {
+                  const qType = intentObj.targetQuestionType;
+                  let updatedQuestion: QuestionReviewItem | null = null;
+                  setQuestionReviewData(prev => {
+                    const next = [...prev];
+                    const idx = next.findIndex(q => q.displayIndex === targetIdx);
+                    if (idx !== -1) {
+                      next[idx] = {
+                        ...next[idx],
+                        questionType: qType,
+                        status: "edited"
+                      };
+                      updatedQuestion = next[idx];
+                    }
+                    return next;
+                  });
+
+                  setTimeout(() => {
+                    if (!updatedQuestion) return;
+                    const qTypeLabel = QUESTION_TYPE_LABELS[qType];
+                    const sTypeLabel = SCALE_TYPE_LABELS[updatedQuestion.scaleType] || updatedQuestion.scaleType;
+                    const detailText = getScaleDetailText(updatedQuestion);
+
+                    const msg = `Listo. Actualicé la pregunta ${targetIdx}.\n\nPregunta ${targetIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                    setConversationalEditState("edited_question_summary");
+                    void simulateChatFlow([{
+                      id: `msg_assistant_summary_${generateId()}`,
+                      role: "assistant",
+                      type: "text",
+                      content: msg,
+                      timestamp: "2025-01-01T12:00:00.000Z"
+                    }]);
+                  }, 50);
+                  return;
+                }
+
+                if (intentObj.intent === "change_scale_type" && intentObj.targetScaleType) {
+                  const sType = intentObj.targetScaleType;
+                  let updatedQuestion: QuestionReviewItem | null = null;
+                  setQuestionReviewData(prev => {
+                    const next = [...prev];
+                    const idx = next.findIndex(q => q.displayIndex === targetIdx);
+                    if (idx !== -1) {
+                      next[idx] = {
+                        ...next[idx],
+                        scaleType: sType,
+                        scaleDetail: getScaleDetailByScaleType(sType),
+                        status: "edited"
+                      };
+                      updatedQuestion = next[idx];
+                    }
+                    return next;
+                  });
+
+                  setTimeout(() => {
+                    if (!updatedQuestion) return;
+                    const qTypeLabel = QUESTION_TYPE_LABELS[updatedQuestion.questionType] || updatedQuestion.questionType;
+                    const sTypeLabel = SCALE_TYPE_LABELS[sType];
+                    const detailText = getScaleDetailText(updatedQuestion);
+
+                    const msg = `Listo. Actualicé la pregunta ${targetIdx}.\n\nPregunta ${targetIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                    setConversationalEditState("edited_question_summary");
+                    void simulateChatFlow([{
+                      id: `msg_assistant_summary_${generateId()}`,
+                      role: "assistant",
+                      type: "text",
+                      content: msg,
+                      timestamp: "2025-01-01T12:00:00.000Z"
+                    }]);
+                  }, 50);
+                  return;
+                }
+
+                // Default free text to custom scale detail
+                let updatedQuestion: QuestionReviewItem | null = null;
+                setQuestionReviewData(prev => {
+                  const next = [...prev];
+                  const idx = next.findIndex(q => q.displayIndex === targetIdx);
+                  if (idx !== -1) {
+                    next[idx] = {
+                      ...next[idx],
+                      scaleDetail: {
+                        ...next[idx].scaleDetail,
+                        scaleAnchors: [text.trim()]
+                      },
+                      status: "edited"
+                    };
+                    updatedQuestion = next[idx];
+                  }
+                  return next;
+                });
+
+                setTimeout(() => {
+                  if (!updatedQuestion) return;
+                  const qTypeLabel = QUESTION_TYPE_LABELS[updatedQuestion.questionType] || updatedQuestion.questionType;
+                  const sTypeLabel = SCALE_TYPE_LABELS[updatedQuestion.scaleType] || updatedQuestion.scaleType;
+                  const detailText = getScaleDetailText(updatedQuestion);
+
+                  const msg = `Listo. Actualicé la pregunta ${targetIdx}.\n\nPregunta ${targetIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                  setConversationalEditState("edited_question_summary");
+                  void simulateChatFlow([{
+                    id: `msg_assistant_summary_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: msg,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                }, 50);
+                return;
+              }
+            }
+
+            const intentObj = mapQuestionReviewUserTextToEditingIntent(text, summaryObj.canConfirmSection);
+
+            if (normalizedInput === "1" || normalizedInput === "elegir una pregunta" || normalizedInput === "elegir una pregunta para modificar" || normalizedInput === "modificar pregunta" || normalizedInput === "editar pregunta") {
+              setConversationalEditState("awaiting_question_selection");
+              void simulateChatFlow([{
+                id: `msg_assistant_await_q_${generateId()}`,
+                role: "assistant",
+                type: "text",
+                content: "¿Qué pregunta quieres modificar? Responde con el número de pregunta, por ejemplo: 5.",
+                timestamp: "2025-01-01T12:00:00.000Z"
+              }]);
+              return;
+            }
+
+            if (normalizedInput === "2" || normalizedInput === "escribir directamente qué quieres ajustar" || normalizedInput === "escribir directamente que quieres ajustar") {
+              void simulateChatFlow([{
+                id: `msg_assistant_direct_hint_${generateId()}`,
+                role: "assistant",
+                type: "text",
+                content: "Escribe directamente la instrucción con el número de la pregunta y el ajuste que deseas. Por ejemplo:\n“cambia la pregunta 5 a NPS”\no\n“ajusta la escala de la pregunta 10 a Likert 7”.",
+                timestamp: "2025-01-01T12:00:00.000Z"
+              }]);
+              return;
+            }
+
+            if (normalizedInput === "3" || normalizedInput === "continuar a demográficos" || normalizedInput === "continuar" || normalizedInput === "continuar a demograficos") {
+              setConversationalEditState("reviewing_demographics");
+              const msg = `Sección 1/7 · Preguntas y escalas confirmada.\n\nAvanzando a 2/7 · Demográficos...\n\n` + getMatchReviewSectionMessage("demographics", scope, false);
+              void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
+              return;
+            }
+
+            if (intentObj.intent === "change_question_type" && intentObj.targetQuestionDisplayIndex !== undefined && intentObj.targetQuestionType) {
+              const index = intentObj.targetQuestionDisplayIndex;
+              const qType = intentObj.targetQuestionType;
               let updatedQuestion: QuestionReviewItem | null = null;
               setQuestionReviewData(prev => {
                 const next = [...prev];
-                const qIdx = next.findIndex(q => q.displayIndex === index);
-                if (qIdx !== -1) {
-                  next[qIdx] = {
-                    ...next[qIdx],
+                const idx = next.findIndex(q => q.displayIndex === index);
+                if (idx !== -1) {
+                  next[idx] = {
+                    ...next[idx],
                     questionType: qType,
                     status: 'edited'
                   };
-                  updatedQuestion = next[qIdx];
+                  updatedQuestion = next[idx];
                 }
                 return next;
               });
@@ -1135,36 +1432,32 @@ export function ConversationalImportWorkspace() {
                 const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
                 if (detail) {
                   detail.questionType = qType;
-                  detail.questionTypeLabel = qType === 'nps' ? 'NPS' : qType === 'enps' ? 'eNPS' : qType === 'open_text' ? 'Texto abierto' : qType;
+                  detail.questionTypeLabel = QUESTION_TYPE_LABELS[qType];
                   detail.status = 'edited';
                   detail.statusLabel = 'Editada';
                 }
-                const msg = `Listo. Actualicé la pregunta ${index} en esta revisión.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel}\nTipo de escala: ${detail?.scaleTypeLabel}\nDimensión: ${detail?.dimensionName}\nEstado: Editada\n\nPuedes responder:\n1. Ver preguntas que requieren revisión\n2. Ver otra pregunta\n3. Confirmar esta sección`;
+                const msg = `Listo. Actualicé la pregunta ${index}.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel}\nTipo de escala: ${detail?.scaleTypeLabel}\nDetalle de escala: ${getScaleDetailText(updatedQuestion)}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                setConversationalEditState("edited_question_summary");
                 void simulateChatFlow([{ id: `msg_assistant_qs_edit_type_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
               }, 50);
               return;
             }
 
-            if (intentObj.intent === "change_scale_type") {
+            if (intentObj.intent === "change_scale_type" && intentObj.targetQuestionDisplayIndex !== undefined && intentObj.targetScaleType) {
               const index = intentObj.targetQuestionDisplayIndex;
               const sType = intentObj.targetScaleType;
-              if (index === undefined || !sType) {
-                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica la pregunta y el tipo de escala.", timestamp: "2025-01-01T12:00:00.000Z" }]);
-                return;
-              }
-
               let updatedQuestion: QuestionReviewItem | null = null;
               setQuestionReviewData(prev => {
                 const next = [...prev];
-                const qIdx = next.findIndex(q => q.displayIndex === index);
-                if (qIdx !== -1) {
-                  next[qIdx] = {
-                    ...next[qIdx],
+                const idx = next.findIndex(q => q.displayIndex === index);
+                if (idx !== -1) {
+                  next[idx] = {
+                    ...next[idx],
                     scaleType: sType,
                     scaleDetail: getScaleDetailByScaleType(sType),
                     status: 'edited'
                   };
-                  updatedQuestion = next[qIdx];
+                  updatedQuestion = next[idx];
                 }
                 return next;
               });
@@ -1177,75 +1470,26 @@ export function ConversationalImportWorkspace() {
                 const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
                 if (detail) {
                   detail.scaleType = sType;
-                  detail.scaleTypeLabel = sType === 'likert_5' ? 'Likert 5 puntos' : sType === 'nps_0_10' ? 'NPS 0–10' : sType;
+                  detail.scaleTypeLabel = SCALE_TYPE_LABELS[sType];
                   detail.status = 'edited';
                   detail.statusLabel = 'Editada';
                 }
-                const msg = `Listo. Actualicé la pregunta ${index} en esta revisión.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel}\nTipo de escala: ${detail?.scaleTypeLabel}\nDimensión: ${detail?.dimensionName}\nEstado: Editada\n\nPuedes responder:\n1. Ver preguntas que requieren revisión\n2. Ver otra pregunta\n3. Confirmar esta sección`;
+                const msg = `Listo. Actualicé la pregunta ${index}.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel}\nTipo de escala: ${detail?.scaleTypeLabel}\nDetalle de escala: ${getScaleDetailText(updatedQuestion)}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                setConversationalEditState("edited_question_summary");
                 void simulateChatFlow([{ id: `msg_assistant_qs_edit_scale_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
               }, 50);
               return;
             }
 
-            if (intentObj.intent === "confirm_question") {
-              const index = intentObj.targetQuestionDisplayIndex;
-              if (index === undefined) {
-                void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: "Por favor especifica el número de pregunta (ej: confirma la pregunta 4).", timestamp: "2025-01-01T12:00:00.000Z" }]);
-                return;
-              }
-
-              let updatedQuestion: QuestionReviewItem | null = null;
-              setQuestionReviewData(prev => {
-                const next = [...prev];
-                const qIdx = next.findIndex(q => q.displayIndex === index);
-                if (qIdx !== -1) {
-                  next[qIdx] = {
-                    ...next[qIdx],
-                    status: 'confirmed'
-                  };
-                  updatedQuestion = next[qIdx];
-                }
-                return next;
-              });
-
-              setTimeout(() => {
-                if (!updatedQuestion) {
-                  void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: `No encontré la pregunta #${index}.`, timestamp: "2025-01-01T12:00:00.000Z" }]);
-                  return;
-                }
-                const detail = mapQuestionReviewToQuestionDetail(questionReviewData, String(index));
-                if (detail) {
-                  detail.status = 'confirmed';
-                  detail.statusLabel = 'Confirmada';
-                }
-                const msg = `Confirmé la pregunta ${index}.\n\nPregunta ${index}\nTipo de pregunta: ${detail?.questionTypeLabel}\nTipo de escala: ${detail?.scaleTypeLabel}\nDimensión: ${detail?.dimensionName}\nEstado: Confirmada\n\nPuedes responder:\n1. Ver preguntas que requieren revisión\n2. Ver otra pregunta\n3. Confirmar esta sección`;
-                void simulateChatFlow([{ id: `msg_assistant_qs_confirm_q_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-              }, 50);
+            if (intentObj.intent === "view_overview") {
+              const overviewObj = mapQuestionReviewToConversationalOverview(questionReviewData, summaryObj);
+              const convResponse = mapQuestionReviewOverviewToConversation(overviewObj, questionReviewData);
+              const msg = formatConversationResponse(convResponse);
+              void simulateChatFlow([{ id: `msg_assistant_qs_overview_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
               return;
             }
 
-            if (intentObj.intent === "confirm_section") {
-              const currentSummary = recalculateSummary(questionReviewData);
-              if (!currentSummary.canConfirmSection) {
-                const stateObj = mapQuestionReviewToSectionConfirmationState(questionReviewData);
-                const convResponse = mapQuestionReviewConfirmationStateToConversation(stateObj);
-                const msg = formatConversationResponse(convResponse);
-                void simulateChatFlow([{ id: `msg_assistant_qs_blocked_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-              } else {
-                setConversationalEditState("reviewing_demographics");
-                const msg = `Sección 1/7 · Preguntas y escalas confirmada.\n\nResumen final:\n• ${currentSummary.totalQuestions} preguntas revisadas\n• ${currentSummary.totalQuestions} preguntas con tipo asignado\n• ${currentSummary.totalQuestions - currentSummary.questionsByScaleType.filter(s => s.scaleType === 'not_applicable').reduce((acc, curr) => acc + curr.questionCount, 0)} preguntas con escala asignada\n• ${currentSummary.questionsByScaleType.filter(s => s.scaleType === 'not_applicable').reduce((acc, curr) => acc + curr.questionCount, 0)} pregunta abierta sin escala\n• ${currentSummary.totalQuestions} preguntas con dimensión\n• 0 preguntas no interpretables\n\nAvanzando a 2/7 · Demográficos...\n\n` + getMatchReviewSectionMessage("demographics", scope, false);
-                void simulateChatFlow([{ id: `msg_assistant_sec_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-              }
-              return;
-            }
-
-            if (intentObj.intent === "ambiguous_input" || intentObj.intent === "invalid_input") {
-              const msg = intentObj.clarificationPrompt || `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“cambia la dimensión de la pregunta 3 a Liderazgo”.`;
-              void simulateChatFlow([{ id: `msg_assistant_qs_amb_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
-              return;
-            }
-
-            const msg = intentObj.clarificationPrompt || `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“cambia la dimensión de la pregunta 3 a Liderazgo”.`;
+            const msg = intentObj.clarificationPrompt || `Necesito un poco más de precisión. Puedes decir, por ejemplo:\n“cambia la escala de la pregunta 5 a Likert 5”\no\n“elige la pregunta 5 para modificar”.`;
             void simulateChatFlow([{ id: `msg_assistant_qs_inv_${generateId()}`, role: "assistant", type: "text", content: msg, timestamp: "2025-01-01T12:00:00.000Z" }]);
             return;
           }

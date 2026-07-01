@@ -25,16 +25,16 @@ describe('questionScaleDimensionEditingMapper', () => {
 
   it('interprets "cambia la dimensión de la pregunta 3 a Liderazgo"', () => {
     const result = mapQuestionReviewUserTextToEditingIntent('cambia la dimensión de la pregunta 3 a Liderazgo');
-    expect(result.intent).toBe('change_question_dimension');
+    expect(result.intent).toBe('invalid_input');
     expect(result.targetQuestionDisplayIndex).toBe(3);
-    expect(result.targetDimensionName).toBe('Liderazgo');
+    expect(result.clarificationPrompt).toContain('Las dimensiones están bloqueadas');
   });
 
   it('interprets "asigna la pregunta 5 a Compromiso"', () => {
     const result = mapQuestionReviewUserTextToEditingIntent('asigna la pregunta 5 a Compromiso');
-    expect(result.intent).toBe('change_question_dimension');
+    expect(result.intent).toBe('invalid_input');
     expect(result.targetQuestionDisplayIndex).toBe(5);
-    expect(result.targetDimensionName).toBe('Compromiso');
+    expect(result.clarificationPrompt).toContain('Las dimensiones están bloqueadas');
   });
 
   it('interprets "la pregunta 8 es NPS"', () => {
@@ -95,10 +95,9 @@ describe('questionScaleDimensionEditingMapper', () => {
     expect(result.intent).toBe('view_overview');
 
     const result2 = mapQuestionReviewUserTextToEditingIntent('cAmBia lA DimensiÓn de la prEgUnta 3 a LideRAzgo');
-    expect(result2.intent).toBe('change_question_dimension');
+    expect(result2.intent).toBe('invalid_input');
     expect(result2.targetQuestionDisplayIndex).toBe(3);
-    // Because of normalization and title case
-    expect(result2.targetDimensionName).toBe('Liderazgo');
+    expect(result2.clarificationPrompt).toContain('Las dimensiones están bloqueadas');
   });
 
   it('returns invalid_input para texto no interpretable', () => {

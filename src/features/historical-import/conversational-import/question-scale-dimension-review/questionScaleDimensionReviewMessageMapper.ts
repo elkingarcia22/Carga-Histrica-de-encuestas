@@ -10,6 +10,7 @@ import type {
   ConversationSection,
   QuestionType,
   ScaleType,
+  QuestionReviewItem,
 } from './questionScaleDimensionReviewTypes';
 
 export const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {
@@ -23,7 +24,7 @@ export const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {
   unknown: 'No determinado',
 };
 
-const SCALE_TYPE_LABELS: Record<ScaleType, string> = {
+export const SCALE_TYPE_LABELS: Record<ScaleType, string> = {
   likert_5: 'Likert 5 puntos',
   likert_7: 'Likert 7 puntos',
   nps_0_10: 'NPS 0–10',
@@ -46,24 +47,85 @@ function generateId(prefix: string): string {
   return `${prefix}-response`;
 }
 
+export function getScaleDetailText(q: QuestionReviewItem): string {
+  if (q.scaleType === 'likert_5') {
+    return 'Muy en desacuerdo · En desacuerdo · Neutral · De acuerdo · Muy de acuerdo';
+  }
+  if (q.scaleType === 'likert_7') {
+    return 'Muy en desacuerdo · En desacuerdo · Algo en desacuerdo · Neutral · Algo de acuerdo · De acuerdo · Muy de acuerdo';
+  }
+  if (q.scaleType === 'nps_0_10') {
+    return 'Detractores 0–6 · Pasivos 7–8 · Promotores 9–10';
+  }
+  if (q.scaleDetail.scaleAnchors && q.scaleDetail.scaleAnchors.length > 0) {
+    return q.scaleDetail.scaleAnchors.join(' · ');
+  }
+  return 'N/A';
+}
+
 export function mapQuestionReviewOverviewToConversation(
   overview: ConversationalOverview,
+  questions?: QuestionReviewItem[],
 ): QuestionReviewConversationResponse {
   const sections: ConversationSection[] = [];
 
-  if (overview.dimensionLines.length > 0) {
+  if (questions && questions.length > 0) {
+    const dimensionsList: { dimensionName: string; list: QuestionReviewItem[] }[] = [];
+    const dimMap = new Map<string, QuestionReviewItem[]>();
+
+    questions.forEach(q => {
+      const dimName = q.dimensionAssignment.source === 'not_assigned' 
+        ? 'Sin dimensión' 
+        : q.dimensionAssignment.dimensionName || 'Sin dimensión';
+      if (!dimMap.has(dimName)) {
+        dimMap.set(dimName, []);
+        dimensionsList.push({ dimensionName: dimName, list: dimMap.get(dimName)! });
+      }
+      dimMap.get(dimName)!.push(q);
+    });
+
+    const lines: string[] = [];
+    dimensionsList.forEach(grp => {
+      lines.push(`Dimensión: ${grp.dimensionName}\n`);
+      grp.list.forEach(q => {
+        const qTypeLabel = QUESTION_TYPE_LABELS[q.questionType] || q.questionType;
+        const sTypeLabel = SCALE_TYPE_LABELS[q.scaleType] || q.scaleType;
+        const detailText = getScaleDetailText(q);
+        lines.push(`P${q.displayIndex}. ${q.questionText}`);
+        lines.push(`Tipo de pregunta: ${qTypeLabel}`);
+        lines.push(`Tipo de escala: ${sTypeLabel}`);
+        lines.push(`Detalle de escala: ${detailText}\n`);
+      });
+    });
+
+    const joinedContent = lines.join('\n').trim();
+    sections.push({
+      type: 'summary',
+      content: joinedContent,
+    });
+  } else if (overview.dimensionLines.length > 0) {
     sections.push({
       type: 'summary',
       content: 'Resumen:\n' + overview.dimensionLines.map(line => `- ${line}`).join('\n'),
     });
   }
 
+  const suggestedCommands = questions && questions.length > 0
+    ? [
+        '1. Elegir una pregunta para modificar',
+        '2. Escribir directamente qué quieres ajustar',
+        '3. Continuar a Demográficos',
+      ]
+    : formatSuggestedCommands(overview.suggestedCommands);
+
   return {
     responseId: generateId('overview'),
     title: overview.headerText,
-    intro: overview.summaryLine,
+    intro: questions && questions.length > 0
+      ? `Detecté ${questions.length} preguntas. Las agrupé por dimensión para que puedas revisar su configuración.`
+      : overview.summaryLine,
     sections,
-    suggestedTextCommands: formatSuggestedCommands(overview.suggestedCommands),
+    suggestedTextCommands: suggestedCommands,
     status: overview.canConfirmSection ? 'ready' : 'needs_review',
   };
 }

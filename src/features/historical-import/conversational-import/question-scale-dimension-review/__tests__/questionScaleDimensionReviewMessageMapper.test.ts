@@ -65,6 +65,94 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
       expect(result.status).toBe('ready');
       expect(result.suggestedTextCommands).toEqual(['1. Confirmar esta sección']);
     });
+
+    it('generates grouped list by dimension when questions array is provided', () => {
+      const overview: ConversationalOverview = {
+        headerText: '1/7 · Preguntas y escalas',
+        summaryLine: 'Detecté 2 preguntas.',
+        dimensionLines: [],
+        totalQuestions: 2,
+        alignedCount: 2,
+        needsReviewCount: 0,
+        canConfirmSection: true,
+        blockingIssues: [],
+        suggestedCommands: [],
+      };
+
+      const mockQuestions = [
+        {
+          questionId: 'q1',
+          displayIndex: 1,
+          questionText: 'Pregunta de liderazgo',
+          questionType: 'rating_scale' as const,
+          scaleType: 'likert_5' as const,
+          scaleDetail: {
+            scaleLabel: 'Likert 5',
+            scaleValueRange: '1-5',
+            scaleAnchors: [],
+            scoreDirection: 'positive_up' as const,
+            favorableValues: [],
+            neutralValues: [],
+            unfavorableValues: [],
+          },
+          dimensionAssignment: {
+            dimensionId: 'dim_liderazgo',
+            dimensionName: 'Liderazgo',
+            source: 'detected_by_column' as const,
+            confidence: 'high' as const,
+          },
+          status: 'aligned' as const,
+          sourceSheetLabel: 'Preguntas',
+          confidenceLevel: 'high' as const,
+        },
+        {
+          questionId: 'q2',
+          displayIndex: 2,
+          questionText: 'Pregunta de eNPS',
+          questionType: 'enps' as const,
+          scaleType: 'nps_0_10' as const,
+          scaleDetail: {
+            scaleLabel: 'NPS',
+            scaleValueRange: '0-10',
+            scaleAnchors: [],
+            scoreDirection: 'positive_up' as const,
+            favorableValues: [],
+            neutralValues: [],
+            unfavorableValues: [],
+          },
+          dimensionAssignment: {
+            dimensionId: 'dim_enps',
+            dimensionName: 'eNPS',
+            source: 'detected_by_column' as const,
+            confidence: 'high' as const,
+          },
+          status: 'aligned' as const,
+          sourceSheetLabel: 'Preguntas',
+          confidenceLevel: 'high' as const,
+        },
+      ];
+
+      const result = mapQuestionReviewOverviewToConversation(overview, mockQuestions);
+      expect(result.intro).toContain('Detecté 2 preguntas');
+      expect(result.sections).toHaveLength(1);
+      const content = result.sections[0].content;
+      expect(content).toContain('Dimensión: Liderazgo');
+      expect(content).toContain('P1. Pregunta de liderazgo');
+      expect(content).toContain('Tipo de pregunta: Escala de valoración');
+      expect(content).toContain('Tipo de escala: Likert 5 puntos');
+      expect(content).toContain('Detalle de escala: Muy en desacuerdo · En desacuerdo · Neutral · De acuerdo · Muy de acuerdo');
+      expect(content).toContain('Dimensión: eNPS');
+      expect(content).toContain('P2. Pregunta de eNPS');
+      expect(content).toContain('Tipo de pregunta: eNPS');
+      expect(content).toContain('Tipo de escala: NPS 0–10');
+      expect(content).toContain('Detalle de escala: Detractores 0–6 · Pasivos 7–8 · Promotores 9–10');
+
+      expect(result.suggestedTextCommands).toEqual([
+        '1. Elegir una pregunta para modificar',
+        '2. Escribir directamente qué quieres ajustar',
+        '3. Continuar a Demográficos'
+      ]);
+    });
   });
 
   describe('mapQuestionReviewDimensionGroupsToConversation', () => {

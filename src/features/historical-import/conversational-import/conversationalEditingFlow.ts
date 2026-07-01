@@ -12,7 +12,11 @@ export type ConversationalEditState =
   | "showing_questions"
   | "asking_question_selection"
   | "asking_new_label"
-  | "asking_confirmation";
+  | "asking_confirmation"
+  | "awaiting_question_selection"
+  | "awaiting_edit_field_selection"
+  | "awaiting_edit_value"
+  | "edited_question_summary";
 
 export interface ConversationalEditContext {
   area?: "dimensiones" | "preguntas" | "demográficos" | "métricas" | "segmentos" | "decisiones";
@@ -21,6 +25,8 @@ export interface ConversationalEditContext {
   proposedLabel?: string;
   previousLabel?: string;
   targetType?: "dimension" | "question";
+  targetQuestionIndex?: number;
+  editingField?: "question_type" | "scale_type" | "scale_detail" | "free_text";
 }
 
 export interface ChatResponse {
