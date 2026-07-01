@@ -1,3 +1,36 @@
+## Fase 11F-F-H3-C · Fix Visible Chat Scrollbar
+
+Phase: Fase 11F-F-H3-C · Fix Visible Chat Scrollbar
+
+Summary:
+- Identified the real Radix ScrollArea container and customized both its track and thumb elements to remain permanently visible on desktop without hiding.
+- Applied CSS rules in `globals.css` using theme HSL tokens (`--muted` and `--muted-foreground`) to provide an elegant, consistent, and highly visible scroll track and scroll thumb without hardcoded hexes.
+- Ensured all previously implemented features (sticky auto-scroll, AI gradient send button, double-send lock, unifications, review aliases, and pagination) remain fully functional.
+
+Commit SHA: PENDING_COMMIT
+
+CHAT_SCROLLBAR_VISIBLE_FIXED
+REAL_SCROLL_CONTAINER_IDENTIFIED
+SCROLLBAR_NOT_HIDDEN_BY_CSS
+OVERFLOW_Y_SCROLL_VISIBLE
+SCROLLBAR_VISIBLE_ON_DESKTOP
+SCROLLBAR_USES_TOKENS_OR_NATIVE
+NO_SCROLLBAR_HIDE_CLASS_REMAINS_ON_CHAT_FEED
+AUTO_SCROLL_TO_PROCESSING_STILL_WORKS
+THINKING_STATE_VISIBLE_AFTER_USER_MESSAGE
+AI_GRADIENT_SEND_BUTTON_STILL_WORKS
+SEND_BUTTON_PROCESSING_LOADER_STILL_WORKS
+SURVEY_SELECTION_SINGLE_ASSISTANT_BUBBLE_STILL_WORKS
+QUESTION_REVIEW_NUMBERED_COMMANDS_STILL_WORK
+NO_HARDCODED_HEX_CONFIRMED
+NO_TEXT_WHITE_CONFIRMED
+NO_ANY_USAGE_CONFIRMED
+NO_AS_ANY_USAGE_CONFIRMED
+NO_DATE_USAGE
+NO_RANDOM_USAGE
+VISIBLE_UI_CHANGE_INTRODUCED
+OWNER_VISUAL_REVIEW_REQUIRED
+
 ## Fase 11F-F-H3-B · Implement Chat Master Runtime UX Fixes
 
 Phase: Fase 11F-F-H3-B · Implement Chat Master Runtime UX Fixes

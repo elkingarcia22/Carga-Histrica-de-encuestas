@@ -221,5 +221,15 @@
   [data-slot="scroll-area-scrollbar"] {
     opacity: 1 !important;
     visibility: visible !important;
+    display: flex !important;
+    background: hsl(var(--muted) / 0.3) !important;
+    width: 8px !important;
+  }
+
+  [data-slot="scroll-area-scrollbar"] [data-slot="scroll-area-thumb"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    background-color: hsl(var(--muted-foreground) / 0.5) !important;
+    border-radius: 9999px !important;
   }
 }
