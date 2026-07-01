@@ -128,7 +128,7 @@ describe('mapQuestionReviewToQuestionDetail', () => {
   it('includes questionTypeLabel and scaleTypeLabel', () => {
     const detail: QuestionDetailView | null = mapQuestionReviewToQuestionDetail(questions, 'q_1');
     expect(detail!.questionTypeLabel).toBe('Escala de valoración');
-    expect(detail!.scaleTypeLabel).toBe('Likert 5 puntos');
+    expect(detail!.scaleTypeLabel).toBe('Likert (escala de preferencias)');
   });
 
   it('includes full question detail fields', () => {
@@ -153,7 +153,7 @@ describe('mapQuestionReviewToScaleDetailText', () => {
     const text: string | null = mapQuestionReviewToScaleDetailText(questions, 'q_1');
     expect(text).not.toBeNull();
     expect(text).toContain('Escala de valoración');
-    expect(text).toContain('Likert 5 puntos');
+    expect(text).toContain('Likert (escala de preferencias)');
     expect(text).toContain('Muy en desacuerdo');
   });
 
@@ -161,7 +161,7 @@ describe('mapQuestionReviewToScaleDetailText', () => {
     const text: string | null = mapQuestionReviewToScaleDetailText(questions, 'q_36');
     expect(text).not.toBeNull();
     expect(text).toContain('eNPS');
-    expect(text).toContain('NPS 0–10');
+    expect(text).toContain('NPS (recomendabilidad)');
     expect(text).toContain('Detractores');
     expect(text).toContain('Promotores');
   });

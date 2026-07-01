@@ -139,12 +139,12 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
       expect(content).toContain('Dimensión: Liderazgo');
       expect(content).toContain('P1. Pregunta de liderazgo');
       expect(content).toContain('Tipo de pregunta: Escala de valoración');
-      expect(content).toContain('Tipo de escala: Likert 5 puntos');
+      expect(content).toContain('Tipo de escala: Likert (escala de preferencias)');
       expect(content).toContain('Detalle de escala: Muy en desacuerdo · En desacuerdo · Neutral · De acuerdo · Muy de acuerdo');
       expect(content).toContain('Dimensión: eNPS');
       expect(content).toContain('P2. Pregunta de eNPS');
       expect(content).toContain('Tipo de pregunta: eNPS');
-      expect(content).toContain('Tipo de escala: NPS 0–10');
+      expect(content).toContain('Tipo de escala: NPS (recomendabilidad)');
       expect(content).toContain('Detalle de escala: Detractores 0–6 · Pasivos 7–8 · Promotores 9–10');
 
       expect(result.suggestedTextCommands).toEqual([
@@ -175,7 +175,7 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
       const content = result.sections[0].content;
       expect(content).toContain('Dimensión: Liderazgo');
       expect(content).toContain('Preguntas: 8');
-      expect(content).toContain('Escalas: Likert 5 puntos');
+      expect(content).toContain('Escalas: Likert (escala de preferencias)');
       expect(content).toContain('Por revisar: 1');
       expect(content).toContain('Vista previa:\n- P1 · Pregunta 1\n- P2 · Pregunta 2\n- P3 · Pregunta 3');
       
@@ -199,7 +199,7 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
       const result = mapQuestionReviewDimensionGroupsToConversation(group);
       const content = result.sections[0].content;
       expect(content).not.toContain('Vista previa:');
-      expect(content).toContain('Escalas: Likert 5 puntos, NPS 0–10');
+      expect(content).toContain('Escalas: Likert (escala de preferencias), NPS (recomendabilidad)');
     });
   });
 
@@ -222,7 +222,7 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
       expect(result.intro).toBe('Encontré 1 pregunta(s) que requieren revisión:');
       expect(result.sections).toHaveLength(1);
       expect(result.sections[0].type).toBe('needs_review');
-      expect(result.sections[0].content).toContain('Pregunta 3: "Test q"\nDetalle: Escala de valoración · Likert 5 puntos · Liderazgo');
+      expect(result.sections[0].content).toContain('Pregunta 3: "Test q"\nDetalle: Escala de valoración · Likert (escala de preferencias) · Liderazgo');
       
       expect(result.suggestedTextCommands[0]).toBe('1. Ver detalle de la pregunta 3');
     });
@@ -244,7 +244,7 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
         questionType: 'rating_scale',
         questionTypeLabel: 'Escala de valoración',
         scaleType: 'likert_5',
-        scaleTypeLabel: 'Likert 5 puntos',
+        scaleTypeLabel: 'Likert (escala de preferencias)',
         scaleDetail: {
           scaleLabel: '',
           scaleValueRange: '1-5',
@@ -279,7 +279,7 @@ describe('questionScaleDimensionReviewMessageMapper', () => {
         questionType: 'nps',
         questionTypeLabel: 'NPS',
         scaleType: 'nps_0_10',
-        scaleTypeLabel: 'NPS 0–10',
+        scaleTypeLabel: 'NPS (recomendabilidad)',
         scaleDetail: {
           scaleLabel: '',
           scaleValueRange: '0-10',

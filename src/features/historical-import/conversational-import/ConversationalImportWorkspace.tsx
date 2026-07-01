@@ -198,7 +198,7 @@ export function ConversationalImportWorkspace() {
     switch (scaleType) {
       case 'likert_5':
         return {
-          scaleLabel: 'Likert 5 puntos',
+          scaleLabel: 'Likert (escala de preferencias)',
           scaleValueRange: '1–5',
           scaleAnchors: ['Muy en desacuerdo', 'En desacuerdo', 'Neutral', 'De acuerdo', 'Muy de acuerdo'],
           scoreDirection: 'positive_up',
@@ -208,7 +208,7 @@ export function ConversationalImportWorkspace() {
         };
       case 'likert_7':
         return {
-          scaleLabel: 'Likert 7 puntos',
+          scaleLabel: 'Likert (escala de preferencias)',
           scaleValueRange: '1–7',
           scaleAnchors: [
             'Totalmente en desacuerdo',
@@ -226,7 +226,7 @@ export function ConversationalImportWorkspace() {
         };
       case 'nps_0_10':
         return {
-          scaleLabel: 'NPS 0–10',
+          scaleLabel: 'NPS (recomendabilidad)',
           scaleValueRange: '0–10',
           scaleAnchors: ['0 a 10 · Detractores 0–6 · Pasivos 7–8 · Promotores 9–10'],
           scoreDirection: 'positive_up',
@@ -249,6 +249,46 @@ export function ConversationalImportWorkspace() {
           scaleLabel: 'Frecuencia',
           scaleValueRange: '1–5',
           scaleAnchors: ['Nunca', 'Rara vez', 'A veces', 'Frecuentemente', 'Siempre'],
+          scoreDirection: 'positive_up',
+          favorableValues: [4, 5],
+          neutralValues: [3],
+          unfavorableValues: [1, 2],
+        };
+      case 'visual_stars':
+        return {
+          scaleLabel: 'Visual por estrellas',
+          scaleValueRange: '1–5',
+          scaleAnchors: ['1 estrella', '2 estrellas', '3 estrellas', '4 estrellas', '5 estrellas'],
+          scoreDirection: 'positive_up',
+          favorableValues: [4, 5],
+          neutralValues: [3],
+          unfavorableValues: [1, 2],
+        };
+      case 'visual_emotions':
+        return {
+          scaleLabel: 'Visual por emociones',
+          scaleValueRange: '1–5',
+          scaleAnchors: ['Muy insatisfecho', 'Insatisfecho', 'Neutral', 'Satisfecho', 'Muy satisfecho'],
+          scoreDirection: 'positive_up',
+          favorableValues: [4, 5],
+          neutralValues: [3],
+          unfavorableValues: [1, 2],
+        };
+      case 'linear_scale':
+        return {
+          scaleLabel: 'Escala lineal',
+          scaleValueRange: '1–10',
+          scaleAnchors: ['Bajo', 'Alto'],
+          scoreDirection: 'positive_up',
+          favorableValues: [8, 9, 10],
+          neutralValues: [6, 7],
+          unfavorableValues: [1, 2, 3, 4, 5],
+        };
+      case 'likert_nom035':
+        return {
+          scaleLabel: 'Likert (NOM 035)',
+          scaleValueRange: '1–5',
+          scaleAnchors: ['Siempre', 'Casi siempre', 'Algunas veces', 'Casi nunca', 'Nunca'],
           scoreDirection: 'positive_up',
           favorableValues: [4, 5],
           neutralValues: [3],
@@ -1033,7 +1073,7 @@ export function ConversationalImportWorkspace() {
                   id: `msg_assistant_type_sel_${generateId()}`,
                   role: "assistant",
                   type: "text",
-                  content: `Elige el nuevo tipo de pregunta para la pregunta ${qIdx}:\n\n1. Escala de valoración\n2. Selección única\n3. Selección múltiple\n4. Texto abierto\n5. NPS\n6. eNPS\n7. Matriz\n8. Desconocido`,
+                  content: `Elige el nuevo tipo de pregunta para la pregunta ${qIdx}:\n\n1. Escala de valoración\n2. Pregunta abierta\n3. Opción única\n4. Múltiples respuestas\n5. Desplegable`,
                   timestamp: "2025-01-01T12:00:00.000Z"
                 }]);
                 return;
@@ -1049,7 +1089,7 @@ export function ConversationalImportWorkspace() {
                   id: `msg_assistant_scale_sel_${generateId()}`,
                   role: "assistant",
                   type: "text",
-                  content: `Elige el nuevo tipo de escala para la pregunta ${qIdx}:\n\n1. Likert 5\n2. Likert 7\n3. NPS 0–10\n4. Sí / No\n5. Frecuencia\n6. Acuerdo\n7. Personalizada\n8. No aplica\n9. Desconocida`,
+                  content: `Elige el nuevo tipo de escala para la pregunta ${qIdx}:\n\n1. Likert (escala de preferencias)\n2. NPS (recomendabilidad)\n3. Visual por estrellas\n4. Visual por emociones\n5. Escala lineal\n6. Likert (NOM 035)`,
                   timestamp: "2025-01-01T12:00:00.000Z"
                 }]);
                 return;
@@ -1065,7 +1105,7 @@ export function ConversationalImportWorkspace() {
                   id: `msg_assistant_detail_ent_${generateId()}`,
                   role: "assistant",
                   type: "text",
-                  content: `Escribe el nuevo detalle de escala para la pregunta ${qIdx}.`,
+                  content: `Elige el tipo de valoración o escribe el detalle con tus palabras para la pregunta ${qIdx}:\n\n1. Frecuencia (nunca / siempre)\n2. Satisfecho (insatisfecho / satisfecho)\n3. Acuerdo (en desacuerdo / de acuerdo)\n4. Probabilidad (Nada probable / Es probable siempre)\n5. Frecuencia (Siempre / Nunca) - NOM 035\n6. Escribir detalle personalizado`,
                   timestamp: "2025-01-01T12:00:00.000Z"
                 }]);
                 return;
@@ -1109,13 +1149,10 @@ export function ConversationalImportWorkspace() {
                 const choice = text.trim();
                 const types: Record<string, QuestionType> = {
                   "1": "rating_scale",
-                  "2": "single_choice",
-                  "3": "multiple_choice",
-                  "4": "open_text",
-                  "5": "nps",
-                  "6": "enps",
-                  "7": "matrix",
-                  "8": "unknown"
+                  "2": "open_text",
+                  "3": "single_choice",
+                  "4": "multiple_choice",
+                  "5": "dropdown"
                 };
 
                 const qType = types[choice];
@@ -1124,7 +1161,7 @@ export function ConversationalImportWorkspace() {
                     id: `msg_assistant_err_${generateId()}`,
                     role: "assistant",
                     type: "text",
-                    content: "Opción no válida. Por favor elige un número del 1 al 8.",
+                    content: "Opción no válida. Por favor elige un número del 1 al 5.",
                     timestamp: "2025-01-01T12:00:00.000Z"
                   }]);
                   return;
@@ -1168,14 +1205,11 @@ export function ConversationalImportWorkspace() {
                 const choice = text.trim();
                 const scales: Record<string, ScaleType> = {
                   "1": "likert_5",
-                  "2": "likert_7",
-                  "3": "nps_0_10",
-                  "4": "binary_yes_no",
-                  "5": "frequency",
-                  "6": "agreement",
-                  "7": "custom",
-                  "8": "not_applicable",
-                  "9": "unknown"
+                  "2": "nps_0_10",
+                  "3": "visual_stars",
+                  "4": "visual_emotions",
+                  "5": "linear_scale",
+                  "6": "likert_nom035"
                 };
 
                 const sType = scales[choice];
@@ -1184,7 +1218,7 @@ export function ConversationalImportWorkspace() {
                     id: `msg_assistant_err_${generateId()}`,
                     role: "assistant",
                     type: "text",
-                    content: "Opción no válida. Por favor elige un número del 1 al 9.",
+                    content: "Opción no válida. Por favor elige un número del 1 al 6.",
                     timestamp: "2025-01-01T12:00:00.000Z"
                   }]);
                   return;
@@ -1226,6 +1260,79 @@ export function ConversationalImportWorkspace() {
               }
 
               if (field === "scale_detail") {
+                const choice = text.trim();
+                let anchors: string[] = [];
+                let isCustomInputRequired = false;
+
+                if (choice === "1") {
+                  anchors = ['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre'];
+                } else if (choice === "2") {
+                  anchors = ['Muy insatisfecho', 'Insatisfecho', 'Neutral', 'Satisfecho', 'Muy satisfecho'];
+                } else if (choice === "3") {
+                  anchors = ['Muy en desacuerdo', 'En desacuerdo', 'Neutral', 'De acuerdo', 'Muy de acuerdo'];
+                } else if (choice === "4") {
+                  anchors = ['Nada probable', 'Poco probable', 'Neutral', 'Probable', 'Muy probable'];
+                } else if (choice === "5") {
+                  anchors = ['Siempre', 'Casi siempre', 'Algunas veces', 'Casi nunca', 'Nunca'];
+                } else if (choice === "6") {
+                  isCustomInputRequired = true;
+                } else {
+                  anchors = [choice];
+                }
+
+                if (isCustomInputRequired) {
+                  setConversationalEditContext({
+                    ...conversationalEditContext,
+                    editingField: "scale_detail_custom"
+                  });
+                  void simulateChatFlow([{
+                    id: `msg_assistant_custom_detail_prompt_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: `Escribe el nuevo detalle de escala para la pregunta ${qIdx}.`,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                  return;
+                }
+
+                let updatedQuestion: QuestionReviewItem | null = null;
+                setQuestionReviewData(prev => {
+                  const next = [...prev];
+                  const idx = next.findIndex(q => q.displayIndex === qIdx);
+                  if (idx !== -1) {
+                    next[idx] = {
+                      ...next[idx],
+                      scaleDetail: {
+                        ...next[idx].scaleDetail,
+                        scaleAnchors: anchors
+                      },
+                      status: "edited"
+                    };
+                    updatedQuestion = next[idx];
+                  }
+                  return next;
+                });
+
+                setTimeout(() => {
+                  if (!updatedQuestion) return;
+                  const qTypeLabel = QUESTION_TYPE_LABELS[updatedQuestion.questionType] || updatedQuestion.questionType;
+                  const sTypeLabel = SCALE_TYPE_LABELS[updatedQuestion.scaleType] || updatedQuestion.scaleType;
+                  const detailText = getScaleDetailText(updatedQuestion);
+
+                  const msg = `Listo. Actualicé la pregunta ${qIdx}.\n\nPregunta ${qIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                  setConversationalEditState("edited_question_summary");
+                  void simulateChatFlow([{
+                    id: `msg_assistant_summary_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: msg,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                }, 50);
+                return;
+              }
+
+              if (field === "scale_detail_custom") {
                 const detailInput = text.trim();
                 let updatedQuestion: QuestionReviewItem | null = null;
                 setQuestionReviewData(prev => {
@@ -1326,6 +1433,45 @@ export function ConversationalImportWorkspace() {
                     if (!updatedQuestion) return;
                     const qTypeLabel = QUESTION_TYPE_LABELS[updatedQuestion.questionType] || updatedQuestion.questionType;
                     const sTypeLabel = SCALE_TYPE_LABELS[sType];
+                    const detailText = getScaleDetailText(updatedQuestion);
+
+                    const msg = `Listo. Actualicé la pregunta ${targetIdx}.\n\nPregunta ${targetIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;
+                    setConversationalEditState("edited_question_summary");
+                    void simulateChatFlow([{
+                      id: `msg_assistant_summary_${generateId()}`,
+                      role: "assistant",
+                      type: "text",
+                      content: msg,
+                      timestamp: "2025-01-01T12:00:00.000Z"
+                    }]);
+                  }, 50);
+                  return;
+                }
+
+                if (intentObj.intent === "change_scale_detail" && intentObj.targetScaleDetailAnchors) {
+                  const anchors = intentObj.targetScaleDetailAnchors;
+                  let updatedQuestion: QuestionReviewItem | null = null;
+                  setQuestionReviewData(prev => {
+                    const next = [...prev];
+                    const idx = next.findIndex(q => q.displayIndex === targetIdx);
+                    if (idx !== -1) {
+                      next[idx] = {
+                        ...next[idx],
+                        scaleDetail: {
+                          ...next[idx].scaleDetail,
+                          scaleAnchors: anchors
+                        },
+                        status: "edited"
+                      };
+                      updatedQuestion = next[idx];
+                    }
+                    return next;
+                  });
+
+                  setTimeout(() => {
+                    if (!updatedQuestion) return;
+                    const qTypeLabel = QUESTION_TYPE_LABELS[updatedQuestion.questionType] || updatedQuestion.questionType;
+                    const sTypeLabel = SCALE_TYPE_LABELS[updatedQuestion.scaleType] || updatedQuestion.scaleType;
                     const detailText = getScaleDetailText(updatedQuestion);
 
                     const msg = `Listo. Actualicé la pregunta ${targetIdx}.\n\nPregunta ${targetIdx}\nTipo de pregunta: ${qTypeLabel}\nTipo de escala: ${sTypeLabel}\nDetalle de escala: ${detailText}\n\nPuedes responder:\n1. Seguir editando preguntas\n2. Continuar a Demográficos`;

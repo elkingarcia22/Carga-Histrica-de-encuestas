@@ -13343,3 +13343,12 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Outlined mapping rules and minimal technical contract extensions (e.g. adding `'dropdown'`, `'visual_stars'`, `'visual_emotions'`, `'linear_scale'`, `'likert_nom035'`).
 - Documented NLP free-text parsing rules for interpreting the new taxonomy phrases.
 - Appended Section 10 to `docs/QUESTION_REVIEW_SIMPLIFIED_FLOW_ARCHITECTURE.md` and added markers to existing documentation files.
+
+## Phase 11F-F-H4-D-B: Implement Question Editing Options Taxonomy
+- Implemented the locked UBITS taxonomy options in `ConversationalImportWorkspace.tsx` and review mappers.
+- Supported mapping raw/numerical choice selections (`1-5`, `1-6`) to their business terms and default scale detail structures.
+- Added custom scale detail input flow trigger on choice `6` ("Escribir detalle personalizado") or free-text fallbacks.
+- Enhanced NLP free-text parser in `questionScaleDimensionEditingMapper.ts` to recognize the approved taxonomy terms.
+- Kept dimension editing locked with the required block warning.
+- Updated all unit tests and passed the quality test suite and ESLint checks.
+

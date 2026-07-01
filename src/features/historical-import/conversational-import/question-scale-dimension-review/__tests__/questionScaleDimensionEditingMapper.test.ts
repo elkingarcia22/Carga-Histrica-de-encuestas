@@ -239,4 +239,83 @@ describe('questionScaleDimensionEditingMapper', () => {
       expect(res.errorMsg).toBe('No pude identificar la pregunta. Responde con el número de pregunta que quieres modificar, por ejemplo: 28.');
     });
   });
+
+  describe('UBITS taxonomy free-text parsing', () => {
+    it('interprets "cambia la pregunta 5 a pregunta abierta"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('cambia la pregunta 5 a pregunta abierta');
+      expect(result.intent).toBe('change_question_type');
+      expect(result.targetQuestionDisplayIndex).toBe(5);
+      expect(result.targetQuestionType).toBe('open_text');
+    });
+
+    it('interprets "la pregunta 8 debe ser opción única"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('la pregunta 8 debe ser opción única');
+      expect(result.intent).toBe('change_question_type');
+      expect(result.targetQuestionDisplayIndex).toBe(8);
+      expect(result.targetQuestionType).toBe('single_choice');
+    });
+
+    it('interprets "la pregunta 9 debe ser múltiples respuestas"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('la pregunta 9 debe ser múltiples respuestas');
+      expect(result.intent).toBe('change_question_type');
+      expect(result.targetQuestionDisplayIndex).toBe(9);
+      expect(result.targetQuestionType).toBe('multiple_choice');
+    });
+
+    it('interprets "la pregunta 10 es desplegable"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('la pregunta 10 es desplegable');
+      expect(result.intent).toBe('change_question_type');
+      expect(result.targetQuestionDisplayIndex).toBe(10);
+      expect(result.targetQuestionType).toBe('dropdown');
+    });
+
+    it('interprets "usa NPS recomendabilidad"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('pregunta 7 usa NPS recomendabilidad');
+      expect(result.intent).toBe('change_scale_type');
+      expect(result.targetQuestionDisplayIndex).toBe(7);
+      expect(result.targetScaleType).toBe('nps_0_10');
+    });
+
+    it('interprets "la escala debe ser visual por estrellas"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('la escala de la pregunta 3 debe ser visual por estrellas');
+      expect(result.intent).toBe('change_scale_type');
+      expect(result.targetQuestionDisplayIndex).toBe(3);
+      expect(result.targetScaleType).toBe('visual_stars');
+    });
+
+    it('interprets "cambia la escala a visual por emociones"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('cambia la escala de la pregunta 4 a visual por emociones');
+      expect(result.intent).toBe('change_scale_type');
+      expect(result.targetQuestionDisplayIndex).toBe(4);
+      expect(result.targetScaleType).toBe('visual_emotions');
+    });
+
+    it('interprets "usa escala lineal"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('pregunta 12 usa escala lineal');
+      expect(result.intent).toBe('change_scale_type');
+      expect(result.targetQuestionDisplayIndex).toBe(12);
+      expect(result.targetScaleType).toBe('linear_scale');
+    });
+
+    it('interprets "usa Likert NOM 035"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('pregunta 15 usa Likert NOM 035');
+      expect(result.intent).toBe('change_scale_type');
+      expect(result.targetQuestionDisplayIndex).toBe(15);
+      expect(result.targetScaleType).toBe('likert_nom035');
+    });
+
+    it('interprets "tipo de valoración acuerdo"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('pregunta 5 tipo de valoración acuerdo');
+      expect(result.intent).toBe('change_scale_detail');
+      expect(result.targetQuestionDisplayIndex).toBe(5);
+      expect(result.targetScaleDetailAnchors).toEqual(['Muy en desacuerdo', 'En desacuerdo', 'Neutral', 'De acuerdo', 'Muy de acuerdo']);
+    });
+
+    it('interprets "usa frecuencia nunca siempre"', () => {
+      const result = mapQuestionReviewUserTextToEditingIntent('pregunta 2 usa frecuencia nunca siempre');
+      expect(result.intent).toBe('change_scale_detail');
+      expect(result.targetQuestionDisplayIndex).toBe(2);
+      expect(result.targetScaleDetailAnchors).toEqual(['Nunca', 'Casi nunca', 'A veces', 'Casi siempre', 'Siempre']);
+    });
+  });
 });

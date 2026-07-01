@@ -6,6 +6,7 @@ export type QuestionType =
   | 'nps'
   | 'enps'
   | 'matrix'
+  | 'dropdown'
   | 'unknown';
 
 export type ScaleType =
@@ -17,6 +18,10 @@ export type ScaleType =
   | 'agreement'
   | 'custom'
   | 'not_applicable'
+  | 'visual_stars'
+  | 'visual_emotions'
+  | 'linear_scale'
+  | 'likert_nom035'
   | 'unknown';
 
 export type ScoreDirection = 'positive_up' | 'positive_down';
@@ -184,6 +189,7 @@ export type QuestionReviewEditingIntentType =
   | 'change_question_dimension'
   | 'change_question_type'
   | 'change_scale_type'
+  | 'change_scale_detail'
   | 'confirm_question'
   | 'confirm_section'
   | 'invalid_input'
@@ -200,6 +206,7 @@ export interface QuestionReviewEditingIntent {
   targetDimensionName?: string;
   targetQuestionType?: QuestionType;
   targetScaleType?: ScaleType;
+  targetScaleDetailAnchors?: string[];
   rawUserTextSanitized: string;
   confidence: 'high' | 'medium' | 'low';
   clarificationPrompt?: string;

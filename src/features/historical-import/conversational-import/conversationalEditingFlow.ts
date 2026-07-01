@@ -26,7 +26,7 @@ export interface ConversationalEditContext {
   previousLabel?: string;
   targetType?: "dimension" | "question";
   targetQuestionIndex?: number;
-  editingField?: "question_type" | "scale_type" | "scale_detail" | "free_text";
+  editingField?: "question_type" | "scale_type" | "scale_detail" | "free_text" | "scale_detail_custom";
 }
 
 export interface ChatResponse {

@@ -73,24 +73,29 @@ export interface SectionConfirmationState {
 
 const QUESTION_TYPE_LABELS: Record<QuestionType, string> = {
   rating_scale: 'Escala de valoración',
-  single_choice: 'Selección única',
-  multiple_choice: 'Selección múltiple',
-  open_text: 'Texto abierto',
+  single_choice: 'Opción única',
+  multiple_choice: 'Múltiples respuestas',
+  open_text: 'Pregunta abierta',
   nps: 'NPS',
   enps: 'eNPS',
   matrix: 'Matriz',
+  dropdown: 'Desplegable',
   unknown: 'No determinado',
 };
 
 const SCALE_TYPE_LABELS: Record<ScaleType, string> = {
-  likert_5: 'Likert 5 puntos',
-  likert_7: 'Likert 7 puntos',
-  nps_0_10: 'NPS 0–10',
+  likert_5: 'Likert (escala de preferencias)',
+  likert_7: 'Likert (escala de preferencias)',
+  nps_0_10: 'NPS (recomendabilidad)',
   binary_yes_no: 'Binaria Sí/No',
   frequency: 'Frecuencia',
   agreement: 'Acuerdo',
   custom: 'Personalizada',
   not_applicable: 'No aplica',
+  visual_stars: 'Visual por estrellas',
+  visual_emotions: 'Visual por emociones',
+  linear_scale: 'Escala lineal',
+  likert_nom035: 'Likert (NOM 035)',
   unknown: 'No determinado',
 };
 
