@@ -199,5 +199,32 @@ To match the actual builder constructor options, the visible options for editing
 
 For complete specifications on business labels, internal type mappings, contract extension strategy, and NLP free-text parsing rules, see [docs/QUESTION_EDITING_OPTIONS_TAXONOMY.md](file:///Users/ub-col-pro-lf4/Documents/Carga%20Historica%20de%20encuestas/docs/QUESTION_EDITING_OPTIONS_TAXONOMY.md).
 
-## 11. Governance Alignment (Phase 11F-F-H4-D-B-G1)
+## 11. Question Edit Compatibility Validation Rules (Fase 11F-F-H4-E-A)
+
+All editing operations must now be validated against detected response evidence before applying.
+
+### 11.1 Principle
+```
+QUESTION_EDITING_COMPATIBILITY_VALIDATION_REQUIRED = YES
+EDIT_OPTIONS_DEPEND_ON_DETECTED_RESPONSE_STRUCTURE = YES
+DO_NOT_ALLOW_SEMANTICALLY_INVALID_EDITS = YES
+INVALID_EDIT_MUST_EXPLAIN_REASON = YES
+INVALID_EDIT_MUST_NOT_MUTATE_STATE = YES
+```
+
+### 11.2 Evidence Model
+Each question carries a `QuestionResponseEvidence` record describing:
+- `responseValueKind`: textual_scale_labels, numeric_scale_values, categorical_single_value, categorical_multi_value, free_text, mixed, unknown
+- `responseCardinality`: single_per_respondent, multiple_per_respondent, unknown
+- `matchedKnownScale`: likert_agreement_5, likert_frequency_5, satisfaction_5, nps_0_10, nom_035_frequency, custom, none, unknown
+
+### 11.3 Validation Behavior
+- At option display time: show only compatible options, or separate compatible/incompatible with reason
+- On invalid edit attempt: do not apply, explain reason in natural language, show valid alternatives, stay in editing flow
+- On valid edit: apply, show summary, offer seguir editando or continuar a Demográficos
+- Free-text NLP commands (e.g., "cambia la pregunta 24 a abierta") must also be validated
+
+For full specification, see [docs/QUESTION_EDIT_COMPATIBILITY_VALIDATION.md](file:///Users/ub-col-pro-lf4/Documents/Carga%20Historica%20de%20encuestas/docs/QUESTION_EDIT_COMPATIBILITY_VALIDATION.md).
+
+## 12. Governance Alignment (Phase 11F-F-H4-D-B-G1)
 The question editing taxonomy implementation has been fully aligned with project governance guidelines. Changes to `conversationalEditingFlow.ts` have been reverted. Instead, the context interface is extended locally in the workspace React component (`ConversationalImportWorkspace.tsx`), preserving the global state machine intact. All unit tests remain housed within `__tests__/`.

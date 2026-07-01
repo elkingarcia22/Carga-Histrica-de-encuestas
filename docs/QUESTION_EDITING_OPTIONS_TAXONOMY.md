@@ -77,6 +77,37 @@ The parsing mapper must be updated to interpret natural expressions for the new 
 
 ---
 
+## 4.B. Question Edit Compatibility Validation Cross-Reference
+
+All editing operations (question type, scale type, scale detail) must be validated against the detected response evidence before applying.
+
+### 4.B.1 Validation Layer
+
+The editing flow must incorporate a compatibility validation layer that receives:
+- The user's requested edit (question type, scale type, or scale detail change)
+- The `QuestionResponseEvidence` for the target question
+- The current editing intent
+
+The validation layer returns:
+- `compatible: true/false` — whether the edit is semantically valid
+- `reason?: string` — explanation in Spanish if incompatible
+- `compatibleOptions: string[]` — alternative options that are valid
+
+### 4.B.2 Allowed Edits by Response Nature
+
+| Detected Nature        | Allowed Question Types                               | Allowed Scale Types              | Blocked Edits                                  |
+|------------------------|------------------------------------------------------|----------------------------------|------------------------------------------------|
+| Likert textual         | Escala de valoración, Opción única, Desplegable      | Likert (escala de preferencias)  | Abierta, Múltiples respuestas, NPS, Estrellas, Emociones, Lineal, NOM 035 (unless matched) |
+| NPS numérico 0-10      | Escala de valoración                                 | NPS (recomendabilidad)           | Abierta, Múltiples respuestas, Desplegable, Opción única (unless owner decides), Likert textual, Visual |
+| Pregunta abierta       | Pregunta abierta                                     | No aplica                        | Escala de valoración, Opción única, Múltiples respuestas, Desplegable |
+| Opción única categórica| Opción única, Desplegable                            | No aplica                        | Abierta, Múltiples respuestas                   |
+| Múltiples respuestas   | Múltiples respuestas                                 | No aplica                        | Abierta, Opción única, Desplegable, Escala de valoración |
+| Unknown / Mixed        | No aplicar cambios automáticamente                   | —                                | Todos requieren aclaración humana              |
+
+### 4.B.3 Reference
+
+For full compatibility specification, see [docs/QUESTION_EDIT_COMPATIBILITY_VALIDATION.md](file:///Users/ub-col-pro-lf4/Documents/Carga%20Historica%20de%20encuestas/docs/QUESTION_EDIT_COMPATIBILITY_VALIDATION.md).
+
 ## 5. Non-Modifiability Constraints
 
 *   Dimension editing attempts (e.g. `“cambia la dimensión de la pregunta 5 a Liderazgo”`) remain strictly blocked and must return:

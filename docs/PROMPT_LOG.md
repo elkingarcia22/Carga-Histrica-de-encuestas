@@ -1,3 +1,42 @@
+## Fase 11F-F-H4-E-A · Question Edit Compatibility Validation Architecture
+
+Phase: Fase 11F-F-H4-E-A · Question Edit Compatibility Validation Architecture
+
+Summary:
+- Locked the architecture for question edit compatibility validation in Step 1/7 (Preguntas y escalas).
+- Defined the QuestionResponseEvidence model with responseValueKind, responseCardinality, responseShape, knownOptionLabels, knownNumericRange, and matchedKnownScale.
+- Documented the compatibility matrix for 6 detected natures: Likert textual, NPS numérico, pregunta abierta, opción única categórica, múltiples respuestas, and unknown/mixed.
+- Specified allowed and disallowed edits for each nature with expected error messages.
+- Defined conversational behavior: show compatible options, explain reasons for invalid edits, never mutate state on invalid changes.
+- Extended editing constraints to include compatibility validation for all edit types (question type, scale type, scale detail) and free-text NLP commands.
+- Created the specification file `docs/QUESTION_EDIT_COMPATIBILITY_VALIDATION.md`.
+
+Commit SHA: PENDING_COMMIT
+
+QUESTION_EDIT_COMPATIBILITY_VALIDATION_ARCHITECTURE_LOCKED
+QUESTION_RESPONSE_EVIDENCE_MODEL_DEFINED
+EDIT_OPTIONS_DEPEND_ON_RESPONSE_STRUCTURE_DEFINED
+LIKERT_TEXTUAL_COMPATIBILITY_RULES_DEFINED
+NPS_NUMERIC_COMPATIBILITY_RULES_DEFINED
+FREE_TEXT_COMPATIBILITY_RULES_DEFINED
+SINGLE_CHOICE_COMPATIBILITY_RULES_DEFINED
+MULTIPLE_CHOICE_COMPATIBILITY_RULES_DEFINED
+UNKNOWN_MIXED_COMPATIBILITY_RULES_DEFINED
+INVALID_EDIT_DOES_NOT_MUTATE_STATE_DEFINED
+INVALID_EDIT_EXPLAINS_REASON_DEFINED
+INVALID_EDIT_SUGGESTS_COMPATIBLE_OPTIONS_DEFINED
+FREE_TEXT_EDIT_VALIDATION_DEFINED
+NUMERIC_SELECTION_VALIDATION_DEFINED
+DIMENSION_EDITING_REMAINS_DISABLED_DEFINED
+NO_CODE_CHANGES
+NO_RUNTIME_CHANGES
+NO_UI_CHANGES
+NO_MAPPER_CHANGES
+NO_TEST_CHANGES
+VISUAL_REVIEW_REQUIRED = NO
+
+NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11F-F-H4-E-B · Implement Question Edit Compatibility Validation
+
 ## Fase 11F-F-H4-A · Simplified Question Review Flow Architecture Lock
 
 Phase: Fase 11F-F-H4-A · Simplified Question Review Flow Architecture Lock

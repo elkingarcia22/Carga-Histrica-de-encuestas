@@ -159,8 +159,44 @@ Governance documents for first dashboard build:
 
 ---
 
+## Fase 11F-F-H4-E-A · Question Edit Compatibility Validation Architecture
+
+- **Phase Status**: Completed (docs only — no code changes)
+- **Problem**: The question editing flow currently allows changing any field to any value without considering the nature of historical responses. For example, a Likert textual scale question could be changed to "Pregunta abierta" even though responses are not free text. This creates semantic inconsistency between the detected question type and the actual response data.
+- **Solution**: Defined the Question Edit Compatibility Validation Architecture — a pure evidence-driven validation layer that inspects `QuestionResponseEvidence` (detected response value kind, cardinality, known labels, matched scale) and restricts editing options to semantically compatible alternatives only. Documented in `docs/QUESTION_EDIT_COMPATIBILITY_VALIDATION.md`.
+- **Changes Made**:
+  - Created `docs/QUESTION_EDIT_COMPATIBILITY_VALIDATION.md` with full architecture specification
+  - Updated `docs/QUESTION_EDITING_OPTIONS_TAXONOMY.md` with compatibility cross-reference
+  - Updated `docs/QUESTION_REVIEW_SIMPLIFIED_FLOW_ARCHITECTURE.md` with compatibility validation rules
+  - Updated `docs/ARCHITECTURE.md` with this section
+  - Updated `docs/PROMPT_LOG.md` with this entry
+  - Updated `docs/QA_CHECKLIST.md` with acceptance criteria
+- **Markers**:
+  - PHASE_11F_F_H4_E_A_QUESTION_EDIT_COMPATIBILITY_VALIDATION_ARCHITECTURE_LOCKED
+  - QUESTION_RESPONSE_EVIDENCE_MODEL_DEFINED
+  - EDIT_OPTIONS_DEPEND_ON_RESPONSE_STRUCTURE_DEFINED
+  - LIKERT_TEXTUAL_COMPATIBILITY_RULES_DEFINED
+  - NPS_NUMERIC_COMPATIBILITY_RULES_DEFINED
+  - FREE_TEXT_COMPATIBILITY_RULES_DEFINED
+  - SINGLE_CHOICE_COMPATIBILITY_RULES_DEFINED
+  - MULTIPLE_CHOICE_COMPATIBILITY_RULES_DEFINED
+  - UNKNOWN_MIXED_COMPATIBILITY_RULES_DEFINED
+  - INVALID_EDIT_DOES_NOT_MUTATE_STATE_DEFINED
+  - INVALID_EDIT_EXPLAINS_REASON_DEFINED
+  - INVALID_EDIT_SUGGESTS_COMPATIBLE_OPTIONS_DEFINED
+  - FREE_TEXT_EDIT_VALIDATION_DEFINED
+  - NUMERIC_SELECTION_VALIDATION_DEFINED
+  - DIMENSION_EDITING_REMAINS_DISABLED_DEFINED
+  - NO_CODE_CHANGES
+  - NO_RUNTIME_CHANGES
+  - NO_UI_CHANGES
+  - NO_MAPPER_CHANGES
+  - NO_TEST_CHANGES
+  - VISUAL_REVIEW_REQUIRED = NO
+  - NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11F-F-H4-E-B · Implement Question Edit Compatibility Validation
+
 *Documento de arquitectura UBITS v3.0.0*
-*Última revisión: 2026-05-06*
+*Última revisión: 2026-07-01*
 
 **Phase 8 Timeline:** 8.0 (✅) → 8.1 (✅) → 8.2 (✅) → 8.3 (✅) → 8.4 (✅) → 8.5 (✅) → 8.6 (8.6C ✅) → 8.6D (Blocked) → 9.0 (API)
 
