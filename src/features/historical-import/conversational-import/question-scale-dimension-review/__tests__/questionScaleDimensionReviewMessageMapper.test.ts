@@ -1,3 +1,4 @@
+// Governance alignment: tests moved to authorized __tests__ folder
 import { describe, it, expect } from 'vitest';
 import {
   mapQuestionReviewOverviewToConversation,

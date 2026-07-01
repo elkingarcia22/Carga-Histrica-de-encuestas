@@ -13357,3 +13357,9 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Extended the `ConversationalEditContext` interface locally in `ConversationalImportWorkspace.tsx` (`ExtendedConversationalEditContext`) to handle `"scale_detail_custom"` cleanly and type-safely.
 - Confirmed unit tests are located in `src/features/historical-import/conversational-import/question-scale-dimension-review/__tests__/`.
 - Ran full linting, unit test suite, and production build checks successfully.
+
+## Phase 11F-F-H4-D-B-G2 · Move Question Review Tests Back To Authorized Folder
+- Verified that all question-scale-dimension-review test files are located under the authorized `__tests__/` directory.
+- Confirmed that no unauthorized `tests/` directory exists under `question-scale-dimension-review/`.
+- Updated test file metadata/comments to reflect folder governance verification.
+- Ran quality checks: eslint, tests, tsc, and build passed cleanly.
