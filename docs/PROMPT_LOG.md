@@ -13336,3 +13336,10 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Defined responsibilities between Workspace (business logic deciding if operation is heavy/light) and Chat Master (pure renderer of explicit progress messages).
 - Documented strict constraints: `THINKING_MUST_CLEAR_AFTER_FINAL_RESPONSE = YES` and `PERSISTENT_THINKING_AFTER_RESPONSE_ALLOWED = NO`.
 - Updated the QA visual checklist with selective thinking guidelines.
+
+## Phase 11F-F-H4-D-A: Lock Question Editing Options Taxonomy
+- Created and locked the question editing options taxonomy in `docs/QUESTION_EDITING_OPTIONS_TAXONOMY.md`.
+- Specified the approved constructor options for Question Type, Scale Type, and Scale Detail/Valuation.
+- Outlined mapping rules and minimal technical contract extensions (e.g. adding `'dropdown'`, `'visual_stars'`, `'visual_emotions'`, `'linear_scale'`, `'likert_nom035'`).
+- Documented NLP free-text parsing rules for interpreting the new taxonomy phrases.
+- Appended Section 10 to `docs/QUESTION_REVIEW_SIMPLIFIED_FLOW_ARCHITECTURE.md` and added markers to existing documentation files.

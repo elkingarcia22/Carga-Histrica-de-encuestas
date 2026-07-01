@@ -169,3 +169,32 @@ To prevent inputs like "preguta 28" or "p28" from falling back to the master cha
 3.  **Contextual Validation**:
     *   If no digits are found, it returns a contextual error: `"No pude identificar la pregunta. Responde con el número de pregunta que quieres modificar, por ejemplo: 28."`
     *   If the digit is out of range, it returns: `"No encontré la pregunta X. Responde con un número entre 1 y Y."` (dynamically based on the total questions count).
+
+---
+
+## 10. Question Editing Options Taxonomy Specifications (Fase 11F-F-H4-D-A)
+
+To match the actual builder constructor options, the visible options for editing questions must follow the specifications below:
+
+1.  **Question Type Taxonomy**:
+    1. Escala de valoración
+    2. Pregunta abierta
+    3. Opción única
+    4. Múltiples respuestas
+    5. Desplegable
+2.  **Scale Type Taxonomy**:
+    1. Likert (escala de preferencias)
+    2. NPS (recomendabilidad)
+    3. Visual por estrellas
+    4. Visual por emociones
+    5. Escala lineal
+    6. Likert (NOM 035)
+3.  **Scale Detail / Evaluation Type**:
+    1. Frecuencia (nunca / siempre)
+    2. Satisfecho (insatisfecho / satisfecho)
+    3. Acuerdo (en desacuerdo / de acuerdo)
+    4. Probabilidad (Nada probable / Es probable siempre)
+    5. Frecuencia (Siempre / Nunca) - NOM 035
+    *  Also accept custom detail written by the user.
+
+For complete specifications on business labels, internal type mappings, contract extension strategy, and NLP free-text parsing rules, see [docs/QUESTION_EDITING_OPTIONS_TAXONOMY.md](file:///Users/ub-col-pro-lf4/Documents/Carga%20Historica%20de%20encuestas/docs/QUESTION_EDITING_OPTIONS_TAXONOMY.md).
