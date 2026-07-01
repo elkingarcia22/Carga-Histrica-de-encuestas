@@ -13329,3 +13329,10 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Implemented and exported the `parseQuestionSelection` helper function in `questionScaleDimensionEditingMapper.ts` to parse selection commands robustly (interpreting formats like `28`, `pregunta 28`, `preguta 28`, `p28`, `P28`, `pregunta #28`, `modificar pregunta 28`, etc.) and validate the range limits.
 - Added comprehensive unit tests in `questionScaleDimensionEditingMapper.test.ts` covering all input variations, out-of-range, and invalid inputs.
 - Validated all tests and lint checks cleanly.
+
+## Phase 11F-F-H3-E-A: Revise Chat Thinking Visibility Policy Architecture
+- Documented and locked the selective chat thinking visibility policy in `docs/CHAT_THINKING_VISIBILITY_POLICY.md`.
+- Updated `docs/CHAT_MASTER_RUNTIME_UX_ARCHITECTURE.md` to shift from an all-encompassing thinking state policy to a selective visibility architecture (only showing feed-level thinking for heavy background processing).
+- Defined responsibilities between Workspace (business logic deciding if operation is heavy/light) and Chat Master (pure renderer of explicit progress messages).
+- Documented strict constraints: `THINKING_MUST_CLEAR_AFTER_FINAL_RESPONSE = YES` and `PERSISTENT_THINKING_AFTER_RESPONSE_ALLOWED = NO`.
+- Updated the QA visual checklist with selective thinking guidelines.

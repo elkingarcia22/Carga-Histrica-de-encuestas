@@ -80,22 +80,23 @@ When a submission is processing, the composer must visually reflect this state a
 
 ---
 
-## 5. Assistant Response Processing Transition
+## 5. Assistant Response Processing Transition & Thinking Policy
 
-Assistant responses must never appear instantly without a thinking state, as it breaks conversational immersion.
+Assistant responses represent the outcome of the agent's calculations. To maintain clean UX and prevent visual clutter, the visible `Pensando...` (thinking) bubble in the feed must follow the selective visibility policy.
 
-### Rule & Flow
-1. **Trigger**: User inputs text and sends it.
-2. **Intermediate Phase**: The assistant immediately appends a progress message (e.g. `role: 'assistant'`, `kind: 'thinking'`) rendering the inline `AILoader` component.
-3. **Execution**: The underlying process runs.
-4. **Resolution Phase**: The progress/thinking message is replaced or transitioned into the final response text.
-5. **Enforcement**: This applies to all steps, including survey selection, configuration changes, scale reviews, invalid commands, and generic errors.
+### Core Policy Integration
+1. **Selective Thinking**: Feed-level thinking/progress messages (using `AILoader`) are restricted strictly to heavy/long operations (e.g., initial file loading, match structure analysis, final steps transition).
+2. **Immediate Transitions**: Lightweight interactions (menu option selection, question selections, contextual inputs, validation errors, and local state edits) must bypass the feed-level thinking loader completely.
+3. **Immutability of Finished States**: A thinking bubble must never remain in the feed once a final assistant response is delivered. It must be replaced or cleared.
+4. **Composer Processing vs. Feed Thinking**: The message composer send button loader and interface locks (`isProcessing`) may run briefly for all interactions to guarantee rate-limiting and prevent double-clicks, without injecting a thinking bubble in the feed history.
+
+For the full detailed specifications, refer to [docs/CHAT_THINKING_VISIBILITY_POLICY.md](file:///Users/ub-col-pro-lf4/Documents/Carga%20Historica%20de%20encuestas/docs/CHAT_THINKING_VISIBILITY_POLICY.md).
 
 ---
 
 ## 6. Implementation Boundaries
 
-To secure governance, changes in the next phase (11F-F-H3-B) are strictly confined to these paths:
+To secure governance, changes in the next phase (11F-F-H3-E-B) are strictly confined to these paths:
 
 ### Authorized Files
 - [MessageComposer.tsx](file:///Users/ub-col-pro-lf4/Documents/Carga%20Historica%20de%20encuestas/src/features/historical-import/conversational-import/MessageComposer.tsx)
@@ -121,5 +122,5 @@ The final implementation must be verified against this checklist:
 - [ ] Send button features the AI premium gradient.
 - [ ] Send button renders a loader icon when processing.
 - [ ] Keyboard input and composer text area are locked during processing.
-- [ ] Every assistant response shows a progress loading state before rendering the content.
+- [ ] Only heavy processes display the `Pensando...` feed bubble, while light actions bypass it.
 - [ ] No hex color codes are hardcoded; all styles reference tokens.
