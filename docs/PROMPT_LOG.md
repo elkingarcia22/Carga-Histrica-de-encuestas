@@ -13420,3 +13420,12 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - All `.finally()` handlers that call `setIsProcessingNextStep(false)` now also call `setIsFeedThinking(false)`.
 - No changes to `chat-foundation/`, `MessageComposer.tsx`, taxonomies, mappers, tests, or forbidden files.
 - Build, lint (scoped to conversational-import and historical-import), and full regression tests (268 tests) passed.
+
+## Phase 11F-F-H4-E-C · Fix Question Review Persistent Thinking Regression
+- **Problem**: After rendering the `1/7 · Preguntas y escalas` question list, a "Pensando..." bubble persisted in the feed. Root cause: `simulateChatFlow` never explicitly cleared `isFeedThinking` for lightweight operations. A previous heavy call with `keepThinkingAfter: true` left `isFeedThinking = true` in state, and the next lightweight call inherited that stale state. The `thinking_continuity` component checked `isFeedThinking` directly and rendered a separate "Pensando..." bubble when `true` with a non-thinking last message.
+- **Fix 1 (defensive)**: In `simulateChatFlow`, when `showFeedThinking` is false, explicitly set `setIsFeedThinking(false)`. This ensures no lightweight operation can inherit stale thinking state from a previous heavy call.
+- **Fix 2 (question review transition)**: In the `.then()` callback of the structure review → question review transition, call `setIsFeedThinking(false)` immediately before the 1500ms `setTimeout` delay. This prevents "Pensando..." from appearing during the brief delay before the question list renders.
+- **Files modified**: `ConversationalImportWorkspace.tsx` (only the two targeted changes).
+- **Files updated**: `CHAT_THINKING_VISIBILITY_POLICY.md`, `QA_CHECKLIST.md`, `PROMPT_LOG.md`.
+- **No changes to**: chat-foundation, MessageComposer, ChatTimeline, conversationalEditingFlow, mappers, taxonomies, tests, stash, forbidden files.
+- **Verification**: Build passed, eslint scoped passes (conversational-import, historical-import), 323/323 regression tests passed. Stash still exists.

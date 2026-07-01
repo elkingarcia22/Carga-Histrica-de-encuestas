@@ -130,3 +130,13 @@ The final implementation must be verified against this checklist:
 - [ ] Keyboard input and composer text area are locked during processing.
 - [ ] Only heavy processes display the `Pensando...` feed bubble, while light actions bypass it.
 - [ ] No hex color codes are hardcoded; all styles reference tokens.
+
+### Amendment (Fase 11F-F-H4-E-C · Fix Question Review Persistent Thinking)
+
+**Root Cause**: The `simulateChatFlow` function's `showFeedThinking = false` branch never explicitly cleared `isFeedThinking`. When a previous heavy call with `keepThinkingAfter: true` left `isFeedThinking = true`, the next lightweight call inherited that stale state. The `thinking_continuity` component (guarded on `isFeedThinking`) rendered a persistent "Pensando..." bubble.
+
+**Fix**:
+1. `simulateChatFlow` now explicitly calls `setIsFeedThinking(false)` when `showFeedThinking` is `false`, preventing stale state propagation.
+2. The structure review → question review transition immediately clears `isFeedThinking` in its `.then()` callback before the 1500ms `setTimeout` delay, preventing the bubble from appearing during the brief waiting period.
+
+This amendment preserves all existing policies: selective thinking for heavy operations, no thinking for lightweight responses, and no persistent thinking after final response.

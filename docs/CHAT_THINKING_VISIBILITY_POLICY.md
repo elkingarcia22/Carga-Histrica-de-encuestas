@@ -83,4 +83,27 @@ Use this checklist during visual regression tests to verify compliance:
 *   [x] Auto-scroll only scrolls to thinking when `isFeedThinking` is active.
 *   [x] Scrollbar remains fully visible.
 
+### Amendment (Fase 11F-F-H4-E-C · Fix Question Review Persistent Thinking)
+
+**Problem**: After rendering the `1/7 · Preguntas y escalas` question list, a "Pensando..." bubble remained persistent in the feed. Root cause: the `simulateChatFlow` function never explicitly cleared `isFeedThinking` for lightweight operations. When a previous heavy call with `keepThinkingAfter: true` left `isFeedThinking = true` in state, the next lightweight call inherited that stale state, causing the `thinking_continuity` component to render a "Pensando..." bubble.
+
+**Fix**:
+1. **Defensive clear in `simulateChatFlow`**: When `showFeedThinking` is `false`, explicitly set `setIsFeedThinking(false)` at the start of every operation. This prevents any lightweight operation from inheriting stale thinking state from previous heavy calls.
+2. **Explicit clear in question review transition**: In the `.then()` callback of the structure review → question review transition, call `setIsFeedThinking(false)` immediately before the 1500ms `setTimeout` delay. This prevents the "Pensando..." bubble from being visible during the brief delay before the question list appears.
+
+**Before** (`simulateChatFlow`):
+```
+if (showFeedThinking) setIsFeedThinking(true);
+// isFeedThinking NEVER cleared for lightweight ops
+```
+
+**After**:
+```
+if (showFeedThinking) {
+  setIsFeedThinking(true);
+} else {
+  setIsFeedThinking(false);  // explicitly clear stale state
+}
+```
+
 <!-- OWNER_VISUAL_REVIEW_REQUIRED -->

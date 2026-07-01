@@ -461,10 +461,16 @@ export function ConversationalImportWorkspace() {
     newMessages: ChatMessage[],
     options?: { keepThinkingAfter?: boolean; feedThinking?: boolean }
   ) => {
-    // FEED_LEVEL_THINKING_POLICY: only activate feed bubble when explicitly requested
+    // FEED_LEVEL_THINKING_POLICY: only activate feed bubble when explicitly requested.
+    // When the operation is lightweight, explicitly clear any stale feed thinking
+    // that may have been left by a previous heavy call with keepThinkingAfter: true.
     const showFeedThinking = options?.feedThinking === true;
     setIsProcessingNextStep(true);
-    if (showFeedThinking) setIsFeedThinking(true);
+    if (showFeedThinking) {
+      setIsFeedThinking(true);
+    } else {
+      setIsFeedThinking(false);
+    }
     initAudioSync();
 
     for (const msg of newMessages) {
@@ -963,6 +969,10 @@ export function ConversationalImportWorkspace() {
                 { id: `msg_assistant_summary_${generateId()}`, role: "assistant", type: "text", content: summaryMsg, timestamp: "2025-01-01T12:00:00.000Z" },
                 { id: `msg_assistant_review_${generateId()}`, role: "assistant", type: "text", content: startMsg, timestamp: "2025-01-01T12:00:00.000Z" }
               ], { keepThinkingAfter: true, feedThinking: true }).then(() => {
+                // FEED_LEVEL_THINKING_POLICY: clear feed thinking immediately —
+                // the transition to the question review list is a lightweight
+                // response, not continued heavy processing.
+                setIsFeedThinking(false);
                 setTimeout(() => {
                   setConversationalEditState("reviewing_questions_and_scales");
                   const currentSummary = recalculateSummary(questionReviewData);
