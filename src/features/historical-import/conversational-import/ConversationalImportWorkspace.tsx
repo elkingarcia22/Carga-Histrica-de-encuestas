@@ -167,6 +167,10 @@ const playNotificationSound = () => {
 
 
 
+interface ExtendedConversationalEditContext extends Omit<ConversationalEditContext, "editingField"> {
+  editingField?: ConversationalEditContext["editingField"] | "scale_detail_custom";
+}
+
 export function ConversationalImportWorkspace() {
   const [chatStarted, setChatStarted] = useState(false);
   const [viewMode, setViewMode] = useState<"chat" | "draft_preview">("chat");
@@ -177,7 +181,7 @@ export function ConversationalImportWorkspace() {
   const [currentDecisionIndex, setCurrentDecisionIndex] = useState(0);
   const [resolvedDecisionIds, setResolvedDecisionIds] = useState<string[]>([]);
   const [conversationalEditState, setConversationalEditState] = useState<ConversationalEditState | ConversationalImportWizardStateId>("idle");
-  const [conversationalEditContext, setConversationalEditContext] = useState<ConversationalEditContext>({});
+  const [conversationalEditContext, setConversationalEditContext] = useState<ExtendedConversationalEditContext>({});
   const [selectedSurveyScope, setSelectedSurveyScope] = useState<ConversationalSurveyScope | null>(null);
   const [generalConfiguration, setGeneralConfiguration] = useState<Partial<ConversationalGeneralConfiguration>>({});
   const [activeAmbiguity, setActiveAmbiguity] = useState<ActiveAmbiguity | null>(null);
@@ -1836,7 +1840,7 @@ export function ConversationalImportWorkspace() {
 
       const normalizedText = text.trim().toLowerCase();
       if (conversationalEditState !== "idle" || /preguntas|dimensiones|demográficos|demograficos|métricas|metricas|segmentos|decisiones|menu|menú|volver/i.test(normalizedText) || intent === "show_review_menu") {
-        const response = handleConversationalEdit(text, conversationalEditState as ConversationalEditState, conversationalEditContext, globalOverlayState);
+        const response = handleConversationalEdit(text, conversationalEditState as ConversationalEditState, conversationalEditContext as ConversationalEditContext, globalOverlayState);
         setConversationalEditState(response.newState);
         setConversationalEditContext(response.newContext);
 

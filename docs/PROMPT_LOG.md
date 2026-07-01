@@ -13352,3 +13352,8 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Kept dimension editing locked with the required block warning.
 - Updated all unit tests and passed the quality test suite and ESLint checks.
 
+## Phase 11F-F-H4-D-B-G1 · Governance Fix for Question Editing Options Taxonomy
+- Reverted all unauthorized changes in `conversationalEditingFlow.ts` to satisfy governance constraints.
+- Extended the `ConversationalEditContext` interface locally in `ConversationalImportWorkspace.tsx` (`ExtendedConversationalEditContext`) to handle `"scale_detail_custom"` cleanly and type-safely.
+- Confirmed unit tests are located in `src/features/historical-import/conversational-import/question-scale-dimension-review/__tests__/`.
+- Ran full linting, unit test suite, and production build checks successfully.

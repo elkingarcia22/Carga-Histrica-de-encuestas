@@ -93,3 +93,10 @@ The parsing mapper must be updated to interpret natural expressions for the new 
 *   [ ] Natural language command parsing maps successfully to the extended types.
 *   [ ] No old/generic scale types (e.g. "Sí / No", "Likert 7", "Personalizada", "No aplica") are offered.
 *   [ ] Conversational interface uses business labels, not technical keys.
+
+---
+
+## 7. Governance Alignment Check
+
+*   **Conversational Editing Flow**: Modifying `conversationalEditingFlow.ts` is strictly prohibited. The implementation was aligned by reverting all changes in `conversationalEditingFlow.ts` and extending the `ConversationalEditContext` interface locally inside `ConversationalImportWorkspace.tsx` (`ExtendedConversationalEditContext`), ensuring complete isolation and preserving the state machine.
+*   **Test folder**: All unit tests are located in `src/features/historical-import/conversational-import/question-scale-dimension-review/__tests__/`. No tests exist under `tests/` directory within this feature folder.

@@ -198,3 +198,6 @@ To match the actual builder constructor options, the visible options for editing
     *  Also accept custom detail written by the user.
 
 For complete specifications on business labels, internal type mappings, contract extension strategy, and NLP free-text parsing rules, see [docs/QUESTION_EDITING_OPTIONS_TAXONOMY.md](file:///Users/ub-col-pro-lf4/Documents/Carga%20Historica%20de%20encuestas/docs/QUESTION_EDITING_OPTIONS_TAXONOMY.md).
+
+## 11. Governance Alignment (Phase 11F-F-H4-D-B-G1)
+The question editing taxonomy implementation has been fully aligned with project governance guidelines. Changes to `conversationalEditingFlow.ts` have been reverted. Instead, the context interface is extended locally in the workspace React component (`ConversationalImportWorkspace.tsx`), preserving the global state machine intact. All unit tests remain housed within `__tests__/`.
