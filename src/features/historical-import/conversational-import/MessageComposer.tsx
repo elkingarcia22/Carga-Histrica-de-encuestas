@@ -1,14 +1,15 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Paperclip, X, File as FileIcon } from "lucide-react";
+import { ArrowRight, Paperclip, X, File as FileIcon, Loader2 } from "lucide-react";
 
 interface MessageComposerProps {
   onSend?: (text: string, files: File[]) => void;
   disabled?: boolean;
   placeholder?: string;
+  isProcessing?: boolean;
 }
 
-export function MessageComposer({ onSend, disabled, placeholder }: MessageComposerProps) {
+export function MessageComposer({ onSend, disabled, placeholder, isProcessing }: MessageComposerProps) {
   const [text, setText] = useState("");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -28,27 +29,29 @@ export function MessageComposer({ onSend, disabled, placeholder }: MessageCompos
   };
 
   const handleSend = () => {
-    if ((text.trim() || stagedFiles.length > 0) && onSend && !disabled) {
+    if ((text.trim() || stagedFiles.length > 0) && onSend && !disabled && !isProcessing) {
       onSend(text, stagedFiles);
       setText("");
       setStagedFiles([]);
     }
   };
 
-  const isSendDisabled = disabled || (!text.trim() && stagedFiles.length === 0);
+  const isSendDisabled = disabled || isProcessing || (!text.trim() && stagedFiles.length === 0);
 
   return (
-    <div className={`relative border border-border bg-card rounded-2xl p-4 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all shadow-sm w-full ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
+    <div className={`relative border border-border bg-card rounded-2xl p-4 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all shadow-sm w-full ${disabled || isProcessing ? 'opacity-50 pointer-events-none' : ''}`}>
       <textarea
         placeholder={placeholder || "Cuéntame qué encuesta quieres cargar"}
         className="w-full min-h-[100px] bg-transparent outline-none resize-none text-sm placeholder:text-muted-foreground/75 text-foreground pb-12"
-        disabled={disabled}
+        disabled={disabled || isProcessing}
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSend();
+            if (!isSendDisabled && !isProcessing) {
+              handleSend();
+            }
           }
         }}
       />
@@ -90,7 +93,7 @@ export function MessageComposer({ onSend, disabled, placeholder }: MessageCompos
           size="icon"
           className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted"
           onClick={() => fileInputRef.current?.click()}
-          disabled={disabled}
+          disabled={disabled || isProcessing}
           title="Adjuntar archivo"
         >
           <Paperclip className="h-4 w-4" />
@@ -100,11 +103,19 @@ export function MessageComposer({ onSend, disabled, placeholder }: MessageCompos
       <div className="absolute bottom-3 right-3">
         <Button
           size="icon"
-          className={`h-8 w-8 rounded-full transition-colors border-0 ${isSendDisabled ? 'bg-muted text-muted-foreground/75 cursor-not-allowed hover:bg-muted' : 'bg-primary text-primary-foreground hover:bg-primary/90'}`}
+          className={`h-8 w-8 rounded-full transition-all border-0 ${
+            isSendDisabled
+              ? 'bg-muted text-muted-foreground/75 cursor-not-allowed hover:bg-muted'
+              : 'bg-ai-gradient shadow-ai-premium text-primary-foreground hover:opacity-90'
+          }`}
           disabled={isSendDisabled}
           onClick={handleSend}
         >
-          <ArrowRight className="h-4 w-4" />
+          {isProcessing ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ArrowRight className="h-4 w-4" />
+          )}
         </Button>
       </div>
     </div>

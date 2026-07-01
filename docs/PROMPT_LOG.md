@@ -1,3 +1,31 @@
+## Fase 11F-F-H3-B · Implement Chat Master Runtime UX Fixes
+
+Phase: Fase 11F-F-H3-B · Implement Chat Master Runtime UX Fixes
+
+Summary:
+- Implemented auto-scroll logic that automatically moves the feed to the bottom when a new user message or assistant thinking/processing bubble appears.
+- Built a manual scroll override detection so manual user scrolling is preserved without hijacking if the viewport is not near the bottom.
+- Forced the Radix-ui ScrollArea scrollbar to remain always visible by applying a CSS opacity override targeting `[data-slot="scroll-area-scrollbar"]` in `globals.css` using theme variables without hardcoded hexes.
+- Upgraded the composer send button to render with the approved AI gradient (`bg-ai-gradient`) and shadow (`shadow-ai-premium`) when enabled.
+- Intercepted input/Enter actions and rendered a spinning loader icon inside the send button during active assistant processing stages.
+- Ensured all assistant responses transited through a visible progress loading state before rendering content.
+- Ensured all downstream hotfixes (survey selection bubble unifications, review aliases, block pagination) remain fully functional.
+
+Commit SHA: PENDING_COMMIT
+
+PHASE_11F_F_H3_B_CHAT_MASTER_RUNTIME_UX_FIXES_COMPLETE
+CHAT_MASTER_AUTO_SCROLL_TO_PROCESSING_COMPLETE
+CHAT_MASTER_VISIBLE_SCROLLBAR_COMPLETE
+CHAT_MASTER_AI_GRADIENT_SEND_BUTTON_COMPLETE
+CHAT_MASTER_SEND_BUTTON_PROCESSING_LOADER_COMPLETE
+CHAT_MASTER_PROCESSING_BEFORE_ASSISTANT_RESPONSE_COMPLETE
+CHAT_MASTER_NO_DUPLICATED_LOADERS
+CHAT_MASTER_NO_FAKE_TEXT
+CHAT_MASTER_NO_TIMEOUT_HACKS
+CHAT_MASTER_EXISTING_FLOWS_PRESERVED
+OWNER_VISUAL_REVIEW_REQUIRED
+PHASE_11F_G_OWNER_VISUAL_QA_READY
+
 ## Fase 11F-F-H3-A · Chat Master Runtime UX Architecture Lock
 
 Phase: Fase 11F-F-H3-A · Chat Master Runtime UX Architecture Lock

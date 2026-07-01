@@ -414,7 +414,7 @@ export function ConversationalImportWorkspace() {
       if (msg.role === "user") {
         setMessages(prev => [...prev, msg]);
       } else {
-        const typingId = `typing_${generateId()}`;
+        const typingId = `msg_typing_${generateId()}`;
         setMessages(prev => {
           const cleaned = prev.filter(m => !(m.role === "assistant" && m.type === "analysis_progress" && m.content === "Pensando..."));
           return [...cleaned, {
@@ -456,14 +456,31 @@ export function ConversationalImportWorkspace() {
   useEffect(() => {
     if (chatStarted && viewMode === "chat") {
       const timeout = setTimeout(() => {
-        const lastMsg = document.querySelectorAll('[id^="msg_"]');
-        if (lastMsg.length > 0) {
-          lastMsg[lastMsg.length - 1].scrollIntoView({ behavior: 'smooth', block: 'end' });
+        const viewport = document.querySelector('[data-slot="scroll-area-viewport"]');
+        if (viewport) {
+          const { scrollTop, scrollHeight, clientHeight } = viewport;
+          const isNearBottom = scrollHeight - scrollTop - clientHeight < 150;
+
+          const lastMsgData = messages[messages.length - 1];
+          const isLastMsgUser = lastMsgData?.role === "user";
+          const isLastMsgThinking = lastMsgData?.type === "analysis_progress" || isProcessingNextStep;
+
+          if (isNearBottom || isLastMsgUser || isLastMsgThinking) {
+            const lastMsg = document.querySelectorAll('[id^="msg_"]');
+            if (lastMsg.length > 0) {
+              lastMsg[lastMsg.length - 1].scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+          }
+        } else {
+          const lastMsg = document.querySelectorAll('[id^="msg_"]');
+          if (lastMsg.length > 0) {
+            lastMsg[lastMsg.length - 1].scrollIntoView({ behavior: 'smooth', block: 'end' });
+          }
         }
       }, 100);
       return () => clearTimeout(timeout);
     }
-  }, [messages, chatStarted, viewMode]);
+  }, [messages, chatStarted, viewMode, isProcessingNextStep]);
 
   const handleNewChat = () => {
     setChatStarted(false);
@@ -1818,6 +1835,8 @@ export function ConversationalImportWorkspace() {
       return;
     }
 
+    setIsProcessingNextStep(true);
+
     const file = files[0];
     const ts = generateId();
     const isoString = "2025-01-01T12:00:00.000Z";
@@ -2059,7 +2078,7 @@ export function ConversationalImportWorkspace() {
               </p>
 
               <div className="w-full mb-8 max-w-2xl mx-auto px-4">
-                <MessageComposer onSend={handleComposerSend} />
+                <MessageComposer onSend={handleComposerSend} isProcessing={isProcessingNextStep} />
               </div>
 
               {/* Quick Actions pills/botones sobrios en fila */}
@@ -2245,20 +2264,22 @@ export function ConversationalImportWorkspace() {
                         const isLastMsgThinking = lastMsg?.type === "analysis_progress";
                         if (isLastMsgThinking) return null;
                         return (
-                          <ChatFoundationMessageRenderer
-                            message={{
-                              id: 'thinking_continuity',
-                              role: 'assistant',
-                              kind: 'thinking',
-                              status: 'thinking',
-                              tone: 'neutral',
-                              content: '',
-                              metadata: {
-                                showAvatar: true,
-                                showTimestamp: false,
-                              }
-                            }}
-                          />
+                          <div id="msg_thinking_continuity" className="w-full flex flex-col gap-2">
+                            <ChatFoundationMessageRenderer
+                              message={{
+                                id: 'thinking_continuity',
+                                role: 'assistant',
+                                kind: 'thinking',
+                                status: 'thinking',
+                                tone: 'neutral',
+                                content: '',
+                                metadata: {
+                                  showAvatar: true,
+                                  showTimestamp: false,
+                                }
+                              }}
+                            />
+                          </div>
                         );
                       })()}
                     </div>
@@ -2274,6 +2295,7 @@ export function ConversationalImportWorkspace() {
                   <MessageComposer
                     onSend={handleComposerSend}
                     placeholder={conversationalEditState === "reviewing_questions_and_scales" ? "Escribe una instrucción sobre preguntas y escalas" : undefined}
+                    isProcessing={isProcessingNextStep}
                   />
                 </div>
               </div>

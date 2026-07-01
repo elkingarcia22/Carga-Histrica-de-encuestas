@@ -217,4 +217,9 @@
   .shadow-ai-premium {
     box-shadow: var(--shadow-ai-premium) !important;
   }
+
+  [data-slot="scroll-area-scrollbar"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
 }
