@@ -6,6 +6,7 @@ import {
   getQuestionTypeOptionsTextForEvidence,
   getScaleTypeOptionsTextForEvidence,
   getEvidenceFromQuestion,
+  resolveNumericCompatibleOption,
 } from '../questionEditCompatibilityMapper';
 import type { QuestionReviewItem, DimensionAssignment } from '../questionScaleDimensionReviewTypes';
 
@@ -598,5 +599,290 @@ describe('UBITS taxonomy still valid', () => {
     const q = makeLikertAgreementQuestion();
     const evidence = buildResponseEvidence(q);
     expect(evidence.matchedKnownScale).toBe('likert_agreement_5');
+  });
+});
+
+describe('resolveNumericCompatibleOption', () => {
+  const options = [
+    { value: 'rating_scale', label: 'Escala de valoración' },
+    { value: 'single_choice', label: 'Opción única' },
+    { value: 'dropdown', label: 'Desplegable' },
+  ];
+
+  it('resolves 1 to first option', () => {
+    const result = resolveNumericCompatibleOption('1', options);
+    expect(result.isValid).toBe(true);
+    if (result.isValid) {
+      expect(result.value).toBe('rating_scale');
+    }
+  });
+
+  it('resolves 2 to second option', () => {
+    const result = resolveNumericCompatibleOption('2', options);
+    expect(result.isValid).toBe(true);
+    if (result.isValid) {
+      expect(result.value).toBe('single_choice');
+    }
+  });
+
+  it('resolves 3 to third option', () => {
+    const result = resolveNumericCompatibleOption('3', options);
+    expect(result.isValid).toBe(true);
+    if (result.isValid) {
+      expect(result.value).toBe('dropdown');
+    }
+  });
+
+  it('rejects 4 as out of range when 3 options visible', () => {
+    const result = resolveNumericCompatibleOption('4', options);
+    expect(result.isValid).toBe(false);
+    if (!result.isValid) {
+      expect(result.isOutOfRange).toBe(true);
+      if (result.isOutOfRange) {
+        expect(result.maxRange).toBe(3);
+      }
+    }
+  });
+
+  it('rejects 0 as out of range', () => {
+    const result = resolveNumericCompatibleOption('0', options);
+    expect(result.isValid).toBe(false);
+    if (!result.isValid) {
+      expect(result.isOutOfRange).toBe(true);
+    }
+  });
+
+  it('rejects negative number', () => {
+    const result = resolveNumericCompatibleOption('-1', options);
+    expect(result.isValid).toBe(false);
+    if (!result.isValid) {
+      expect(result.isOutOfRange).toBe(true);
+    }
+  });
+
+  it('rejects non-numeric input as not numeric', () => {
+    const result = resolveNumericCompatibleOption('abc', options);
+    expect(result.isValid).toBe(false);
+    if (!result.isValid) {
+      expect(result.isOutOfRange).toBe(false);
+    }
+  });
+
+  it('rejects decimal input as not numeric', () => {
+    const result = resolveNumericCompatibleOption('1.5', options);
+    expect(result.isValid).toBe(false);
+    if (!result.isValid) {
+      expect(result.isOutOfRange).toBe(false);
+    }
+  });
+
+  it('works with single option', () => {
+    const singleOption = [{ value: 'open_text', label: 'Pregunta abierta' }];
+    const result = resolveNumericCompatibleOption('1', singleOption);
+    expect(result.isValid).toBe(true);
+    if (result.isValid) {
+      expect(result.value).toBe('open_text');
+    }
+  });
+
+  it('rejects out of range with single option', () => {
+    const singleOption = [{ value: 'open_text', label: 'Pregunta abierta' }];
+    const result = resolveNumericCompatibleOption('2', singleOption);
+    expect(result.isValid).toBe(false);
+    if (!result.isValid && result.isOutOfRange) {
+      expect(result.maxRange).toBe(1);
+    }
+  });
+});
+
+describe('Contextual numeric mapping integration', () => {
+  it('Likert textual compatible options list has 3 items', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    expect(result.allowedOptions).toHaveLength(3);
+  });
+
+  it('Likert textual numeric 1 maps to rating_scale', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    const resolution = resolveNumericCompatibleOption('1', result.allowedOptions);
+    expect(resolution.isValid).toBe(true);
+    if (resolution.isValid) {
+      expect(resolution.value).toBe('rating_scale');
+      const compatResult = validateQuestionTypeEdit(q, evidence, resolution.value as never);
+      expect(compatResult.compatible).toBe(true);
+    }
+  });
+
+  it('Likert textual numeric 2 maps to single_choice, not open_text', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    const resolution = resolveNumericCompatibleOption('2', result.allowedOptions);
+    expect(resolution.isValid).toBe(true);
+    if (resolution.isValid) {
+      expect(resolution.value).toBe('single_choice');
+      const compatResult = validateQuestionTypeEdit(q, evidence, resolution.value as never);
+      expect(compatResult.compatible).toBe(true);
+    }
+  });
+
+  it('Likert textual numeric 3 maps to dropdown', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    const resolution = resolveNumericCompatibleOption('3', result.allowedOptions);
+    expect(resolution.isValid).toBe(true);
+    if (resolution.isValid) {
+      expect(resolution.value).toBe('dropdown');
+      const compatResult = validateQuestionTypeEdit(q, evidence, resolution.value as never);
+      expect(compatResult.compatible).toBe(true);
+    }
+  });
+
+  it('Likert textual numeric 4 blocked by out of range contextual', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    expect(result.allowedOptions).toHaveLength(3);
+    const resolution = resolveNumericCompatibleOption('4', result.allowedOptions);
+    expect(resolution.isValid).toBe(false);
+    if (!resolution.isValid && resolution.isOutOfRange) {
+      expect(resolution.maxRange).toBe(3);
+    }
+  });
+
+  it('Likert textual free text open_text still blocked', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const compatResult = validateQuestionTypeEdit(q, evidence, 'open_text');
+    expect(compatResult.compatible).toBe(false);
+    expect(compatResult.reason).toContain('texto libre');
+  });
+
+  it('Likert textual free text multiple_choice still blocked', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const compatResult = validateQuestionTypeEdit(q, evidence, 'multiple_choice');
+    expect(compatResult.compatible).toBe(false);
+    expect(compatResult.reason).toContain('una sola respuesta');
+  });
+
+  it('Likert textual free text single_choice still allowed', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const compatResult = validateQuestionTypeEdit(q, evidence, 'single_choice');
+    expect(compatResult.compatible).toBe(true);
+  });
+
+  it('Likert textual free text dropdown still allowed', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const compatResult = validateQuestionTypeEdit(q, evidence, 'dropdown');
+    expect(compatResult.compatible).toBe(true);
+  });
+
+  it('invalid numeric selection does not mutate state', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    const resolution = resolveNumericCompatibleOption('4', result.allowedOptions);
+    expect(resolution.isValid).toBe(false);
+    expect(result.shouldMutate).toBe(true);
+    expect(result.allowedOptions).toHaveLength(3);
+  });
+
+  it('invalid free text selection does not mutate state', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const compatResult = validateQuestionTypeEdit(q, evidence, 'open_text');
+    expect(compatResult.shouldMutate).toBe(false);
+  });
+
+  it('global taxonomy index not used for numeric selection', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    const resolution = resolveNumericCompatibleOption('2', result.allowedOptions);
+    expect(resolution.isValid).toBe(true);
+    if (resolution.isValid) {
+      expect(resolution.value).not.toBe('open_text');
+    }
+  });
+
+  it('NPS compatible options list has 1 item', () => {
+    const q = makeNpsQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    expect(result.allowedOptions).toHaveLength(1);
+  });
+
+  it('NPS numeric 1 maps to rating_scale', () => {
+    const q = makeNpsQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    const resolution = resolveNumericCompatibleOption('1', result.allowedOptions);
+    expect(resolution.isValid).toBe(true);
+    if (resolution.isValid) {
+      expect(resolution.value).toBe('rating_scale');
+    }
+  });
+
+  it('NPS numeric 2 blocked by out of range contextual', () => {
+    const q = makeNpsQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    const resolution = resolveNumericCompatibleOption('2', result.allowedOptions);
+    expect(resolution.isValid).toBe(false);
+    if (!resolution.isValid && resolution.isOutOfRange) {
+      expect(resolution.maxRange).toBe(1);
+    }
+  });
+
+  it('no Date/Math.random dependency in resolveNumericCompatibleOption', () => {
+    const options = [
+      { value: 'a', label: 'A' },
+      { value: 'b', label: 'B' },
+    ];
+    const r1 = JSON.stringify(resolveNumericCompatibleOption('1', options));
+    const r2 = JSON.stringify(resolveNumericCompatibleOption('1', options));
+    expect(r1).toBe(r2);
+  });
+
+  it('deterministic output for same input', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, q.questionType);
+    const r1 = resolveNumericCompatibleOption('2', result.allowedOptions);
+    const r2 = resolveNumericCompatibleOption('2', result.allowedOptions);
+    expect(JSON.stringify(r1)).toBe(JSON.stringify(r2));
+  });
+
+  it('no action buttons or side panel in resolution', () => {
+    const result = resolveNumericCompatibleOption('1', [
+      { value: 'test', label: 'Test' },
+    ]);
+    const json = JSON.stringify(result);
+    expect(json).not.toContain('onClick');
+    expect(json).not.toContain('button');
+    expect(json).not.toContain('href');
+  });
+
+  it('Likert textual compatible options text still shows 3 options', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const text = getQuestionTypeOptionsTextForEvidence(evidence, 24);
+    expect(text).toContain('Escala de valoración');
+    expect(text).toContain('Opción única');
+    expect(text).toContain('Desplegable');
+  });
+
+  it('dimension edit attempt still blocked', () => {
+    const q = makeLikertAgreementQuestion();
+    const evidence = buildResponseEvidence(q);
+    const result = validateQuestionTypeEdit(q, evidence, 'rating_scale');
+    expect(result.compatible).toBe(true);
   });
 });

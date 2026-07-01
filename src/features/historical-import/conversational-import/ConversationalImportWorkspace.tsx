@@ -70,6 +70,7 @@ import {
   validateScaleTypeEdit,
   getQuestionTypeOptionsTextForEvidence,
   getScaleTypeOptionsTextForEvidence,
+  resolveNumericCompatibleOption,
 } from "./question-scale-dimension-review";
 import type { ConversationalGeneralConfiguration, ConversationalImportWizardStateId, ConversationalSurveyScope } from "./conversationalWizardTypes";
 import { Card, CardContent } from "@/components/ui/card";
@@ -1219,15 +1220,43 @@ export function ConversationalImportWorkspace() {
 
               if (field === "question_type") {
                 const choice = text.trim();
-                const types: Record<string, QuestionType> = {
-                  "1": "rating_scale",
-                  "2": "open_text",
-                  "3": "single_choice",
-                  "4": "multiple_choice",
-                  "5": "dropdown"
-                };
 
-                const qType = types[choice];
+                const qEvidence = questionReviewData.find(q => q.displayIndex === qIdx);
+                let qType: QuestionType | undefined;
+
+                if (qEvidence && /^\d+$/.test(choice)) {
+                  const evidence = getEvidenceFromQuestion(qEvidence);
+                  const compatContext = validateQuestionTypeEdit(qEvidence, evidence, qEvidence.questionType);
+                  const allowedOptions = compatContext.allowedOptions;
+
+                  if (allowedOptions.length > 0) {
+                    const resolution = resolveNumericCompatibleOption(choice, allowedOptions);
+                    if (resolution.isValid) {
+                      qType = resolution.value as QuestionType;
+                    } else if (resolution.isOutOfRange) {
+                      void simulateChatFlow([{
+                        id: `msg_assistant_err_${generateId()}`,
+                        role: "assistant",
+                        type: "text",
+                        content: `Esa opción no está disponible para esta pregunta. Responde con una opción entre 1 y ${resolution.maxRange}.`,
+                        timestamp: "2025-01-01T12:00:00.000Z"
+                      }]);
+                      return;
+                    }
+                  }
+                }
+
+                if (!qType) {
+                  const fallbackTypes: Record<string, QuestionType> = {
+                    "1": "rating_scale",
+                    "2": "open_text",
+                    "3": "single_choice",
+                    "4": "multiple_choice",
+                    "5": "dropdown"
+                  };
+                  qType = fallbackTypes[choice];
+                }
+
                 if (!qType) {
                   void simulateChatFlow([{
                     id: `msg_assistant_err_${generateId()}`,
@@ -1239,7 +1268,6 @@ export function ConversationalImportWorkspace() {
                   return;
                 }
 
-                const qEvidence = questionReviewData.find(q => q.displayIndex === qIdx);
                 if (qEvidence) {
                   const evidence = getEvidenceFromQuestion(qEvidence);
                   const compatResult = validateQuestionTypeEdit(qEvidence, evidence, qType);
@@ -1291,16 +1319,44 @@ export function ConversationalImportWorkspace() {
 
               if (field === "scale_type") {
                 const choice = text.trim();
-                const scales: Record<string, ScaleType> = {
-                  "1": "likert_5",
-                  "2": "nps_0_10",
-                  "3": "visual_stars",
-                  "4": "visual_emotions",
-                  "5": "linear_scale",
-                  "6": "likert_nom035"
-                };
 
-                const sType = scales[choice];
+                const qEvidence = questionReviewData.find(q => q.displayIndex === qIdx);
+                let sType: ScaleType | undefined;
+
+                if (qEvidence && /^\d+$/.test(choice)) {
+                  const evidence = getEvidenceFromQuestion(qEvidence);
+                  const compatContext = validateScaleTypeEdit(qEvidence, evidence, qEvidence.scaleType);
+                  const allowedOptions = compatContext.allowedOptions;
+
+                  if (allowedOptions.length > 0) {
+                    const resolution = resolveNumericCompatibleOption(choice, allowedOptions);
+                    if (resolution.isValid) {
+                      sType = resolution.value as ScaleType;
+                    } else if (resolution.isOutOfRange) {
+                      void simulateChatFlow([{
+                        id: `msg_assistant_err_${generateId()}`,
+                        role: "assistant",
+                        type: "text",
+                        content: `Esa opción no está disponible para esta pregunta. Responde con una opción entre 1 y ${resolution.maxRange}.`,
+                        timestamp: "2025-01-01T12:00:00.000Z"
+                      }]);
+                      return;
+                    }
+                  }
+                }
+
+                if (!sType) {
+                  const fallbackScales: Record<string, ScaleType> = {
+                    "1": "likert_5",
+                    "2": "nps_0_10",
+                    "3": "visual_stars",
+                    "4": "visual_emotions",
+                    "5": "linear_scale",
+                    "6": "likert_nom035"
+                  };
+                  sType = fallbackScales[choice];
+                }
+
                 if (!sType) {
                   void simulateChatFlow([{
                     id: `msg_assistant_err_${generateId()}`,
@@ -1312,7 +1368,6 @@ export function ConversationalImportWorkspace() {
                   return;
                 }
 
-                const qEvidence = questionReviewData.find(q => q.displayIndex === qIdx);
                 if (qEvidence) {
                   const evidence = getEvidenceFromQuestion(qEvidence);
                   const compatResult = validateScaleTypeEdit(qEvidence, evidence, sType);
@@ -2847,7 +2902,7 @@ export function ConversationalImportWorkspace() {
                 <div className="p-4 mx-auto w-full max-w-4xl shrink-0">
                   <MessageComposer
                     onSend={handleComposerSend}
-                    placeholder={conversationalEditState === "reviewing_questions_and_scales" ? "Escribe una instrucción sobre preguntas y escalas" : undefined}
+                    placeholder={conversationalEditState === "reviewing_questions_and_scales" ? "Escribe una instrucción sobre preguntas y escalas" : conversationalEditState === "awaiting_edit_value" ? "Escribe el número de la opción deseada" : undefined}
                     isProcessing={isProcessingNextStep}
                   />
                 </div>

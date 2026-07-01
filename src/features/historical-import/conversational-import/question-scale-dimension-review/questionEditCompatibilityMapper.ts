@@ -649,6 +649,25 @@ function getBlockedQuestionTypeLabels(evidence: QuestionResponseEvidence): strin
   return [];
 }
 
+export type NumericOptionResolution =
+  | { isValid: true; value: string }
+  | { isValid: false; isOutOfRange: true; maxRange: number }
+  | { isValid: false; isOutOfRange: false };
+
+export function resolveNumericCompatibleOption(
+  numericInput: string,
+  allowedOptions: CompatibleOptionItem[],
+): NumericOptionResolution {
+  const num = parseInt(numericInput, 10);
+  if (isNaN(num) || String(num) !== numericInput) {
+    return { isValid: false, isOutOfRange: false };
+  }
+  if (num < 1 || num > allowedOptions.length) {
+    return { isValid: false, isOutOfRange: true, maxRange: allowedOptions.length };
+  }
+  return { isValid: true, value: allowedOptions[num - 1].value };
+}
+
 export function getQuestionTypeOptionsTextForEvidence(
   evidence: QuestionResponseEvidence,
   displayIndex: number,
