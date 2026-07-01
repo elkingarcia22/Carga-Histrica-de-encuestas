@@ -9,6 +9,10 @@ import type {
   ConversationalCommandSuggestion,
   QuestionReviewMockDataset,
   ScaleType,
+  QuestionResponseEvidence,
+  ResponseValueKind,
+  ResponseCardinality,
+  MatchedKnownScale,
 } from './questionScaleDimensionReviewTypes';
 
 const likert5Scale: ScaleDetail = {
@@ -151,14 +155,115 @@ const dimIds = [
   'experiencia',
 ];
 
+const buildLikertAgreementEvidence = (
+  questionId: string,
+  questionText: string,
+  detectedScaleType: ScaleType,
+  detectedScaleDetail: ScaleDetail,
+): QuestionResponseEvidence => ({
+  questionId,
+  questionText,
+  detectedQuestionType: 'rating_scale',
+  detectedScaleType,
+  detectedScaleDetail,
+  responseValueKind: 'textual_scale_labels' as ResponseValueKind,
+  responseCardinality: 'single_per_respondent' as ResponseCardinality,
+  responseShape: 'scale_labels',
+  knownOptionLabels: [...detectedScaleDetail.scaleAnchors],
+  knownNumericRange: null,
+  matchedKnownScale: 'likert_agreement_5' as MatchedKnownScale,
+  confidence: 'high',
+  compatibilityWarnings: [],
+});
+
+const buildFrequencyEvidence = (
+  questionId: string,
+  questionText: string,
+  detectedScaleDetail: ScaleDetail,
+): QuestionResponseEvidence => ({
+  questionId,
+  questionText,
+  detectedQuestionType: 'rating_scale',
+  detectedScaleType: 'frequency',
+  detectedScaleDetail,
+  responseValueKind: 'textual_scale_labels' as ResponseValueKind,
+  responseCardinality: 'single_per_respondent' as ResponseCardinality,
+  responseShape: 'scale_labels',
+  knownOptionLabels: [...detectedScaleDetail.scaleAnchors],
+  knownNumericRange: null,
+  matchedKnownScale: 'likert_frequency_5' as MatchedKnownScale,
+  confidence: 'high',
+  compatibilityWarnings: [],
+});
+
+const buildBinaryEvidence = (
+  questionId: string,
+  questionText: string,
+  detectedScaleDetail: ScaleDetail,
+): QuestionResponseEvidence => ({
+  questionId,
+  questionText,
+  detectedQuestionType: 'rating_scale',
+  detectedScaleType: 'binary_yes_no',
+  detectedScaleDetail,
+  responseValueKind: 'categorical_single_value' as ResponseValueKind,
+  responseCardinality: 'single_per_respondent' as ResponseCardinality,
+  responseShape: 'categorical',
+  knownOptionLabels: [...detectedScaleDetail.scaleAnchors],
+  knownNumericRange: [0, 1],
+  matchedKnownScale: 'none' as MatchedKnownScale,
+  confidence: 'high',
+  compatibilityWarnings: [],
+});
+
+const buildNpsEvidence = (
+  questionId: string,
+  questionText: string,
+  detectedScaleDetail: ScaleDetail,
+): QuestionResponseEvidence => ({
+  questionId,
+  questionText,
+  detectedQuestionType: 'enps',
+  detectedScaleType: 'nps_0_10',
+  detectedScaleDetail,
+  responseValueKind: 'numeric_scale_values' as ResponseValueKind,
+  responseCardinality: 'single_per_respondent' as ResponseCardinality,
+  responseShape: 'scale_numbers',
+  knownOptionLabels: [...detectedScaleDetail.scaleAnchors],
+  knownNumericRange: [0, 10],
+  matchedKnownScale: 'nps_0_10' as MatchedKnownScale,
+  confidence: 'high',
+  compatibilityWarnings: [],
+});
+
+const buildOpenTextEvidence = (
+  questionId: string,
+  questionText: string,
+): QuestionResponseEvidence => ({
+  questionId,
+  questionText,
+  detectedQuestionType: 'open_text',
+  detectedScaleType: 'not_applicable',
+  detectedScaleDetail: null,
+  responseValueKind: 'free_text' as ResponseValueKind,
+  responseCardinality: 'free_text_per_respondent' as ResponseCardinality,
+  responseShape: 'open_text',
+  knownOptionLabels: [],
+  knownNumericRange: null,
+  matchedKnownScale: 'none' as MatchedKnownScale,
+  confidence: 'high',
+  compatibilityWarnings: [],
+});
+
 const buildQuestions = (): QuestionReviewItem[] => {
   const items: QuestionReviewItem[] = [];
   let idx = 1;
 
   climaTexts.forEach((text, i) => {
     const dimKey = dimIds[i % dimIds.length];
+    const questionId = `q_${idx}`;
     items.push({
-      questionId: `q_${idx}`,
+      questionId,
       displayIndex: idx,
       questionText: text,
       questionType: 'rating_scale',
@@ -168,6 +273,7 @@ const buildQuestions = (): QuestionReviewItem[] => {
       status: 'aligned',
       sourceSheetLabel: 'Clima',
       confidenceLevel: 'high',
+      responseEvidence: buildLikertAgreementEvidence(questionId, text, 'likert_5', likert5Scale),
     });
     idx++;
   });
@@ -176,23 +282,38 @@ const buildQuestions = (): QuestionReviewItem[] => {
     const dimKey = i < 3 ? 'compromiso' : 'engagement';
     const isFrequency = i === 1;
     const isBinary = i === 2;
+    const questionId = `q_${idx}`;
+    const sType = isFrequency ? 'frequency' as ScaleType : isBinary ? 'binary_yes_no' as ScaleType : 'likert_5' as ScaleType;
+    const sDetail = isFrequency ? frequencyScale : isBinary ? binaryScale : likert5Scale;
+
+    let evidence: QuestionResponseEvidence;
+    if (isFrequency) {
+      evidence = buildFrequencyEvidence(questionId, text, frequencyScale);
+    } else if (isBinary) {
+      evidence = buildBinaryEvidence(questionId, text, binaryScale);
+    } else {
+      evidence = buildLikertAgreementEvidence(questionId, text, 'likert_5', likert5Scale);
+    }
+
     items.push({
-      questionId: `q_${idx}`,
+      questionId,
       displayIndex: idx,
       questionText: text,
       questionType: 'rating_scale',
-      scaleType: isFrequency ? 'frequency' : isBinary ? 'binary_yes_no' : 'likert_5',
-      scaleDetail: isFrequency ? frequencyScale : isBinary ? binaryScale : likert5Scale,
+      scaleType: sType,
+      scaleDetail: sDetail,
       dimensionAssignment: dimensions[dimKey],
       status: 'aligned',
       sourceSheetLabel: 'Engagement',
       confidenceLevel: 'high',
+      responseEvidence: evidence,
     });
     idx++;
   });
 
+  const enpsId = `q_${idx}`;
   items.push({
-    questionId: `q_${idx}`,
+    questionId: enpsId,
     displayIndex: idx,
     questionText: enpsText,
     questionType: 'enps',
@@ -202,11 +323,13 @@ const buildQuestions = (): QuestionReviewItem[] => {
     status: 'aligned',
     sourceSheetLabel: 'eNPS',
     confidenceLevel: 'high',
+    responseEvidence: buildNpsEvidence(enpsId, enpsText, npsScale),
   });
   idx++;
 
+  const openId = `q_${idx}`;
   items.push({
-    questionId: `q_${idx}`,
+    questionId: openId,
     displayIndex: idx,
     questionText: openTextQuestionText,
     questionType: 'open_text',
@@ -216,6 +339,7 @@ const buildQuestions = (): QuestionReviewItem[] => {
     status: 'aligned',
     sourceSheetLabel: 'Clima',
     confidenceLevel: 'medium',
+    responseEvidence: buildOpenTextEvidence(openId, openTextQuestionText),
   });
 
   return items;

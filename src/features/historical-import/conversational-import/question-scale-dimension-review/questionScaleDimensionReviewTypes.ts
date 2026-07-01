@@ -36,6 +36,56 @@ export interface ScaleDetail {
   unfavorableValues: number[];
 }
 
+export type ResponseValueKind =
+  | 'textual_scale_labels'
+  | 'numeric_scale_values'
+  | 'categorical_single_value'
+  | 'categorical_multi_value'
+  | 'free_text'
+  | 'mixed'
+  | 'unknown';
+
+export type ResponseCardinality =
+  | 'single_per_respondent'
+  | 'multiple_per_respondent'
+  | 'free_text_per_respondent'
+  | 'unknown';
+
+export type ResponseShape =
+  | 'scale_labels'
+  | 'scale_numbers'
+  | 'categorical'
+  | 'multi_select'
+  | 'open_text'
+  | 'mixed'
+  | 'unknown';
+
+export type MatchedKnownScale =
+  | 'likert_agreement_5'
+  | 'likert_frequency_5'
+  | 'satisfaction_5'
+  | 'nps_0_10'
+  | 'nom_035_frequency'
+  | 'custom'
+  | 'none'
+  | 'unknown';
+
+export interface QuestionResponseEvidence {
+  questionId: string;
+  questionText: string;
+  detectedQuestionType: QuestionType;
+  detectedScaleType: ScaleType;
+  detectedScaleDetail: ScaleDetail | null;
+  responseValueKind: ResponseValueKind;
+  responseCardinality: ResponseCardinality;
+  responseShape: ResponseShape;
+  knownOptionLabels: string[];
+  knownNumericRange: [number, number] | null;
+  matchedKnownScale: MatchedKnownScale;
+  confidence: ConfidenceLevel;
+  compatibilityWarnings: string[];
+}
+
 export type DimensionSource =
   | 'detected_by_sheet'
   | 'detected_by_column'
@@ -73,6 +123,7 @@ export interface QuestionReviewItem {
   reviewNotes?: string;
   sourceSheetLabel: string;
   confidenceLevel: ConfidenceLevel;
+  responseEvidence?: QuestionResponseEvidence;
 }
 
 export interface DimensionSummary {

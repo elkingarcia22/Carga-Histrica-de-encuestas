@@ -65,6 +65,11 @@ import {
   type ScaleType,
   type ScaleDetail,
   type QuestionType,
+  getEvidenceFromQuestion,
+  validateQuestionTypeEdit,
+  validateScaleTypeEdit,
+  getQuestionTypeOptionsTextForEvidence,
+  getScaleTypeOptionsTextForEvidence,
 } from "./question-scale-dimension-review";
 import type { ConversationalGeneralConfiguration, ConversationalImportWizardStateId, ConversationalSurveyScope } from "./conversationalWizardTypes";
 import { Card, CardContent } from "@/components/ui/card";
@@ -527,7 +532,7 @@ export function ConversationalImportWorkspace() {
 
           const lastMsgData = messages[messages.length - 1];
           const isLastMsgUser = lastMsgData?.role === "user";
-          const isLastMsgThinking = lastMsgData?.type === "analysis_progress" || isFeedThinking;
+          const isLastMsgThinking = lastMsgData?.type === "analysis_progress" || isFeedThinking || isProcessingNextStep;
 
           if (isNearBottom || isLastMsgUser || isLastMsgThinking) {
             const lastMsg = document.querySelectorAll('[id^="msg_"]');
@@ -1100,13 +1105,26 @@ export function ConversationalImportWorkspace() {
                   editingField: "question_type"
                 });
                 setConversationalEditState("awaiting_edit_value");
-                void simulateChatFlow([{
-                  id: `msg_assistant_type_sel_${generateId()}`,
-                  role: "assistant",
-                  type: "text",
-                  content: `Elige el nuevo tipo de pregunta para la pregunta ${qIdx}:\n\n1. Escala de valoración\n2. Pregunta abierta\n3. Opción única\n4. Múltiples respuestas\n5. Desplegable`,
-                  timestamp: "2025-01-01T12:00:00.000Z"
-                }]);
+                const qEvidenceData = questionReviewData.find(q => q.displayIndex === qIdx);
+                if (qEvidenceData) {
+                  const evidence = getEvidenceFromQuestion(qEvidenceData);
+                  const optionsText = getQuestionTypeOptionsTextForEvidence(evidence, qIdx);
+                  void simulateChatFlow([{
+                    id: `msg_assistant_type_sel_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: optionsText,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                } else {
+                  void simulateChatFlow([{
+                    id: `msg_assistant_type_sel_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: `Elige el nuevo tipo de pregunta para la pregunta ${qIdx}:\n\n1. Escala de valoración\n2. Pregunta abierta\n3. Opción única\n4. Múltiples respuestas\n5. Desplegable`,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                }
                 return;
               }
 
@@ -1116,13 +1134,26 @@ export function ConversationalImportWorkspace() {
                   editingField: "scale_type"
                 });
                 setConversationalEditState("awaiting_edit_value");
-                void simulateChatFlow([{
-                  id: `msg_assistant_scale_sel_${generateId()}`,
-                  role: "assistant",
-                  type: "text",
-                  content: `Elige el nuevo tipo de escala para la pregunta ${qIdx}:\n\n1. Likert (escala de preferencias)\n2. NPS (recomendabilidad)\n3. Visual por estrellas\n4. Visual por emociones\n5. Escala lineal\n6. Likert (NOM 035)`,
-                  timestamp: "2025-01-01T12:00:00.000Z"
-                }]);
+                const qEvidenceData = questionReviewData.find(q => q.displayIndex === qIdx);
+                if (qEvidenceData) {
+                  const evidence = getEvidenceFromQuestion(qEvidenceData);
+                  const optionsText = getScaleTypeOptionsTextForEvidence(evidence, qIdx);
+                  void simulateChatFlow([{
+                    id: `msg_assistant_scale_sel_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: optionsText,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                } else {
+                  void simulateChatFlow([{
+                    id: `msg_assistant_scale_sel_${generateId()}`,
+                    role: "assistant",
+                    type: "text",
+                    content: `Elige el nuevo tipo de escala para la pregunta ${qIdx}:\n\n1. Likert (escala de preferencias)\n2. NPS (recomendabilidad)\n3. Visual por estrellas\n4. Visual por emociones\n5. Escala lineal\n6. Likert (NOM 035)`,
+                    timestamp: "2025-01-01T12:00:00.000Z"
+                  }]);
+                }
                 return;
               }
 
@@ -1198,6 +1229,22 @@ export function ConversationalImportWorkspace() {
                   return;
                 }
 
+                const qEvidence = questionReviewData.find(q => q.displayIndex === qIdx);
+                if (qEvidence) {
+                  const evidence = getEvidenceFromQuestion(qEvidence);
+                  const compatResult = validateQuestionTypeEdit(qEvidence, evidence, qType);
+                  if (!compatResult.compatible) {
+                    void simulateChatFlow([{
+                      id: `msg_assistant_err_${generateId()}`,
+                      role: "assistant",
+                      type: "text",
+                      content: compatResult.message || compatResult.reason || "Cambio no compatible.",
+                      timestamp: "2025-01-01T12:00:00.000Z"
+                    }]);
+                    return;
+                  }
+                }
+
                 let updatedQuestion: QuestionReviewItem | null = null;
                 setQuestionReviewData(prev => {
                   const next = [...prev];
@@ -1249,10 +1296,26 @@ export function ConversationalImportWorkspace() {
                     id: `msg_assistant_err_${generateId()}`,
                     role: "assistant",
                     type: "text",
-                    content: "Opción no válida. Por favor elige un número del 1 al 6.",
+                    content: "Opción no válida.",
                     timestamp: "2025-01-01T12:00:00.000Z"
                   }]);
                   return;
+                }
+
+                const qEvidence = questionReviewData.find(q => q.displayIndex === qIdx);
+                if (qEvidence) {
+                  const evidence = getEvidenceFromQuestion(qEvidence);
+                  const compatResult = validateScaleTypeEdit(qEvidence, evidence, sType);
+                  if (!compatResult.compatible) {
+                    void simulateChatFlow([{
+                      id: `msg_assistant_err_${generateId()}`,
+                      role: "assistant",
+                      type: "text",
+                      content: compatResult.message || compatResult.reason || "Cambio no compatible.",
+                      timestamp: "2025-01-01T12:00:00.000Z"
+                    }]);
+                    return;
+                  }
                 }
 
                 let updatedQuestion: QuestionReviewItem | null = null;
@@ -1408,6 +1471,21 @@ export function ConversationalImportWorkspace() {
 
                 if (intentObj.intent === "change_question_type" && intentObj.targetQuestionType) {
                   const qType = intentObj.targetQuestionType;
+                  const qEvidence = questionReviewData.find(q => q.displayIndex === targetIdx);
+                  if (qEvidence) {
+                    const evidence = getEvidenceFromQuestion(qEvidence);
+                    const compatResult = validateQuestionTypeEdit(qEvidence, evidence, qType);
+                    if (!compatResult.compatible) {
+                      void simulateChatFlow([{
+                        id: `msg_assistant_err_${generateId()}`,
+                        role: "assistant",
+                        type: "text",
+                        content: compatResult.message || compatResult.reason || "Cambio no compatible.",
+                        timestamp: "2025-01-01T12:00:00.000Z"
+                      }]);
+                      return;
+                    }
+                  }
                   let updatedQuestion: QuestionReviewItem | null = null;
                   setQuestionReviewData(prev => {
                     const next = [...prev];
@@ -1444,6 +1522,21 @@ export function ConversationalImportWorkspace() {
 
                 if (intentObj.intent === "change_scale_type" && intentObj.targetScaleType) {
                   const sType = intentObj.targetScaleType;
+                  const qEvidence = questionReviewData.find(q => q.displayIndex === targetIdx);
+                  if (qEvidence) {
+                    const evidence = getEvidenceFromQuestion(qEvidence);
+                    const compatResult = validateScaleTypeEdit(qEvidence, evidence, sType);
+                    if (!compatResult.compatible) {
+                      void simulateChatFlow([{
+                        id: `msg_assistant_err_${generateId()}`,
+                        role: "assistant",
+                        type: "text",
+                        content: compatResult.message || compatResult.reason || "Cambio no compatible.",
+                        timestamp: "2025-01-01T12:00:00.000Z"
+                      }]);
+                      return;
+                    }
+                  }
                   let updatedQuestion: QuestionReviewItem | null = null;
                   setQuestionReviewData(prev => {
                     const next = [...prev];
@@ -1592,6 +1685,15 @@ export function ConversationalImportWorkspace() {
             if (intentObj.intent === "change_question_type" && intentObj.targetQuestionDisplayIndex !== undefined && intentObj.targetQuestionType) {
               const index = intentObj.targetQuestionDisplayIndex;
               const qType = intentObj.targetQuestionType;
+              const qEvidence = questionReviewData.find(q => q.displayIndex === index);
+              if (qEvidence) {
+                const evidence = getEvidenceFromQuestion(qEvidence);
+                const compatResult = validateQuestionTypeEdit(qEvidence, evidence, qType);
+                if (!compatResult.compatible) {
+                  void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: compatResult.message || compatResult.reason || "Cambio no compatible.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+                  return;
+                }
+              }
               let updatedQuestion: QuestionReviewItem | null = null;
               setQuestionReviewData(prev => {
                 const next = [...prev];
@@ -1629,6 +1731,15 @@ export function ConversationalImportWorkspace() {
             if (intentObj.intent === "change_scale_type" && intentObj.targetQuestionDisplayIndex !== undefined && intentObj.targetScaleType) {
               const index = intentObj.targetQuestionDisplayIndex;
               const sType = intentObj.targetScaleType;
+              const qEvidence = questionReviewData.find(q => q.displayIndex === index);
+              if (qEvidence) {
+                const evidence = getEvidenceFromQuestion(qEvidence);
+                const compatResult = validateScaleTypeEdit(qEvidence, evidence, sType);
+                if (!compatResult.compatible) {
+                  void simulateChatFlow([{ id: `msg_assistant_qs_err_${generateId()}`, role: "assistant", type: "text", content: compatResult.message || compatResult.reason || "Cambio no compatible.", timestamp: "2025-01-01T12:00:00.000Z" }]);
+                  return;
+                }
+              }
               let updatedQuestion: QuestionReviewItem | null = null;
               setQuestionReviewData(prev => {
                 const next = [...prev];
