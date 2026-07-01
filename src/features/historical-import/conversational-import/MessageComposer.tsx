@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Paperclip, X, File as FileIcon, Loader2 } from "lucide-react";
 
@@ -13,6 +13,13 @@ export function MessageComposer({ onSend, disabled, placeholder, isProcessing }:
   const [text, setText] = useState("");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (!disabled && !isProcessing) {
+      textareaRef.current?.focus();
+    }
+  }, [disabled, isProcessing]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -41,6 +48,7 @@ export function MessageComposer({ onSend, disabled, placeholder, isProcessing }:
   return (
     <div className={`relative border border-border bg-card rounded-2xl p-4 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all shadow-sm w-full ${disabled || isProcessing ? 'opacity-50 pointer-events-none' : ''}`}>
       <textarea
+        ref={textareaRef}
         placeholder={placeholder || "Cuéntame qué encuesta quieres cargar"}
         className="w-full min-h-[100px] bg-transparent outline-none resize-none text-sm placeholder:text-muted-foreground/75 text-foreground pb-12"
         disabled={disabled || isProcessing}

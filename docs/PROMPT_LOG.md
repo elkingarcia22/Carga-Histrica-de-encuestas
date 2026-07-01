@@ -1,3 +1,48 @@
+## Fase 11F-F-H3-D · Focus Composer When Awaiting User Input
+
+Phase: Fase 11F-F-H3-D · Focus Composer When Awaiting User Input
+
+Summary:
+- Modified `MessageComposer.tsx` to automatically focus the textarea via a React `useRef` and `useEffect` when `isProcessing` or `disabled` transitions to `false` (meaning the assistant finished processing and is waiting for user input).
+- Checked that this autofocus behavior takes place after survey selection, configs, match/question review steps, and text clarifications.
+- Verified that any text already drafted by the user in the input area is never cleared or lost when auto-focus is re-triggered.
+- Ensured all downstream hotfixes (visible scrollbars, AI gradients, loaders, unifications, review aliases) remain fully functional.
+
+Commit SHA: PENDING_COMMIT
+
+CHAT_COMPOSER_AUTO_FOCUS_WHEN_AWAITING_USER_COMPLETE
+COMPOSER_FOCUSES_AFTER_ASSISTANT_RESPONSE
+COMPOSER_FOCUSES_AFTER_SURVEY_SELECTION_PROMPT
+COMPOSER_FOCUSES_AFTER_QUESTION_REVIEW_PROMPT
+COMPOSER_FOCUSES_AFTER_CLARIFICATION
+COMPOSER_NOT_FOCUSED_DURING_PROCESSING
+COMPOSER_ENABLED_WHEN_AWAITING_USER
+COMPOSER_DISABLED_OR_BLOCKED_WHILE_PROCESSING
+DOUBLE_SEND_PREVENTED_WHILE_PROCESSING
+ENTER_SEND_PREVENTED_WHILE_PROCESSING
+USER_DRAFT_TEXT_NOT_CLEARED_ON_FOCUS
+PLACEHOLDER_CONTEXTUAL_STILL_WORKS
+SEND_BUTTON_AI_GRADIENT_STILL_WORKS
+SEND_BUTTON_PROCESSING_LOADER_STILL_WORKS
+AUTO_SCROLL_TO_PROCESSING_STILL_WORKS
+CHAT_SCROLLBAR_STILL_VISIBLE
+SURVEY_SELECTION_SINGLE_ASSISTANT_BUBBLE_STILL_WORKS
+QUESTION_REVIEW_NUMBERED_COMMANDS_STILL_WORK
+QUESTION_REVIEW_TITLE_STILL_CLEAN
+NO_ACTION_BUTTONS_FOR_REVIEW
+NO_SIDE_PANEL_EDITOR
+NO_EXTERNAL_REVIEW_TAB
+NO_FORM_MODE_EDITOR
+NO_ANY_USAGE_CONFIRMED
+NO_AS_ANY_USAGE_CONFIRMED
+NO_DATE_USAGE
+NO_RANDOM_USAGE
+NO_TIMEOUT_HACKS
+NO_HARDCODED_HEX_CONFIRMED
+NO_TEXT_WHITE_CONFIRMED
+VISIBLE_UI_CHANGE_INTRODUCED
+OWNER_VISUAL_REVIEW_REQUIRED
+
 ## Fase 11F-F-H3-C · Fix Visible Chat Scrollbar
 
 Phase: Fase 11F-F-H3-C · Fix Visible Chat Scrollbar
