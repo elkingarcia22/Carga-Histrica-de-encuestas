@@ -13323,3 +13323,9 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - Established a formal Decision Gate documenting the extension of `ConversationalEditState` to justify the changes.
 - Checked that tests are correctly stored under `__tests__/` and that no files exist under `tests/`.
 - Ensured visual compatibility and auto-scroll/scrollbar functionality.
+
+## Phase 11F-F-H4-C: Fix Robust Question Selection Parsing
+- Integrated the question review sub-states (`"awaiting_question_selection"`, `"awaiting_edit_field_selection"`, `"awaiting_edit_value"`, and `"edited_question_summary"`) into the workspace message routing condition in `ConversationalImportWorkspace.tsx` to prevent messages in these states from falling back to the master chatbot's global fallback message.
+- Implemented and exported the `parseQuestionSelection` helper function in `questionScaleDimensionEditingMapper.ts` to parse selection commands robustly (interpreting formats like `28`, `pregunta 28`, `preguta 28`, `p28`, `P28`, `pregunta #28`, `modificar pregunta 28`, etc.) and validate the range limits.
+- Added comprehensive unit tests in `questionScaleDimensionEditingMapper.test.ts` covering all input variations, out-of-range, and invalid inputs.
+- Validated all tests and lint checks cleanly.

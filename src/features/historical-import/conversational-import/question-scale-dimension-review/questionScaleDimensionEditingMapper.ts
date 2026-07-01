@@ -266,3 +266,63 @@ export function mapQuestionReviewUserTextToEditingIntent(
     clarificationPrompt: 'No entendi el comando. Puedes intentar decir "ver resumen" o "ver pregunta X".',
   };
 }
+
+/**
+ * Robustly parses the question selection from user text.
+ */
+export function parseQuestionSelection(
+  text: string,
+  totalQuestions: number
+): {
+  valid: boolean;
+  questionNumber?: number;
+  errorMsg?: string;
+} {
+  const normalized = text
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+
+  // Regex patterns to capture the question number
+  const patterns = [
+    /(?:pregunta|preguta|p|#)\s*(\d+)/i, // e.g. pregunta 28, preguta 28, p28, #28
+    /\b(\d+)\b/                           // e.g. 28 as a standalone word
+  ];
+
+  let num: number | null = null;
+  for (const regex of patterns) {
+    const match = normalized.match(regex);
+    if (match) {
+      num = parseInt(match[1], 10);
+      break;
+    }
+  }
+
+  // Fallback: search for any sequence of digits in the text
+  if (num === null) {
+    const fallbackMatch = normalized.match(/\d+/);
+    if (fallbackMatch) {
+      num = parseInt(fallbackMatch[0], 10);
+    }
+  }
+
+  if (num === null) {
+    return {
+      valid: false,
+      errorMsg: 'No pude identificar la pregunta. Responde con el número de pregunta que quieres modificar, por ejemplo: 28.',
+    };
+  }
+
+  if (num < 1 || num > totalQuestions) {
+    return {
+      valid: false,
+      errorMsg: `No encontré la pregunta ${num}. Responde con un número entre 1 y ${totalQuestions}.`,
+    };
+  }
+
+  return {
+    valid: true,
+    questionNumber: num,
+  };
+}

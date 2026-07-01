@@ -154,3 +154,18 @@ To implement the guided, multi-step conversational editing flow required by this
 *   [x] Question review loads the comprehensive list grouped by dimension.
 *   [x] Dimension changes are blocked and show a clear warning message.
 *   [x] Transition to step 2/7 (Demographics) executes correctly upon user choice.
+
+---
+
+## 9. Robust Question Selection Parsing (Fase 11F-F-H4-C)
+
+To prevent inputs like "preguta 28" or "p28" from falling back to the master chatbot's generic menu, two major changes were implemented:
+
+1.  **State Routing Integration**: The question review sub-states (`"awaiting_question_selection"`, `"awaiting_edit_field_selection"`, `"awaiting_edit_value"`, and `"edited_question_summary"`) are now explicitly included in the first outer routing check inside the conversational workspace. This ensures all user messages received during these sub-states are processed by the Step 1/7 question and scales review flow instead of passing through to the global fallback.
+2.  **Flexible Digit Extraction**: The new `parseQuestionSelection(text, totalQuestions)` helper in `questionScaleDimensionEditingMapper.ts` uses robust regular expressions to capture the target question index:
+    *   Standalone digits: `28`
+    *   Explicit prefixes: `pregunta 28`, `preguta 28`, `p28`, `P28`, `pregunta #28`
+    *   Natural phrases: `modificar pregunta 28`, `editar la pregunta 28`, `quiero cambiar la pregunta 28`
+3.  **Contextual Validation**:
+    *   If no digits are found, it returns a contextual error: `"No pude identificar la pregunta. Responde con el número de pregunta que quieres modificar, por ejemplo: 28."`
+    *   If the digit is out of range, it returns: `"No encontré la pregunta X. Responde con un número entre 1 y Y."` (dynamically based on the total questions count).

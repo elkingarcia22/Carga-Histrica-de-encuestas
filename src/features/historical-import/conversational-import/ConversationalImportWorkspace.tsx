@@ -51,6 +51,7 @@ import {
   mapQuestionReviewToQuestionDetail,
   mapQuestionReviewOverviewToConversation,
   mapQuestionReviewUserTextToEditingIntent,
+  parseQuestionSelection,
   questionScaleDimensionReviewMockData37,
   getScaleDetailText,
   QUESTION_TYPE_LABELS,
@@ -908,6 +909,10 @@ export function ConversationalImportWorkspace() {
 
       if (
         conversationalEditState === "reviewing_questions_and_scales" ||
+        conversationalEditState === "awaiting_question_selection" ||
+        conversationalEditState === "awaiting_edit_field_selection" ||
+        conversationalEditState === "awaiting_edit_value" ||
+        conversationalEditState === "edited_question_summary" ||
         conversationalEditState === "reviewing_demographics" ||
         conversationalEditState === "reviewing_participants_or_responses" ||
         conversationalEditState === "reviewing_dimensions" ||
@@ -982,18 +987,19 @@ export function ConversationalImportWorkspace() {
             }
 
             if (currentStateStr === "awaiting_question_selection") {
-              const num = parseInt(text.trim(), 10);
-              if (isNaN(num) || num < 1 || num > questionReviewData.length) {
+              const parseResult = parseQuestionSelection(text, questionReviewData.length);
+              if (!parseResult.valid || !parseResult.questionNumber) {
                 void simulateChatFlow([{
                   id: `msg_assistant_invalid_q_${generateId()}`,
                   role: "assistant",
                   type: "text",
-                  content: `Por favor ingresa un número de pregunta válido entre 1 y ${questionReviewData.length}.`,
+                  content: parseResult.errorMsg || "Por favor ingresa un número de pregunta válido.",
                   timestamp: "2025-01-01T12:00:00.000Z"
                 }]);
                 return;
               }
 
+              const num = parseResult.questionNumber;
               setConversationalEditContext({
                 ...conversationalEditContext,
                 targetQuestionIndex: num

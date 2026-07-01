@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { mapQuestionReviewUserTextToEditingIntent } from '../questionScaleDimensionEditingMapper';
+import {
+  mapQuestionReviewUserTextToEditingIntent,
+  parseQuestionSelection,
+} from '../questionScaleDimensionEditingMapper';
 
 describe('questionScaleDimensionEditingMapper', () => {
   it('interprets "ver resumen"', () => {
@@ -165,5 +168,75 @@ describe('questionScaleDimensionEditingMapper', () => {
     const r1 = mapQuestionReviewUserTextToEditingIntent('ver pregunta 3');
     const r2 = mapQuestionReviewUserTextToEditingIntent('ver pregunta 3');
     expect(r1).toEqual(r2);
+  });
+
+  describe('parseQuestionSelection robust parsing', () => {
+    it('interprets number only "28"', () => {
+      const res = parseQuestionSelection('28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('interprets "pregunta 28"', () => {
+      const res = parseQuestionSelection('pregunta 28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('interprets typo "preguta 28"', () => {
+      const res = parseQuestionSelection('preguta 28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('interprets "p28"', () => {
+      const res = parseQuestionSelection('p28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('interprets "P28"', () => {
+      const res = parseQuestionSelection('P28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('interprets "pregunta #28"', () => {
+      const res = parseQuestionSelection('pregunta #28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('interprets "modificar pregunta 28"', () => {
+      const res = parseQuestionSelection('modificar pregunta 28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('interprets "editar la pregunta 28"', () => {
+      const res = parseQuestionSelection('editar la pregunta 28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('interprets "quiero cambiar la pregunta 28"', () => {
+      const res = parseQuestionSelection('quiero cambiar la pregunta 28', 37);
+      expect(res.valid).toBe(true);
+      expect(res.questionNumber).toBe(28);
+    });
+
+    it('retains state and requests valid range when out of range (e.g. "pregunta 99")', () => {
+      const res = parseQuestionSelection('pregunta 99', 37);
+      expect(res.valid).toBe(false);
+      expect(res.questionNumber).toBeUndefined();
+      expect(res.errorMsg).toBe('No encontré la pregunta 99. Responde con un número entre 1 y 37.');
+    });
+
+    it('retains state and requests valid number on invalid text (e.g. no digits)', () => {
+      const res = parseQuestionSelection('hello world', 37);
+      expect(res.valid).toBe(false);
+      expect(res.questionNumber).toBeUndefined();
+      expect(res.errorMsg).toBe('No pude identificar la pregunta. Responde con el número de pregunta que quieres modificar, por ejemplo: 28.');
+    });
   });
 });
