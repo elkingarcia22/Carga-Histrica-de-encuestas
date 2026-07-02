@@ -583,8 +583,36 @@ FULL_REGRESSION_TESTS_PASSED = YES
 PHASE_11G_D_DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE_READY = YES
 ```
 
+## Fase 11G-D · Demographics Workspace Integration Architecture
+
+### Purpose
+
+Define how the existing demographics review modules (types, mock data, mappers, message mappers) integrate into `ConversationalImportWorkspace.tsx` as the runtime Step `2/7 · Demográficos`.
+
+### Location
+
+`docs/DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE.md`
+
+### Key Decisions
+
+- Entry point from `reviewing_demographics` state must use the existing mapper pipeline, not hardcoded strings
+- Main message rendered via `createDemographicsReviewMainMessage(viewModel)`
+- Runtime state model: `DemographicsReviewRuntimeState` with status transitions
+- All actions by chat text only — no buttons, no panels, no tabs, no forms
+- Thinking policy: NO feed thinking for demographics (lightweight, synchronous)
+- Placeholder must be contextual: `Escribe una instrucción sobre demográficos`
+- Privacy rules strictly enforced from existing architecture
+- Next section: `3/7 · Participantes / respuestas` (`reviewing_participants_or_responses`)
+
+### Markers
+
+```
+PHASE_11G_D_DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE_LOCKED
+NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-E · Demographics Workspace Integration Build
+```
+
 ---
 
 *Documento de arquitectura para Demographics Review — UBITS Carga Histórica de Encuestas*
-*Fase 11G-A · Lock Demographics Review Architecture*
-*Última revisión: 2026-07-01*
+*Fase 11G-A · Lock Demographics Review Architecture · Actualizado 2026-07-02 (Fase 11G-D)*
+*Última revisión: 2026-07-02*

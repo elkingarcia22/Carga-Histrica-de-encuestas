@@ -195,8 +195,49 @@ Governance documents for first dashboard build:
   - VISUAL_REVIEW_REQUIRED = NO
   - NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11F-F-H4-E-B · Implement Question Edit Compatibility Validation
 
+## Fase 11G-D · Demographics Workspace Integration Architecture
+
+- **Phase Status**: Completed (docs only — no code changes)
+- **Problem**: The current `2/7 · Demográficos` implementation in `conversationalMatchReviewMapper.ts` shows a flat summary ("Demográficos detectados: 7, Alineados: 7") that does not meet the Owner's requirement to show all demographics with their detected items, destinations, and match reasons — the same way `1/7 · Preguntas y escalas` works.
+- **Solution**: Defined the complete architecture for integrating the existing demographics review modules (types, mock data, mapper, message mapper) into `ConversationalImportWorkspace.tsx`. The integration must replace the flat summary with the detailed message from `createDemographicsReviewMainMessage`, support text-only commands (`confirmar`, `revisar`, `sincroniza`, `crear`, `excluir`, `volver`), define a runtime state model (`DemographicsReviewRuntimeState` with 5 statuses), apply the selective thinking policy (NO feed thinking), and enforce contextual placeholder and privacy rules.
+- **Document created**: `docs/DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE.md`
+- **Changes Made**:
+  - Created `docs/DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE.md` with full architecture specification
+  - Updated `docs/DEMOGRAPHICS_REVIEW_ARCHITECTURE.md` with next phase marker
+  - Updated `docs/ARCHITECTURE.md` with this section
+  - Updated `docs/PROMPT_LOG.md` with this entry
+  - Updated `docs/QA_CHECKLIST.md` with acceptance criteria
+- **Markers**:
+  - PHASE_11G_D_DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE_LOCKED
+  - DEMOGRAPHICS_WORKSPACE_ENTRY_POINT_DEFINED
+  - DEMOGRAPHICS_MAIN_MESSAGE_INTEGRATION_DEFINED
+  - DEMOGRAPHICS_RUNTIME_STATE_MODEL_DEFINED
+  - DEMOGRAPHICS_TEXT_COMMANDS_DEFINED
+  - DEMOGRAPHICS_DETAIL_FLOW_DEFINED
+  - DEMOGRAPHICS_DESTINATION_CHANGE_FLOW_DEFINED
+  - DEMOGRAPHICS_INVALID_SYNC_FLOW_DEFINED
+  - DEMOGRAPHICS_CONFIRMATION_FLOW_DEFINED
+  - DEMOGRAPHICS_NUMERIC_SELECTION_CONTEXT_RULE_DEFINED
+  - DEMOGRAPHICS_PLACEHOLDER_CONTEXT_RULE_DEFINED
+  - DEMOGRAPHICS_THINKING_POLICY_DEFINED
+  - DEMOGRAPHICS_PRIVACY_RULES_DEFINED
+  - DEMOGRAPHICS_NEXT_PHASES_DEFINED
+  - ALL_ACTIONS_BY_CHAT_TEXT_ONLY_DEFINED
+  - NO_ACTION_BUTTONS_FOR_REVIEW_DEFINED
+  - NO_SIDE_PANEL_EDITOR_DEFINED
+  - NO_EXTERNAL_REVIEW_TAB_DEFINED
+  - NO_FORM_MODE_EDITOR_DEFINED
+  - NO_CODE_CHANGES
+  - NO_RUNTIME_CHANGES
+  - NO_UI_CHANGES
+  - NO_MAPPER_CHANGES
+  - NO_TEST_CHANGES
+  - VISIBLE_UI_CHANGE_INTRODUCED = NO
+  - OWNER_VISUAL_REVIEW_REQUIRED = NO
+  - NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-E · Demographics Workspace Integration Build
+
 *Documento de arquitectura UBITS v3.0.0*
-*Última revisión: 2026-07-01*
+*Última revisión: 2026-07-02*
 
 **Phase 8 Timeline:** 8.0 (✅) → 8.1 (✅) → 8.2 (✅) → 8.3 (✅) → 8.4 (✅) → 8.5 (✅) → 8.6 (8.6C ✅) → 8.6D (Blocked) → 9.0 (API)
 

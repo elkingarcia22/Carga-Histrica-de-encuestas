@@ -1,3 +1,54 @@
+## Fase 11G-D · Demographics Workspace Integration Architecture
+
+Phase: Fase 11G-D · Demographics Workspace Integration Architecture
+
+Summary:
+- Locked the architecture for integrating Step 2/7 · Demográficos into ConversationalImportWorkspace.
+- Defined entry point from reviewing_demographics state using existing mapper pipeline (mockData → mapper → messageMapper).
+- Specified main message rendering via createDemographicsReviewMainMessage instead of hardcoded workspace string.
+- Defined runtime state model DemographicsReviewRuntimeState with 5 statuses (main_review, field_detail, awaiting_destination, awaiting_confirmation, section_confirmed) and status transitions.
+- Defined 15+ text-only commands: confirmar, revisar, sincroniza, crear, excluir, cambia, volver, continuar.
+- Defined detail flow for single field review with items, destination, reason, and action options.
+- Defined destination change flow with validation against SYSTEM_PRELOADED_DEMOGRAPHICS (6 system demographics).
+- Defined invalid sync blocking: nonexistent system demographic rejected with error listing all 6 available options.
+- Defined confirmation flow showing sync list, survey-only list, needs-review list, excluded list, and next section.
+- Applied selective thinking policy: NO feed thinking for any demographics response.
+- Defined contextual placeholder: "Escribe una instrucción sobre demográficos".
+- Defined privacy rules: no raw rows, no IDs, no emails, no names, no individual responses, no open text, no workbook dumps.
+- Defined next phases: 11G-E (Integration Build), 11G-F (Destination Edit Handling), 11G-G (Owner Visual QA), 11G-H (Hotfix).
+- Created docs/DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE.md.
+- Updated docs/DEMOGRAPHICS_REVIEW_ARCHITECTURE.md, ARCHITECTURE.md, PROMPT_LOG.md, QA_CHECKLIST.md.
+
+Commit SHA: PENDING_COMMIT
+
+DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE_LOCKED
+DEMOGRAPHICS_WORKSPACE_ENTRY_POINT_DEFINED
+DEMOGRAPHICS_MAIN_MESSAGE_INTEGRATION_DEFINED
+DEMOGRAPHICS_RUNTIME_STATE_MODEL_DEFINED
+DEMOGRAPHICS_TEXT_COMMANDS_DEFINED
+DEMOGRAPHICS_DETAIL_FLOW_DEFINED
+DEMOGRAPHICS_DESTINATION_CHANGE_FLOW_DEFINED
+DEMOGRAPHICS_INVALID_SYNC_FLOW_DEFINED
+DEMOGRAPHICS_CONFIRMATION_FLOW_DEFINED
+DEMOGRAPHICS_NUMERIC_SELECTION_CONTEXT_RULE_DEFINED
+DEMOGRAPHICS_PLACEHOLDER_CONTEXT_RULE_DEFINED
+DEMOGRAPHICS_THINKING_POLICY_DEFINED
+DEMOGRAPHICS_PRIVACY_RULES_DEFINED
+DEMOGRAPHICS_NEXT_PHASES_DEFINED
+ALL_ACTIONS_BY_CHAT_TEXT_ONLY_DEFINED
+NO_ACTION_BUTTONS_FOR_REVIEW_DEFINED
+NO_SIDE_PANEL_EDITOR_DEFINED
+NO_EXTERNAL_REVIEW_TAB_DEFINED
+NO_FORM_MODE_EDITOR_DEFINED
+NO_CODE_CHANGES
+NO_RUNTIME_CHANGES
+NO_UI_CHANGES
+NO_MAPPER_CHANGES
+NO_TEST_CHANGES
+VISUAL_REVIEW_REQUIRED = NO
+
+NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-E · Demographics Workspace Integration Build
+
 ## Fase 11F-F-H4-E-A · Question Edit Compatibility Validation Architecture
 
 Phase: Fase 11F-F-H4-E-A · Question Edit Compatibility Validation Architecture
