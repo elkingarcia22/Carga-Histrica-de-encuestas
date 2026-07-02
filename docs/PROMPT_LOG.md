@@ -13429,3 +13429,51 @@ QUESTION_SCALE_DIMENSION_REVIEW_TYPES_MODIFICATION_JUSTIFIED
 - **Files updated**: `CHAT_THINKING_VISIBILITY_POLICY.md`, `QA_CHECKLIST.md`, `PROMPT_LOG.md`.
 - **No changes to**: chat-foundation, MessageComposer, ChatTimeline, conversationalEditingFlow, mappers, taxonomies, tests, stash, forbidden files.
 - **Verification**: Build passed, eslint scoped passes (conversational-import, historical-import), 323/323 regression tests passed. Stash still exists.
+
+## Fase 11G-A · Lock Demographics Review Architecture
+
+Phase: Fase 11G-A · Lock Demographics Review Architecture
+
+Summary:
+- Locked the architecture for demographics review flow in Step 2/7 (Demográficos).
+- Defined the 6 system preloaded demographics from UBITS constructor (Departamento o área de trabajo, Nivel jerárquico en la empresa, País, Ciudad, Columna A, Columna B) as exclusive source of truth.
+- Documented matching rules: direct match, alias match (Área, Departamento, Gerencia, Nivel, Pais), and survey-only default for unmatched fields (Rol, Antigüedad, Sede, Unidad, Regional, Equipo, Líder, etc.).
+- Specified the `DemographicReviewField` conceptual model with systemMatchStatus, destination, reviewStatus, detectedItems, matchReason, and warnings.
+- Defined conversational message structures: main message (per-field enumeration with items and destination), detail message, confirmation message, and invalid destination rejection.
+- Documented text commands (confirmar, revisar, sincroniza, crear, excluir, continúa) with no buttons, side panels, or forms.
+- Established strict privacy rules: no raw rows, user IDs, names, emails, individual responses, open text, or workbook dumps.
+- Created the specification file `docs/DEMOGRAPHICS_REVIEW_ARCHITECTURE.md`.
+
+Commit SHA: PENDING_COMMIT
+
+DEMOGRAPHICS_REVIEW_ARCHITECTURE_LOCKED
+SYSTEM_PRELOADED_DEMOGRAPHICS_DEFINED
+DEMOGRAPHICS_MATCHING_RULES_DEFINED
+DEMOGRAPHICS_ALIAS_RULES_DEFINED
+SURVEY_ONLY_DEMOGRAPHICS_RULE_DEFINED
+DEMOGRAPHIC_REVIEW_FIELD_MODEL_DEFINED
+DETECTED_ITEMS_PER_DEMOGRAPHIC_DEFINED
+SYSTEM_SYNC_DESTINATION_DEFINED
+SURVEY_ONLY_DESTINATION_DEFINED
+NEEDS_REVIEW_DESTINATION_DEFINED
+DEMOGRAPHICS_MAIN_MESSAGE_STRUCTURE_DEFINED
+DEMOGRAPHICS_DETAIL_MESSAGE_STRUCTURE_DEFINED
+DEMOGRAPHICS_CONFIRMATION_MESSAGE_DEFINED
+DEMOGRAPHICS_TEXT_COMMANDS_DEFINED
+NO_INDIVIDUAL_RESPONDENT_DATA_VISIBLE_DEFINED
+NO_RAW_ROWS_VISIBLE_DEFINED
+NO_OPEN_TEXT_VISIBLE_DEFINED
+NO_WORKBOOK_DUMP_VISIBLE_DEFINED
+ALL_ACTIONS_BY_CHAT_TEXT_ONLY_DEFINED
+NO_ACTION_BUTTONS_FOR_REVIEW_DEFINED
+NO_SIDE_PANEL_EDITOR_DEFINED
+NO_EXTERNAL_REVIEW_TAB_DEFINED
+NO_FORM_MODE_EDITOR_DEFINED
+NO_CODE_CHANGES
+NO_RUNTIME_CHANGES
+NO_UI_CHANGES
+NO_MAPPER_CHANGES
+NO_TEST_CHANGES
+VISUAL_REVIEW_REQUIRED = NO
+
+NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-B · Demographics Mock Data Contract

@@ -2586,3 +2586,47 @@ All guided-prompt wizard steps: scope selection, 1/7–7/7 general config, quest
 - FULL_REGRESSION_TESTS_PASSED = YES
 - OWNER_VISUAL_REVIEW_REQUIRED = YES
 - NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11F-G · Owner Visual QA
+
+---
+
+## Fase 11G-A · Lock Demographics Review Architecture
+
+- **Phase Status**: Completed (docs only — no code changes)
+- **Problem**: Step 2/7 · Demográficos currently shows a generic summary (counts only, no per-field detail). The Owner requested that demographics review work like Step 1/7 · Preguntas y escalas: showing each detected field, its detected items, and its sync destination.
+- **Solution**: Defined the Demographics Review Architecture — a pure documentation specification covering system preloaded demographics (6 entries from UBITS constructor), matching rules (direct match, alias match, survey-only default), the `DemographicReviewField` conceptual model, conversational message structures (main, detail, confirmation), text commands, privacy rules, and destination transition validation. Documented in `docs/DEMOGRAPHICS_REVIEW_ARCHITECTURE.md`.
+- **Changes Made**:
+  - Created `docs/DEMOGRAPHICS_REVIEW_ARCHITECTURE.md` with full architecture specification (500+ lines)
+  - Updated `docs/ARCHITECTURE.md` with this section
+  - Updated `docs/PROMPT_LOG.md` with this entry
+  - Updated `docs/QA_CHECKLIST.md` with acceptance criteria
+- **Markers**:
+  - DEMOGRAPHICS_REVIEW_ARCHITECTURE_LOCKED
+  - SYSTEM_PRELOADED_DEMOGRAPHICS_DEFINED
+  - DEMOGRAPHICS_MATCHING_RULES_DEFINED
+  - DEMOGRAPHICS_ALIAS_RULES_DEFINED
+  - SURVEY_ONLY_DEMOGRAPHICS_RULE_DEFINED
+  - DEMOGRAPHIC_REVIEW_FIELD_MODEL_DEFINED
+  - DETECTED_ITEMS_PER_DEMOGRAPHIC_DEFINED
+  - SYSTEM_SYNC_DESTINATION_DEFINED
+  - SURVEY_ONLY_DESTINATION_DEFINED
+  - NEEDS_REVIEW_DESTINATION_DEFINED
+  - DEMOGRAPHICS_MAIN_MESSAGE_STRUCTURE_DEFINED
+  - DEMOGRAPHICS_DETAIL_MESSAGE_STRUCTURE_DEFINED
+  - DEMOGRAPHICS_CONFIRMATION_MESSAGE_DEFINED
+  - DEMOGRAPHICS_TEXT_COMMANDS_DEFINED
+  - NO_INDIVIDUAL_RESPONDENT_DATA_VISIBLE_DEFINED
+  - NO_RAW_ROWS_VISIBLE_DEFINED
+  - NO_OPEN_TEXT_VISIBLE_DEFINED
+  - NO_WORKBOOK_DUMP_VISIBLE_DEFINED
+  - ALL_ACTIONS_BY_CHAT_TEXT_ONLY_DEFINED
+  - NO_ACTION_BUTTONS_FOR_REVIEW_DEFINED
+  - NO_SIDE_PANEL_EDITOR_DEFINED
+  - NO_EXTERNAL_REVIEW_TAB_DEFINED
+  - NO_FORM_MODE_EDITOR_DEFINED
+  - NO_CODE_CHANGES
+  - NO_RUNTIME_CHANGES
+  - NO_UI_CHANGES
+  - NO_MAPPER_CHANGES
+  - NO_TEST_CHANGES
+  - VISUAL_REVIEW_REQUIRED = NO
+  - NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-B · Demographics Mock Data Contract
