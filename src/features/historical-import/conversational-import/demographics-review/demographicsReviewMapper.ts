@@ -227,3 +227,29 @@ export function countUniqueItems(fields: DemographicReviewField[]): number {
   const allItems = fields.flatMap((f) => f.detectedItems);
   return new Set(allItems).size;
 }
+
+export function getDestinationText(field: DemographicReviewField): string {
+  if (field.destination === 'sync_with_system') {
+    return `Se sincronizará con "${field.matchedSystemDemographic}"`;
+  }
+  if (field.destination === 'create_in_survey_only') {
+    return 'Se creará solo en esta encuesta';
+  }
+  if (field.destination === 'needs_user_decision') {
+    return 'Requiere revisión';
+  }
+  return 'Excluido de la estructura de demográficos';
+}
+
+export function getDestinationReasonText(field: DemographicReviewField): string {
+  if (field.destination === 'sync_with_system') {
+    return 'Coincidencia directa con demográfico precargado.';
+  }
+  if (field.destination === 'create_in_survey_only') {
+    return 'No existe como demográfico precargado del sistema.';
+  }
+  if (field.destination === 'needs_user_decision') {
+    return 'El campo puede tener más de una interpretación o no hay suficiente evidencia.';
+  }
+  return 'No se usará como segmentador para esta encuesta.';
+}

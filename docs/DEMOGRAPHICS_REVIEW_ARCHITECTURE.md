@@ -507,6 +507,80 @@ NO_TEST_CHANGES = YES
 VISUAL_REVIEW_REQUIRED = NO
 
 NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-B · Demographics Mock Data Contract
+
+## Fase 11G-C · Demographics Message Mapper
+
+### Purpose
+
+Convert `DemographicsReviewConversationViewModel` and `DemographicReviewField` into `DemographicsConversationMessage` (text + commands) for the chat runtime. No UI integration.
+
+### Message Functions
+
+| Function | Produces |
+|----------|----------|
+| `createDemographicsReviewMainMessage` | Main review message: title, all fields with items/destination/reason, aggregated summary, text commands |
+| `createDemographicsReviewDetailMessage` | Single field detail: items, current destination, reason, action options |
+| `createDemographicsReviewConfirmationMessage` | Section confirmed: sync-with-system list, survey-only list, needs-review list, next section |
+| `createDemographicsDestinationChangeMessage` | Destination change: previous vs new destination, reason |
+| `createDemographicsInvalidSystemSyncMessage` | Blocks non-system demographic: lists all 6 system preloaded options |
+| `createDemographicsUnknownCommandMessage` | Graceful recovery: shows available commands |
+
+### Destination Text Rules
+
+| Destination | Display Text |
+|-------------|-------------|
+| `sync_with_system` | Se sincronizará con "{matchedSystemDemographic}" |
+| `create_in_survey_only` | Se creará solo en esta encuesta |
+| `needs_user_decision` | Requiere revisión |
+| `excluded` | Excluido de la estructura de demográficos |
+
+### Destination Reason Text Rules
+
+| Destination | Reason Text |
+|-------------|-------------|
+| `sync_with_system` | Coincidencia directa con demográfico precargado. |
+| `create_in_survey_only` | No existe como demográfico precargado del sistema. |
+| `needs_user_decision` | El campo puede tener más de una interpretación o no hay suficiente evidencia. |
+| `excluded` | No se usará como segmentador para esta encuesta. |
+
+### Commands
+
+All commands are text-only. No action buttons, no action payloads, no UI components.
+
+```
+confirmar demográficos
+revisar país
+revisar 2
+sincroniza Gerencia con Departamento o área de trabajo
+crear Sede solo en la encuesta
+excluir Rol
+cambia País a encuesta solamente
+continúa a la siguiente sección
+```
+
+### Testing
+
+31 tests in `__tests__/demographicsReviewMessageMapper.test.ts` covering:
+- Main message: title, all fields, items, destinations, summary, commands
+- Detail message: items, destination, action options
+- Confirmation: sync list, survey-only list, needs-review, next section
+- Destination change: previous vs new
+- Invalid sync: blocks non-system demographic, lists all 6 options
+- Unknown command: graceful recovery
+- Privacy: no raw rows, no emails, no IDs
+- Determinism: same input always produces same output
+- No Date, Math.random, setTimeout usage
+
+### Markers
+
+```
+DEMOGRAPHICS_MESSAGE_MAPPER_IMPLEMENTED = YES
+NO_RUNTIME_INTEGRATION = YES
+NO_WORKSPACE_CHANGES = YES
+NO_UI_CHANGES = YES
+BUILD_PASSED = YES
+FULL_REGRESSION_TESTS_PASSED = YES
+PHASE_11G_D_DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE_READY = YES
 ```
 
 ---

@@ -13477,3 +13477,52 @@ NO_TEST_CHANGES
 VISUAL_REVIEW_REQUIRED = NO
 
 NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-B · Demographics Mock Data Contract
+
+## Fase 11G-C · Demographics Message Mapper
+
+Phase: Fase 11G-C · Demographics Message Mapper
+
+Summary:
+- Created demographicsReviewMessageMapper.ts with 6 pure functions for converting demographics review data into conversational messages.
+- Functions: createDemographicsReviewMainMessage, createDemographicsReviewDetailMessage, createDemographicsReviewConfirmationMessage, createDemographicsDestinationChangeMessage, createDemographicsInvalidSystemSyncMessage, createDemographicsUnknownCommandMessage.
+- Added findFieldByIndexOrName helper for field lookup by name or index.
+- Added DemographicsConversationMessage and DemographicsConversationStatus types to demographicsReviewTypes.ts.
+- Added getDestinationText and getDestinationReasonText helpers to demographicsReviewMapper.ts.
+- Created 31 tests in demographics-review/__tests__/demographicsReviewMessageMapper.test.ts.
+- All tests pass (428 total, 20 test files).
+- Updated ARCHITECTURE.md, QA_CHECKLIST.md, PROMPT_LOG.md, DEMOGRAPHICS_REVIEW_ARCHITECTURE.md.
+- No runtime/UI integration. No workspace changes. No chat foundation changes.
+- All actions by chat text only. No action buttons. No side panel editor.
+
+Commit SHA: PENDING
+
+DEMOGRAPHICS_MESSAGE_MAPPER_IMPLEMENTED
+DEMOGRAPHICS_MAIN_MESSAGE_CREATED
+DEMOGRAPHICS_DETAIL_MESSAGE_CREATED
+DEMOGRAPHICS_CONFIRMATION_MESSAGE_CREATED
+DEMOGRAPHICS_DESTINATION_CHANGE_MESSAGE_CREATED
+DEMOGRAPHICS_INVALID_SYNC_MESSAGE_CREATED
+DEMOGRAPHICS_UNKNOWN_COMMAND_MESSAGE_CREATED
+MAIN_MESSAGE_SHOWS_ALL_DEMOGRAPHIC_FIELDS
+MAIN_MESSAGE_SHOWS_DETECTED_ITEMS_PER_FIELD
+MAIN_MESSAGE_SHOWS_SYSTEM_SYNC_DESTINATIONS
+MAIN_MESSAGE_SHOWS_SURVEY_ONLY_DESTINATIONS
+MAIN_MESSAGE_SHOWS_NEEDS_REVIEW_DESTINATIONS
+MAIN_MESSAGE_SHOWS_AGGREGATED_SUMMARY
+MAIN_MESSAGE_SHOWS_TEXT_COMMANDS
+SYSTEM_PRELOADED_DEMOGRAPHICS_LISTED_IN_INVALID_SYNC
+INVALID_SYNC_BLOCKS_NON_SYSTEM_DEMOGRAPHIC
+INVALID_SYNC_DOES_NOT_MUTATE_STATE
+NO_RUNTIME_INTEGRATION
+NO_WORKSPACE_CHANGES
+NO_UI_CHANGES
+NO_CHAT_FOUNDATION_CHANGES
+NO_MESSAGE_COMPOSER_CHANGES
+NO_QUESTION_REVIEW_CHANGES
+ALL_ACTIONS_BY_CHAT_TEXT_ONLY
+NO_ACTION_BUTTONS_FOR_REVIEW
+NO_RAW_ROWS_VISIBLE
+NO_REAL_CLIENT_DATA
+BUILD_PASSED
+FULL_REGRESSION_TESTS_PASSED
+NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-D · Demographics Workspace Integration Architecture

@@ -109,3 +109,11 @@ export interface DemographicsReviewConversationViewModel {
 }
 
 export const SAFE_ITEMS_PREVIEW_LIMIT = 5;
+
+export type DemographicsConversationStatus = 'ready' | 'needs_review' | 'info' | 'error';
+
+export interface DemographicsConversationMessage {
+  text: string;
+  commands: string[];
+  status: DemographicsConversationStatus;
+}

@@ -2632,6 +2632,31 @@ All guided-prompt wizard steps: scope selection, 1/7–7/7 general config, quest
   - NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-B · Demographics Mock Data Contract
   - PHASE_11G_C_DEMOGRAPHICS_MESSAGE_MAPPER_READY
 
+## Fase 11G-C · Demographics Message Mapper
+
+- **Phase Status**: Completed (message mapper + tests — no runtime/UI integration)
+- **Problem**: The demographics review view model could not be converted into conversational chat messages. Step 2/7 · Demográficos needed text-only messages that show all detected fields, items, destinations, and aggregated summary.
+- **Solution**: Created a pure message mapper that converts `DemographicsReviewConversationViewModel` and `DemographicReviewField` into `DemographicsConversationMessage` (text + commands).
+- **Files Created**:
+  - `src/features/historical-import/conversational-import/demographics-review/demographicsReviewMessageMapper.ts` — 6 message functions: `createDemographicsReviewMainMessage`, `createDemographicsReviewDetailMessage`, `createDemographicsReviewConfirmationMessage`, `createDemographicsDestinationChangeMessage`, `createDemographicsInvalidSystemSyncMessage`, `createDemographicsUnknownCommandMessage`, plus `findFieldByIndexOrName`.
+  - `src/features/historical-import/conversational-import/demographics-review/__tests__/demographicsReviewMessageMapper.test.ts` — 31 tests covering all message types, destination texts, privacy, determinism, security.
+- **Messages Produced**:
+  - Main message: title "2/7 · Demográficos", all detected fields with items, destination, reason, aggregated summary, text commands.
+  - Detail message: field-specific items, current destination, reason, action options.
+  - Confirmation: sync-with-system list, survey-only list, needs-review list, excluded list, next section advancement.
+  - Destination change: previous vs new destination.
+  - Invalid sync: blocks non-system demographic, lists all 6 system preloaded options.
+  - Unknown command: graceful recovery without breaking flow.
+- **Markers**:
+  - DEMOGRAPHICS_MESSAGE_MAPPER_IMPLEMENTED
+  - DEMOGRAPHICS_MAIN_MESSAGE_CREATED
+  - DEMOGRAPHICS_DETAIL_MESSAGE_CREATED
+  - DEMOGRAPHICS_CONFIRMATION_MESSAGE_CREATED
+  - DEMOGRAPHICS_DESTINATION_CHANGE_MESSAGE_CREATED
+  - DEMOGRAPHICS_INVALID_SYNC_MESSAGE_CREATED
+  - DEMOGRAPHICS_UNKNOWN_COMMAND_MESSAGE_CREATED
+  - NO_RUNTIME_INTEGRATION
+  - PHASE_11G_D_DEMOGRAPHICS_WORKSPACE_INTEGRATION_ARCHITECTURE_READY
 ## Fase 11G-B · Demographics Mock Data Contract
 
 - **Phase Status**: Completed (types + mock data + mapper + tests — no runtime/UI integration)
