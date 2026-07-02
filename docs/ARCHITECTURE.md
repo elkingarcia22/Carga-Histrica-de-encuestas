@@ -2630,3 +2630,30 @@ All guided-prompt wizard steps: scope selection, 1/7–7/7 general config, quest
   - NO_TEST_CHANGES
   - VISUAL_REVIEW_REQUIRED = NO
   - NEXT_MAXIMUM_AUTHORIZED_PHASE = Fase 11G-B · Demographics Mock Data Contract
+  - PHASE_11G_C_DEMOGRAPHICS_MESSAGE_MAPPER_READY
+
+## Fase 11G-B · Demographics Mock Data Contract
+
+- **Phase Status**: Completed (types + mock data + mapper + tests — no runtime/UI integration)
+- **Problem**: The demographics mock data contract did not exist. Step 2/7 · Demográficos could not be rendered with per-field detail, detected items, and sync destinations.
+- **Solution**: Created the typed contract, sanitized mock data, pure matching mapper, and comprehensive tests for demographics review.
+- **Files Created**:
+  - `src/features/historical-import/conversational-import/demographics-review/demographicsReviewTypes.ts` — Type contracts: `SystemPreloadedDemographic` (6 entries), `DemographicReviewField`, `DemographicsReviewSummary`, `DemographicsReviewConversationViewModel`, and all supporting unions (`SystemMatchStatus`, `Destination`, `ReviewStatus`, `MatchConfidence`).
+  - `src/features/historical-import/conversational-import/demographics-review/demographicsReviewMockData.ts` — 12 sanitized demographic fields with safe items: Gerencia, Área, Rol, Antigüedad, Sede, Nivel, Departamento, País, Ciudad, Columna A, Columna B, Segmento personalizado (ambiguous). All items are safe (no PII, no emails, no raw rows).
+  - `src/features/historical-import/conversational-import/demographics-review/demographicsReviewMapper.ts` — Pure, deterministic mapper with `matchDemographicToSystem`, `mapDetectedFieldToReviewField`, `mapFieldsToReviewSummary`, `mapReviewSummaryToConversationViewModel`, `countUniqueItems` and helpers.
+  - `src/features/historical-import/conversational-import/demographics-review/index.ts` — Public barrel export.
+  - `src/features/historical-import/conversational-import/demographics-review/__tests__/demographicsReviewMockData.test.ts` — 22 tests covering match rules, privacy, determinism.
+  - `src/features/historical-import/conversational-import/demographics-review/__tests__/demographicsReviewMapper.test.ts` — 22 tests covering summary derivation, conversation view model, alias matching, survey-only, needs_review.
+- **Matching Rules Implemented**:
+  - Direct match: País → País, Ciudad → Ciudad, Columna A → Columna A, Columna B → Columna B
+  - Alias match: Área/Departamento/Gerencia → Departamento o área de trabajo, Nivel → Nivel jerárquico en la empresa
+  - Survey-only: Rol, Antigüedad, Sede, Unidad, Equipo, etc.
+  - Needs review: ambiguous fields not matching any rule
+- **Markers**:
+  - PHASE_11G_B_DEMOGRAPHICS_MOCK_DATA_CONTRACT_IMPLEMENTED
+  - DEMOGRAPHICS_REVIEW_TYPES_CREATED
+  - SYSTEM_PRELOADED_DEMOGRAPHICS_MOCKED
+  - DETECTED_DEMOGRAPHIC_ITEMS_MOCKED
+  - DEMOGRAPHICS_REVIEW_MAPPER_CREATED
+  - NO_RUNTIME_INTEGRATION
+  - PHASE_11G_C_DEMOGRAPHICS_MESSAGE_MAPPER_READY
